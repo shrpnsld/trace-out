@@ -467,7 +467,7 @@ namespace trace_out { namespace detail
 		return print_tuple<Index + 1>(stream, tuple);
 	}
 
-#if defined(_MSC_VER)
+#if defined(TRACE_OUT_MVS)
 
 	#pragma warning(pop)
 

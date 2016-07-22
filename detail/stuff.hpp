@@ -23,9 +23,9 @@
 			(trace_out::detail::filename_line_field(trace_out::detail::filename_from_path(__FILE__), __LINE__))
 
 
-#if defined(__GNUG__) || defined(__clang__)
+#if defined(TRACE_OUT_CLANG) || defined(TRACE_OUT_GCC) || defined(TRACE_OUT_MINGW)
 	#define TRACE_OUT_FUNCTION_SIGNATURE __PRETTY_FUNCTION__
-#elif defined(_MSC_VER)
+#elif defined(TRACE_OUT_MVS)
 	#define TRACE_OUT_FUNCTION_SIGNATURE __FUNCSIG__
 #else
 	#error Cannot find function signature macro for current compiler. Try to add one manualy to this block.

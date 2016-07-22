@@ -20,10 +20,10 @@
 	#pragma clang diagnostic ignored "-Wvariadic-macros"
 	#pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
 
-#elif defined(TRACE_OUT_GCC)
+#elif defined(TRACE_OUT_GCC) || defined(TRACE_OUT_MINGW)
 
 	#pragma GCC diagnostic push
-	#pragma GCC diagnostic ignored "-Wvariadic-macros" // doesn't work with MinGW and probably also with GCC
+	#pragma GCC diagnostic ignored "-Wvariadic-macros" // seems it does not turn off the warning
 
 #endif
 
@@ -130,11 +130,11 @@
 
 
 
-#if defined(__clang__)
+#if defined(TRACE_OUT_CLANG)
 
 	#pragma clang diagnostic pop
 
-#elif defined(__GNUC__) || defined(__GNUG__)
+#elif defined(TRACE_OUT_GCC) || defined(TRACE_OUT_MINGW)
 
 	#pragma GCC diagnostic pop
 
