@@ -86,6 +86,7 @@ namespace trace_out { namespace detail
 			}
 
 
+	TRACE_OUT__DEFINE_IS_FUNDAMENTAL(bool);
 	TRACE_OUT__DEFINE_IS_FUNDAMENTAL(char);
 	TRACE_OUT__DEFINE_IS_FUNDAMENTAL(signed char);
 	TRACE_OUT__DEFINE_IS_FUNDAMENTAL(unsigned char);
