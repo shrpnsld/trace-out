@@ -19,13 +19,16 @@ namespace trace_out { namespace detail
 	template <typename Type_t>
 	Type_t &expression(const std::string &filename_line, const char *name, Type_t &value);
 
+	template <typename Type_t>
+	void watch(const std::string &filename_line, const char *name, const Type_t &value);
+
 #else
 
 	template <typename Type_t>
 	Type_t &&expression(const std::string &filename_line, const char *name, Type_t &&value);
 
 	template <typename ...Types_t>
-	void watch(const std::string &filename_line, const char *names, const Types_t &...arguments);
+	void watch(const std::string &filename_line, const char *names, const Types_t &...values);
 
 #endif // !defined(TRACE_OUT_CPP11)
 
@@ -55,6 +58,14 @@ namespace trace_out { namespace detail
 		return value;
 	}
 
+
+	template <typename Type_t>
+	void watch(const std::string &filename_line, const char *name, Type_t &value)
+	{
+		out_stream stream(filename_line);
+		stream << name << " = " << make_pretty(value) << ENDLINE;
+	}
+
 #else
 
 	template <typename Type_t>
@@ -81,10 +92,10 @@ namespace trace_out { namespace detail
 	}
 
 	template <typename ...Types_t>
-	void watch(const std::string &filename_line, const char *names, const Types_t &...arguments)
+	void watch(const std::string &filename_line, const char *names, const Types_t &...values)
 	{
 		out_stream stream(filename_line);
-		print_values(stream, names, arguments...);
+		print_values(stream, names, values...);
 	}
 
 #endif // !defined(TRACE_OUT_CPP11)
