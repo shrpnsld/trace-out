@@ -2,6 +2,8 @@
 
 #include <windows.h>
 
+#include "standard/integer.hpp"
+
 
 namespace trace_out_to_wdo
 {
@@ -17,7 +19,7 @@ namespace trace_out_to_wdo
 	}
 
 
-	size_t width()
+	trace_out::detail::standard::size_t width()
 	{
 		return 120;
 	}

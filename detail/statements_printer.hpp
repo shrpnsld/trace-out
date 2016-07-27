@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "standard/integer.hpp"
 #include "platform_defines.hpp"
 #include "pretty.hpp"
 #include "out_stream.hpp"
@@ -47,7 +48,7 @@ namespace trace_out { namespace detail
 	template <typename Type_t>
 	block while_block(const std::string &filename_line, const char *condition, const Type_t &value);
 
-	block iteration_block(const std::string &filename_line, size_t iteration);
+	block iteration_block(const std::string &filename_line, standard::size_t iteration);
 
 
 
@@ -58,10 +59,10 @@ namespace trace_out { namespace detail
 		~for_block();
 
 		operator bool() const;
-		size_t iteration();
+		standard::size_t iteration();
 
 	private:
-		size_t _iteration_number;
+		standard::size_t _iteration_number;
 	};
 
 

@@ -1,12 +1,12 @@
 #pragma once
 
-#include <cstdint>
+#include "standard/integer.hpp"
 
 
 namespace trace_out { namespace detail
 {
 
-	uint64_t time_in_milliseconds();
+	standard::uint64_t time_in_milliseconds();
 
 }
 }

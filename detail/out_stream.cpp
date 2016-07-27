@@ -1,8 +1,8 @@
-#include <cstdint>
 #include <cstdarg>
 #include <cstdlib>
 #include <sstream>
 
+#include "standard/io.hpp"
 #include "constants.hpp"
 #include "system_thread_local_storage.hpp"
 #include "system_mutex.hpp"
@@ -24,7 +24,7 @@ namespace TRACE_OUT_REDIRECTION_NAMESPACE
 
 	void print(const char *string);
 	void flush();
-	size_t width();
+	trace_out::detail::standard::size_t width();
 
 }
 
@@ -43,11 +43,11 @@ namespace trace_out { namespace detail
 	void lock_output();
 	void unlock_output();
 
-	const std::string thread_id_field(uint64_t thread_id);
+	const std::string thread_id_field(standard::uint64_t thread_id);
 	const std::string thread_header(const std::string &thread_id, const std::string &thread_name);
 
 
-	uint64_t _current_thread_id;
+	standard::uint64_t _current_thread_id;
 	tls<std::string> _thread_name;
 	mutex _output_mutex;
 	tls<std::string> _indentation;
@@ -97,7 +97,7 @@ namespace trace_out { namespace detail
 	}
 
 
-	const std::string thread_id_field(uint64_t thread_id)
+	const std::string thread_id_field(standard::uint64_t thread_id)
 	{
 		std::stringstream stream;
 		stream << reinterpret_cast<void *>(thread_id);
@@ -240,7 +240,7 @@ namespace trace_out { namespace detail
 	}
 
 
-	size_t out_stream::width_left() const
+	standard::size_t out_stream::width_left() const
 	{
 		return out_stream::width() - _current_line_length;
 	}
@@ -254,10 +254,10 @@ namespace trace_out { namespace detail
 		va_start(arguments, format);
 		va_start(arguments_copy, format);
 
-		size_t size = printf_string_length(format, arguments_copy) + 1;
+		int size = standard::vsnprintf_string_length(format, arguments_copy) + 1;
 
 		resource<void *> buffer(std::malloc(size), std::free);
-		printf_to_string(static_cast<char *>(buffer.get()), size, format, arguments);
+		standard::vsnprintf(static_cast<char *>(buffer.get()), size, format, arguments);
 		*this << "// " << static_cast<char *>(buffer.get());
 
 		va_end(arguments);
@@ -271,7 +271,7 @@ namespace trace_out { namespace detail
 	}
 
 
-	size_t out_stream::width()
+	standard::size_t out_stream::width()
 	{
 #if defined(TRACE_OUT_WIDTH)
 
@@ -409,7 +409,7 @@ namespace trace_out { namespace detail
 			return stream << "<null>";
 		}
 
-		uintptr_t numeric_value = reinterpret_cast<uintptr_t>(value.get());
+		standard::uintptr_t numeric_value = reinterpret_cast<standard::uintptr_t>(value.get());
 		return stream << to_string(numeric_value, std::hex, std::showbase, NULL);
 	}
 

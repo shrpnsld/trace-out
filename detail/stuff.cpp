@@ -63,7 +63,7 @@ namespace trace_out { namespace detail
 
 	std::string rest_tokens(const std::string &tokens)
 	{
-		size_t from = tokens.find(',') + 1;
+		standard::size_t from = tokens.find(',') + 1;
 		while (tokens[from] == ' ')
 		{
 			++from;

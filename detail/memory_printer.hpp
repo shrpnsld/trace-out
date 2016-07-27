@@ -1,11 +1,10 @@
 #pragma once
 
-#include <cstddef>
-#include <cstdint>
 #include <limits>
 #include <string>
 #include <sstream>
 
+#include "standard/integer.hpp"
 #include "stuff.hpp"
 #include "out_stream.hpp"
 
@@ -13,10 +12,10 @@
 namespace trace_out { namespace detail
 {
 
-	typedef uint32_t option_t;
+	typedef standard::uint32_t option_t;
 
-	const size_t OPTIONS_START_BASE = 0;
-	const size_t OPTIONS_START_BYTE_ORDER = 16;
+	const standard::size_t OPTIONS_START_BASE = 0;
+	const standard::size_t OPTIONS_START_BYTE_ORDER = 16;
 
 }
 }
@@ -43,10 +42,10 @@ namespace trace_out { namespace detail
 {
 
 	extern const char *const BASE_NAMES[];
-	extern const size_t BASE_NAMES_LENGTH;
+	extern const standard::size_t BASE_NAMES_LENGTH;
 
 	extern const char *const BYTE_ORDER_NAMES[];
-	extern const size_t BYTE_ORDER_NAMES_LENGTH;
+	extern const standard::size_t BYTE_ORDER_NAMES_LENGTH;
 
 	typedef std::streamsize outputwidth_t;
 
@@ -69,10 +68,10 @@ namespace trace_out { namespace detail
 	};
 
 
-	template <typefamily_t Family, size_t Size, bool IsSigned>
+	template <typefamily_t Family, standard::size_t Size, bool IsSigned>
 	struct print_traits_details
 	{
-		typedef uint8_t unit_t;
+		typedef standard::uint8_t unit_t;
 		static const outputwidth_t field_width = 2;
 		static const option_t default_base = HEX;
 		typedef void signed_t;
@@ -90,15 +89,15 @@ namespace trace_out { namespace detail
 			typedef to_unsigned_type unsigned_t; \
 		}
 
-	TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 1, true, int8_t, 4, HEX, int8_t, uint8_t);
-	TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 2, true, int16_t, 6, SDEC, int16_t, uint16_t);
-	TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 4, true, int32_t, 11, SDEC, int32_t, uint32_t);
-	TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 8, true, int64_t, 21, SDEC, int64_t, uint64_t);
+	TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 1, true, standard::int8_t, 4, HEX, standard::int8_t, standard::uint8_t);
+	TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 2, true, standard::int16_t, 6, SDEC, standard::int16_t, standard::uint16_t);
+	TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 4, true, standard::int32_t, 11, SDEC, standard::int32_t, standard::uint32_t);
+	TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 8, true, standard::int64_t, 21, SDEC, standard::int64_t, standard::uint64_t);
 
-	TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 1, false, uint8_t, 3, HEX, int8_t, uint8_t);
-	TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 2, false, uint16_t, 5, UDEC, int16_t, uint16_t);
-	TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 4, false, uint32_t, 10, UDEC, int32_t, uint32_t);
-	TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 8, false, uint64_t, 20, UDEC, int64_t, uint64_t);
+	TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 1, false, standard::uint8_t, 3, HEX, standard::int8_t, standard::uint8_t);
+	TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 2, false, standard::uint16_t, 5, UDEC, standard::int16_t, standard::uint16_t);
+	TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 4, false, standard::uint32_t, 10, UDEC, standard::int32_t, standard::uint32_t);
+	TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 8, false, standard::uint64_t, 20, UDEC, standard::int64_t, standard::uint64_t);
 
 	// sign + first_digit + point + precision + 'e' + exponent_sign + exponent
 	TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_FLOATING_POINT, 4, true, float, 1 + 1 + 1 + std::numeric_limits<float>::digits10 + 1 + 1 + 3, FLT, float, float);
@@ -119,9 +118,9 @@ namespace trace_out { namespace detail
 
 	option_t base_value_from_options(option_t options, option_t default_value);
 	option_t byte_order_value_from_options(option_t options, option_t default_value);
-	const char *option_name(option_t option, const char *const names[], size_t names_length, const char *default_name);
-	const char *byte_to_binary(uint8_t byte);
-	const char *byte_to_hexadecimal(uint8_t byte);
+	const char *option_name(option_t option, const char *const names[], standard::size_t names_length, const char *default_name);
+	const char *byte_to_binary(standard::uint8_t byte);
+	const char *byte_to_hexadecimal(standard::uint8_t byte);
 
 	template <typename Type_t>
 	outputwidth_t field_width(option_t base);
@@ -145,11 +144,11 @@ namespace trace_out { namespace detail
 	const std::string (*select_conversion(option_t base))(Type_t);
 
 	option_t current_byte_order();
-	void reverse_bytes(void *destination, const void *source, size_t size);
-	void order_bytes(void *ordered_bytes, const void *unordered_bytes, size_t size, option_t byte_order);
+	void reverse_bytes(void *destination, const void *source, standard::size_t size);
+	void order_bytes(void *ordered_bytes, const void *unordered_bytes, standard::size_t size, option_t byte_order);
 
 	template <typename Type_t>
-	void print_memory(const std::string &filename_line, const char *name, const Type_t *pointer, size_t size = sizeof(Type_t), option_t options = 0);
+	void print_memory(const std::string &filename_line, const char *name, const Type_t *pointer, standard::size_t size = sizeof(Type_t), option_t options = 0);
 
 }
 }
@@ -188,8 +187,8 @@ namespace trace_out { namespace detail
 	const std::string bytes_to_binary_string(Type_t value)
 	{
 		std::stringstream stream;
-		uint8_t *data = reinterpret_cast<uint8_t *>(&value);
-		for (size_t index = 0; index < sizeof(value); ++index)
+		standard::uint8_t *data = reinterpret_cast<standard::uint8_t *>(&value);
+		for (standard::size_t index = 0; index < sizeof(value); ++index)
 		{
 			stream << byte_to_binary(data[index]);
 		}
@@ -204,7 +203,7 @@ namespace trace_out { namespace detail
 		typedef typename print_traits<Type_t>::signed_t signed_promotion_t;
 
 		signed_promotion_t signed_value = static_cast<signed_promotion_t>(value);
-		int64_t signed_integer = static_cast<int64_t>(signed_value);
+		standard::int64_t signed_integer = static_cast<standard::int64_t>(signed_value);
 
 		return to_string(signed_integer);
 	}
@@ -216,7 +215,7 @@ namespace trace_out { namespace detail
 		typedef typename print_traits<Type_t>::unsigned_t unsigned_promotion_t;
 
 		unsigned_promotion_t unsigned_value = static_cast<unsigned_promotion_t>(value);
-		uint64_t unsigned_integer = static_cast<uint64_t>(unsigned_value);
+		standard::uint64_t unsigned_integer = static_cast<standard::uint64_t>(unsigned_value);
 
 		return to_string(unsigned_integer);
 	}
@@ -237,8 +236,8 @@ namespace trace_out { namespace detail
 	const std::string bytes_to_hexadecimal_string(Type_t value)
 	{
 		std::stringstream stream;
-		uint8_t *data = reinterpret_cast<uint8_t *>(&value);
-		for (size_t index = 0; index < sizeof(value); ++index)
+		standard::uint8_t *data = reinterpret_cast<standard::uint8_t *>(&value);
+		for (standard::size_t index = 0; index < sizeof(value); ++index)
 		{
 			stream << byte_to_hexadecimal(data[index]);
 		}
@@ -274,18 +273,18 @@ namespace trace_out { namespace detail
 
 
 	template <typename Type_t>
-	void print_memory_contents(out_stream &stream, const Type_t *pointer, size_t size, outputwidth_t column_width, const std::string (*bytes_to_string)(Type_t), option_t byte_order)
+	void print_memory_contents(out_stream &stream, const Type_t *pointer, standard::size_t size, outputwidth_t column_width, const std::string (*bytes_to_string)(Type_t), option_t byte_order)
 	{
 		std::stringstream string_stream;
 
 		const Type_t *iterator = pointer;
-		size_t length = size / sizeof(Type_t);
+		standard::size_t length = size / sizeof(Type_t);
 
 		stream << make_pretty(static_cast<const void *>(iterator)) << ":";
-		for (std::size_t index = 0; index < length; ++index)
+		for (standard::size_t index = 0; index < length; ++index)
 		{
 			const std::string string_representation = string_stream.str();
-			if (string_representation.length() + static_cast<size_t>(column_width) + 1 > stream.width_left())
+			if (string_representation.length() + static_cast<standard::size_t>(column_width) + 1 > stream.width_left())
 			{
 				stream << string_representation;
 				string_stream.str("");
@@ -317,7 +316,7 @@ namespace trace_out { namespace detail
 
 
 	template <typename Type_t>
-	void print_memory(const std::string &filename_line, const char *name, const Type_t *pointer, size_t size, option_t options)
+	void print_memory(const std::string &filename_line, const char *name, const Type_t *pointer, standard::size_t size, option_t options)
 	{
 		typedef typename print_traits<Type_t>::unit_t unit_t;
 

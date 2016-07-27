@@ -9,9 +9,9 @@
 namespace trace_out { namespace detail
 {
 
-	uint64_t current_thread_id()
+	standard::uint64_t current_thread_id()
 	{
-		return static_cast<uint64_t>(GetCurrentThreadId());
+		return static_cast<standard::uint64_t>(GetCurrentThreadId());
 	}
 
 }

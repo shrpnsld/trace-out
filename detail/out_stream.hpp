@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cstddef>
 #include <memory>
 #include <string>
 
@@ -9,6 +8,7 @@
 	#include <tuple>
 #endif
 
+#include "standard/integer.hpp"
 #include "stuff.hpp"
 #include "pretty.hpp"
 
@@ -44,14 +44,14 @@ namespace trace_out { namespace detail
 		out_stream &operator <<(const newline_manipulator &);
 		out_stream &operator <<(const endline_manipulator &);
 		out_stream &operator <<(const flush_manipulator &);
-		size_t width_left() const;
+		standard::size_t width_left() const;
 		void printf(const char *format, ...);
 		void flush();
 
-		static size_t width();
+		static standard::size_t width();
 
 	private:
-		size_t _current_line_length;
+		standard::size_t _current_line_length;
 	};
 
 
@@ -446,7 +446,7 @@ namespace trace_out { namespace detail
 
 #if defined(TRACE_OUT_CPP11)
 
-	template <std::size_t Index, typename ...Types_t>
+	template <standard::size_t Index, typename ...Types_t>
 	typename enable_if<Index == sizeof_pack<Types_t...>::value - 1, out_stream &>::type print_tuple(out_stream &stream, const std::tuple<Types_t...> &tuple)
 	{
 		return stream << make_pretty(std::get<Index>(tuple)) << "}";
@@ -460,7 +460,7 @@ namespace trace_out { namespace detail
 
 #endif
 
-	template <std::size_t Index, typename ...Types_t>
+	template <standard::size_t Index, typename ...Types_t>
 	typename enable_if<Index < sizeof_pack<Types_t...>::value - 1, out_stream &>::type print_tuple(out_stream &stream, const std::tuple<Types_t...> &tuple)
 	{
 		stream << make_pretty(std::get<Index>(tuple)) << ", ";

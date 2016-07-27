@@ -7,7 +7,7 @@
 namespace trace_out { namespace detail
 {
 
-	void print_execution_time_in_milliseconds(const std::string &filename_line, uint64_t milliseconds)
+	void print_execution_time_in_milliseconds(const std::string &filename_line, standard::uint64_t milliseconds)
 	{
 		out_stream stream(filename_line);
 		stream << "// execution time: " << to_string(milliseconds) << " ms" << ENDLINE;

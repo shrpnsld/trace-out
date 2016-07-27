@@ -1,9 +1,9 @@
 #pragma once
 
-#include <cstdint>
 #include <ctime>
 
 #include "detail/platform_defines.hpp"
+#include "detail/standard/integer.hpp"
 #include "detail/out_stream.hpp"
 #include "detail/watch_printer.hpp"
 #include "detail/function_printer.hpp"
@@ -72,9 +72,9 @@
 
 	#define trace_out_private__time(start_time_variable, end_time_variable, ...) \
 				{ \
-					uint64_t start_time_variable = trace_out::detail::time_in_milliseconds(); \
+					trace_out::detail::standard::uint64_t start_time_variable = trace_out::detail::time_in_milliseconds(); \
 					__VA_ARGS__ \
-					uint64_t end_time_variable = trace_out::detail::time_in_milliseconds(); \
+					trace_out::detail::standard::uint64_t end_time_variable = trace_out::detail::time_in_milliseconds(); \
 					trace_out::detail::print_execution_time_in_milliseconds(TRACE_OUT_FILENAME_LINE, end_time_variable - start_time_variable); \
 				}
 

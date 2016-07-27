@@ -1,6 +1,8 @@
 #include <fstream>
 #include <cassert>
 
+#include "standard/integer.hpp"
+
 
 #define TRACE_OUT_TO_FILE__QUOTIZE_IMPL(something) \
 			#something
@@ -39,7 +41,7 @@ namespace trace_out_to_file
 	}
 
 
-	size_t width()
+	trace_out::detail::standard::size_t width()
 	{
 		return 120;
 	}

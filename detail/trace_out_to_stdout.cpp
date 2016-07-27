@@ -1,8 +1,8 @@
 #if !defined(TRACE_OUT_REDIRECTION)
 
-#include <cstddef>
 #include <iostream>
 
+#include "standard/integer.hpp"
 #include "system_console.hpp"
 
 
@@ -11,7 +11,7 @@ namespace trace_out_to_stdout
 
 	void print(const char *string);
 	void flush();
-	size_t width();
+	trace_out::detail::standard::size_t width();
 
 }
 
@@ -19,7 +19,7 @@ namespace trace_out_to_stdout
 namespace trace_out_to_stdout
 {
 
-	const size_t DEFAULT_WIDTH = 79;
+	const trace_out::detail::standard::size_t DEFAULT_WIDTH = 79;
 
 
 	void print(const char *string)
@@ -34,7 +34,7 @@ namespace trace_out_to_stdout
 	}
 
 
-	size_t width()
+	trace_out::detail::standard::size_t width()
 	{
 		int width = trace_out::detail::console_width();
 		if (width == -1)
@@ -42,7 +42,7 @@ namespace trace_out_to_stdout
 			return DEFAULT_WIDTH;
 		}
 
-		return static_cast<size_t>(width);
+		return static_cast<trace_out::detail::standard::size_t>(width);
 	}
 
 }

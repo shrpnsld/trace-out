@@ -45,7 +45,7 @@ namespace trace_out { namespace detail
 	}
 
 
-	block iteration_block(const std::string &filename_line, size_t iteration)
+	block iteration_block(const std::string &filename_line, standard::size_t iteration)
 	{
 		{
 			auto_indentation auto_indentation;
@@ -79,7 +79,7 @@ namespace trace_out { namespace detail
 	}
 
 
-	size_t for_block::iteration()
+	standard::size_t for_block::iteration()
 	{
 		return ++_iteration_number;
 	}

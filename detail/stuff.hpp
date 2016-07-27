@@ -1,12 +1,12 @@
 #pragma once
 
-#include <cstdint>
 #include <cstdarg>
 #include <cstring>
 #include <string>
 #include <ios>
 #include <sstream>
 
+#include "standard/integer.hpp"
 #include "platform_defines.hpp"
 
 
@@ -294,7 +294,7 @@ namespace trace_out { namespace detail
 	template <typename Type_t>
 	void crash_on_bad_memory(const Type_t &variable)
 	{
-		uint8_t buffer[sizeof(variable)];
+		standard::uint8_t buffer[sizeof(variable)];
 		std::memcpy(buffer, &variable, sizeof(buffer));
 	}
 

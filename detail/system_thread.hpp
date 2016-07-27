@@ -1,12 +1,12 @@
 #pragma once
 
-#include <cstdint>
+#include "standard/integer.hpp"
 
 
 namespace trace_out { namespace detail
 {
 
-	uint64_t current_thread_id();
+	standard::uint64_t current_thread_id();
 
 }
 }

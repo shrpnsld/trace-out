@@ -75,16 +75,16 @@ namespace trace_out { namespace detail
 	};
 
 	const char *const BASE_NAMES[] = {"binary", "signed decimal", "unsigned decimal", "hexadecimal", "float", "double", "long double"};
-	const size_t BASE_NAMES_LENGTH = sizeof(BASE_NAMES) / sizeof(BASE_NAMES[0]);
+	const standard::size_t BASE_NAMES_LENGTH = sizeof(BASE_NAMES) / sizeof(BASE_NAMES[0]);
 
 	const char *const BYTE_ORDER_NAMES[] = {"little-endian", "big-endian"};
-	const size_t BYTE_ORDER_NAMES_LENGTH = sizeof(BYTE_ORDER_NAMES) / sizeof(BYTE_ORDER_NAMES[0]);
+	const standard::size_t BYTE_ORDER_NAMES_LENGTH = sizeof(BYTE_ORDER_NAMES) / sizeof(BYTE_ORDER_NAMES[0]);
 
 
 	template <typename T>
-	size_t first_set_bit(T number)
+	standard::size_t first_set_bit(T number)
 	{
-		size_t index = 0;
+		standard::size_t index = 0;
 		for (;;)
 		{
 			if ((number & static_cast<T>(0x1)) == static_cast<T>(0x1))
@@ -124,9 +124,9 @@ namespace trace_out { namespace detail
 	}
 
 
-	const char *option_name(option_t option, const char *const names[], size_t names_length, const char *default_name)
+	const char *option_name(option_t option, const char *const names[], standard::size_t names_length, const char *default_name)
 	{
-		size_t index = first_set_bit(option);
+		standard::size_t index = first_set_bit(option);
 		if (index >= names_length)
 		{
 			return default_name;
@@ -136,13 +136,13 @@ namespace trace_out { namespace detail
 	}
 
 
-	const char *byte_to_binary(uint8_t byte)
+	const char *byte_to_binary(standard::uint8_t byte)
 	{
 		return BINARY_VALUES[byte];
 	}
 
 
-	const char *byte_to_hexadecimal(uint8_t byte)
+	const char *byte_to_hexadecimal(standard::uint8_t byte)
 	{
 		return HEXADECIMAL_VALUES[byte];
 	}
@@ -150,10 +150,10 @@ namespace trace_out { namespace detail
 
 	option_t current_byte_order()
 	{
-		const uint16_t VALUE = static_cast<uint16_t>(0x0001);
-		const uint8_t FIRST_BYTE = *reinterpret_cast<const uint8_t *>(&VALUE);
+		const standard::uint16_t VALUE = static_cast<standard::uint16_t>(0x0001);
+		const standard::uint8_t FIRST_BYTE = *reinterpret_cast<const standard::uint8_t *>(&VALUE);
 
-		if (FIRST_BYTE == static_cast<uint8_t>(0x01))
+		if (FIRST_BYTE == static_cast<standard::uint8_t>(0x01))
 		{
 			return BIG;
 		}
@@ -164,11 +164,11 @@ namespace trace_out { namespace detail
 	}
 
 
-	void reverse_bytes(void *destination, const void *source, size_t size)
+	void reverse_bytes(void *destination, const void *source, standard::size_t size)
 	{
-		uint8_t *destination_iterator = static_cast<uint8_t *>(destination);
-		const uint8_t *source_iterator = static_cast<const uint8_t *>(source) + size - 1;
-		for (size_t bytes_processed = 0; bytes_processed < size; ++bytes_processed)
+		standard::uint8_t *destination_iterator = static_cast<standard::uint8_t *>(destination);
+		const standard::uint8_t *source_iterator = static_cast<const standard::uint8_t *>(source) + size - 1;
+		for (standard::size_t bytes_processed = 0; bytes_processed < size; ++bytes_processed)
 		{
 			*destination_iterator = *source_iterator;
 			++destination_iterator;
@@ -177,7 +177,7 @@ namespace trace_out { namespace detail
 	}
 
 
-	void order_bytes(void *ordered_bytes, const void *unordered_bytes, size_t size, option_t byte_order)
+	void order_bytes(void *ordered_bytes, const void *unordered_bytes, standard::size_t size, option_t byte_order)
 	{
 		if (current_byte_order() != byte_order)
 		{
