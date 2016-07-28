@@ -7,7 +7,6 @@
 #include "system_thread_local_storage.hpp"
 #include "system_mutex.hpp"
 #include "system_thread.hpp"
-#include "stdlib_specific.hpp"
 
 #include "out_stream.hpp"
 

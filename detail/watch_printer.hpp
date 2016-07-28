@@ -60,7 +60,7 @@ namespace trace_out { namespace detail
 
 
 	template <typename Type_t>
-	void watch(const std::string &filename_line, const char *name, Type_t &value)
+	void watch(const std::string &filename_line, const char *name, const Type_t &value)
 	{
 		out_stream stream(filename_line);
 		stream << name << " = " << make_pretty(value) << ENDLINE;
