@@ -85,6 +85,9 @@ namespace trace_out { namespace detail
 	template <typename Type_t>
 	out_stream &operator <<(out_stream &stream, const pretty<Type_t *> &value);
 
+	template <typename Type_t, standard::size_t Size>
+	out_stream &operator <<(out_stream &stream, const pretty<Type_t[Size]> &value);
+
 	template <typename Type_t>
 	typename enable_if<has_data_member_x<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_compound<Type_t> &value);
 
@@ -174,6 +177,25 @@ namespace trace_out { namespace detail
 	{
 		stream << FLUSH;
 		return stream << make_pretty(static_cast<const Type_t *>(value.get()));
+	}
+
+
+	template <typename Type_t, standard::size_t Size>
+	out_stream &operator <<(out_stream &stream, const pretty<Type_t[Size]> &value)
+	{
+		stream << FLUSH;
+		const Type_t *c_array = value.get();
+
+		stream << "[";
+		standard::size_t index = 0;
+		for ( ; index < Size - 1; ++index)
+		{
+			stream << make_pretty(c_array[index]) << ", ";
+		}
+
+		stream << make_pretty(c_array[index]) << "]";
+
+		return stream;
 	}
 
 

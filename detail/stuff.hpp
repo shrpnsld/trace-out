@@ -142,6 +142,53 @@ namespace trace_out { namespace detail
 	};
 
 
+
+	template <typename Type_t>
+	struct is_array;
+
+
+	template <typename Type_t>
+	struct is_array<Type_t[]>
+	{
+		enum
+		{
+			value = true
+		};
+	};
+
+
+	template <typename Type_t, standard::size_t Size>
+	struct is_array<Type_t[Size]>
+	{
+		enum
+		{
+			value = true
+		};
+	};
+
+
+	template <typename Type_t>
+	struct is_array
+	{
+		enum
+		{
+			value = false
+		};
+	};
+
+
+
+	template <typename Type_t>
+	struct is_structural
+	{
+		enum
+		{
+			value = !(is_primitive<Type_t>::value || is_array<Type_t>::value)
+		};
+	};
+
+
+
 	template <bool Condition, typename True_t, typename False_t>
 	struct conditional
 	{
@@ -197,7 +244,7 @@ namespace trace_out { namespace detail
 				}; \
 				\
 				struct derived \
-					: conditional<!is_primitive<Struct_t>::value, Struct_t, dummy>::type, fallback \
+					: conditional<is_structural<Struct_t>::value, Struct_t, dummy>::type, fallback \
 				{ \
 				}; \
 				\
