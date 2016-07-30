@@ -40,25 +40,25 @@
 				trace_out::detail::print_memory(TRACE_OUT_FILENAME_LINE, #pointer, pointer, ##__VA_ARGS__);
 
 	#define $f \
-				trace_out::detail::function_printer TRACE_OUT_PRIVATE__UNIFY(trace_out_f) = trace_out::detail::make_function_printer(TRACE_OUT_FILENAME_LINE, TRACE_OUT_FUNCTION_SIGNATURE);
+				trace_out::detail::function_printer trace_out_private__unify(trace_out_f) = trace_out::detail::make_function_printer(TRACE_OUT_FILENAME_LINE, TRACE_OUT_FUNCTION_SIGNATURE);
 
 	#define $return \
 				return trace_out::detail::make_return_printer(TRACE_OUT_FILENAME_LINE) ,
 
 	#define $if(...) \
-				if (trace_out::detail::block TRACE_OUT_PRIVATE__UNIFY(trace_out_if_block) = trace_out::detail::if_block(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__, (__VA_ARGS__)))
+				if (trace_out::detail::block trace_out_private__unify(trace_out_if_block) = trace_out::detail::if_block(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__, (__VA_ARGS__)))
 
 	#define trace_out_private__for(block_variable_name, ...) \
 				if (trace_out::detail::for_block block_variable_name = trace_out::detail::make_for_block(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__)) {} else \
 					for (__VA_ARGS__) \
-						if (trace_out::detail::block TRACE_OUT_PRIVATE__UNIFY(trace_out_iteration_block) = trace_out::detail::iteration_block(TRACE_OUT_FILENAME_LINE, block_variable_name.iteration())) {} else
+						if (trace_out::detail::block trace_out_private__unify(trace_out_iteration_block) = trace_out::detail::iteration_block(TRACE_OUT_FILENAME_LINE, block_variable_name.iteration())) {} else
 
 	#define $for(...) \
-				trace_out_private__for(TRACE_OUT_PRIVATE__UNIFY(trace_out_for_block), ##__VA_ARGS__)
+				trace_out_private__for(trace_out_private__unify(trace_out_for_block), ##__VA_ARGS__)
 
 	#define $while(...) \
 				if (trace_out::detail::print_while_header(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__), false) {} else \
-					while (trace_out::detail::block TRACE_OUT_PRIVATE__UNIFY(trace_out_while_block) = trace_out::detail::while_block(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__, (__VA_ARGS__)))
+					while (trace_out::detail::block trace_out_private__unify(trace_out_while_block) = trace_out::detail::while_block(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__, (__VA_ARGS__)))
 
 	#define $p(format, ...) \
 				{ \
@@ -79,7 +79,7 @@
 				}
 
 	#define $time(...) \
-				trace_out_private__time(TRACE_OUT_PRIVATE__UNIFY(trace_out_start_ticks), TRACE_OUT_PRIVATE__UNIFY(trace_out_end_ticks), ##__VA_ARGS__)
+				trace_out_private__time(trace_out_private__unify(trace_out_start_ticks), trace_out_private__unify(trace_out_end_ticks), ##__VA_ARGS__)
 
 	#define trace_out_private__ticks(start_ticks_variable, end_ticks_variable, ...) \
 				{ \
@@ -91,7 +91,7 @@
 				}
 
 	#define $ticks(...) \
-				trace_out_private__ticks(TRACE_OUT_PRIVATE__UNIFY(trace_out_start_time), TRACE_OUT_PRIVATE__UNIFY(trace_out_end_time), ##__VA_ARGS__)
+				trace_out_private__ticks(trace_out_private__unify(trace_out_start_time), trace_out_private__unify(trace_out_end_time), ##__VA_ARGS__)
 
 #elif defined(NDEBUG) || defined(TRACE_OUT_OFF)
 

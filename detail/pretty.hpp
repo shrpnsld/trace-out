@@ -61,21 +61,21 @@ namespace trace_out { namespace detail
 
 
 	template <typename Type_t>
-	class pretty_compound
+	class pretty_structural
 	{
 	public:
-		pretty_compound(const Type_t &data);
-		pretty_compound(const pretty_compound &another);
+		pretty_structural(const Type_t &data);
+		pretty_structural(const pretty_structural &another);
 
 		const Type_t &get() const;
 		const Type_t &unsafe_get() const;
 
 	private:
-		pretty_compound &operator =(const pretty_compound &another); // = delete
+		pretty_structural &operator =(const pretty_structural &another); // = delete
 
 #if defined(TRACE_OUT_CPP11)
 
-		pretty_compound &operator =(pretty_compound &&another); // = delete
+		pretty_structural &operator =(pretty_structural &&another); // = delete
 
 #endif // defined(TRACE_OUT_CPP11)
 
@@ -85,11 +85,11 @@ namespace trace_out { namespace detail
 
 
 	template <typename Type_t>
-	typename enable_if<is_dimensional<Type_t>::value, pretty_compound<typename promote<Type_t>::type> >::type make_pretty(const Type_t &value)
+	typename enable_if<is_dimensional<Type_t>::value, pretty_structural<typename promote<Type_t>::type> >::type make_pretty(const Type_t &value)
 	{
 		typedef typename promote<Type_t>::type promoted_t;
 
-		return pretty_compound<promoted_t>(reinterpret_cast<const promoted_t &>(value));
+		return pretty_structural<promoted_t>(reinterpret_cast<const promoted_t &>(value));
 	}
 
 
@@ -173,7 +173,7 @@ namespace trace_out { namespace detail
 
 
 	template <typename Type_t>
-	pretty_compound<Type_t>::pretty_compound(const Type_t &data)
+	pretty_structural<Type_t>::pretty_structural(const Type_t &data)
 		:
 		_data(data)
 	{
@@ -181,7 +181,7 @@ namespace trace_out { namespace detail
 
 
 	template <typename Type_t>
-	pretty_compound<Type_t>::pretty_compound(const pretty_compound &another)
+	pretty_structural<Type_t>::pretty_structural(const pretty_structural &another)
 		:
 		_data(another._data)
 	{
@@ -189,7 +189,7 @@ namespace trace_out { namespace detail
 
 
 	template <typename Type_t>
-	const Type_t &pretty_compound<Type_t>::get() const
+	const Type_t &pretty_structural<Type_t>::get() const
 	{
 		crash_on_bad_memory(_data);
 
@@ -198,7 +198,7 @@ namespace trace_out { namespace detail
 
 
 	template <typename Type_t>
-	const Type_t &pretty_compound<Type_t>::unsafe_get() const
+	const Type_t &pretty_structural<Type_t>::unsafe_get() const
 	{
 		return _data;
 	}

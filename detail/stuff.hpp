@@ -10,14 +10,14 @@
 #include "platform_defines.hpp"
 
 
-#define TRACE_OUT_PRIVATE__CONCAT_IMPL(a, b) \
+#define trace_out_private__concat_impl(a, b) \
 			a##b
 
-#define TRACE_OUT_PRIVATE__CONCAT(a, b) \
-			TRACE_OUT_PRIVATE__CONCAT_IMPL(a, b)
+#define trace_out_private__concat(a, b) \
+			trace_out_private__concat_impl(a, b)
 
-#define TRACE_OUT_PRIVATE__UNIFY(identifier_base) \
-			TRACE_OUT_PRIVATE__CONCAT(identifier_base, __COUNTER__)
+#define trace_out_private__unify(identifier_base) \
+			trace_out_private__concat(identifier_base, __COUNTER__)
 
 #define TRACE_OUT_FILENAME_LINE \
 			(trace_out::detail::filename_line_field(trace_out::detail::filename_from_path(__FILE__), __LINE__))
@@ -75,7 +75,7 @@ namespace trace_out { namespace detail
 	};
 
 
-#define TRACE_OUT__DEFINE_IS_FUNDAMENTAL(type) \
+#define trace_out__define_is_fundamental(type) \
 			template <> \
 			struct is_fundamental<type> \
 			{ \
@@ -86,29 +86,29 @@ namespace trace_out { namespace detail
 			}
 
 
-	TRACE_OUT__DEFINE_IS_FUNDAMENTAL(bool);
-	TRACE_OUT__DEFINE_IS_FUNDAMENTAL(char);
-	TRACE_OUT__DEFINE_IS_FUNDAMENTAL(signed char);
-	TRACE_OUT__DEFINE_IS_FUNDAMENTAL(unsigned char);
-	TRACE_OUT__DEFINE_IS_FUNDAMENTAL(signed short int);
-	TRACE_OUT__DEFINE_IS_FUNDAMENTAL(unsigned short int);
-	TRACE_OUT__DEFINE_IS_FUNDAMENTAL(signed int);
-	TRACE_OUT__DEFINE_IS_FUNDAMENTAL(unsigned int);
-	TRACE_OUT__DEFINE_IS_FUNDAMENTAL(signed long int);
-	TRACE_OUT__DEFINE_IS_FUNDAMENTAL(unsigned long int);
+	trace_out__define_is_fundamental(bool);
+	trace_out__define_is_fundamental(char);
+	trace_out__define_is_fundamental(signed char);
+	trace_out__define_is_fundamental(unsigned char);
+	trace_out__define_is_fundamental(signed short int);
+	trace_out__define_is_fundamental(unsigned short int);
+	trace_out__define_is_fundamental(signed int);
+	trace_out__define_is_fundamental(unsigned int);
+	trace_out__define_is_fundamental(signed long int);
+	trace_out__define_is_fundamental(unsigned long int);
 
 #if defined(TRACE_OUT_CPP11)
 
-	TRACE_OUT__DEFINE_IS_FUNDAMENTAL(signed long long);
-	TRACE_OUT__DEFINE_IS_FUNDAMENTAL(unsigned long long);
+	trace_out__define_is_fundamental(signed long long);
+	trace_out__define_is_fundamental(unsigned long long);
 
 #endif // defined(TRACE_OUT_CPP11)
 
-	TRACE_OUT__DEFINE_IS_FUNDAMENTAL(float);
-	TRACE_OUT__DEFINE_IS_FUNDAMENTAL(double);
-	TRACE_OUT__DEFINE_IS_FUNDAMENTAL(long double);
+	trace_out__define_is_fundamental(float);
+	trace_out__define_is_fundamental(double);
+	trace_out__define_is_fundamental(long double);
 
-#undef TRACE_OUT__DEFINE_IS_FUNDAMENTAL
+#undef trace_out__define_is_fundamental
 
 
 	template <typename Type_t>
@@ -230,7 +230,7 @@ namespace trace_out { namespace detail
 #endif // defined(TRACE_OUT_CPP11)
 
 
-#define TRACE_OUT_PRIVATE__DEFINE_HAS_DATA_MEMBER(name) \
+#define trace_out_private__define_has_data_member(name) \
 			template <typename Struct_t> \
 			struct has_data_member_##name \
 			{ \
@@ -264,35 +264,36 @@ namespace trace_out { namespace detail
 			}
 
 
-	TRACE_OUT_PRIVATE__DEFINE_HAS_DATA_MEMBER(x);
-	TRACE_OUT_PRIVATE__DEFINE_HAS_DATA_MEMBER(y);
-	TRACE_OUT_PRIVATE__DEFINE_HAS_DATA_MEMBER(z);
-	TRACE_OUT_PRIVATE__DEFINE_HAS_DATA_MEMBER(w);
+	trace_out_private__define_has_data_member(x);
+	trace_out_private__define_has_data_member(y);
+	trace_out_private__define_has_data_member(z);
+	trace_out_private__define_has_data_member(w);
 
-	TRACE_OUT_PRIVATE__DEFINE_HAS_DATA_MEMBER(width);
-	TRACE_OUT_PRIVATE__DEFINE_HAS_DATA_MEMBER(height);
+	trace_out_private__define_has_data_member(width);
+	trace_out_private__define_has_data_member(height);
 
-	TRACE_OUT_PRIVATE__DEFINE_HAS_DATA_MEMBER(origin);
-	TRACE_OUT_PRIVATE__DEFINE_HAS_DATA_MEMBER(size);
+	trace_out_private__define_has_data_member(origin);
+	trace_out_private__define_has_data_member(size);
 
-	TRACE_OUT_PRIVATE__DEFINE_HAS_DATA_MEMBER(X);
-	TRACE_OUT_PRIVATE__DEFINE_HAS_DATA_MEMBER(Y);
-	TRACE_OUT_PRIVATE__DEFINE_HAS_DATA_MEMBER(Z);
-	TRACE_OUT_PRIVATE__DEFINE_HAS_DATA_MEMBER(W);
+	trace_out_private__define_has_data_member(X);
+	trace_out_private__define_has_data_member(Y);
+	trace_out_private__define_has_data_member(Z);
+	trace_out_private__define_has_data_member(W);
 
-	TRACE_OUT_PRIVATE__DEFINE_HAS_DATA_MEMBER(WIDTH);
-	TRACE_OUT_PRIVATE__DEFINE_HAS_DATA_MEMBER(HEIGHT);
+	trace_out_private__define_has_data_member(WIDTH);
+	trace_out_private__define_has_data_member(HEIGHT);
 
-	TRACE_OUT_PRIVATE__DEFINE_HAS_DATA_MEMBER(ORIGIN);
-	TRACE_OUT_PRIVATE__DEFINE_HAS_DATA_MEMBER(SIZE);
+	trace_out_private__define_has_data_member(ORIGIN);
+	trace_out_private__define_has_data_member(SIZE);
 
-	TRACE_OUT_PRIVATE__DEFINE_HAS_DATA_MEMBER(Width);
-	TRACE_OUT_PRIVATE__DEFINE_HAS_DATA_MEMBER(Height);
+	trace_out_private__define_has_data_member(Width);
+	trace_out_private__define_has_data_member(Height);
 
-	TRACE_OUT_PRIVATE__DEFINE_HAS_DATA_MEMBER(Origin);
-	TRACE_OUT_PRIVATE__DEFINE_HAS_DATA_MEMBER(Size);
+	trace_out_private__define_has_data_member(Origin);
+	trace_out_private__define_has_data_member(Size);
 
-#undef TRACE_OUT_PRIVATE__DEFINE_HAS_DATA_MEMBER
+#undef trace_out_private__define_has_data_member
+
 
 	template <typename Type_t>
 	struct is_dimensional
