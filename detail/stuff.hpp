@@ -230,9 +230,9 @@ namespace trace_out { namespace detail
 #endif // defined(TRACE_OUT_CPP11)
 
 
-#define trace_out_private__define_has_data_member(name) \
+#define trace_out_private__define_has_member(name) \
 			template <typename Struct_t> \
-			struct has_data_member_##name \
+			struct has_member_##name \
 			{ \
 				struct fallback \
 				{ \
@@ -264,35 +264,35 @@ namespace trace_out { namespace detail
 			}
 
 
-	trace_out_private__define_has_data_member(x);
-	trace_out_private__define_has_data_member(y);
-	trace_out_private__define_has_data_member(z);
-	trace_out_private__define_has_data_member(w);
+	trace_out_private__define_has_member(x);
+	trace_out_private__define_has_member(y);
+	trace_out_private__define_has_member(z);
+	trace_out_private__define_has_member(w);
 
-	trace_out_private__define_has_data_member(width);
-	trace_out_private__define_has_data_member(height);
+	trace_out_private__define_has_member(X);
+	trace_out_private__define_has_member(Y);
+	trace_out_private__define_has_member(Z);
+	trace_out_private__define_has_member(W);
 
-	trace_out_private__define_has_data_member(origin);
-	trace_out_private__define_has_data_member(size);
+	trace_out_private__define_has_member(width);
+	trace_out_private__define_has_member(height);
 
-	trace_out_private__define_has_data_member(X);
-	trace_out_private__define_has_data_member(Y);
-	trace_out_private__define_has_data_member(Z);
-	trace_out_private__define_has_data_member(W);
+	trace_out_private__define_has_member(Width);
+	trace_out_private__define_has_member(Height);
 
-	trace_out_private__define_has_data_member(WIDTH);
-	trace_out_private__define_has_data_member(HEIGHT);
+	trace_out_private__define_has_member(WIDTH);
+	trace_out_private__define_has_member(HEIGHT);
 
-	trace_out_private__define_has_data_member(ORIGIN);
-	trace_out_private__define_has_data_member(SIZE);
+	trace_out_private__define_has_member(origin);
+	trace_out_private__define_has_member(size);
 
-	trace_out_private__define_has_data_member(Width);
-	trace_out_private__define_has_data_member(Height);
+	trace_out_private__define_has_member(Origin);
+	trace_out_private__define_has_member(Size);
 
-	trace_out_private__define_has_data_member(Origin);
-	trace_out_private__define_has_data_member(Size);
+	trace_out_private__define_has_member(ORIGIN);
+	trace_out_private__define_has_member(SIZE);
 
-#undef trace_out_private__define_has_data_member
+#undef trace_out_private__define_has_member
 
 
 	template <typename Type_t>
@@ -300,7 +300,7 @@ namespace trace_out { namespace detail
 	{
 		enum
 		{
-			value = has_data_member_x<Type_t>::value || has_data_member_X<Type_t>::value || has_data_member_width<Type_t>::value || has_data_member_Width<Type_t>::value || has_data_member_WIDTH<Type_t>::value || has_data_member_origin<Type_t>::value || has_data_member_Origin<Type_t>::value || has_data_member_ORIGIN<Type_t>::value
+			value = has_member_x<Type_t>::value || has_member_X<Type_t>::value || has_member_width<Type_t>::value || has_member_Width<Type_t>::value || has_member_WIDTH<Type_t>::value || has_member_origin<Type_t>::value || has_member_Origin<Type_t>::value || has_member_ORIGIN<Type_t>::value
 		};
 	};
 
