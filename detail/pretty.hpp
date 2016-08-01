@@ -60,6 +60,7 @@ namespace trace_out { namespace detail
 	pretty_condition<Type_t> make_pretty_condition(const Type_t &value);
 
 
+
 	template <typename Type_t>
 	class pretty_structural
 	{
@@ -85,7 +86,31 @@ namespace trace_out { namespace detail
 
 
 	template <typename Type_t>
-	typename enable_if<is_dimensional<Type_t>::value, pretty_structural<typename promote<Type_t>::type> >::type make_pretty(const Type_t &value)
+	class pretty_iterable
+	{
+	public:
+		pretty_iterable(const Type_t &data);
+		pretty_iterable(const pretty_iterable &another);
+
+		const Type_t &get() const;
+		const Type_t &unsafe_get() const;
+
+	private:
+		pretty_iterable &operator =(const pretty_iterable &another); // = delete
+
+#if defined(TRACE_OUT_CPP11)
+
+		pretty_iterable &operator =(pretty_iterable &&another); // = delete
+
+#endif // defined(TRACE_OUT_CPP11)
+
+		const Type_t &_data;
+	};
+
+
+
+	template <typename Type_t>
+	typename enable_if<!is_iterable<Type_t>::value && is_dimensional<Type_t>::value, pretty_structural<typename promote<Type_t>::type> >::type make_pretty(const Type_t &value)
 	{
 		typedef typename promote<Type_t>::type promoted_t;
 
@@ -94,7 +119,16 @@ namespace trace_out { namespace detail
 
 
 	template <typename Type_t>
-	typename enable_if<!is_dimensional<Type_t>::value, pretty<typename promote<Type_t>::type> >::type make_pretty(const Type_t &value)
+	typename enable_if<is_iterable<Type_t>::value && !is_same<Type_t, std::string>::value, pretty_iterable<typename promote<Type_t>::type> >::type make_pretty(const Type_t &value)
+	{
+		typedef typename promote<Type_t>::type promoted_t;
+
+		return pretty_iterable<promoted_t>(reinterpret_cast<const promoted_t &>(value));
+	}
+
+
+	template <typename Type_t>
+	typename enable_if<!is_iterable<Type_t>::value && !is_dimensional<Type_t>::value, pretty<typename promote<Type_t>::type> >::type make_pretty(const Type_t &value)
 	{
 		typedef typename promote<Type_t>::type promoted_t;
 
@@ -199,6 +233,39 @@ namespace trace_out { namespace detail
 
 	template <typename Type_t>
 	const Type_t &pretty_structural<Type_t>::unsafe_get() const
+	{
+		return _data;
+	}
+
+
+
+	template <typename Type_t>
+	pretty_iterable<Type_t>::pretty_iterable(const Type_t &data)
+		:
+		_data(data)
+	{
+	}
+
+
+	template <typename Type_t>
+	pretty_iterable<Type_t>::pretty_iterable(const pretty_iterable &another)
+		:
+		_data(another._data)
+	{
+	}
+
+
+	template <typename Type_t>
+	const Type_t &pretty_iterable<Type_t>::get() const
+	{
+		crash_on_bad_memory(_data);
+
+		return _data;
+	}
+
+
+	template <typename Type_t>
+	const Type_t &pretty_iterable<Type_t>::unsafe_get() const
 	{
 		return _data;
 	}

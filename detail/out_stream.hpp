@@ -136,10 +136,11 @@ namespace trace_out { namespace detail
 	template <typename ...Types_t>
 	out_stream &operator <<(out_stream &stream, const pretty<std::tuple<Types_t ...> > &value);
 
-	template <template <typename ...> class Container, typename ...Parameters_t>
-	out_stream &operator <<(out_stream &stream, const pretty<Container<Parameters_t ...> > &value);
-
 #endif // defined(TRACE_OUT_CPP11)
+
+
+	template <typename Type_t>
+	out_stream &operator <<(out_stream &stream, const pretty_iterable<Type_t> &value);
 
 	template <typename Type_t>
 	out_stream &operator <<(out_stream &stream, const pretty<Type_t> &value);
@@ -546,8 +547,9 @@ namespace trace_out { namespace detail
 		return print_tuple<0>(stream, tuple);
 	}
 
+#endif // defined(TRACE_OUT_CPP11)
 
-	// not sure if all C++11 standard library versions have std::next
+
 	template <typename Type_t>
 	Type_t next_itr(Type_t iterator)
 	{
@@ -556,15 +558,15 @@ namespace trace_out { namespace detail
 	}
 
 
-	template <template <typename ...> class Container, typename ...Parameters_t>
-	out_stream &operator <<(out_stream &stream, const pretty<Container<Parameters_t...> > &value)
+	template <typename Type_t>
+	out_stream &operator <<(out_stream &stream, const pretty_iterable<Type_t> &value)
 	{
 		stream << FLUSH;
-		const auto &container = value.get();
+		const Type_t &container = value.get();
 
 		stream << "[";
-		auto iterator = std::begin(container);
-		for ( ; next_itr(iterator) != std::end(container); ++iterator)
+		typename Type_t::const_iterator iterator = container.begin();
+		for ( ; next_itr(iterator) != container.end(); ++iterator)
 		{
 			stream << make_pretty(*iterator) << ", ";
 		}
@@ -574,7 +576,6 @@ namespace trace_out { namespace detail
 		return stream;
 	}
 
-#endif // defined(TRACE_OUT_CPP11)
 
 	template <typename Type_t>
 	out_stream &operator <<(out_stream &stream, const pretty<Type_t> &value)

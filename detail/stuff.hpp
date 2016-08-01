@@ -65,6 +65,32 @@ namespace trace_out { namespace detail
 	std::string rest_tokens(const std::string &tokens);
 
 
+
+	template <typename First_t, typename Second_t>
+	struct is_same;
+
+
+	template <typename Type_t>
+	struct is_same<Type_t, Type_t>
+	{
+		enum
+		{
+			value = true
+		};
+	};
+
+
+	template <typename First_t, typename Second_t>
+	struct is_same
+	{
+		enum
+		{
+			value = false
+		};
+	};
+
+
+
 	template <typename Type_t>
 	struct is_fundamental
 	{
@@ -292,6 +318,9 @@ namespace trace_out { namespace detail
 	trace_out_private__define_has_member(ORIGIN);
 	trace_out_private__define_has_member(SIZE);
 
+	trace_out_private__define_has_member(begin);
+	trace_out_private__define_has_member(end);
+
 #undef trace_out_private__define_has_member
 
 
@@ -301,6 +330,16 @@ namespace trace_out { namespace detail
 		enum
 		{
 			value = has_member_x<Type_t>::value || has_member_X<Type_t>::value || has_member_width<Type_t>::value || has_member_Width<Type_t>::value || has_member_WIDTH<Type_t>::value || has_member_origin<Type_t>::value || has_member_Origin<Type_t>::value || has_member_ORIGIN<Type_t>::value
+		};
+	};
+
+
+	template <typename Type_t>
+	struct is_iterable
+	{
+		enum
+		{
+			value = has_member_begin<Type_t>::value && has_member_end<Type_t>::value && !is_same<Type_t, std::string>::value
 		};
 	};
 
