@@ -1,3 +1,4 @@
+#include "platform_defines.hpp"
 #if defined(TRACE_OUT_WINDOWS)
 
 #include <windows.h>

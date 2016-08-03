@@ -19,6 +19,14 @@
 #define trace_out_private__unify(identifier_base) \
 			trace_out_private__concat(identifier_base, __COUNTER__)
 
+
+#define trace_out_private__quotize_impl(something) \
+			#something
+
+#define trace_out_private__quotize(something) \
+			trace_out_private__quotize_impl(something)
+
+
 #define TRACE_OUT_FILENAME_LINE \
 			(trace_out::detail::filename_line_field(trace_out::detail::filename_from_path(__FILE__), __LINE__))
 
@@ -272,6 +280,14 @@ namespace trace_out { namespace detail
 				struct derived \
 					: conditional<is_structural<Struct_t>::value, Struct_t, dummy>::type, fallback \
 				{ \
+					derived(const derived &) \
+					{ \
+					} \
+					\
+					derived &operator =(const derived &) \
+					{ \
+						return *this; \
+					} \
 				}; \
 				\
 				template <typename Type_t, Type_t> \

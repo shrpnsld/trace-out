@@ -2,13 +2,7 @@
 #include <cassert>
 
 #include "standard/integer.hpp"
-
-
-#define TRACE_OUT_TO_FILE__QUOTIZE_IMPL(something) \
-			#something
-
-#define TRACE_OUT_TO_FILE__QUOTIZE(something) \
-			TRACE_OUT_TO_FILE__QUOTIZE_IMPL(something)
+#include "stuff.hpp"
 
 
 #if !defined(TRACE_OUT_TO_FILE)
@@ -26,7 +20,7 @@ namespace trace_out_to_file
 	{
 		if (!stream.is_open())
 		{
-			stream.open(TRACE_OUT_TO_FILE__QUOTIZE(TRACE_OUT_TO_FILE));
+			stream.open(trace_out_private__quotize(TRACE_OUT_TO_FILE));
 		}
 
 		stream << string;

@@ -253,7 +253,7 @@ namespace trace_out { namespace detail
 		va_start(arguments, format);
 		va_start(arguments_copy, format);
 
-		int size = standard::vsnprintf_string_length(format, arguments_copy) + 1;
+		standard::size_t size = standard::vsnprintf_string_length(format, arguments_copy) + 1;
 
 		resource<void *> buffer(std::malloc(size), std::free);
 		standard::vsnprintf(static_cast<char *>(buffer.get()), size, format, arguments);
