@@ -4,7 +4,6 @@
 
 #include "platform_defines.hpp"
 #include "stuff.hpp"
-#include "type_promotions.hpp"
 
 
 namespace trace_out { namespace detail
@@ -110,29 +109,23 @@ namespace trace_out { namespace detail
 
 
 	template <typename Type_t>
-	typename enable_if<!is_iterable<Type_t>::value && is_dimensional<Type_t>::value, pretty_structural<typename promote<Type_t>::type> >::type make_pretty(const Type_t &value)
+	typename enable_if<!is_iterable<Type_t>::value && is_dimensional<Type_t>::value, pretty_structural<Type_t> >::type make_pretty(const Type_t &value)
 	{
-		typedef typename promote<Type_t>::type promoted_t;
-
-		return pretty_structural<promoted_t>(reinterpret_cast<const promoted_t &>(value));
+		return pretty_structural<Type_t>(value);
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<is_iterable<Type_t>::value && !is_same<Type_t, std::string>::value, pretty_iterable<typename promote<Type_t>::type> >::type make_pretty(const Type_t &value)
+	typename enable_if<is_iterable<Type_t>::value && !is_same<Type_t, std::string>::value, pretty_iterable<Type_t> >::type make_pretty(const Type_t &value)
 	{
-		typedef typename promote<Type_t>::type promoted_t;
-
-		return pretty_iterable<promoted_t>(reinterpret_cast<const promoted_t &>(value));
+		return pretty_iterable<Type_t>(value);
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<!is_iterable<Type_t>::value && !is_dimensional<Type_t>::value, pretty<typename promote<Type_t>::type> >::type make_pretty(const Type_t &value)
+	typename enable_if<!is_iterable<Type_t>::value && !is_dimensional<Type_t>::value, pretty<Type_t> >::type make_pretty(const Type_t &value)
 	{
-		typedef typename promote<Type_t>::type promoted_t;
-
-		return pretty<promoted_t>(reinterpret_cast<const promoted_t &>(value));
+		return pretty<Type_t>(value);
 	}
 
 }
