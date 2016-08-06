@@ -113,6 +113,15 @@ namespace trace_out { namespace detail
 	typename enable_if<has_member_ORIGIN<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
 
 	template <typename Type_t>
+	typename enable_if<has_member_real<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	template <typename Type_t>
+	typename enable_if<has_member_Real<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	template <typename Type_t>
+	typename enable_if<has_member_REAL<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	template <typename Type_t>
 	out_stream &operator <<(out_stream &stream, const pretty<std::auto_ptr<Type_t> > &value);
 
 #if defined(TRACE_OUT_CPP11)
@@ -443,6 +452,69 @@ namespace trace_out { namespace detail
 		stream << FLUSH;
 		const Type_t &rect = value.get();
 		print_member_value(stream, rect, &Type_t::ORIGIN);
+		return print_size(stream, value);
+	}
+
+
+	template <typename Type_t>
+	typename enable_if<has_member_imag<Type_t>::value, out_stream &>::type print_size(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t &complex = value.unsafe_get();
+		stream << " ";
+		print_member_value(stream, complex, &Type_t::imag);
+		return stream;
+	}
+
+
+	template <typename Type_t>
+	typename enable_if<has_member_Imag<Type_t>::value, out_stream &>::type print_size(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t &complex = value.unsafe_get();
+		stream << " ";
+		print_member_value(stream, complex, &Type_t::Imag);
+		return stream;
+	}
+
+
+	template <typename Type_t>
+	typename enable_if<has_member_IMAG<Type_t>::value, out_stream &>::type print_size(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t &complex = value.unsafe_get();
+		stream << " ";
+		print_member_value(stream, complex, &Type_t::IMAG);
+		return stream;
+	}
+
+
+	template <typename Type_t>
+	typename enable_if<has_member_real<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t &complex = value.get();
+		print_member_value(stream, complex, &Type_t::real);
+		return print_size(stream, value);
+	}
+
+
+	template <typename Type_t>
+	typename enable_if<has_member_Real<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t &complex = value.get();
+		print_member_value(stream, complex, &Type_t::Real);
+		return print_size(stream, value);
+	}
+
+
+	template <typename Type_t>
+	typename enable_if<has_member_REAL<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t &complex = value.get();
+		print_member_value(stream, complex, &Type_t::REAL);
 		return print_size(stream, value);
 	}
 

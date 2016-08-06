@@ -334,6 +334,15 @@ namespace trace_out { namespace detail
 	trace_out_private__define_has_member(ORIGIN);
 	trace_out_private__define_has_member(SIZE);
 
+	trace_out_private__define_has_member(real);
+	trace_out_private__define_has_member(imag);
+
+	trace_out_private__define_has_member(Real);
+	trace_out_private__define_has_member(Imag);
+
+	trace_out_private__define_has_member(REAL);
+	trace_out_private__define_has_member(IMAG);
+
 	trace_out_private__define_has_member(begin);
 	trace_out_private__define_has_member(end);
 
@@ -345,7 +354,7 @@ namespace trace_out { namespace detail
 	{
 		enum
 		{
-			value = has_member_x<Type_t>::value || has_member_X<Type_t>::value || has_member_width<Type_t>::value || has_member_Width<Type_t>::value || has_member_WIDTH<Type_t>::value || has_member_origin<Type_t>::value || has_member_Origin<Type_t>::value || has_member_ORIGIN<Type_t>::value
+			value = has_member_x<Type_t>::value || has_member_X<Type_t>::value || has_member_width<Type_t>::value || has_member_Width<Type_t>::value || has_member_WIDTH<Type_t>::value || has_member_origin<Type_t>::value || has_member_Origin<Type_t>::value || has_member_ORIGIN<Type_t>::value || has_member_real<Type_t>::value || has_member_Real<Type_t>::value || has_member_REAL<Type_t>::value
 		};
 	};
 
