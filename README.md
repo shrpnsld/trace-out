@@ -4,7 +4,7 @@ printf debugging done the right way.
 
 ### Features
 
-* Pretty-prints all the required information about code.
+* Pretty-prints information about code.
 * Uses only C++/C++11, standard and system libraries; does not use any external preprocessors or libraries.
 * Supports output redirection.
 * Crossplatform. Tested with:
@@ -64,7 +64,9 @@ trace-out's interface is based on macros that pretty-print information about the
 
 ### Macros
 
-`$w(<variable1>, <variable2>, ...)` – print values of listed variables (supported with C++11 and later).
+`$w(<variable>)` *[C++03]* – print value of a variable.
+
+`$w(<variable1>, <variable2>, ...)` *[C++11 and later]* – print values of listed variables.
 
 `$e(<expression>)` – print value of passed in expression and return that value (can be used inside other expressions).
 
@@ -110,8 +112,8 @@ Byte order flags (default value is determined automatically):
 Macros `$w`, `$e`, `$return`, `$if` and `$while` support following types:
 
 * all fundamental types, raw pointers, standard smart pointers, `std::string`, `std::pair`, `std::tuple`
-* iterable types – for which `std::begin()` and `std::end()` are defined (supported with C++11 and later)
-* sturctures and classes with data members `x`, `y`, `z`, `width`, `height`, `origin` and `size` in lowcase, HIGHCASE and Capital
+* types which have `.begin()` and `.end()` member functions defined
+* sturctures and classes with data members or member functions `x`, `y`, `z`, `w`, `width`, `height`, `origin`, `size`, `real`, `imag` in lowcase, HIGHCASE and Capital
 
 --
 
@@ -126,7 +128,7 @@ Code:
 ```c++
 int bueno {456};
 int &no_bueno {*(int *)nullptr};
-$w(bueno, no_bueno) // will show "Segmentation fault" when try to read "no_bueno" value
+$w(bueno, no_bueno) // using GCC will show "Segmentation fault" when try to read "no_bueno" value
 ```
 
 Output:
@@ -184,7 +186,7 @@ There is an output synchronization that prevents outputs from different threads 
 
 # Troubleshooting
 
-* Passing variable or expression of unknown type to `$w`, `$e`, `$return`, `$if` or `$while` will cause multiple compiler errors like `candidate template ignored: substitution failure [with Type_t = <your-unknown-type>]`.
+* Passing variable or expression of unknown type to `$w`, `$e`, `$return`, `$if` or `$while` may cause (but usually should not) multiple compiler errors.
 
 	*Fix:* try to cast to one of the supported types or try to pass single fields to these macros if type is struct/class/union.
 

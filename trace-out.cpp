@@ -121,16 +121,16 @@ namespace trace_out { namespace detail
 	};
 
 	const char *const BASE_NAMES[] = {"binary", "signed decimal", "unsigned decimal", "hexadecimal", "float", "double", "long double"};
-	const size_t BASE_NAMES_LENGTH = sizeof(BASE_NAMES) / sizeof(BASE_NAMES[0]);
+	const standard::size_t BASE_NAMES_LENGTH = sizeof(BASE_NAMES) / sizeof(BASE_NAMES[0]);
 
 	const char *const BYTE_ORDER_NAMES[] = {"little-endian", "big-endian"};
-	const size_t BYTE_ORDER_NAMES_LENGTH = sizeof(BYTE_ORDER_NAMES) / sizeof(BYTE_ORDER_NAMES[0]);
+	const standard::size_t BYTE_ORDER_NAMES_LENGTH = sizeof(BYTE_ORDER_NAMES) / sizeof(BYTE_ORDER_NAMES[0]);
 
 
 	template <typename T>
-	size_t first_set_bit(T number)
+	standard::size_t first_set_bit(T number)
 	{
-		size_t index = 0;
+		standard::size_t index = 0;
 		for (;;)
 		{
 			if ((number & static_cast<T>(0x1)) == static_cast<T>(0x1))
@@ -170,9 +170,9 @@ namespace trace_out { namespace detail
 	}
 
 
-	const char *option_name(option_t option, const char *const names[], size_t names_length, const char *default_name)
+	const char *option_name(option_t option, const char *const names[], standard::size_t names_length, const char *default_name)
 	{
-		size_t index = first_set_bit(option);
+		standard::size_t index = first_set_bit(option);
 		if (index >= names_length)
 		{
 			return default_name;
@@ -182,13 +182,13 @@ namespace trace_out { namespace detail
 	}
 
 
-	const char *byte_to_binary(uint8_t byte)
+	const char *byte_to_binary(standard::uint8_t byte)
 	{
 		return BINARY_VALUES[byte];
 	}
 
 
-	const char *byte_to_hexadecimal(uint8_t byte)
+	const char *byte_to_hexadecimal(standard::uint8_t byte)
 	{
 		return HEXADECIMAL_VALUES[byte];
 	}
@@ -196,10 +196,10 @@ namespace trace_out { namespace detail
 
 	option_t current_byte_order()
 	{
-		const uint16_t VALUE = static_cast<uint16_t>(0x0001);
-		const uint8_t FIRST_BYTE = *reinterpret_cast<const uint8_t *>(&VALUE);
+		const standard::uint16_t VALUE = static_cast<standard::uint16_t>(0x0001);
+		const standard::uint8_t FIRST_BYTE = *reinterpret_cast<const standard::uint8_t *>(&VALUE);
 
-		if (FIRST_BYTE == static_cast<uint8_t>(0x01))
+		if (FIRST_BYTE == static_cast<standard::uint8_t>(0x01))
 		{
 			return BIG;
 		}
@@ -210,11 +210,11 @@ namespace trace_out { namespace detail
 	}
 
 
-	void reverse_bytes(void *destination, const void *source, size_t size)
+	void reverse_bytes(void *destination, const void *source, standard::size_t size)
 	{
-		uint8_t *destination_iterator = static_cast<uint8_t *>(destination);
-		const uint8_t *source_iterator = static_cast<const uint8_t *>(source) + size - 1;
-		for (size_t bytes_processed = 0; bytes_processed < size; ++bytes_processed)
+		standard::uint8_t *destination_iterator = static_cast<standard::uint8_t *>(destination);
+		const standard::uint8_t *source_iterator = static_cast<const standard::uint8_t *>(source) + size - 1;
+		for (standard::size_t bytes_processed = 0; bytes_processed < size; ++bytes_processed)
 		{
 			*destination_iterator = *source_iterator;
 			++destination_iterator;
@@ -223,7 +223,7 @@ namespace trace_out { namespace detail
 	}
 
 
-	void order_bytes(void *ordered_bytes, const void *unordered_bytes, size_t size, option_t byte_order)
+	void order_bytes(void *ordered_bytes, const void *unordered_bytes, standard::size_t size, option_t byte_order)
 	{
 		if (current_byte_order() != byte_order)
 		{
@@ -264,7 +264,6 @@ namespace trace_out { namespace detail
 }
 }
 
-#include <cstdint>
 #include <cstdarg>
 #include <cstdlib>
 #include <sstream>
@@ -284,7 +283,7 @@ namespace TRACE_OUT_REDIRECTION_NAMESPACE
 
 	void print(const char *string);
 	void flush();
-	size_t width();
+	trace_out::detail::standard::size_t width();
 
 }
 
@@ -303,11 +302,11 @@ namespace trace_out { namespace detail
 	void lock_output();
 	void unlock_output();
 
-	const std::string thread_id_field(uint64_t thread_id);
+	const std::string thread_id_field(standard::uint64_t thread_id);
 	const std::string thread_header(const std::string &thread_id, const std::string &thread_name);
 
 
-	uint64_t _current_thread_id;
+	standard::uint64_t _current_thread_id;
 	tls<std::string> _thread_name;
 	mutex _output_mutex;
 	tls<std::string> _indentation;
@@ -357,7 +356,7 @@ namespace trace_out { namespace detail
 	}
 
 
-	const std::string thread_id_field(uint64_t thread_id)
+	const std::string thread_id_field(standard::uint64_t thread_id)
 	{
 		std::stringstream stream;
 		stream << reinterpret_cast<void *>(thread_id);
@@ -500,7 +499,7 @@ namespace trace_out { namespace detail
 	}
 
 
-	size_t out_stream::width_left() const
+	standard::size_t out_stream::width_left() const
 	{
 		return out_stream::width() - _current_line_length;
 	}
@@ -514,10 +513,10 @@ namespace trace_out { namespace detail
 		va_start(arguments, format);
 		va_start(arguments_copy, format);
 
-		size_t size = printf_string_length(format, arguments_copy) + 1;
+		standard::size_t size = standard::vsnprintf_string_length(format, arguments_copy) + 1;
 
 		resource<void *> buffer(std::malloc(size), std::free);
-		printf_to_string(static_cast<char *>(buffer.get()), size, format, arguments);
+		standard::vsnprintf(static_cast<char *>(buffer.get()), size, format, arguments);
 		*this << "// " << static_cast<char *>(buffer.get());
 
 		va_end(arguments);
@@ -531,7 +530,7 @@ namespace trace_out { namespace detail
 	}
 
 
-	size_t out_stream::width()
+	standard::size_t out_stream::width()
 	{
 #if defined(TRACE_OUT_WIDTH)
 
@@ -666,15 +665,15 @@ namespace trace_out { namespace detail
 		stream << FLUSH;
 		if (value.get() == NULL)
 		{
-			return stream << "(null)";
+			return stream << "<null>";
 		}
 
-		uintptr_t numeric_value = reinterpret_cast<uintptr_t>(value.get());
+		standard::uintptr_t numeric_value = reinterpret_cast<standard::uintptr_t>(value.get());
 		return stream << to_string(numeric_value, std::hex, std::showbase, NULL);
 	}
 
 
-	out_stream &operator <<(out_stream &stream, const pretty_bool<bool> &value)
+	out_stream &operator <<(out_stream &stream, const pretty_condition<bool> &value)
 	{
 		stream << FLUSH;
 		return stream << (value.get() ? "true" : "false");
@@ -691,34 +690,6 @@ namespace trace_out { namespace detail
 {
 
 	const char FILE_PATH_COMPONENT_DELIMITER = '/';
-
-}
-}
-
-
-#endif // defined(TRACE_OUT_POSIX)
-
-#if defined(TRACE_OUT_POSIX)
-
-#include <cstdio>
-
-
-
-namespace trace_out { namespace detail
-{
-
-	size_t printf_string_length(const char *format, va_list arguments)
-	{
-		int retval = vsnprintf(NULL, 0, format, arguments);
-		return static_cast<size_t>(retval);
-	}
-
-
-	size_t printf_to_string(char *buffer, size_t size, const char *format, va_list arguments)
-	{
-		int retval = vsnprintf(buffer, size, format, arguments);
-		return static_cast<size_t>(retval);
-	}
 
 }
 }
@@ -811,7 +782,6 @@ namespace trace_out { namespace detail
 
 #if defined(TRACE_OUT_POSIX)
 
-#include <cstdint>
 #include <pthread.h>
 
 
@@ -819,9 +789,9 @@ namespace trace_out { namespace detail
 namespace trace_out { namespace detail
 {
 
-	uint64_t current_thread_id()
+	standard::uint64_t current_thread_id()
 	{
-		return reinterpret_cast<uint64_t>(pthread_self());
+		return reinterpret_cast<standard::uint64_t>(pthread_self());
 	}
 
 }
@@ -895,15 +865,15 @@ namespace trace_out { namespace detail
 namespace trace_out { namespace detail
 {
 
-	uint64_t time_in_milliseconds()
+	standard::uint64_t time_in_milliseconds()
 	{
 		struct timeval time_value;
 		int retval = gettimeofday(&time_value, NULL);
 		assert(retval == 0);
 
-		uint64_t microseconds = static_cast<uint64_t>(time_value.tv_usec);
-		uint64_t seconds = static_cast<uint64_t>(time_value.tv_sec);
-		uint64_t milliseconds = seconds * 1000 + microseconds / 1000;
+		standard::uint64_t microseconds = static_cast<standard::uint64_t>(time_value.tv_usec);
+		standard::uint64_t seconds = static_cast<standard::uint64_t>(time_value.tv_sec);
+		standard::uint64_t milliseconds = seconds * 1000 + microseconds / 1000;
 
 		return milliseconds;
 	}
@@ -913,6 +883,61 @@ namespace trace_out { namespace detail
 
 
 #endif // defined(TRACE_OUT_POSIX)
+
+#if defined(TRACE_OUT_CLANG) || defined(TRACE_OUT_GCC) || defined(TRACE_OUT_MINGW)
+
+
+#include <cstdio>
+
+
+namespace trace_out { namespace detail { namespace standard
+{
+
+	size_t vsnprintf_string_length(const char *format, va_list arguments)
+	{
+		int retval = ::vsnprintf(NULL, 0, format, arguments);
+		return static_cast<size_t>(retval);
+	}
+
+
+	int vsnprintf(char *buffer, size_t size, const char *format, va_list arguments)
+	{
+		return ::vsnprintf(buffer, size, format, arguments);
+	}
+
+}
+}
+}
+
+
+#endif // defined(TRACE_OUT_CLANG) || defined(TRACE_OUT_GCC) || defined(TRACE_OUT_MINGW)
+#if defined(TRACE_OUT_MVS)
+
+
+#include <cstdio>
+
+
+namespace trace_out { namespace detail { namespace standard
+{
+
+	size_t vsnprintf_string_length(const char *format, va_list arguments)
+	{
+		int retval = _vscprintf(format, arguments);
+		return static_cast<size_t>(retval);
+	}
+
+
+	int vsnprintf(char *buffer, size_t size, const char *format, va_list arguments)
+	{
+		return _vsnprintf_s(buffer, size, _TRUNCATE, format, arguments);
+	}
+
+}
+}
+}
+
+
+#endif // defined(TRACE_OUT_MVS)
 
 
 
@@ -960,7 +985,7 @@ namespace trace_out { namespace detail
 	}
 
 
-	block iteration_block(const std::string &filename_line, size_t iteration)
+	block iteration_block(const std::string &filename_line, standard::size_t iteration)
 	{
 		{
 			auto_indentation auto_indentation;
@@ -994,7 +1019,7 @@ namespace trace_out { namespace detail
 	}
 
 
-	size_t for_block::iteration()
+	standard::size_t for_block::iteration()
 	{
 		return ++_iteration_number;
 	}
@@ -1077,7 +1102,7 @@ namespace trace_out { namespace detail
 
 	std::string rest_tokens(const std::string &tokens)
 	{
-		size_t from = tokens.find(',') + 1;
+		standard::size_t from = tokens.find(',') + 1;
 		while (tokens[from] == ' ')
 		{
 			++from;
@@ -1095,7 +1120,7 @@ namespace trace_out { namespace detail
 namespace trace_out { namespace detail
 {
 
-	void print_execution_time_in_milliseconds(const std::string &filename_line, uint64_t milliseconds)
+	void print_execution_time_in_milliseconds(const std::string &filename_line, standard::uint64_t milliseconds)
 	{
 		out_stream stream(filename_line);
 		stream << "// execution time: " << to_string(milliseconds) << " ms" << ENDLINE;
@@ -1115,12 +1140,6 @@ namespace trace_out { namespace detail
 #include <cassert>
 
 
-#define TRACE_OUT_TO_FILE__QUOTIZE_IMPL(something) \
-			#something
-
-#define TRACE_OUT_TO_FILE__QUOTIZE(something) \
-			TRACE_OUT_TO_FILE__QUOTIZE_IMPL(something)
-
 
 #if !defined(TRACE_OUT_TO_FILE)
 	#define TRACE_OUT_TO_FILE trace-out.txt
@@ -1137,7 +1156,7 @@ namespace trace_out_to_file
 	{
 		if (!stream.is_open())
 		{
-			stream.open(TRACE_OUT_TO_FILE__QUOTIZE(TRACE_OUT_TO_FILE));
+			stream.open(trace_out_private__quotize(TRACE_OUT_TO_FILE));
 		}
 
 		stream << string;
@@ -1152,7 +1171,7 @@ namespace trace_out_to_file
 	}
 
 
-	size_t width()
+	trace_out::detail::standard::size_t width()
 	{
 		return 120;
 	}
@@ -1161,7 +1180,6 @@ namespace trace_out_to_file
 
 #if !defined(TRACE_OUT_REDIRECTION)
 
-#include <cstddef>
 #include <iostream>
 
 
@@ -1171,7 +1189,7 @@ namespace trace_out_to_stdout
 
 	void print(const char *string);
 	void flush();
-	size_t width();
+	trace_out::detail::standard::size_t width();
 
 }
 
@@ -1179,7 +1197,7 @@ namespace trace_out_to_stdout
 namespace trace_out_to_stdout
 {
 
-	const size_t DEFAULT_WIDTH = 79;
+	const trace_out::detail::standard::size_t DEFAULT_WIDTH = 79;
 
 
 	void print(const char *string)
@@ -1194,7 +1212,7 @@ namespace trace_out_to_stdout
 	}
 
 
-	size_t width()
+	trace_out::detail::standard::size_t width()
 	{
 		int width = trace_out::detail::console_width();
 		if (width == -1)
@@ -1202,7 +1220,7 @@ namespace trace_out_to_stdout
 			return DEFAULT_WIDTH;
 		}
 
-		return static_cast<size_t>(width);
+		return static_cast<trace_out::detail::standard::size_t>(width);
 	}
 
 }
@@ -1213,6 +1231,7 @@ namespace trace_out_to_stdout
 #if defined(TRACE_OUT_WINDOWS)
 
 #include <windows.h>
+
 
 
 namespace trace_out_to_wdo
@@ -1229,7 +1248,7 @@ namespace trace_out_to_wdo
 	}
 
 
-	size_t width()
+	trace_out::detail::standard::size_t width()
 	{
 		return 120;
 	}
@@ -1245,57 +1264,6 @@ namespace trace_out { namespace detail
 {
 
 	const char FILE_PATH_COMPONENT_DELIMITER = '\\';
-
-}
-}
-
-
-#endif // defined(TRACE_OUT_WINDOWS)
-
-#if defined(TRACE_OUT_WINDOWS)
-
-#include <cstdio>
-
-
-
-namespace trace_out { namespace detail
-{
-
-#if defined(TRACE_OUT_MVS)
-
-	int vsnprintf(char *buffer, size_t size, const char *format, va_list arguments);
-
-#endif // defined(TRACE_OUT_MVS)
-
-}
-}
-
-
-namespace trace_out { namespace detail
-{
-
-	size_t printf_string_length(const char *format, va_list arguments)
-	{
-		int retval = _vscprintf(format, arguments);
-		return static_cast<size_t>(retval);
-	}
-
-
-	size_t printf_to_string(char *buffer, size_t size, const char *format, va_list arguments)
-	{
-		int retval = vsnprintf(buffer, size, format, arguments);
-		return static_cast<size_t>(retval);
-	}
-
-
-#if defined(TRACE_OUT_MVS)
-
-	int vsnprintf(char *buffer, size_t size, const char *format, va_list arguments)
-	{
-		return _vsnprintf_s(buffer, size, _TRUNCATE, format, arguments);
-	}
-
-#endif // defined(TRACE_OUT_MVS)
 
 }
 }
@@ -1388,9 +1356,9 @@ namespace trace_out { namespace detail
 namespace trace_out { namespace detail
 {
 
-	uint64_t current_thread_id()
+	standard::uint64_t current_thread_id()
 	{
-		return static_cast<uint64_t>(GetCurrentThreadId());
+		return static_cast<standard::uint64_t>(GetCurrentThreadId());
 	}
 
 }
@@ -1462,7 +1430,7 @@ namespace trace_out { namespace detail
 namespace trace_out { namespace detail
 {
 
-	uint64_t time_in_milliseconds()
+	standard::uint64_t time_in_milliseconds()
 	{
 		FILETIME file_time;
 		ULARGE_INTEGER large_integer;
@@ -1471,7 +1439,7 @@ namespace trace_out { namespace detail
 		large_integer.LowPart = file_time.dwLowDateTime;
 		large_integer.HighPart = file_time.dwHighDateTime;
 
-		uint64_t milliseconds = (large_integer.QuadPart - 116444736000000000LL) / 10000;
+		standard::uint64_t milliseconds = (large_integer.QuadPart - 116444736000000000LL) / 10000;
 
 		return milliseconds;
 	}
