@@ -12,6 +12,12 @@ namespace trace_out { namespace detail
 	const char INDENTATION[] = "    ";
 #endif
 
+#if defined(TRACE_OUT_MARKER)
+	const char MARKER[] = TRACE_OUT_MARKER " ";
+#else
+	const char MARKER[] = "";
+#endif
+
 	const char THREAD_HEADER_SEPARATOR = '~';
 	const char FILENAME_FIELD_EXCESS_PADDING[] = "~";
 	const standard::size_t FILENAME_FIELD_EXCESS_PADDING_SIZE = sizeof(FILENAME_FIELD_EXCESS_PADDING);
