@@ -85,6 +85,12 @@ namespace trace_out { namespace detail
 	const char INDENTATION[] = "    ";
 #endif
 
+#if defined(TRACE_OUT_MARKER)
+	const char MARKER[] = TRACE_OUT_MARKER " ";
+#else
+	const char MARKER[] = "";
+#endif
+
 	const char THREAD_HEADER_SEPARATOR = '~';
 	const char FILENAME_FIELD_EXCESS_PADDING[] = "~";
 	const standard::size_t FILENAME_FIELD_EXCESS_PADDING_SIZE = sizeof(FILENAME_FIELD_EXCESS_PADDING);
@@ -1428,17 +1434,20 @@ namespace trace_out { namespace detail
 		template <typename Type_t>
 		out_stream &operator <<(out_stream &stream, const pretty_iterable<Type_t> &value)
 		{
-			stream << FLUSH;
-			const Type_t &container = value.get();
+			stream << FLUSH << "[";
 
-			stream << "[";
-			typename Type_t::const_iterator iterator = container.begin();
-			for ( ; next_itr(iterator) != container.end(); ++iterator)
+			const Type_t &container = value.get();
+			if (!container.empty())
 			{
-				stream << make_pretty(*iterator) << ", ";
+				typename Type_t::const_iterator iterator = container.begin();
+				stream << make_pretty(*iterator);
+				for (++iterator; iterator != container.end(); ++iterator)
+				{
+					stream << ", " << make_pretty(*iterator);
+				}
 			}
 
-			stream << make_pretty(*iterator) << "]";
+			stream << "]";
 
 			return stream;
 		}

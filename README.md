@@ -176,6 +176,8 @@ There is an output synchronization that prevents outputs from different threads 
 
 `TRACE_OUT_REDIRECTION` – use redirection functions from namespace that is used to define this macro.
 
+`TRACE_OUT_MARKER` – use custom trace-out line marker.
+
 `TRACE_OUT_WIDTH` – width to which output is wrapped (actually only the thread header and memory output are wrapped). This macro overrides value returned by `<redirection_namespace>::width()` function. Default value for standard output is `79`.
 
 `TRACE_OUT_INDENTATION` – string that is used as an indentation for the actual output. Default value is `"    "` (4 spaces).

@@ -371,12 +371,12 @@ namespace trace_out { namespace detail
 	}
 
 
-	const std::string thread_header(const std::string &thread_id, const std::string &thread_name)
+	const std::string thread_header(const std::string &thread_id, const std::string &thread_name, standard::size_t header_width)
 	{
 		std::stringstream stream;
 		stream.fill(THREAD_HEADER_SEPARATOR);
 		stream.flags(std::ios::left);
-		stream.width(static_cast<std::streamsize>(out_stream::width()));
+		stream.width(static_cast<std::streamsize>(header_width));
 		stream << ("[Thread: " + thread_id + (!thread_name.empty() ? " " : "") + thread_name + "]");
 
 		return stream.str();
@@ -412,11 +412,13 @@ namespace trace_out { namespace detail
 		{
 			std::string thread_id = thread_id_field(current_thread_id());
 			const std::string &thread_name = current_thread_name();
-			const std::string &header = thread_header(thread_id, thread_name);
-			*this << "\n" << header << "\n";
+			standard::size_t header_width = out_stream::width() - std::strlen(MARKER);
+			const std::string &header = thread_header(thread_id, thread_name, header_width);
+
+			*this << MARKER << header << "\n";
 		}
 
-		*this << filename_line << DELIMITER << indentation();
+		*this << MARKER << filename_line << DELIMITER << indentation();
 	}
 
 
@@ -431,7 +433,7 @@ namespace trace_out { namespace detail
 		stream.width(FILENAME_FIELD_WIDTH + 1 + LINE_FIELD_WIDTH);
 		stream << "";
 
-		*this << stream.str() << DELIMITER << indentation();
+		*this << MARKER << stream.str() << DELIMITER << indentation();
 	}
 
 
@@ -477,7 +479,7 @@ namespace trace_out { namespace detail
 
 		*this << "\n";
 		_current_line_length = 0;
-		*this << stream.str() << DELIMITER << indentation();
+		*this << MARKER << stream.str() << DELIMITER << indentation();
 
 		return *this;
 	}
