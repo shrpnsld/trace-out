@@ -9,8 +9,8 @@
 namespace trace_out { namespace detail
 {
 
-	void print_execution_time_in_milliseconds(const std::string &filename_line, standard::uint64_t milliseconds);
-	void print_execution_time_in_ticks(const std::string &filename_line, std::clock_t ticks, double milliseconds);
+	void print_execution_time_in_milliseconds(const std::string &filename_line, const char *label, standard::uint64_t milliseconds);
+	void print_execution_time_in_clocks(const std::string &filename_line, const char *label, std::clock_t clocks, double seconds);
 
 }
 }

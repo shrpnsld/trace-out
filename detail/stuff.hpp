@@ -19,6 +19,16 @@
 #define trace_out_private__unify(identifier_base) \
 			trace_out_private__concat(identifier_base, __COUNTER__)
 
+#define trace_out_private__id \
+			trace_out_private__concat(id, __COUNTER__)
+
+
+#define trace_out_private__dereference_macro_impl(name) \
+			name
+
+#define trace_out_private__dereference_macro(name) \
+			trace_out_private__dereference_macro_impl(name)
+
 
 #define trace_out_private__quotize_impl(something) \
 			#something

@@ -23,7 +23,7 @@
 #elif defined(TRACE_OUT_GCC) || defined(TRACE_OUT_MINGW)
 
 	#pragma GCC diagnostic push
-	#pragma GCC diagnostic ignored "-Wvariadic-macros" // seems it does not turn off the warning
+	#pragma GCC diagnostic ignored "-Wvariadic-macros" // seems it does not turn off the warning if there's no C++11
 
 #endif
 
@@ -70,28 +70,23 @@
 	#define $thread(name) \
 				trace_out::detail::set_current_thread_name(#name);
 
-	#define trace_out_private__time(start_time_variable, end_time_variable, ...) \
-				{ \
-					trace_out::detail::standard::uint64_t start_time_variable = trace_out::detail::time_in_milliseconds(); \
-					__VA_ARGS__ \
-					trace_out::detail::standard::uint64_t end_time_variable = trace_out::detail::time_in_milliseconds(); \
-					trace_out::detail::print_execution_time_in_milliseconds(TRACE_OUT_FILENAME_LINE, end_time_variable - start_time_variable); \
-				}
+	#define trace_out_private__time(start_time, execution_time, label, ...) \
+				trace_out::detail::standard::uint64_t start_time = trace_out::detail::time_in_milliseconds(); \
+				__VA_ARGS__ \
+				trace_out::detail::standard::uint64_t execution_time = trace_out::detail::time_in_milliseconds() - start_time; \
+				trace_out::detail::print_execution_time_in_milliseconds(TRACE_OUT_FILENAME_LINE, label, execution_time);
 
-	#define $time(...) \
-				trace_out_private__time(trace_out_private__unify(trace_out_start_ticks), trace_out_private__unify(trace_out_end_ticks), ##__VA_ARGS__)
+	#define $time(label, ...) \
+				trace_out_private__time(trace_out_private__unify(trace_out_start_time), trace_out_private__unify(trace_out_end_time), label, ##__VA_ARGS__)
 
-	#define trace_out_private__ticks(start_ticks_variable, end_ticks_variable, ...) \
-				{ \
-					std::clock_t start_ticks_variable = std::clock(); \
-					__VA_ARGS__ \
-					std::clock_t end_ticks_variable = std::clock(); \
-					std::clock_t execution_time = end_ticks_variable - start_ticks_variable; \
-					trace_out::detail::print_execution_time_in_ticks(TRACE_OUT_FILENAME_LINE, execution_time, (static_cast<double>(execution_time)) / CLOCKS_PER_SEC * 1000); \
-				}
+	#define trace_out_private__clocks(start_clocks, execution_clocks, label, ...) \
+				std::clock_t start_clocks = std::clock(); \
+				__VA_ARGS__ \
+				std::clock_t execution_clocks = std::clock() - start_clocks; \
+				trace_out::detail::print_execution_time_in_clocks(TRACE_OUT_FILENAME_LINE, label, execution_clocks, static_cast<double>(execution_clocks) / CLOCKS_PER_SEC * 1000.0);
 
-	#define $ticks(...) \
-				trace_out_private__ticks(trace_out_private__unify(trace_out_start_time), trace_out_private__unify(trace_out_end_time), ##__VA_ARGS__)
+	#define $clocks(label, ...) \
+				trace_out_private__clocks(trace_out_private__unify(trace_out_start_clocks), trace_out_private__unify(trace_out_execution_clocks), label, ##__VA_ARGS__)
 
 #elif defined(NDEBUG) || defined(TRACE_OUT_OFF)
 
@@ -120,10 +115,10 @@
 
 	#define $thread(name)
 
-	#define $time(...) \
+	#define $time(label, ...) \
 				__VA_ARGS__
 
-	#define $ticks(...) \
+	#define $clocks(label, ...) \
 				__VA_ARGS__
 
 #endif
