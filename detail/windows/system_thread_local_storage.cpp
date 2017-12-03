@@ -1,7 +1,7 @@
 #include "../platform_defines.hpp"
 #if defined(TRACE_OUT_WINDOWS)
 
-#include <cassert>
+#include <cassert> // [amalgamate: leave]
 #include <windows.h>
 
 #include "../system_thread_local_storage.hpp"

@@ -2,7 +2,7 @@
 #if defined(TRACE_OUT_POSIX)
 
 #include <cstddef>
-#include <cassert>
+#include <cassert> // [amalgamate: leave]
 #include <sys/time.h>
 
 #include "../system_time.hpp"

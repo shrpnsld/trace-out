@@ -2,7 +2,7 @@
 #if defined(TRACE_OUT_POSIX)
 
 #include <cstddef>
-#include <cassert>
+#include <cassert> // [amalgamate: leave]
 #include <pthread.h>
 
 #include "../system_mutex.hpp"
