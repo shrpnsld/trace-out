@@ -38,7 +38,7 @@
 
 
 #define TRACE_OUT_FILENAME_LINE \
-			(trace_out::detail::filename_line_field(trace_out::detail::filename_from_path(__FILE__), __LINE__))
+			(trace_out::detail::filename_line_field(trace_out::detail::filename_from_path(__FILE__), static_cast<unsigned long>(__LINE__)))
 
 
 #if defined(TRACE_OUT_CLANG) || defined(TRACE_OUT_GCC) || defined(TRACE_OUT_MINGW)
@@ -54,7 +54,7 @@ namespace trace_out { namespace detail
 {
 
 	const std::string filename_from_path(const char *path);
-	const std::string filename_line_field(const std::string &file, unsigned int line);
+	const std::string filename_line_field(const std::string &file, unsigned long line);
 
 	template <typename Type_t>
 	Type_t &reference(Type_t &object);
@@ -314,7 +314,6 @@ namespace trace_out { namespace detail
 					value = sizeof(function<derived>(0)) == 2 \
 				}; \
 			}
-
 
 	trace_out_private__define_has_member(x);
 	trace_out_private__define_has_member(y);

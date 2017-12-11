@@ -13,7 +13,7 @@ namespace trace_out { namespace detail
 	}
 
 
-	const std::string filename_line_field(const std::string &file, unsigned int line)
+	const std::string filename_line_field(const std::string &file, unsigned long line)
 	{
 		std::stringstream stream;
 		stream.fill(' ');
