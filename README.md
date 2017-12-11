@@ -8,10 +8,10 @@ printf debugging done the right way.
 * Uses only C++/C++11, standard and system libraries; does not use any external preprocessors or libraries.
 * Supports output redirection.
 * Crossplatform. Tested with:
-  * Apple LLVM version 7.3.0 (clang-703.0.29)
+  * Apple LLVM version 9.0.0 (clang-900.0.38)
   * GCC 4.9.2
   * MinGW 4.9.3
-  * Microsoft Visual Studio 2010, 2012, 2013, 2015
+  * Microsoft Visual Studio 2010, 2012, 2013, 2015, 2017
 * Free for all ([MIT license](LICENSE.txt)).
 
 
@@ -41,16 +41,14 @@ int main()
 Output:
 
 ```
-[Thread: 0x7fff77293000]~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            main.cpp:5    |  int main()
-                          |  {
-            main.cpp:10   |      answer = 42
-                          |      moto = "hellomoto!"
-            main.cpp:12   |      if (answer == 42) => true
-            main.cpp:13   |          return 42
-                          |          
-            main.cpp:5    |  }    // int main()
-                          |
+int main()
+{
+    answer = 42
+    moto = "hellomoto!"
+    if (answer == 42) => true
+        return 42
+        
+}    // int main()
 ```
 
 
@@ -103,6 +101,10 @@ Byte order flags (default value is determined automatically):
 
 `$while (<condition>)` – print condition value for each iteration of the `while` loop.
 
+`$time(<name>, <any-code>)` – measure code execution time in milliseconds.
+
+`$clocks(<name>, <any-code>)` – measure code execution time in clocks.
+
 `$p(<format>, ...)` – `printf`-like function.
 
 `$thread(<name>)` – set thread name that will be printed in the thread header.
@@ -134,11 +136,10 @@ $w(bueno, no_bueno) // using GCC will show "Segmentation fault" when try to read
 Output:
 
 ```
-[Thread: 0x7fff77293000]~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            main.cpp:3    |  int main()
-                          |  {
-            main.cpp:5    |      bueno = 456
-                          |      no_bueno = Segmentation fault: 11
+int main()
+{
+    bueno = 456
+    no_bueno = Segmentation fault: 11
 ```
 
 
@@ -174,15 +175,19 @@ There is an output synchronization that prevents outputs from different threads 
 
 `TRACE_OUT_OFF` – turn trace-out off.
 
-`TRACE_OUT_REDIRECTION` – use redirection functions from namespace that is used to define this macro.
+`TRACE_OUT_MARKER` `<string>` – add text marker before every trace-out line (useful when trace-out prints to some shared output).
 
-`TRACE_OUT_MARKER` – use custom trace-out line marker.
+`TRACE_OUT_SHOW_FILE_LINE` – pring file and line information for every trace-out macro.
 
-`TRACE_OUT_WIDTH` – width to which output is wrapped (actually only the thread header and memory output are wrapped). This macro overrides value returned by `<redirection_namespace>::width()` function. Default value for standard output is `79`.
+`TRACE_OUT_INDENTATION` `<string>` – string that is used as an indentation for the actual output. Default value is 4 spaces.
 
-`TRACE_OUT_INDENTATION` – string that is used as an indentation for the actual output. Default value is `"    "` (4 spaces).
+`TRACE_OUT_REDIRECTION` `<name>` – use redirection from namespace `<name>`.
 
-`TRACE_OUT_NO_OUTPUT_SYNC` – disable output syncronization.
+`TRACE_OUT_OUTPUT_SYNC_ON` – enable output syncronization.
+
+`TRACE_OUT_SHOW_THREAD` – show thread information.
+
+`TRACE_OUT_WIDTH` `<how-much>` – width to which output is wrapped (actually only the thread header and memory output are wrapped). This macro overrides value returned by `<redirection-namespace>::width()` function. Default value for standard output is `79`.
 
 
 

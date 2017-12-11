@@ -1,35 +1,37 @@
 #pragma once
 
+#include <ctime>
+
+
+
+	#if defined(__clang__)
+		#define TRACE_OUT_CLANG
+	#elif defined(__MINGW32__)
+		#define TRACE_OUT_MINGW
+	#elif (defined(__GNUC__) || defined(__GNUG__)) && !defined(__MINGW32__)
+		#define TRACE_OUT_GCC
+	#elif defined(_MSC_VER)
+		#define TRACE_OUT_MVS
+	#else
+		#error Failed to detect compiler
+	#endif
+
+
+	#if defined(__unix__) || defined(__APPLE__)
+		#define TRACE_OUT_POSIX
+	#elif defined(_WIN32)
+		#define TRACE_OUT_WINDOWS
+	#else
+		#error Failed to detect platform
+	#endif
+
+
+	#if __cplusplus >= 201103L || _MSC_VER >= 1800
+		#define TRACE_OUT_CPP11
+	#endif
+
 
 	#include <cstddef>
-
-
-
-		#if defined(__clang__)
-			#define TRACE_OUT_CLANG
-		#elif defined(__MINGW32__)
-			#define TRACE_OUT_MINGW
-		#elif (defined(__GNUC__) || defined(__GNUG__)) && !defined(__MINGW32__)
-			#define TRACE_OUT_GCC
-		#elif defined(_MSC_VER)
-			#define TRACE_OUT_MVS
-		#else
-			#error Failed to detect compiler
-		#endif
-
-
-		#if defined(__unix__) || defined(__APPLE__)
-			#define TRACE_OUT_POSIX
-		#elif defined(_WIN32)
-			#define TRACE_OUT_WINDOWS
-		#else
-			#error Failed to detect platform
-		#endif
-
-
-		#if __cplusplus >= 201103L || _MSC_VER >= 1800
-			#define TRACE_OUT_CPP11
-		#endif
 
 
 	#if defined(TRACE_OUT_CPP11)
@@ -75,37 +77,6 @@
 	}
 
 
-
-namespace trace_out { namespace detail
-{
-
-#if defined(TRACE_OUT_INDENTATION)
-	const char INDENTATION[] = TRACE_OUT_INDENTATION;
-#else
-	const char INDENTATION[] = "    ";
-#endif
-
-#if defined(TRACE_OUT_MARKER)
-	const char MARKER[] = TRACE_OUT_MARKER " ";
-#else
-	const char MARKER[] = "";
-#endif
-
-	const char THREAD_HEADER_SEPARATOR = '~';
-	const char FILENAME_FIELD_EXCESS_PADDING[] = "~";
-	const standard::size_t FILENAME_FIELD_EXCESS_PADDING_SIZE = sizeof(FILENAME_FIELD_EXCESS_PADDING);
-	const standard::size_t FILENAME_FIELD_WIDTH = 20;
-	const standard::size_t LINE_FIELD_WIDTH = 4;
-	const char DELIMITER[] = " |  ";
-	const standard::size_t INDENTATION_WIDTH = sizeof(INDENTATION) - 1;
-
-}
-}
-
-
-#include <string>
-
-
 	#include <memory>
 	#include <string>
 
@@ -116,8 +87,7 @@ namespace trace_out { namespace detail
 
 		#include <cstdarg>
 		#include <cstring>
-		#include <string>
-		#include <ios>
+				#include <ios>
 		#include <sstream>
 
 
@@ -131,6 +101,16 @@ namespace trace_out { namespace detail
 		#define trace_out_private__unify(identifier_base) \
 					trace_out_private__concat(identifier_base, __COUNTER__)
 
+		#define trace_out_private__id \
+					trace_out_private__concat(id, __COUNTER__)
+
+
+		#define trace_out_private__dereference_macro_impl(name) \
+					name
+
+		#define trace_out_private__dereference_macro(name) \
+					trace_out_private__dereference_macro_impl(name)
+
 
 		#define trace_out_private__quotize_impl(something) \
 					#something
@@ -140,7 +120,7 @@ namespace trace_out { namespace detail
 
 
 		#define TRACE_OUT_FILENAME_LINE \
-					(trace_out::detail::filename_line_field(trace_out::detail::filename_from_path(__FILE__), __LINE__))
+					(trace_out::detail::filename_line_field(trace_out::detail::filename_from_path(__FILE__), static_cast<unsigned long>(__LINE__)))
 
 
 		#if defined(TRACE_OUT_CLANG) || defined(TRACE_OUT_GCC) || defined(TRACE_OUT_MINGW)
@@ -156,7 +136,7 @@ namespace trace_out { namespace detail
 		{
 
 			const std::string filename_from_path(const char *path);
-			const std::string filename_line_field(const std::string &file, unsigned int line);
+			const std::string filename_line_field(const std::string &file, unsigned long line);
 
 			template <typename Type_t>
 			Type_t &reference(Type_t &object);
@@ -417,7 +397,6 @@ namespace trace_out { namespace detail
 						}; \
 					}
 
-
 			trace_out_private__define_has_member(x);
 			trace_out_private__define_has_member(y);
 			trace_out_private__define_has_member(z);
@@ -548,8 +527,7 @@ namespace trace_out { namespace detail
 		}
 
 
-		#include <string>
-
+		
 
 
 		namespace trace_out { namespace detail
@@ -1475,399 +1453,747 @@ namespace trace_out { namespace detail
 	}
 
 
+	
 
-namespace trace_out { namespace detail
-{
 
-	class function_printer
+	namespace trace_out { namespace detail
 	{
-	public:
-		function_printer(const std::string &filename_line, const char *function_signature);
-		~function_printer();
 
-	private:
-		std::string _filename_line;
-		std::string _function_signature;
-	};
+	#if !defined(TRACE_OUT_CPP11)
 
+		template <typename Type_t>
+		const Type_t &expression(const std::string &filename_line, const char *name, const Type_t &value);
 
-	function_printer make_function_printer(const std::string &filename_line, const char *function_signature);
+		template <typename Type_t>
+		Type_t &expression(const std::string &filename_line, const char *name, Type_t &value);
 
+		template <typename Type_t>
+		void watch(const std::string &filename_line, const char *name, const Type_t &value);
 
+	#else
 
-	class return_printer
-	{
-	public:
-		return_printer(const std::string &filename_line);
+		template <typename Type_t>
+		Type_t &&expression(const std::string &filename_line, const char *name, Type_t &&value);
 
-		template <typename T>
-		const T &operator ,(const T &value);
+		template <typename ...Types_t>
+		void watch(const std::string &filename_line, const char *names, const Types_t &...values);
 
-	private:
-		std::string _filename_line;
-	};
+	#endif // !defined(TRACE_OUT_CPP11)
 
-
-	return_printer make_return_printer(const std::string &filename_line);
-
-}
-}
-
-
-namespace trace_out { namespace detail
-{
-
-	template <typename Type_t>
-	const Type_t &return_printer::operator ,(const Type_t &value)
-	{
-		out_stream stream(_filename_line);
-		stream << "return " << make_pretty(value) << ENDLINE;
-		return value;
+	}
 	}
 
-}
-}
 
-
-#include <limits>
-#include <string>
-#include <sstream>
-
-
-
-namespace trace_out { namespace detail
-{
-
-	typedef standard::uint32_t option_t;
-
-	const standard::size_t OPTIONS_START_BASE = 0;
-	const standard::size_t OPTIONS_START_BYTE_ORDER = 16;
-
-}
-}
-
-
-namespace trace_out
-{
-
-	const detail::option_t BIN = static_cast<detail::option_t>(0x1) << (detail::OPTIONS_START_BASE + 0);
-	const detail::option_t SDEC = static_cast<detail::option_t>(0x1) << (detail::OPTIONS_START_BASE + 1);
-	const detail::option_t UDEC = static_cast<detail::option_t>(0x1) << (detail::OPTIONS_START_BASE + 2);
-	const detail::option_t HEX = static_cast<detail::option_t>(0x1) << (detail::OPTIONS_START_BASE + 3);
-	const detail::option_t FLT = static_cast<detail::option_t>(0x1) << (detail::OPTIONS_START_BASE + 4);
-	const detail::option_t DBL = static_cast<detail::option_t>(0x1) << (detail::OPTIONS_START_BASE + 5);
-	const detail::option_t LDBL = static_cast<detail::option_t>(0x1) << (detail::OPTIONS_START_BASE + 6);
-
-	const detail::option_t LITTLE = static_cast<detail::option_t>(0x1) << (detail::OPTIONS_START_BYTE_ORDER + 0);
-	const detail::option_t BIG = static_cast<detail::option_t>(0x1) << (detail::OPTIONS_START_BYTE_ORDER + 1);
-
-}
-
-
-namespace trace_out { namespace detail
-{
-
-	extern const char *const BASE_NAMES[];
-	extern const standard::size_t BASE_NAMES_LENGTH;
-
-	extern const char *const BYTE_ORDER_NAMES[];
-	extern const standard::size_t BYTE_ORDER_NAMES_LENGTH;
-
-	typedef std::streamsize outputwidth_t;
-
-
-	enum typefamily_t
+	namespace trace_out { namespace detail
 	{
-		TYPE_FAMILY_INTEGER,
-		TYPE_FAMILY_FLOATING_POINT,
-		TYPE_FAMILY_OTHER
-	};
 
+	#if !defined(TRACE_OUT_CPP11)
 
-	template <typename Type_t>
-	struct type_family
-	{
-		enum
+		template <typename Type_t>
+		const Type_t &expression(const std::string &filename_line, const char *name, const Type_t &value)
 		{
-			value = std::numeric_limits<Type_t>::is_integer ? TYPE_FAMILY_INTEGER : (std::numeric_limits<Type_t>::is_specialized ? TYPE_FAMILY_FLOATING_POINT : TYPE_FAMILY_OTHER)
+			out_stream stream(filename_line);
+			stream << name << " = " << make_pretty(value) << ENDLINE;
+			return value;
+		}
+
+
+		template <typename Type_t>
+		Type_t &expression(const std::string &filename_line, const char *name, Type_t &value)
+		{
+			out_stream stream(filename_line);
+			stream << name << " = " << make_pretty(value) << ENDLINE;
+			return value;
+		}
+
+
+		template <typename Type_t>
+		void watch(const std::string &filename_line, const char *name, const Type_t &value)
+		{
+			out_stream stream(filename_line);
+			stream << name << " = " << make_pretty(value) << ENDLINE;
+		}
+
+	#else
+
+		template <typename Type_t>
+		Type_t &&expression(const std::string &filename_line, const char *name, Type_t &&value)
+		{
+			out_stream stream(filename_line);
+			stream << name << " = " << make_pretty(value) << ENDLINE;
+			return std::forward<Type_t>(value);
+		}
+
+
+		template <typename Type_t>
+		void print_values(out_stream &stream, const std::string &name, const Type_t &value)
+		{
+			stream << name << " = " << make_pretty(value) << ENDLINE;
+		}
+
+
+		template <typename FirstType_t, typename ...RestTypes_t>
+		void print_values(out_stream &stream, const std::string &names, const FirstType_t &first_value, const RestTypes_t &...rest_values)
+		{
+			stream << first_token(names) << " = " << make_pretty(first_value) << NEWLINE;
+			print_values(stream, rest_tokens(names), rest_values...);
+		}
+
+		template <typename ...Types_t>
+		void watch(const std::string &filename_line, const char *names, const Types_t &...values)
+		{
+			out_stream stream(filename_line);
+			print_values(stream, names, values...);
+		}
+
+	#endif // !defined(TRACE_OUT_CPP11)
+
+	}
+	}
+
+	
+
+
+	namespace trace_out { namespace detail
+	{
+
+		class function_printer
+		{
+		public:
+			function_printer(const std::string &filename_line, const char *function_signature);
+			~function_printer();
+
+		private:
+			std::string _filename_line;
+			std::string _function_signature;
 		};
-	};
 
 
-	template <typefamily_t Family, standard::size_t Size, bool IsSigned>
-	struct print_traits_details
+		function_printer make_function_printer(const std::string &filename_line, const char *function_signature);
+
+
+
+		class return_printer
+		{
+		public:
+			return_printer(const std::string &filename_line);
+
+			template <typename T>
+			const T &operator ,(const T &value);
+
+		private:
+			std::string _filename_line;
+		};
+
+
+		return_printer make_return_printer(const std::string &filename_line);
+
+	}
+	}
+
+
+	namespace trace_out { namespace detail
 	{
-		typedef standard::uint8_t unit_t;
-		static const outputwidth_t field_width = 2;
-		static const option_t default_base = HEX;
-		typedef void signed_t;
-		typedef void unsigned_t;
-	};
 
-#define TRACE_OUT__DEFINE_PRINT_TRAITS(family, type_size, is_signed, unit_type, field_width_value, default_base_value, to_signed_type, to_unsigned_type) \
-		template <> \
-		struct print_traits_details<family, type_size, is_signed> \
-		{ \
-			typedef unit_type unit_t; \
-			static const outputwidth_t field_width = field_width_value; \
-			static const option_t default_base = default_base_value; \
-			typedef to_signed_type signed_t; \
-			typedef to_unsigned_type unsigned_t; \
+		template <typename Type_t>
+		const Type_t &return_printer::operator ,(const Type_t &value)
+		{
+			out_stream stream(_filename_line);
+			stream << "return " << make_pretty(value) << ENDLINE;
+			return value;
 		}
 
-	TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 1, true, standard::int8_t, 4, HEX, standard::int8_t, standard::uint8_t);
-	TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 2, true, standard::int16_t, 6, SDEC, standard::int16_t, standard::uint16_t);
-	TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 4, true, standard::int32_t, 11, SDEC, standard::int32_t, standard::uint32_t);
-	TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 8, true, standard::int64_t, 21, SDEC, standard::int64_t, standard::uint64_t);
-
-	TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 1, false, standard::uint8_t, 3, HEX, standard::int8_t, standard::uint8_t);
-	TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 2, false, standard::uint16_t, 5, UDEC, standard::int16_t, standard::uint16_t);
-	TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 4, false, standard::uint32_t, 10, UDEC, standard::int32_t, standard::uint32_t);
-	TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 8, false, standard::uint64_t, 20, UDEC, standard::int64_t, standard::uint64_t);
-
-	// sign + first_digit + point + precision + 'e' + exponent_sign + exponent
-	TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_FLOATING_POINT, 4, true, float, 1 + 1 + 1 + std::numeric_limits<float>::digits10 + 1 + 1 + 3, FLT, float, float);
-	TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_FLOATING_POINT, 8, true, double, 1 + 1 + 1 + std::numeric_limits<float>::digits10 + 1 + 1 + 4, DBL, double, double);
-	TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_FLOATING_POINT, 10, true, long double, 1 + 1 + 1 + std::numeric_limits<float>::digits10 + 1 + 1 + 5, LDBL, long double, long double);
-	TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_FLOATING_POINT, 12, true, long double, 1 + 1 + 1 + std::numeric_limits<float>::digits10 + 1 + 1 + 5, LDBL, long double, long double);
-	TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_FLOATING_POINT, 16, true, long double, 1 + 1 + 1 + std::numeric_limits<float>::digits10 + 1 + 1 + 5, LDBL, long double, long double);
-
-#undef TRACE_OUT__DEFINE_PRINT_TRAITS
+	}
+	}
 
 
-	template <typename Type_t>
-	struct print_traits :
-		public print_traits_details<static_cast<typefamily_t>(type_family<Type_t>::value), sizeof(Type_t), std::numeric_limits<Type_t>::is_signed>
+	#include <limits>
+		
+
+
+	namespace trace_out { namespace detail
 	{
-	};
+
+		typedef standard::uint32_t option_t;
+
+		const standard::size_t OPTIONS_START_BASE = 0;
+		const standard::size_t OPTIONS_START_BYTE_ORDER = 16;
+
+	}
+	}
 
 
-	option_t base_value_from_options(option_t options, option_t default_value);
-	option_t byte_order_value_from_options(option_t options, option_t default_value);
-	const char *option_name(option_t option, const char *const names[], standard::size_t names_length, const char *default_name);
-	const char *byte_to_binary(standard::uint8_t byte);
-	const char *byte_to_hexadecimal(standard::uint8_t byte);
-
-	template <typename Type_t>
-	outputwidth_t field_width(option_t base);
-
-	template <typename Type_t>
-	const std::string bytes_to_binary_string(Type_t value);
-
-	template <typename Type_t>
-	const std::string bytes_to_signed_decimal_string(Type_t value);
-
-	template <typename Type_t>
-	const std::string bytes_to_unsigned_decimal_string(Type_t value);
-
-	template <typename Type_t>
-	const std::string bytes_to_floating_point_string(Type_t value);
-
-	template <typename Type_t>
-	const std::string bytes_to_hexadecimal_string(Type_t value);
-
-	template <typename Type_t>
-	const std::string (*select_conversion(option_t base))(Type_t);
-
-	option_t current_byte_order();
-	void reverse_bytes(void *destination, const void *source, standard::size_t size);
-	void order_bytes(void *ordered_bytes, const void *unordered_bytes, standard::size_t size, option_t byte_order);
-
-	template <typename Type_t>
-	void print_memory(const std::string &filename_line, const char *name, const Type_t *pointer, standard::size_t size = sizeof(Type_t), option_t options = 0);
-
-}
-}
-
-
-namespace trace_out { namespace detail
-{
-
-	template <typename Type_t>
-	outputwidth_t field_width(option_t base)
+	namespace trace_out
 	{
-		switch (base)
+
+		const detail::option_t BIN = static_cast<detail::option_t>(0x1) << (detail::OPTIONS_START_BASE + 0);
+		const detail::option_t SDEC = static_cast<detail::option_t>(0x1) << (detail::OPTIONS_START_BASE + 1);
+		const detail::option_t UDEC = static_cast<detail::option_t>(0x1) << (detail::OPTIONS_START_BASE + 2);
+		const detail::option_t HEX = static_cast<detail::option_t>(0x1) << (detail::OPTIONS_START_BASE + 3);
+		const detail::option_t FLT = static_cast<detail::option_t>(0x1) << (detail::OPTIONS_START_BASE + 4);
+		const detail::option_t DBL = static_cast<detail::option_t>(0x1) << (detail::OPTIONS_START_BASE + 5);
+		const detail::option_t LDBL = static_cast<detail::option_t>(0x1) << (detail::OPTIONS_START_BASE + 6);
+
+		const detail::option_t LITTLE = static_cast<detail::option_t>(0x1) << (detail::OPTIONS_START_BYTE_ORDER + 0);
+		const detail::option_t BIG = static_cast<detail::option_t>(0x1) << (detail::OPTIONS_START_BYTE_ORDER + 1);
+
+	}
+
+
+	namespace trace_out { namespace detail
+	{
+
+		extern const char *const BASE_NAMES[];
+		extern const standard::size_t BASE_NAMES_LENGTH;
+
+		extern const char *const BYTE_ORDER_NAMES[];
+		extern const standard::size_t BYTE_ORDER_NAMES_LENGTH;
+
+		typedef std::streamsize outputwidth_t;
+
+
+		enum typefamily_t
 		{
-			case BIN:
-				return sizeof(typename print_traits<Type_t>::unit_t) * 8;
-
-			case SDEC:
-				return print_traits<Type_t>::field_width + (!std::numeric_limits<Type_t>::is_signed ? 1 : 0);
-
-			case UDEC:
-				return print_traits<Type_t>::field_width - (std::numeric_limits<Type_t>::is_signed ? 1 : 0);
-
-			case FLT:
-			case DBL:
-			case LDBL:
-				return print_traits<Type_t>::field_width;
-
-			case HEX:
-			default:
-				return sizeof(typename print_traits<Type_t>::unit_t) * 2;
-		}
-	}
+			TYPE_FAMILY_INTEGER,
+			TYPE_FAMILY_FLOATING_POINT,
+			TYPE_FAMILY_OTHER
+		};
 
 
-	template <typename Type_t>
-	const std::string bytes_to_binary_string(Type_t value)
-	{
-		std::stringstream stream;
-		standard::uint8_t *data = reinterpret_cast<standard::uint8_t *>(&value);
-		for (standard::size_t index = 0; index < sizeof(value); ++index)
+		template <typename Type_t>
+		struct type_family
 		{
-			stream << byte_to_binary(data[index]);
-		}
-
-		return stream.str();
-	}
-
-
-	template <typename Type_t>
-	const std::string bytes_to_signed_decimal_string(Type_t value)
-	{
-		typedef typename print_traits<Type_t>::signed_t signed_promotion_t;
-
-		signed_promotion_t signed_value = static_cast<signed_promotion_t>(value);
-		standard::int64_t signed_integer = static_cast<standard::int64_t>(signed_value);
-
-		return to_string(signed_integer);
-	}
-
-
-	template <typename Type_t>
-	const std::string bytes_to_unsigned_decimal_string(Type_t value)
-	{
-		typedef typename print_traits<Type_t>::unsigned_t unsigned_promotion_t;
-
-		unsigned_promotion_t unsigned_value = static_cast<unsigned_promotion_t>(value);
-		standard::uint64_t unsigned_integer = static_cast<standard::uint64_t>(unsigned_value);
-
-		return to_string(unsigned_integer);
-	}
-
-
-	template <typename Type_t>
-	const std::string bytes_to_floating_point_string(Type_t value)
-	{
-		std::stringstream stream;
-		stream.precision(std::numeric_limits<Type_t>::digits10);
-		stream << std::scientific << value;
-
-		return stream.str();
-	}
-
-
-	template <typename Type_t>
-	const std::string bytes_to_hexadecimal_string(Type_t value)
-	{
-		std::stringstream stream;
-		standard::uint8_t *data = reinterpret_cast<standard::uint8_t *>(&value);
-		for (standard::size_t index = 0; index < sizeof(value); ++index)
-		{
-			stream << byte_to_hexadecimal(data[index]);
-		}
-
-		return stream.str();
-	}
-
-
-	template <typename Type_t>
-	const std::string (*select_conversion(option_t base))(Type_t)
-	{
-		switch (base)
-		{
-			case BIN:
-				return bytes_to_binary_string<Type_t>;
-
-			case SDEC:
-				return bytes_to_signed_decimal_string<Type_t>;
-
-			case UDEC:
-				return bytes_to_unsigned_decimal_string<Type_t>;
-
-			case FLT:
-			case DBL:
-			case LDBL:
-				return bytes_to_floating_point_string<Type_t>;
-
-			case HEX:
-			default:
-				return bytes_to_hexadecimal_string<Type_t>;
-		}
-	}
-
-
-	template <typename Type_t>
-	void print_memory_contents(out_stream &stream, const Type_t *pointer, standard::size_t size, outputwidth_t column_width, const std::string (*bytes_to_string)(Type_t), option_t byte_order)
-	{
-		std::stringstream string_stream;
-
-		const Type_t *iterator = pointer;
-		standard::size_t length = size / sizeof(Type_t);
-
-		stream << make_pretty(static_cast<const void *>(iterator)) << ":";
-		for (standard::size_t index = 0; index < length; ++index)
-		{
-			const std::string string_representation = string_stream.str();
-			if (string_representation.length() + static_cast<standard::size_t>(column_width) + 1 > stream.width_left())
+			enum
 			{
-				stream << string_representation;
-				string_stream.str("");
+				value = std::numeric_limits<Type_t>::is_integer ? TYPE_FAMILY_INTEGER : (std::numeric_limits<Type_t>::is_specialized ? TYPE_FAMILY_FLOATING_POINT : TYPE_FAMILY_OTHER)
+			};
+		};
 
-				stream << NEWLINE << make_pretty(static_cast<const void *>(&iterator[index])) << ":";
+
+		template <typefamily_t Family, standard::size_t Size, bool IsSigned>
+		struct print_traits_details
+		{
+			typedef standard::uint8_t unit_t;
+			static const outputwidth_t field_width = 2;
+			static const option_t default_base = HEX;
+			typedef void signed_t;
+			typedef void unsigned_t;
+		};
+
+	#define TRACE_OUT__DEFINE_PRINT_TRAITS(family, type_size, is_signed, unit_type, field_width_value, default_base_value, to_signed_type, to_unsigned_type) \
+			template <> \
+			struct print_traits_details<family, type_size, is_signed> \
+			{ \
+				typedef unit_type unit_t; \
+				static const outputwidth_t field_width = field_width_value; \
+				static const option_t default_base = default_base_value; \
+				typedef to_signed_type signed_t; \
+				typedef to_unsigned_type unsigned_t; \
 			}
 
-			const Type_t &bytes = iterator[index];
+		TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 1, true, standard::int8_t, 4, HEX, standard::int8_t, standard::uint8_t);
+		TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 2, true, standard::int16_t, 6, SDEC, standard::int16_t, standard::uint16_t);
+		TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 4, true, standard::int32_t, 11, SDEC, standard::int32_t, standard::uint32_t);
+		TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 8, true, standard::int64_t, 21, SDEC, standard::int64_t, standard::uint64_t);
 
-			crash_on_bad_memory(bytes);
+		TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 1, false, standard::uint8_t, 3, HEX, standard::int8_t, standard::uint8_t);
+		TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 2, false, standard::uint16_t, 5, UDEC, standard::int16_t, standard::uint16_t);
+		TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 4, false, standard::uint32_t, 10, UDEC, standard::int32_t, standard::uint32_t);
+		TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_INTEGER, 8, false, standard::uint64_t, 20, UDEC, standard::int64_t, standard::uint64_t);
 
-			Type_t ordered_bytes;
-			order_bytes(&ordered_bytes, &bytes, sizeof(Type_t), byte_order);
+		// sign + first_digit + point + precision + 'e' + exponent_sign + exponent
+		TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_FLOATING_POINT, 4, true, float, 1 + 1 + 1 + std::numeric_limits<float>::digits10 + 1 + 1 + 3, FLT, float, float);
+		TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_FLOATING_POINT, 8, true, double, 1 + 1 + 1 + std::numeric_limits<float>::digits10 + 1 + 1 + 4, DBL, double, double);
+		TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_FLOATING_POINT, 10, true, long double, 1 + 1 + 1 + std::numeric_limits<float>::digits10 + 1 + 1 + 5, LDBL, long double, long double);
+		TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_FLOATING_POINT, 12, true, long double, 1 + 1 + 1 + std::numeric_limits<float>::digits10 + 1 + 1 + 5, LDBL, long double, long double);
+		TRACE_OUT__DEFINE_PRINT_TRAITS(TYPE_FAMILY_FLOATING_POINT, 16, true, long double, 1 + 1 + 1 + std::numeric_limits<float>::digits10 + 1 + 1 + 5, LDBL, long double, long double);
 
-			string_stream << " ";
-			string_stream.fill(' ');
-			string_stream.width(column_width);
-			string_stream.flags(std::ios::right);
+	#undef TRACE_OUT__DEFINE_PRINT_TRAITS
 
-			string_stream << bytes_to_string(ordered_bytes);
-		}
 
-		const std::string string_representation = string_stream.str();
-		if (!string_representation.empty())
+		template <typename Type_t>
+		struct print_traits :
+			public print_traits_details<static_cast<typefamily_t>(type_family<Type_t>::value), sizeof(Type_t), std::numeric_limits<Type_t>::is_signed>
 		{
-			stream << string_representation << NEWLINE;
-		}
+		};
+
+
+		option_t base_value_from_options(option_t options, option_t default_value);
+		option_t byte_order_value_from_options(option_t options, option_t default_value);
+		const char *option_name(option_t option, const char *const names[], standard::size_t names_length, const char *default_name);
+		const char *byte_to_binary(standard::uint8_t byte);
+		const char *byte_to_hexadecimal(standard::uint8_t byte);
+
+		template <typename Type_t>
+		outputwidth_t field_width(option_t base);
+
+		template <typename Type_t>
+		const std::string bytes_to_binary_string(Type_t value);
+
+		template <typename Type_t>
+		const std::string bytes_to_signed_decimal_string(Type_t value);
+
+		template <typename Type_t>
+		const std::string bytes_to_unsigned_decimal_string(Type_t value);
+
+		template <typename Type_t>
+		const std::string bytes_to_floating_point_string(Type_t value);
+
+		template <typename Type_t>
+		const std::string bytes_to_hexadecimal_string(Type_t value);
+
+		template <typename Type_t>
+		const std::string (*select_conversion(option_t base))(Type_t);
+
+		option_t current_byte_order();
+		void reverse_bytes(void *destination, const void *source, standard::size_t size);
+		void order_bytes(void *ordered_bytes, const void *unordered_bytes, standard::size_t size, option_t byte_order);
+
+		template <typename Type_t>
+		void print_memory(const std::string &filename_line, const char *name, const Type_t *pointer, standard::size_t size = sizeof(Type_t), option_t options = 0);
+
+	}
 	}
 
 
-	template <typename Type_t>
-	void print_memory(const std::string &filename_line, const char *name, const Type_t *pointer, standard::size_t size, option_t options)
+	namespace trace_out { namespace detail
 	{
-		typedef typename print_traits<Type_t>::unit_t unit_t;
 
-		option_t base = base_value_from_options(options, print_traits<Type_t>::default_base);
-		option_t byte_order = byte_order_value_from_options(options, current_byte_order());
+		template <typename Type_t>
+		outputwidth_t field_width(option_t base)
+		{
+			switch (base)
+			{
+				case BIN:
+					return sizeof(typename print_traits<Type_t>::unit_t) * 8;
 
-		const char *base_name = option_name((base >> OPTIONS_START_BASE), BASE_NAMES, BASE_NAMES_LENGTH, "?");
-		const char *byte_order_name = option_name((byte_order >> OPTIONS_START_BYTE_ORDER), BYTE_ORDER_NAMES, BYTE_ORDER_NAMES_LENGTH, "?");
+				case SDEC:
+					return print_traits<Type_t>::field_width + (!std::numeric_limits<Type_t>::is_signed ? 1 : 0);
 
-		out_stream stream(filename_line);
-		stream << name << " (" << base_name << ", " << byte_order_name << "):";
-		indentation_add();
-		stream << NEWLINE;
+				case UDEC:
+					return print_traits<Type_t>::field_width - (std::numeric_limits<Type_t>::is_signed ? 1 : 0);
 
-		const std::string (*bytes_to_string)(Type_t) = select_conversion<Type_t>(base);
-		outputwidth_t column_width = field_width<Type_t>(base);
-		print_memory_contents(stream, static_cast<const unit_t *>(pointer), size, column_width, bytes_to_string, byte_order);
+				case FLT:
+				case DBL:
+				case LDBL:
+					return print_traits<Type_t>::field_width;
 
-		indentation_remove();
+				case HEX:
+				default:
+					return sizeof(typename print_traits<Type_t>::unit_t) * 2;
+			}
+		}
 
-		stream << ENDLINE;
+
+		template <typename Type_t>
+		const std::string bytes_to_binary_string(Type_t value)
+		{
+			std::stringstream stream;
+			standard::uint8_t *data = reinterpret_cast<standard::uint8_t *>(&value);
+			for (standard::size_t index = 0; index < sizeof(value); ++index)
+			{
+				stream << byte_to_binary(data[index]);
+			}
+
+			return stream.str();
+		}
+
+
+		template <typename Type_t>
+		const std::string bytes_to_signed_decimal_string(Type_t value)
+		{
+			typedef typename print_traits<Type_t>::signed_t signed_promotion_t;
+
+			signed_promotion_t signed_value = static_cast<signed_promotion_t>(value);
+			standard::int64_t signed_integer = static_cast<standard::int64_t>(signed_value);
+
+			return to_string(signed_integer);
+		}
+
+
+		template <typename Type_t>
+		const std::string bytes_to_unsigned_decimal_string(Type_t value)
+		{
+			typedef typename print_traits<Type_t>::unsigned_t unsigned_promotion_t;
+
+			unsigned_promotion_t unsigned_value = static_cast<unsigned_promotion_t>(value);
+			standard::uint64_t unsigned_integer = static_cast<standard::uint64_t>(unsigned_value);
+
+			return to_string(unsigned_integer);
+		}
+
+
+		template <typename Type_t>
+		const std::string bytes_to_floating_point_string(Type_t value)
+		{
+			std::stringstream stream;
+			stream.precision(std::numeric_limits<Type_t>::digits10);
+			stream << std::scientific << value;
+
+			return stream.str();
+		}
+
+
+		template <typename Type_t>
+		const std::string bytes_to_hexadecimal_string(Type_t value)
+		{
+			std::stringstream stream;
+			standard::uint8_t *data = reinterpret_cast<standard::uint8_t *>(&value);
+			for (standard::size_t index = 0; index < sizeof(value); ++index)
+			{
+				stream << byte_to_hexadecimal(data[index]);
+			}
+
+			return stream.str();
+		}
+
+
+		template <typename Type_t>
+		const std::string (*select_conversion(option_t base))(Type_t)
+		{
+			switch (base)
+			{
+				case BIN:
+					return bytes_to_binary_string<Type_t>;
+
+				case SDEC:
+					return bytes_to_signed_decimal_string<Type_t>;
+
+				case UDEC:
+					return bytes_to_unsigned_decimal_string<Type_t>;
+
+				case FLT:
+				case DBL:
+				case LDBL:
+					return bytes_to_floating_point_string<Type_t>;
+
+				case HEX:
+				default:
+					return bytes_to_hexadecimal_string<Type_t>;
+			}
+		}
+
+
+		template <typename Type_t>
+		void print_memory_contents(out_stream &stream, const Type_t *pointer, standard::size_t size, outputwidth_t column_width, const std::string (*bytes_to_string)(Type_t), option_t byte_order)
+		{
+			std::stringstream string_stream;
+
+			const Type_t *iterator = pointer;
+			standard::size_t length = size / sizeof(Type_t);
+
+			stream << make_pretty(static_cast<const void *>(iterator)) << ":";
+			for (standard::size_t index = 0; index < length; ++index)
+			{
+				const std::string string_representation = string_stream.str();
+				if (string_representation.length() + static_cast<standard::size_t>(column_width) + 1 > stream.width_left())
+				{
+					stream << string_representation;
+					string_stream.str("");
+
+					stream << NEWLINE << make_pretty(static_cast<const void *>(&iterator[index])) << ":";
+				}
+
+				const Type_t &bytes = iterator[index];
+
+				crash_on_bad_memory(bytes);
+
+				Type_t ordered_bytes;
+				order_bytes(&ordered_bytes, &bytes, sizeof(Type_t), byte_order);
+
+				string_stream << " ";
+				string_stream.fill(' ');
+				string_stream.width(column_width);
+				string_stream.flags(std::ios::right);
+
+				string_stream << bytes_to_string(ordered_bytes);
+			}
+
+			const std::string string_representation = string_stream.str();
+			if (!string_representation.empty())
+			{
+				stream << string_representation << NEWLINE;
+			}
+		}
+
+
+		template <typename Type_t>
+		void print_memory(const std::string &filename_line, const char *name, const Type_t *pointer, standard::size_t size, option_t options)
+		{
+			typedef typename print_traits<Type_t>::unit_t unit_t;
+
+			option_t base = base_value_from_options(options, print_traits<Type_t>::default_base);
+			option_t byte_order = byte_order_value_from_options(options, current_byte_order());
+
+			const char *base_name = option_name((base >> OPTIONS_START_BASE), BASE_NAMES, BASE_NAMES_LENGTH, "?");
+			const char *byte_order_name = option_name((byte_order >> OPTIONS_START_BYTE_ORDER), BYTE_ORDER_NAMES, BYTE_ORDER_NAMES_LENGTH, "?");
+
+			out_stream stream(filename_line);
+			stream << name << " (" << base_name << ", " << byte_order_name << "):";
+			indentation_add();
+			stream << NEWLINE;
+
+			const std::string (*bytes_to_string)(Type_t) = select_conversion<Type_t>(base);
+			outputwidth_t column_width = field_width<Type_t>(base);
+			print_memory_contents(stream, static_cast<const unit_t *>(pointer), size, column_width, bytes_to_string, byte_order);
+
+			indentation_remove();
+
+			stream << ENDLINE;
+		}
+
+	}
 	}
 
-}
-}
+
+	
+
+
+	namespace trace_out { namespace detail
+	{
+
+		class auto_indentation
+		{
+		public:
+			auto_indentation();
+			~auto_indentation();
+		};
+
+
+		class block
+		{
+		public:
+			block(bool value);
+			block(const block &another);
+			~block();
+
+			operator bool() const;
+
+		private:
+			block &operator =(const block &another); // = delete
+
+	#if defined(TRACE_OUT_CPP11)
+
+			block &operator =(block &&another); // = delete
+
+	#endif // defined(TRACE_OUT_CPP11)
+
+			auto_indentation _auto_indentation;
+			bool _value;
+		};
+
+
+		template <typename Type_t>
+		block if_block(const std::string &filename_line, const char *condition, const Type_t &value);
+
+		template <typename Type_t>
+		block while_block(const std::string &filename_line, const char *condition, const Type_t &value);
+
+		block iteration_block(const std::string &filename_line, standard::size_t iteration);
+
+
+
+		class for_block
+		{
+		public:
+			for_block(const std::string &filename_line, const char *expression);
+			~for_block();
+
+			operator bool() const;
+			standard::size_t iteration();
+
+		private:
+			standard::size_t _iteration_number;
+		};
+
+
+		for_block make_for_block(const std::string &filename_line, const char *expression);
+
+
+
+		void print_while_header(const std::string &filename_line, const char *condition);
+
+	}
+	}
+
+
+	namespace trace_out { namespace detail
+	{
+
+		template <typename Type_t>
+		block if_block(const std::string &filename_line, const char *condition, const Type_t &value)
+		{
+			out_stream stream(filename_line);
+			stream << "if (" << condition << ") => " << FLUSH;
+			stream << make_pretty_condition(value) << ENDLINE;
+
+			return block(!!value);
+		}
+
+
+		template <typename Type_t>
+		block while_block(const std::string &filename_line, const char *condition, const Type_t &value)
+		{
+			{
+				auto_indentation auto_indentation;
+
+				out_stream stream(filename_line);
+				stream << "// while: " << condition << " => " << FLUSH;
+				stream << make_pretty_condition(value) << ENDLINE;
+			}
+
+			return block(!!value);
+		}
+
+	}
+	}
+
+
+
+	namespace trace_out { namespace detail
+	{
+
+		standard::uint64_t time_in_milliseconds();
+
+	}
+	}
+
+
+		
+
+
+	namespace trace_out { namespace detail
+	{
+
+		void print_execution_time_in_milliseconds(const std::string &filename_line, const char *label, standard::uint64_t milliseconds);
+		void print_execution_time_in_clocks(const std::string &filename_line, const char *label, std::clock_t clocks, double seconds);
+
+	}
+	}
+
+
+
+#if defined(TRACE_OUT_CLANG)
+
+	#pragma clang diagnostic push
+	#pragma clang diagnostic ignored "-Wdollar-in-identifier-extension"
+	#pragma clang diagnostic ignored "-Wvariadic-macros"
+	#pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
+
+#elif defined(TRACE_OUT_GCC) || defined(TRACE_OUT_MINGW)
+
+	#pragma GCC diagnostic push
+	#pragma GCC diagnostic ignored "-Wvariadic-macros" // seems it does not turn off the warning if there's no C++11
+
+#endif
+
+
+#if (!defined(NDEBUG) && !defined(TRACE_OUT_OFF)) || defined(TRACE_OUT_ON)
+
+	#define $e(...) \
+				trace_out::detail::expression(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__, ##__VA_ARGS__)
+
+	#define $w(...) \
+				trace_out::detail::watch(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__, ##__VA_ARGS__);
+
+	#define $m(pointer, ...) \
+				trace_out::detail::print_memory(TRACE_OUT_FILENAME_LINE, #pointer, pointer, ##__VA_ARGS__);
+
+	#define $f \
+				trace_out::detail::function_printer trace_out_private__unify(trace_out_f) = trace_out::detail::make_function_printer(TRACE_OUT_FILENAME_LINE, TRACE_OUT_FUNCTION_SIGNATURE);
+
+	#define $return \
+				return trace_out::detail::make_return_printer(TRACE_OUT_FILENAME_LINE) ,
+
+	#define $if(...) \
+				if (trace_out::detail::block trace_out_private__unify(trace_out_if_block) = trace_out::detail::if_block(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__, (__VA_ARGS__)))
+
+	#define trace_out_private__for(block_variable_name, ...) \
+				if (trace_out::detail::for_block block_variable_name = trace_out::detail::make_for_block(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__)) {} else \
+					for (__VA_ARGS__) \
+						if (trace_out::detail::block trace_out_private__unify(trace_out_iteration_block) = trace_out::detail::iteration_block(TRACE_OUT_FILENAME_LINE, block_variable_name.iteration())) {} else
+
+	#define $for(...) \
+				trace_out_private__for(trace_out_private__unify(trace_out_for_block), ##__VA_ARGS__)
+
+	#define $while(...) \
+				if (trace_out::detail::print_while_header(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__), false) {} else \
+					while (trace_out::detail::block trace_out_private__unify(trace_out_while_block) = trace_out::detail::while_block(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__, (__VA_ARGS__)))
+
+	#define $p(format, ...) \
+				{ \
+					trace_out::detail::out_stream stream(TRACE_OUT_FILENAME_LINE); \
+					stream.printf(format, ##__VA_ARGS__); \
+					stream << trace_out::detail::ENDLINE; \
+				}
+
+	#define $thread(name) \
+				trace_out::detail::set_current_thread_name(#name);
+
+	#define trace_out_private__time(start_time, execution_time, label, ...) \
+				trace_out::detail::standard::uint64_t start_time = trace_out::detail::time_in_milliseconds(); \
+				__VA_ARGS__ \
+				trace_out::detail::standard::uint64_t execution_time = trace_out::detail::time_in_milliseconds() - start_time; \
+				trace_out::detail::print_execution_time_in_milliseconds(TRACE_OUT_FILENAME_LINE, label, execution_time);
+
+	#define $time(label, ...) \
+				trace_out_private__time(trace_out_private__unify(trace_out_start_time), trace_out_private__unify(trace_out_end_time), label, ##__VA_ARGS__)
+
+	#define trace_out_private__clocks(start_clocks, execution_clocks, label, ...) \
+				std::clock_t start_clocks = std::clock(); \
+				__VA_ARGS__ \
+				std::clock_t execution_clocks = std::clock() - start_clocks; \
+				trace_out::detail::print_execution_time_in_clocks(TRACE_OUT_FILENAME_LINE, label, execution_clocks, static_cast<double>(execution_clocks) / CLOCKS_PER_SEC * 1000.0);
+
+	#define $clocks(label, ...) \
+				trace_out_private__clocks(trace_out_private__unify(trace_out_start_clocks), trace_out_private__unify(trace_out_execution_clocks), label, ##__VA_ARGS__)
+
+#elif defined(NDEBUG) || defined(TRACE_OUT_OFF)
+
+	#define $e(...) \
+				__VA_ARGS__
+
+	#define $w(...)
+
+	#define $m(pointer, ...)
+
+	#define $f
+
+	#define $return \
+				return
+
+	#define $if(...) \
+				if (__VA_ARGS__)
+
+	#define $for(...) \
+				for (__VA_ARGS__)
+
+	#define $while(...) \
+				while (__VA_ARGS__)
+
+	#define $p(format, ...)
+
+	#define $thread(name)
+
+	#define $time(label, ...) \
+				__VA_ARGS__
+
+	#define $clocks(label, ...) \
+				__VA_ARGS__
+
+#endif
+
+
+
+#if defined(TRACE_OUT_CLANG)
+
+	#pragma clang diagnostic pop
+
+#elif defined(TRACE_OUT_GCC) || defined(TRACE_OUT_MINGW)
+
+	#pragma GCC diagnostic pop
+
+#endif
 
 
 
@@ -1882,195 +2208,68 @@ namespace trace_out { namespace detail
 
 
 
-namespace trace_out { namespace detail
-{
 
-	template <typename Type_t>
-	class resource
+	namespace trace_out { namespace detail
 	{
-	public:
-		typedef void (*deleter_t)(Type_t);
 
-		resource(Type_t handle, deleter_t deleter);
-		~resource();
-
-		const Type_t &get() const;
-
-	private:
-		resource();
-		resource(const resource &);
-		resource &operator =(const resource &);
-
-#if defined(TRACE_OUT_CPP11)
-
-		resource(resource &&another);
-		resource &operator =(resource &&another);
-
-#endif // defined(TRACE_OUT_CPP11)
-
-		Type_t _handle;
-		deleter_t _deleter;
-	};
-
-}
-}
-
-
-namespace trace_out { namespace detail
-{
-
-	template <typename Type_t>
-	resource<Type_t>::resource(Type_t handle, deleter_t deleter)
-		:
-		_handle(handle),
-		_deleter(deleter)
-	{
-	}
-
-
-	template <typename Type_t>
-	resource<Type_t>::~resource()
-	{
-		_deleter(_handle);
-	}
-
-
-	template <typename Type_t>
-	const Type_t &resource<Type_t>::get() const
-	{
-		return _handle;
-	}
-
-}
-}
-
-
-#include <cstdarg>
-
-
-
-namespace trace_out { namespace detail { namespace standard
-{
-
-	size_t vsnprintf_string_length(const char *format, va_list arguments);
-	int vsnprintf(char *buffer, size_t size, const char *format, va_list arguments);
-
-}
-}
-}
-
-#include <string>
-
-
-
-namespace trace_out { namespace detail
-{
-
-	class auto_indentation
-	{
-	public:
-		auto_indentation();
-		~auto_indentation();
-	};
-
-
-	class block
-	{
-	public:
-		block(bool value);
-		block(const block &another);
-		~block();
-
-		operator bool() const;
-
-	private:
-		block &operator =(const block &another); // = delete
-
-#if defined(TRACE_OUT_CPP11)
-
-		block &operator =(block &&another); // = delete
-
-#endif // defined(TRACE_OUT_CPP11)
-
-		auto_indentation _auto_indentation;
-		bool _value;
-	};
-
-
-	template <typename Type_t>
-	block if_block(const std::string &filename_line, const char *condition, const Type_t &value);
-
-	template <typename Type_t>
-	block while_block(const std::string &filename_line, const char *condition, const Type_t &value);
-
-	block iteration_block(const std::string &filename_line, standard::size_t iteration);
-
-
-
-	class for_block
-	{
-	public:
-		for_block(const std::string &filename_line, const char *expression);
-		~for_block();
-
-		operator bool() const;
-		standard::size_t iteration();
-
-	private:
-		standard::size_t _iteration_number;
-	};
-
-
-	for_block make_for_block(const std::string &filename_line, const char *expression);
-
-
-
-	void print_while_header(const std::string &filename_line, const char *condition);
-
-}
-}
-
-
-namespace trace_out { namespace detail
-{
-
-	template <typename Type_t>
-	block if_block(const std::string &filename_line, const char *condition, const Type_t &value)
-	{
-		out_stream stream(filename_line);
-		stream << "if (" << condition << ") => " << FLUSH;
-		stream << make_pretty_condition(value) << ENDLINE;
-
-		return block(!!value);
-	}
-
-
-	template <typename Type_t>
-	block while_block(const std::string &filename_line, const char *condition, const Type_t &value)
-	{
+		template <typename Type_t>
+		class resource
 		{
-			auto_indentation auto_indentation;
+		public:
+			typedef void (*deleter_t)(Type_t);
 
-			out_stream stream(filename_line);
-			stream << "// while: " << condition << " => " << FLUSH;
-			stream << make_pretty_condition(value) << ENDLINE;
+			resource(Type_t handle, deleter_t deleter);
+			~resource();
+
+			const Type_t &get() const;
+
+		private:
+			resource();
+			resource(const resource &);
+			resource &operator =(const resource &);
+
+	#if defined(TRACE_OUT_CPP11)
+
+			resource(resource &&another);
+			resource &operator =(resource &&another);
+
+	#endif // defined(TRACE_OUT_CPP11)
+
+			Type_t _handle;
+			deleter_t _deleter;
+		};
+
+	}
+	}
+
+
+	namespace trace_out { namespace detail
+	{
+
+		template <typename Type_t>
+		resource<Type_t>::resource(Type_t handle, deleter_t deleter)
+			:
+			_handle(handle),
+			_deleter(deleter)
+		{
 		}
 
-		return block(!!value);
+
+		template <typename Type_t>
+		resource<Type_t>::~resource()
+		{
+			_deleter(_handle);
+		}
+
+
+		template <typename Type_t>
+		const Type_t &resource<Type_t>::get() const
+		{
+			return _handle;
+		}
+
 	}
-
-}
-}
-
-
-namespace trace_out { namespace detail
-{
-
-	int console_width();
-
-}
-}
-
+	}
 
 
 
@@ -2113,10 +2312,41 @@ namespace trace_out { namespace detail
 
 
 
+
+namespace trace_out { namespace detail { namespace standard
+{
+
+	size_t vsnprintf_string_length(const char *format, va_list arguments);
+	int vsnprintf(char *buffer, size_t size, const char *format, va_list arguments);
+
+}
+}
+}
+
+
+
 namespace trace_out { namespace detail
 {
 
-	standard::uint64_t current_thread_id();
+#if defined(TRACE_OUT_INDENTATION)
+	const char INDENTATION[] = TRACE_OUT_INDENTATION;
+#else
+	const char INDENTATION[] = "    ";
+#endif
+
+#if defined(TRACE_OUT_MARKER)
+	const char MARKER[] = TRACE_OUT_MARKER " ";
+#else
+	const char MARKER[] = "";
+#endif
+
+	const char THREAD_HEADER_SEPARATOR = '~';
+	const char FILENAME_FIELD_EXCESS_PADDING[] = "~";
+	const standard::size_t FILENAME_FIELD_EXCESS_PADDING_SIZE = sizeof(FILENAME_FIELD_EXCESS_PADDING);
+	const standard::size_t FILENAME_FIELD_WIDTH = 20;
+	const standard::size_t LINE_FIELD_WIDTH = 4;
+	const char DELIMITER[] = " |  ";
+	const standard::size_t INDENTATION_WIDTH = sizeof(INDENTATION) - 1;
 
 }
 }
@@ -2216,254 +2446,18 @@ namespace trace_out { namespace detail
 namespace trace_out { namespace detail
 {
 
-	standard::uint64_t time_in_milliseconds();
+	standard::uint64_t current_thread_id();
 
 }
 }
-
-
-#include <ctime>
-#include <string>
 
 
 
 namespace trace_out { namespace detail
 {
 
-	void print_execution_time_in_milliseconds(const std::string &filename_line, standard::uint64_t milliseconds);
-	void print_execution_time_in_ticks(const std::string &filename_line, std::clock_t ticks, double milliseconds);
+	int console_width();
 
 }
 }
-
-
-#include <string>
-
-
-
-namespace trace_out { namespace detail
-{
-
-#if !defined(TRACE_OUT_CPP11)
-
-	template <typename Type_t>
-	const Type_t &expression(const std::string &filename_line, const char *name, const Type_t &value);
-
-	template <typename Type_t>
-	Type_t &expression(const std::string &filename_line, const char *name, Type_t &value);
-
-	template <typename Type_t>
-	void watch(const std::string &filename_line, const char *name, const Type_t &value);
-
-#else
-
-	template <typename Type_t>
-	Type_t &&expression(const std::string &filename_line, const char *name, Type_t &&value);
-
-	template <typename ...Types_t>
-	void watch(const std::string &filename_line, const char *names, const Types_t &...values);
-
-#endif // !defined(TRACE_OUT_CPP11)
-
-}
-}
-
-
-namespace trace_out { namespace detail
-{
-
-#if !defined(TRACE_OUT_CPP11)
-
-	template <typename Type_t>
-	const Type_t &expression(const std::string &filename_line, const char *name, const Type_t &value)
-	{
-		out_stream stream(filename_line);
-		stream << name << " = " << make_pretty(value) << ENDLINE;
-		return value;
-	}
-
-
-	template <typename Type_t>
-	Type_t &expression(const std::string &filename_line, const char *name, Type_t &value)
-	{
-		out_stream stream(filename_line);
-		stream << name << " = " << make_pretty(value) << ENDLINE;
-		return value;
-	}
-
-
-	template <typename Type_t>
-	void watch(const std::string &filename_line, const char *name, const Type_t &value)
-	{
-		out_stream stream(filename_line);
-		stream << name << " = " << make_pretty(value) << ENDLINE;
-	}
-
-#else
-
-	template <typename Type_t>
-	Type_t &&expression(const std::string &filename_line, const char *name, Type_t &&value)
-	{
-		out_stream stream(filename_line);
-		stream << name << " = " << make_pretty(value) << ENDLINE;
-		return std::forward<Type_t>(value);
-	}
-
-
-	template <typename Type_t>
-	void print_values(out_stream &stream, const std::string &name, const Type_t &value)
-	{
-		stream << name << " = " << make_pretty(value) << ENDLINE;
-	}
-
-
-	template <typename FirstType_t, typename ...RestTypes_t>
-	void print_values(out_stream &stream, const std::string &names, const FirstType_t &first_value, const RestTypes_t &...rest_values)
-	{
-		stream << first_token(names) << " = " << make_pretty(first_value) << NEWLINE;
-		print_values(stream, rest_tokens(names), rest_values...);
-	}
-
-	template <typename ...Types_t>
-	void watch(const std::string &filename_line, const char *names, const Types_t &...values)
-	{
-		out_stream stream(filename_line);
-		print_values(stream, names, values...);
-	}
-
-#endif // !defined(TRACE_OUT_CPP11)
-
-}
-}
-
-#include <ctime>
-
-
-
-#if defined(TRACE_OUT_CLANG)
-
-	#pragma clang diagnostic push
-	#pragma clang diagnostic ignored "-Wdollar-in-identifier-extension"
-	#pragma clang diagnostic ignored "-Wvariadic-macros"
-	#pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
-
-#elif defined(TRACE_OUT_GCC) || defined(TRACE_OUT_MINGW)
-
-	#pragma GCC diagnostic push
-	#pragma GCC diagnostic ignored "-Wvariadic-macros" // seems it does not turn off the warning
-
-#endif
-
-
-#if (!defined(NDEBUG) && !defined(TRACE_OUT_OFF)) || defined(TRACE_OUT_ON)
-
-	#define $e(...) \
-				trace_out::detail::expression(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__, ##__VA_ARGS__)
-
-	#define $w(...) \
-				trace_out::detail::watch(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__, ##__VA_ARGS__);
-
-	#define $m(pointer, ...) \
-				trace_out::detail::print_memory(TRACE_OUT_FILENAME_LINE, #pointer, pointer, ##__VA_ARGS__);
-
-	#define $f \
-				trace_out::detail::function_printer trace_out_private__unify(trace_out_f) = trace_out::detail::make_function_printer(TRACE_OUT_FILENAME_LINE, TRACE_OUT_FUNCTION_SIGNATURE);
-
-	#define $return \
-				return trace_out::detail::make_return_printer(TRACE_OUT_FILENAME_LINE) ,
-
-	#define $if(...) \
-				if (trace_out::detail::block trace_out_private__unify(trace_out_if_block) = trace_out::detail::if_block(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__, (__VA_ARGS__)))
-
-	#define trace_out_private__for(block_variable_name, ...) \
-				if (trace_out::detail::for_block block_variable_name = trace_out::detail::make_for_block(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__)) {} else \
-					for (__VA_ARGS__) \
-						if (trace_out::detail::block trace_out_private__unify(trace_out_iteration_block) = trace_out::detail::iteration_block(TRACE_OUT_FILENAME_LINE, block_variable_name.iteration())) {} else
-
-	#define $for(...) \
-				trace_out_private__for(trace_out_private__unify(trace_out_for_block), ##__VA_ARGS__)
-
-	#define $while(...) \
-				if (trace_out::detail::print_while_header(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__), false) {} else \
-					while (trace_out::detail::block trace_out_private__unify(trace_out_while_block) = trace_out::detail::while_block(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__, (__VA_ARGS__)))
-
-	#define $p(format, ...) \
-				{ \
-					trace_out::detail::out_stream stream(TRACE_OUT_FILENAME_LINE); \
-					stream.printf(format, ##__VA_ARGS__); \
-					stream << trace_out::detail::ENDLINE; \
-				}
-
-	#define $thread(name) \
-				trace_out::detail::set_current_thread_name(#name);
-
-	#define trace_out_private__time(start_time_variable, end_time_variable, ...) \
-				{ \
-					trace_out::detail::standard::uint64_t start_time_variable = trace_out::detail::time_in_milliseconds(); \
-					__VA_ARGS__ \
-					trace_out::detail::standard::uint64_t end_time_variable = trace_out::detail::time_in_milliseconds(); \
-					trace_out::detail::print_execution_time_in_milliseconds(TRACE_OUT_FILENAME_LINE, end_time_variable - start_time_variable); \
-				}
-
-	#define $time(...) \
-				trace_out_private__time(trace_out_private__unify(trace_out_start_ticks), trace_out_private__unify(trace_out_end_ticks), ##__VA_ARGS__)
-
-	#define trace_out_private__ticks(start_ticks_variable, end_ticks_variable, ...) \
-				{ \
-					std::clock_t start_ticks_variable = std::clock(); \
-					__VA_ARGS__ \
-					std::clock_t end_ticks_variable = std::clock(); \
-					std::clock_t execution_time = end_ticks_variable - start_ticks_variable; \
-					trace_out::detail::print_execution_time_in_ticks(TRACE_OUT_FILENAME_LINE, execution_time, (static_cast<double>(execution_time)) / CLOCKS_PER_SEC * 1000); \
-				}
-
-	#define $ticks(...) \
-				trace_out_private__ticks(trace_out_private__unify(trace_out_start_time), trace_out_private__unify(trace_out_end_time), ##__VA_ARGS__)
-
-#elif defined(NDEBUG) || defined(TRACE_OUT_OFF)
-
-	#define $e(...) \
-				__VA_ARGS__
-
-	#define $w(...)
-
-	#define $m(pointer, ...)
-
-	#define $f
-
-	#define $return \
-				return
-
-	#define $if(...) \
-				if (__VA_ARGS__)
-
-	#define $for(...) \
-				for (__VA_ARGS__)
-
-	#define $while(...) \
-				while (__VA_ARGS__)
-
-	#define $p(format, ...)
-
-	#define $thread(name)
-
-	#define $time(...) \
-				__VA_ARGS__
-
-	#define $ticks(...) \
-				__VA_ARGS__
-
-#endif
-
-
-
-#if defined(TRACE_OUT_CLANG)
-
-	#pragma clang diagnostic pop
-
-#elif defined(TRACE_OUT_GCC) || defined(TRACE_OUT_MINGW)
-
-	#pragma GCC diagnostic pop
-
-#endif
 
