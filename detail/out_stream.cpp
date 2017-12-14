@@ -78,21 +78,21 @@ namespace trace_out { namespace detail
 
 	void lock_output()
 	{
-#if !defined(TRACE_OUT_NO_OUTPUT_SYNC)
+#if defined(TRACE_OUT_OUTPUT_SYNC_ON)
 
 		_output_mutex.lock();
 
-#endif // !defined(TRACE_OUT_NO_OUTPUT_SYNC)
+#endif // defined(TRACE_OUT_OUTPUT_SYNC_ON)
 	}
 
 
 	void unlock_output()
 	{
-#if !defined(TRACE_OUT_NO_OUTPUT_SYNC)
+#if defined(TRACE_OUT_OUTPUT_SYNC_ON)
 
 		_output_mutex.unlock();
 
-#endif // !defined(TRACE_OUT_NO_OUTPUT_SYNC)
+#endif // defined(TRACE_OUT_OUTPUT_SYNC_ON)
 	}
 
 
@@ -148,6 +148,9 @@ namespace trace_out { namespace detail
 	{
 		lock_output();
 
+		(void)filename_line; // eliminating 'not used' warning
+
+#if defined(TRACE_OUT_SHOW_THREAD)
 		if (!is_running_same_thread())
 		{
 			std::string thread_id = thread_id_field(current_thread_id());
@@ -157,8 +160,15 @@ namespace trace_out { namespace detail
 
 			*this << MARKER << header << "\n";
 		}
+#endif // defined(TRACE_OUT_SHOW_THREAD)
 
-		*this << MARKER << filename_line << DELIMITER << indentation();
+		*this << MARKER;
+
+#if defined(TRACE_OUT_SHOW_FILE_LINE)
+		*this << filename_line << DELIMITER;
+#endif // defined(TRACE_OUT_SHOW_FILE_LINE)
+
+        *this << indentation();
 	}
 
 
@@ -168,12 +178,15 @@ namespace trace_out { namespace detail
 	{
 		lock_output();
 
+#if defined(TRACE_OUT_SHOW_FILE_LINE)
 		std::stringstream stream;
 		stream.fill(' ');
 		stream.width(FILENAME_FIELD_WIDTH + 1 + LINE_FIELD_WIDTH);
 		stream << "";
+		*this << MARKER << stream.str() << DELIMITER;
+#endif // defined(TRACE_OUT_SHOW_FILE_LINE)
 
-		*this << MARKER << stream.str() << DELIMITER << indentation();
+		*this << indentation();
 	}
 
 
@@ -212,14 +225,19 @@ namespace trace_out { namespace detail
 
 	out_stream &out_stream::operator <<(const newline_manipulator &)
 	{
+		*this << "\n";
+
+#if defined(TRACE_OUT_SHOW_FILE_LINE)
 		std::stringstream stream;
 		stream.fill(' ');
 		stream.width(FILENAME_FIELD_WIDTH + 1 + LINE_FIELD_WIDTH);
 		stream << "";
 
-		*this << "\n";
 		_current_line_length = 0;
-		*this << MARKER << stream.str() << DELIMITER << indentation();
+		*this << MARKER << stream.str() << DELIMITER;
+#endif // defined(TRACE_OUT_SHOW_FILE_LINE)
+
+		*this << indentation();
 
 		return *this;
 	}
