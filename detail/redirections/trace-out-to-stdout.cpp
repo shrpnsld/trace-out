@@ -1,5 +1,3 @@
-#if !defined(TRACE_OUT_REDIRECTION)
-
 #include <iostream>
 
 #include "trace-out/detail/standard/integer.hpp"
@@ -46,7 +44,4 @@ namespace trace_out_to_stdout
 	}
 
 }
-
-
-#endif // !defined(TRACE_OUT_REDIRECTION)
 
