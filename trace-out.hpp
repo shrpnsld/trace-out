@@ -2,15 +2,15 @@
 
 #include <ctime>
 
-#include "detail/platform_defines.hpp"
-#include "detail/standard/integer.hpp"
-#include "detail/out_stream.hpp"
-#include "detail/watch_printer.hpp"
-#include "detail/function_printer.hpp"
-#include "detail/memory_printer.hpp"
-#include "detail/statements_printer.hpp"
-#include "detail/system_time.hpp"
-#include "detail/time_printer.hpp"
+#include "trace-out/detail/stuff/platform-detection.hpp"
+#include "trace-out/detail/standard/integer.hpp"
+#include "trace-out/detail/pretty-printing/out-stream.hpp"
+#include "trace-out/detail/pretty-printing/watch-printer.hpp"
+#include "trace-out/detail/pretty-printing/function-printer.hpp"
+#include "trace-out/detail/pretty-printing/memory-printer.hpp"
+#include "trace-out/detail/pretty-printing/statements-printer.hpp"
+#include "trace-out/detail/pretty-printing/time-printer.hpp"
+#include "trace-out/detail/system/time.hpp"
 
 
 #if defined(TRACE_OUT_CLANG)

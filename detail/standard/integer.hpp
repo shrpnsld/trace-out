@@ -2,7 +2,7 @@
 
 #include <cstddef>
 
-#include "../platform_defines.hpp"
+#include "trace-out/detail/stuff/platform-detection.hpp"
 
 #if defined(TRACE_OUT_CPP11)
 	#include <cstdint>
