@@ -1,5 +1,5 @@
-#include "trace-out/detail/stuff/platform-detection.hpp"
-#if defined(TRACE_OUT_WINDOWS)
+//#include "trace-out/detail/stuff/platform-detection.hpp" // [amalgamate:uncomment]
+//#if defined(TRACE_OUT_WINDOWS) // [amalgamate:uncomment]
 
 #include <windows.h>
 
@@ -19,5 +19,5 @@ namespace trace_out { namespace detail { namespace system
 }
 
 
-#endif // defined(TRACE_OUT_WINDOWS)
+//#endif // defined(TRACE_OUT_WINDOWS) // [amalgamate:uncomment]
 

@@ -1,5 +1,5 @@
-#include "trace-out/detail/stuff/platform-detection.hpp"
-#if defined(TRACE_OUT_MVS)
+//#include "trace-out/detail/stuff/platform-detection.hpp" // [amalgamate:uncomment]
+//#if defined(TRACE_OUT_MVS) // [amalgamate:uncomment]
 
 #include "trace-out/detail/standard/printfamily.hpp"
 
@@ -26,5 +26,5 @@ namespace trace_out { namespace detail { namespace standard
 }
 
 
-#endif // defined(TRACE_OUT_MVS)
+//#endif // defined(TRACE_OUT_MVS) // [amalgamate:uncomment]
 

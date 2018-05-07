@@ -1,5 +1,5 @@
-#include "trace-out/detail/stuff/platform-detection.hpp"
-#if defined(TRACE_OUT_CLANG) || defined(TRACE_OUT_GCC) || defined(TRACE_OUT_MINGW)
+//#include "trace-out/detail/stuff/platform-detection.hpp" // [amalgamate:uncomment]
+//#if defined(TRACE_OUT_CLANG) || defined(TRACE_OUT_GCC) || defined(TRACE_OUT_MINGW) // [amalgamate:uncomment]
 
 #include "trace-out/detail/standard/printfamily.hpp"
 
@@ -26,4 +26,4 @@ namespace trace_out { namespace detail { namespace standard
 }
 
 
-#endif // defined(TRACE_OUT_CLANG) || defined(TRACE_OUT_GCC) || defined(TRACE_OUT_MINGW)
+//#endif // defined(TRACE_OUT_CLANG) || defined(TRACE_OUT_GCC) || defined(TRACE_OUT_MINGW) // [amalgamate:uncomment]

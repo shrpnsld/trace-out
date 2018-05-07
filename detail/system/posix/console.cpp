@@ -1,5 +1,5 @@
-#include "trace-out/detail/stuff/platform-detection.hpp"
-#if defined(TRACE_OUT_POSIX)
+//#include "trace-out/detail/stuff/platform-detection.hpp" // [amalgamate:uncomment]
+//#if defined(TRACE_OUT_POSIX) // [amalgamate:uncomment]
 
 #include <sys/ioctl.h>
 #include <unistd.h>
@@ -27,5 +27,5 @@ namespace trace_out { namespace detail { namespace system
 }
 
 
-#endif // defined(TRACE_OUT_POSIX)
+//#endif // defined(TRACE_OUT_POSIX) // [amalgamate:uncomment]
 
