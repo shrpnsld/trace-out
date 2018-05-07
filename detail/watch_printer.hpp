@@ -96,6 +96,10 @@ namespace trace_out { namespace detail
 	{
 		out_stream stream(filename_line);
 		print_values(stream, names, values...);
+		if (sizeof...(values) > 1)
+		{
+			out_stream() << ENDLINE;
+		}
 	}
 
 #endif // !defined(TRACE_OUT_CPP11)
