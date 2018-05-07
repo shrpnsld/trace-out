@@ -6,7 +6,7 @@
 #include "trace-out/detail/system/time.hpp"
 
 
-namespace trace_out { namespace detail
+namespace trace_out { namespace detail { namespace system
 {
 
 	standard::uint64_t time_in_milliseconds()
@@ -23,6 +23,7 @@ namespace trace_out { namespace detail
 		return milliseconds;
 	}
 
+}
 }
 }
 

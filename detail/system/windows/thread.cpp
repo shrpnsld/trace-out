@@ -6,7 +6,7 @@
 #include "trace-out/detail/system/thread.hpp"
 
 
-namespace trace_out { namespace detail
+namespace trace_out { namespace detail { namespace system
 {
 
 	standard::uint64_t current_thread_id()
@@ -14,6 +14,7 @@ namespace trace_out { namespace detail
 		return static_cast<standard::uint64_t>(GetCurrentThreadId());
 	}
 
+}
 }
 }
 

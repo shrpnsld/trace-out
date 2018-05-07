@@ -1,7 +1,7 @@
 #include "trace-out/detail/system/mutex.hpp"
 
 
-namespace trace_out { namespace detail
+namespace trace_out { namespace detail { namespace system
 {
 
 	mutex::mutex()
@@ -22,6 +22,7 @@ namespace trace_out { namespace detail
 		mutex_unlock(_handle.get());
 	}
 
+}
 }
 }
 

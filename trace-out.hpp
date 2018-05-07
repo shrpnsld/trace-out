@@ -71,9 +71,9 @@
 				trace_out::detail::set_current_thread_name(#name);
 
 	#define trace_out_private__time(start_time, execution_time, label, ...) \
-				trace_out::detail::standard::uint64_t start_time = trace_out::detail::time_in_milliseconds(); \
+				trace_out::detail::standard::uint64_t start_time = trace_out::detail::system::time_in_milliseconds(); \
 				__VA_ARGS__ \
-				trace_out::detail::standard::uint64_t execution_time = trace_out::detail::time_in_milliseconds() - start_time; \
+				trace_out::detail::standard::uint64_t execution_time = trace_out::detail::system::time_in_milliseconds() - start_time; \
 				trace_out::detail::print_execution_time_in_milliseconds(TRACE_OUT_FILENAME_LINE, label, execution_time);
 
 	#define $time(label, ...) \

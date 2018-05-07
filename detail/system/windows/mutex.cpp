@@ -6,7 +6,7 @@
 #include "trace-out/detail/system/mutex.hpp"
 
 
-namespace trace_out { namespace detail
+namespace trace_out { namespace detail { namespace system
 {
 
 	struct _mutex
@@ -41,6 +41,7 @@ namespace trace_out { namespace detail
 		LeaveCriticalSection(&mutex->value);
 	}
 
+}
 }
 }
 

@@ -8,7 +8,7 @@
 #include "trace-out/detail/system/thread-local-storage.hpp"
 
 
-namespace trace_out { namespace detail
+namespace trace_out { namespace detail { namespace system
 {
 
 	struct _tlskey
@@ -48,6 +48,7 @@ namespace trace_out { namespace detail
 		assert(retval == 0);
 	}
 
+}
 }
 }
 

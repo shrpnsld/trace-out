@@ -4,7 +4,7 @@
 #include "trace-out/detail/stuff/resource.hpp"
 
 
-namespace trace_out { namespace detail
+namespace trace_out { namespace detail { namespace system
 {
 
 	typedef struct _tlskey *tlskey_t;
@@ -41,9 +41,10 @@ namespace trace_out { namespace detail
 
 }
 }
+}
 
 
-namespace trace_out { namespace detail
+namespace trace_out { namespace detail { namespace system
 {
 
 	template <typename Type_t>
@@ -87,6 +88,7 @@ namespace trace_out { namespace detail
 		return *value;
 	}
 
+}
 }
 }
 

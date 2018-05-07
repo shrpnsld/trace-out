@@ -34,7 +34,7 @@ namespace trace_out_to_stdout
 
 	trace_out::detail::standard::size_t width()
 	{
-		int width = trace_out::detail::console_width();
+		int width = trace_out::detail::system::console_width();
 		if (width == -1)
 		{
 			return DEFAULT_WIDTH;

@@ -4,7 +4,7 @@
 #include "trace-out/detail/stuff/resource.hpp"
 
 
-namespace trace_out { namespace detail
+namespace trace_out { namespace detail { namespace system
 {
 
 	typedef struct _mutex *mutex_t;
@@ -37,6 +37,7 @@ namespace trace_out { namespace detail
 		resource<mutex_t> _handle;
 	};
 
+}
 }
 }
 

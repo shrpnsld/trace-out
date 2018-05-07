@@ -4,11 +4,12 @@
 #include "trace-out/detail/system/constants.hpp"
 
 
-namespace trace_out { namespace detail
+namespace trace_out { namespace detail { namespace system
 {
 
 	const char FILE_PATH_COMPONENT_DELIMITER = '\\';
 
+}
 }
 }
 

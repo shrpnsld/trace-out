@@ -47,9 +47,9 @@ namespace trace_out { namespace detail
 
 
 	standard::uint64_t _current_thread_id;
-	tls<std::string> _thread_name;
-	mutex _output_mutex;
-	tls<std::string> _indentation;
+	system::tls<std::string> _thread_name;
+	system::mutex _output_mutex;
+	system::tls<std::string> _indentation;
 
 }
 }
@@ -66,9 +66,9 @@ namespace trace_out { namespace detail
 
 	bool is_running_same_thread()
 	{
-		if (_current_thread_id != current_thread_id())
+		if (_current_thread_id != system::current_thread_id())
 		{
-			_current_thread_id = current_thread_id();
+			_current_thread_id = system::current_thread_id();
 			return false;
 		}
 

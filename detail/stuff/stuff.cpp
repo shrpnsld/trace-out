@@ -9,7 +9,7 @@ namespace trace_out { namespace detail
 	const std::string filename_from_path(const char *path)
 	{
 		std::string file_path(path);
-		return file_path.substr(file_path.rfind(FILE_PATH_COMPONENT_DELIMITER) + 1);
+		return file_path.substr(file_path.rfind(system::FILE_PATH_COMPONENT_DELIMITER) + 1);
 	}
 
 

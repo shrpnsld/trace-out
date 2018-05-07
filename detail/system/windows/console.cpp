@@ -6,7 +6,7 @@
 #include "trace-out/detail/system/console.hpp"
 
 
-namespace trace_out { namespace detail
+namespace trace_out { namespace detail { namespace system
 {
 
 	int console_width()
@@ -23,6 +23,7 @@ namespace trace_out { namespace detail
 		return width;
 	}
 
+}
 }
 }
 
