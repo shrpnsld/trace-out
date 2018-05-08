@@ -121,8 +121,17 @@ namespace trace_out { namespace detail
 	template <typename Type_t>
 	typename enable_if<has_member_REAL<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
 
+#if defined(TRACE_OUT_GCC)
+	#pragma GCC diagnostic push
+	#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
+
 	template <typename Type_t>
 	out_stream &operator <<(out_stream &stream, const pretty<std::auto_ptr<Type_t> > &value);
+
+#if defined(TRACE_OUT_GCC)
+	#pragma GCC diagnostic pop
+#endif
 
 #if defined(TRACE_OUT_CPP11)
 
@@ -519,6 +528,11 @@ namespace trace_out { namespace detail
 	}
 
 
+#if defined(TRACE_OUT_GCC)
+	#pragma GCC diagnostic push
+	#pragma GCC diagnostic ignored "-Wdeprecated-declarations" // seems it does not turn off the warning if there's no C++11
+#endif
+
 	template <typename Type_t>
 	out_stream &operator <<(out_stream &stream, const pretty<std::auto_ptr<Type_t> > &value)
 	{
@@ -526,6 +540,10 @@ namespace trace_out { namespace detail
 		const std::auto_ptr<Type_t> &pointer = value.get();
 		return stream << make_pretty(static_cast<const Type_t *>(pointer.get()));
 	}
+
+#if defined(TRACE_OUT_GCC)
+	#pragma GCC diagnostic pop
+#endif
 
 
 #if defined(TRACE_OUT_CPP11)

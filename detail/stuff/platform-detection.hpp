@@ -3,9 +3,7 @@
 
 #if defined(__clang__)
 	#define TRACE_OUT_CLANG
-#elif defined(__MINGW32__)
-	#define TRACE_OUT_MINGW
-#elif (defined(__GNUC__) || defined(__GNUG__)) && !defined(__MINGW32__)
+#elif defined(__GNUC__) || defined(__GNUG__)
 	#define TRACE_OUT_GCC
 #elif defined(_MSC_VER)
 	#define TRACE_OUT_MVS
@@ -13,6 +11,9 @@
 	#error Failed to detect compiler
 #endif
 
+#if defined(__MINGW32__)
+	#define TRACE_OUT_MINGW
+#endif
 
 #if defined(__unix__) || defined(__APPLE__)
 	#define TRACE_OUT_POSIX
