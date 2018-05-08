@@ -8,9 +8,9 @@ printf debugging done the right way.
 * Uses only C++/C++11, standard and system libraries; does not use any external preprocessors or libraries.
 * Supports output redirection.
 * Crossplatform. Tested with:
-  * Apple LLVM version 9.0.0 (clang-900.0.38)
-  * GCC 4.9.2
-  * MinGW 4.9.3
+  * Apple LLVM version 9.1.0
+  * GCC 5.4.0
+  * MinGW 6.3.0
   * Microsoft Visual Studio 2010, 2012, 2013, 2015, 2017
 * Free for all ([MIT license](LICENSE.txt)).
 
