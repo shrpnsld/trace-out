@@ -109,7 +109,7 @@ Byte order flags (default value is determined automatically):
 
 `$thread(<name>)` – set thread name that will be printed in the thread header.
 
---
+---
 
 Macros `$w`, `$e`, `$return`, `$if` and `$while` support following types:
 
@@ -117,11 +117,11 @@ Macros `$w`, `$e`, `$return`, `$if` and `$while` support following types:
 * types which have `.begin()` and `.end()` member functions defined
 * sturctures and classes with data members or member functions `x`, `y`, `z`, `w`, `width`, `height`, `origin`, `size`, `real`, `imag` in lowcase, HIGHCASE and Capital
 
---
+---
 
 Macros `$f`, `$if`, `$for` and `$while` automatically shift indentation of the output inside their blocks.
 
---
+---
 
 Output is flushed before reading variables and dereferencing pointers that are passed from the outer context, thus it is more clear where things went wrong when memory was corrupted.
 
@@ -157,7 +157,7 @@ To use custom redirection you should:
 * Add `<redireciton>.cpp` file to a project.
 * Define macro `TRACE_OUT_REDIRECTION` with a name of the namespace where redirection functions are defined.
 
---
+---
 
 There are built-in implementations for redirecting output to Windows debug output and to a file: `trace_out_to_wdo` and `trace_out_to_file` respectively. By defulat `trace_out_to_file` saves output to `trace-out.txt`. To change this define `TRACE_OUT_TO_FILE` with desired file name. No `<redirection>.cpp` files required when using these built-in redirections.
 
@@ -177,7 +177,7 @@ There is an output synchronization that prevents outputs from different threads 
 
 `TRACE_OUT_MARKER` `<string>` – add text marker before every trace-out line (useful when trace-out prints to some shared output).
 
-`TRACE_OUT_SHOW_FILE_LINE` – pring file and line information for every trace-out macro.
+`TRACE_OUT_SHOW_FILE_LINE` – print file and line information for every trace-out macro.
 
 `TRACE_OUT_INDENTATION` `<string>` – string that is used as an indentation for the actual output. Default value is 4 spaces.
 
