@@ -1,21 +1,6 @@
 # trace-out
 
-printf debugging done the right way.
-
-### Features
-
-* Pretty-prints information about code.
-* Uses only C++/C++11, standard and system libraries; does not use any external preprocessors or libraries.
-* Supports output redirection.
-* Crossplatform. Tested with:
-  * Apple LLVM version 9.1.0
-  * GCC 5.4.0
-  * MinGW 6.3.0
-  * Microsoft Visual Studio 2010, 2012, 2013, 2015, 2017
-* Free for all ([MIT license](LICENSE.txt)).
-
-
-### Example
+Printf debugging done the right way
 
 Code:
 
@@ -28,7 +13,6 @@ int main()
 
     int answer {42};
     std::string moto {"hellomoto!"};
-
     $w(answer, moto) // print "answer" and "moto" values
 
     $if (answer == 42) // print condition value
@@ -52,15 +36,30 @@ int main()
 ```
 
 
+## Features
+
+* Easy to use.
+* No additional dependencies.
+* Output can be redirected.
+* Crossplatform. Tested with:
+  * Apple LLVM version 9.1.0
+  * GCC 5.4.0
+  * MinGW 6.3.0
+  * Microsoft Visual Studio 2010, 2012, 2013, 2015, 2017
+* Free for all ([MIT license](LICENSE.txt)).
+
+
 
 # Usage
 
-Simply add source code to your project and you're ready to use it.
+Simply add trace-out files to your project and you're ready to use it.
+
+
+## Interface
 
 trace-out's interface is based on macros that pretty-print information about their arguments.
 
-
-### Macros
+### Value printing
 
 `$w(<variable>)` *[C++03]* – print value of a variable.
 
@@ -91,9 +90,7 @@ Byte order flags (default value is determined automatically):
 * `trace_out::LITTLE` – big-endian
 * `trace_out::BIG` – little-endian
 
-`$f` – print function call and return labels. Should be used inside a function and preferably be the first expression in it.
-
-`$return <expression>` – print expression value passed to the `return` statement.
+### Statement printing
 
 `$if (<condition>)` – print condition value of the `if` statement.
 
@@ -101,20 +98,26 @@ Byte order flags (default value is determined automatically):
 
 `$while (<condition>)` – print condition value for each iteration of the `while` loop.
 
-`$time(<name>, <any-code>)` – measure code execution time in milliseconds.
+`$return <expression>` – print expression value passed to the `return` statement.
 
-`$clocks(<name>, <any-code>)` – measure code execution time in clocks.
+### Other
+
+`$f` – print function call and return labels. Must be used inside a function.
+
+`$thread(<name>)` – set thread name that will be printed in the thread header.
 
 `$p(<format>, ...)` – `printf`-like function.
 
-`$thread(<name>)` – set thread name that will be printed in the thread header.
+`$time(<name>, <any-code>)` – measure code execution time in milliseconds.
+
+`$clocks(<name>, <any-code>)` – measure code execution time in clocks.
 
 ---
 
 Macros `$w`, `$e`, `$return`, `$if` and `$while` support following types:
 
 * all fundamental types, raw pointers, standard smart pointers, `std::string`, `std::pair`, `std::tuple`
-* types which have `.begin()` and `.end()` member functions defined
+* types that define member functions `.begin()` and `.end()` which return iterators
 * sturctures and classes with data members or member functions `x`, `y`, `z`, `w`, `width`, `height`, `origin`, `size`, `real`, `imag` in lowcase, HIGHCASE and Capital
 
 ---
@@ -143,8 +146,7 @@ int main()
 ```
 
 
-
-### Output Redirection
+## Output Redirection
 
 To make custom redirection implement following functions within some namespace in `.cpp` file (no header required):
 
@@ -161,11 +163,12 @@ To use custom redirection you should:
 
 There are built-in implementations for redirecting output to Windows debug output and to a file: `trace_out_to_wdo` and `trace_out_to_file` respectively. By defulat `trace_out_to_file` saves output to `trace-out.txt`. To change this define `TRACE_OUT_TO_FILE` with desired file name. No `<redirection>.cpp` files required when using these built-in redirections.
 
-### Notes
+
+## Notes
 
 trace-out is turned on if `NDEBUG` is not defined or `TRACE_OUT_ON` is defined; turned off if `NDEBUG` or `TRACE_OUT_OFF` is defined.
 
-There is an output synchronization that prevents outputs from different threads to mix up. By default it is turned on. To disable syncronization define macro `TRACE_OUT_NO_OUTPUT_SYNC`.
+There is an output synchronization that prevents outputs from different threads to mix up. By default it is turned off. To enable syncronization define macro `TRACE_OUT_OUTPUT_SYNC_ON`.
 
 
 
