@@ -6,6 +6,7 @@
 #include "trace-out/detail/standard/integer.hpp"
 #include "trace-out/detail/pretty-printing/out-stream.hpp"
 #include "trace-out/detail/pretty-printing/watch-printer.hpp"
+#include "trace-out/detail/pretty-printing/range-printer.hpp"
 #include "trace-out/detail/pretty-printing/function-printer.hpp"
 #include "trace-out/detail/pretty-printing/memory-printer.hpp"
 #include "trace-out/detail/pretty-printing/statements-printer.hpp"
@@ -35,6 +36,9 @@
 
 	#define $w(...) \
 				trace_out::detail::watch(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__, ##__VA_ARGS__);
+
+	#define $r(begin, end_OR_how_much) \
+				trace_out::detail::range(TRACE_OUT_FILENAME_LINE, #begin, #end_OR_how_much, (begin), (end_OR_how_much));
 
 	#define $m(pointer, ...) \
 				trace_out::detail::print_memory(TRACE_OUT_FILENAME_LINE, #pointer, pointer, ##__VA_ARGS__);
@@ -94,6 +98,8 @@
 				__VA_ARGS__
 
 	#define $w(...)
+
+	#define $r(...)
 
 	#define $m(pointer, ...)
 

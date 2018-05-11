@@ -107,6 +107,53 @@ namespace trace_out { namespace detail
 	};
 
 
+	template <typename Iterator_t>
+	class pretty_range_closed
+	{
+	public:
+		pretty_range_closed(const Iterator_t &begin, const Iterator_t &end);
+		pretty_range_closed(const pretty_range_closed &another);
+
+		const Iterator_t &get_begin() const;
+		const Iterator_t &get_end() const;
+
+	private:
+		pretty_range_closed &operator =(const pretty_range_closed &another); // = delete
+
+#if defined(TRACE_OUT_CPP11)
+		pretty_range_closed &operator =(pretty_range_closed &&another); // = delete
+#endif // defined(TRACE_OUT_CPP11)
+
+	private:
+		const Iterator_t &_begin;
+		const Iterator_t &_end;
+	};
+
+
+	template <typename Iterator_t, typename How_much_t>
+	class pretty_range_open
+	{
+	public:
+		pretty_range_open(const Iterator_t &begin, const How_much_t &how_much);
+		pretty_range_open(const pretty_range_open &another);
+
+		const Iterator_t &get_begin() const;
+		const How_much_t &get_how_much() const;
+
+	private:
+		pretty_range_open &operator =(const pretty_range_open &another); // = delete
+
+#if defined(TRACE_OUT_CPP11)
+		pretty_range_open &operator =(pretty_range_open &&another); // = delete
+#endif // defined(TRACE_OUT_CPP11)
+
+	public:
+		const Iterator_t &_begin;
+		const How_much_t &_how_much;
+	};
+
+
+
 
 	template <typename Type_t>
 	typename enable_if<!is_iterable<Type_t>::value && is_dimensional<Type_t>::value, pretty_structural<Type_t> >::type make_pretty(const Type_t &value)
@@ -261,6 +308,94 @@ namespace trace_out { namespace detail
 	const Type_t &pretty_iterable<Type_t>::unsafe_get() const
 	{
 		return _data;
+	}
+
+
+
+	template <typename Iterator_t>
+	pretty_range_closed<Iterator_t>::pretty_range_closed(const Iterator_t &begin, const Iterator_t &end)
+		:
+		_begin(begin),
+		_end(end)
+	{
+	}
+
+
+	template <typename Iterator_t>
+	pretty_range_closed<Iterator_t>::pretty_range_closed(const pretty_range_closed &another)
+		:
+		_begin(another._begin),
+		_end(another._end)
+	{
+	}
+
+
+	template <typename Iterator_t>
+	const Iterator_t &pretty_range_closed<Iterator_t>::get_begin() const
+	{
+		crash_on_bad_memory(_begin);
+
+		return _begin;
+	}
+
+
+	template <typename Iterator_t>
+	const Iterator_t &pretty_range_closed<Iterator_t>::get_end() const
+	{
+		crash_on_bad_memory(_end);
+
+		return _end;
+	}
+
+
+	template <typename Iterator_t, typename How_much_t>
+	pretty_range_open<Iterator_t, How_much_t>::pretty_range_open(const Iterator_t &begin, const How_much_t &how_much)
+		:
+		_begin(begin),
+		_how_much(how_much)
+	{
+	}
+
+
+	template <typename Iterator_t, typename How_much_t>
+	pretty_range_open<Iterator_t, How_much_t>::pretty_range_open(const pretty_range_open &another)
+		:
+		_begin(another._begin),
+		_how_much(another._how_much)
+	{
+	}
+
+
+	template <typename Iterator_t, typename How_much_t>
+	const Iterator_t &pretty_range_open<Iterator_t, How_much_t>::get_begin() const
+	{
+		crash_on_bad_memory(_begin);
+
+		return _begin;
+	}
+
+
+	template <typename Iterator_t, typename How_much_t>
+	const How_much_t &pretty_range_open<Iterator_t, How_much_t>::get_how_much() const
+	{
+		crash_on_bad_memory(_how_much);
+
+		return _how_much;
+	}
+
+
+
+	template <typename Iterator_t>
+	pretty_range_closed<Iterator_t> make_pretty_range(const Iterator_t &begin, const Iterator_t &end)
+	{
+		return pretty_range_closed<Iterator_t>(begin, end);
+	}
+
+
+	template <typename Iterator_t, typename How_much_t>
+	pretty_range_open<Iterator_t, How_much_t> make_pretty_range(const Iterator_t &begin, const How_much_t &how_much)
+	{
+		return pretty_range_open<Iterator_t, How_much_t>(begin, how_much);
 	}
 
 }

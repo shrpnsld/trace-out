@@ -160,13 +160,19 @@ namespace trace_out { namespace detail
 	template <typename Type_t>
 	out_stream &operator <<(out_stream &stream, const pretty_iterable<Type_t> &value);
 
-	template <typename Type_t>
-	out_stream &operator <<(out_stream &stream, const pretty<Type_t> &value);
+	template <typename Iterator_t>
+	out_stream &operator <<(out_stream &stream, const pretty_range_closed<Iterator_t> &value);
+
+	template <typename Iterator_t, typename How_much_t>
+	out_stream &operator <<(out_stream &stream, const pretty_range_open<Iterator_t, How_much_t> &value);
 
 	out_stream &operator <<(out_stream &stream, const pretty_condition<bool> &value);
 
 	template <typename Type_t>
 	out_stream &operator <<(out_stream &stream, const pretty_condition<Type_t> &value);
+
+	template <typename Type_t>
+	out_stream &operator <<(out_stream &stream, const pretty<Type_t> &value);
 
 }
 }
@@ -670,12 +676,45 @@ namespace trace_out { namespace detail
 	}
 
 
-	template <typename Type_t>
-	out_stream &operator <<(out_stream &stream, const pretty<Type_t> &value)
+	template <typename Iterator_t>
+	out_stream &operator <<(out_stream &stream, const pretty_range_closed<Iterator_t> &value)
 	{
-		stream << FLUSH;
-		value.get();
-		return stream << "<unknown type>";
+		stream << FLUSH << "[";
+
+		Iterator_t iterator = value.get_begin();
+		Iterator_t end = value.get_end();
+		if (iterator != end)
+		{
+			stream << make_pretty(*iterator);
+			for (++iterator; iterator != end; ++iterator)
+			{
+				stream << ", " << make_pretty(*iterator);
+			}
+		}
+
+		stream << "]";
+		return stream;
+	}
+
+
+	template <typename Iterator_t, typename How_much_t>
+	out_stream &operator <<(out_stream &stream, const pretty_range_open<Iterator_t, How_much_t> &value)
+	{
+		stream << FLUSH << "[";
+
+		Iterator_t iterator = value.get_begin();
+		std::size_t how_much = value.get_how_much();
+		if (how_much > 0)
+		{
+			stream << make_pretty(*iterator);
+			for (++iterator, --how_much; how_much > 0; ++iterator, --how_much)
+			{
+				stream << ", " << make_pretty(*iterator);
+			}
+		}
+
+		stream << "]";
+		return stream;
 	}
 
 
@@ -686,6 +725,15 @@ namespace trace_out { namespace detail
 		stream << (value.get() ? "true" : "false") << " (" << FLUSH;
 		stream << make_pretty(value.get()) << ")";
 		return stream;
+	}
+
+
+	template <typename Type_t>
+	out_stream &operator <<(out_stream &stream, const pretty<Type_t> &value)
+	{
+		stream << FLUSH;
+		value.get();
+		return stream << "<unknown type>";
 	}
 
 }
