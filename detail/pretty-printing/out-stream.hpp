@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <string>
+#include <bitset>
 
 #include "trace-out/detail/stuff/platform-detection.hpp"
 #if defined(TRACE_OUT_CPP11)
@@ -156,6 +157,9 @@ namespace trace_out { namespace detail
 
 #endif // defined(TRACE_OUT_CPP11)
 
+
+	template <std::size_t Size>
+	out_stream &operator <<(out_stream &stream, const pretty<std::bitset<Size> > &value);
 
 	template <typename Type_t>
 	out_stream &operator <<(out_stream &stream, const pretty_iterable<Type_t> &value);
@@ -644,6 +648,15 @@ namespace trace_out { namespace detail
 	}
 
 #endif // defined(TRACE_OUT_CPP11)
+
+
+	template <std::size_t Size>
+	out_stream &operator <<(out_stream &stream, const pretty<std::bitset<Size> > &value)
+	{
+		stream << FLUSH;
+		const std::bitset<Size> &bits = value.get();
+		return stream << bits.to_string();
+	}
 
 
 	template <typename Type_t>
