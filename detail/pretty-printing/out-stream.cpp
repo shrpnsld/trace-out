@@ -328,6 +328,11 @@ namespace trace_out { namespace detail
 	out_stream &operator <<(out_stream &stream, const pretty<const char *> &value)
 	{
 		stream << FLUSH;
+		if (value.get() == NULL)
+		{
+			return stream << "<null>";
+		}
+
 		return stream << "\"" << value.get() << "\"";
 	}
 
