@@ -746,7 +746,7 @@ namespace trace_out { namespace detail
 	{
 		stream << FLUSH;
 		value.get();
-		return stream << "<unknown type>";
+		return stream << "<unknown-type>";
 	}
 
 }
