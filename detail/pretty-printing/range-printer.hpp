@@ -12,8 +12,8 @@ namespace trace_out { namespace detail
 	template <typename Iterator_t>
 	void range(const std::string &filename_line, const char *begin_name, const char *end_name, const Iterator_t &begin, const Iterator_t &end);
 
-	template <typename Iterator_t, typename How_much_t>
-	void range(const std::string &filename_line, const char *begin_name, const char *how_much_name, const Iterator_t &begin, const How_much_t &how_much);
+	template <typename Iterator_t>
+	void range(const std::string &filename_line, const char *begin_name, const char *how_much_name, const Iterator_t &begin, std::size_t how_much);
 
 }
 }
@@ -30,11 +30,11 @@ namespace trace_out { namespace detail
 	}
 
 
-	template <typename Iterator_t, typename How_much_t>
-	void range(const std::string &filename_line, const char *begin_name, const char *how_much_name, const Iterator_t &begin, const How_much_t &how_much)
+	template <typename Iterator_t>
+	void range(const std::string &filename_line, const char *begin_name, const char *how_much_name, const Iterator_t &begin, std::size_t how_much)
 	{
 		out_stream stream(filename_line);
-		stream << "[" << begin_name << ": " << how_much_name << "] = " << pretty_range_open<Iterator_t, How_much_t>(begin, how_much) << ENDLINE;
+		stream << "[" << begin_name << ": " << how_much_name << "] = " << pretty_range_open<Iterator_t>(begin, how_much) << ENDLINE;
 	}
 
 }

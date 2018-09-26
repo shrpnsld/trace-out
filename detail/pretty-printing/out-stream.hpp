@@ -167,8 +167,8 @@ namespace trace_out { namespace detail
 	template <typename Iterator_t>
 	out_stream &operator <<(out_stream &stream, const pretty_range_closed<Iterator_t> &value);
 
-	template <typename Iterator_t, typename How_much_t>
-	out_stream &operator <<(out_stream &stream, const pretty_range_open<Iterator_t, How_much_t> &value);
+	template <typename Iterator_t>
+	out_stream &operator <<(out_stream &stream, const pretty_range_open<Iterator_t> &value);
 
 	out_stream &operator <<(out_stream &stream, const pretty_condition<bool> &value);
 
@@ -710,8 +710,8 @@ namespace trace_out { namespace detail
 	}
 
 
-	template <typename Iterator_t, typename How_much_t>
-	out_stream &operator <<(out_stream &stream, const pretty_range_open<Iterator_t, How_much_t> &value)
+	template <typename Iterator_t>
+	out_stream &operator <<(out_stream &stream, const pretty_range_open<Iterator_t> &value)
 	{
 		stream << FLUSH << "[";
 

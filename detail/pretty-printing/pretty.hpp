@@ -130,15 +130,15 @@ namespace trace_out { namespace detail
 	};
 
 
-	template <typename Iterator_t, typename How_much_t>
+	template <typename Iterator_t>
 	class pretty_range_open
 	{
 	public:
-		pretty_range_open(const Iterator_t &begin, const How_much_t &how_much);
+		pretty_range_open(const Iterator_t &begin, std::size_t how_much);
 		pretty_range_open(const pretty_range_open &another);
 
 		const Iterator_t &get_begin() const;
-		const How_much_t &get_how_much() const;
+		const std::size_t &get_how_much() const;
 
 	private:
 		pretty_range_open &operator =(const pretty_range_open &another); // = delete
@@ -149,7 +149,7 @@ namespace trace_out { namespace detail
 
 	public:
 		const Iterator_t &_begin;
-		const How_much_t &_how_much;
+		const std::size_t &_how_much;
 	};
 
 
@@ -348,8 +348,8 @@ namespace trace_out { namespace detail
 	}
 
 
-	template <typename Iterator_t, typename How_much_t>
-	pretty_range_open<Iterator_t, How_much_t>::pretty_range_open(const Iterator_t &begin, const How_much_t &how_much)
+	template <typename Iterator_t>
+	pretty_range_open<Iterator_t>::pretty_range_open(const Iterator_t &begin, std::size_t how_much)
 		:
 		_begin(begin),
 		_how_much(how_much)
@@ -357,8 +357,8 @@ namespace trace_out { namespace detail
 	}
 
 
-	template <typename Iterator_t, typename How_much_t>
-	pretty_range_open<Iterator_t, How_much_t>::pretty_range_open(const pretty_range_open &another)
+	template <typename Iterator_t>
+	pretty_range_open<Iterator_t>::pretty_range_open(const pretty_range_open &another)
 		:
 		_begin(another._begin),
 		_how_much(another._how_much)
@@ -366,8 +366,8 @@ namespace trace_out { namespace detail
 	}
 
 
-	template <typename Iterator_t, typename How_much_t>
-	const Iterator_t &pretty_range_open<Iterator_t, How_much_t>::get_begin() const
+	template <typename Iterator_t>
+	const Iterator_t &pretty_range_open<Iterator_t>::get_begin() const
 	{
 		crash_on_bad_memory(_begin);
 
@@ -375,8 +375,8 @@ namespace trace_out { namespace detail
 	}
 
 
-	template <typename Iterator_t, typename How_much_t>
-	const How_much_t &pretty_range_open<Iterator_t, How_much_t>::get_how_much() const
+	template <typename Iterator_t>
+	const std::size_t &pretty_range_open<Iterator_t>::get_how_much() const
 	{
 		crash_on_bad_memory(_how_much);
 
@@ -392,10 +392,10 @@ namespace trace_out { namespace detail
 	}
 
 
-	template <typename Iterator_t, typename How_much_t>
-	pretty_range_open<Iterator_t, How_much_t> make_pretty_range(const Iterator_t &begin, const How_much_t &how_much)
+	template <typename Iterator_t>
+	pretty_range_open<Iterator_t> make_pretty_range(const Iterator_t &begin, std::size_t how_much)
 	{
-		return pretty_range_open<Iterator_t, How_much_t>(begin, how_much);
+		return pretty_range_open<Iterator_t>(begin, how_much);
 	}
 
 }

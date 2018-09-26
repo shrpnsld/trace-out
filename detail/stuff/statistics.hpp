@@ -68,7 +68,7 @@ namespace trace_out { namespace detail
 	template <typename Type_t, typename Iterator_t>
 	Type_t average_value(Iterator_t begin, Iterator_t end)
 	{
-		Type_t full_time = std::accumulate(begin, end, 0);
+		Type_t full_time = std::accumulate(begin, end, Type_t(0));
 		return static_cast<Type_t>(full_time) / std::distance(begin, end);
 	}
 
@@ -85,12 +85,12 @@ namespace trace_out { namespace detail
 			Iterator_t next = begin;
 			std::advance(begin, half_size - 1);
 			std::advance(next, half_size);
-			return (*begin + *next) / static_cast<Type_t>(2);
+			return static_cast<Type_t>((*begin + *next) / Type_t(2));
 		}
 		else
 		{
 			std::advance(begin, half_size);
-			return *begin;
+			return static_cast<Type_t>(*begin);
 		}
 	}
 
