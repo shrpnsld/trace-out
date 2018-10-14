@@ -67,6 +67,8 @@ trace-out's interface is based on macros that pretty-print information about the
 
 `$e(<expression>)` – print value of passed in expression and return that value (can be used inside other expressions).
 
+`$r(<begin>, <end>)`, `$r(<begin>, <how-much>)` – print values from range defined by iterators.
+
 `$m(<pointer>, <size>, <base> | <byte-order>)` – print memory under `<pointer>`.
 
 `<pointer>` – address of the memory to be printed. Type of the pointer defines byte grouping and default `<base>`. For example, memory under `unsigned char *` pointer will be grouped by 1 byte and hexadecimal numbers will be used; memory under `int *` will be grouped by 4 (or 8) bytes and signed decimal numbers will be used. For unknown types default grouping is by 1 byte and numerical base is hexadecimal.
@@ -112,11 +114,15 @@ Byte order flags (default value is determined automatically):
 
 `$clocks(<name>, <any-code>)` – measure code execution time in clocks.
 
+`$time_stats(<name>, <passes>, <any-code>)` – gather code execution time measurements in milliseconds and print statistics (average, median, mode, range) each time number of passes has reached `<passes>` value.
+
+`$clock_stats(<name>, <passes>, <any-code>)` – gather code execution time measurements in clocks and print statistics (average, median, mode, range) each time number of passes has reached `<passes>` value.
+
 ---
 
 Macros `$w`, `$e`, `$return`, `$if` and `$while` support following types:
 
-* all fundamental types, raw pointers, standard smart pointers, `std::string`, `std::pair`, `std::tuple`
+* all fundamental types, raw pointers, standard smart pointers, `std::string`, `std::pair`, `std::tuple`, `std::bitset`
 * types that define member functions `.begin()` and `.end()` which return iterators
 * sturctures and classes with data members or member functions `x`, `y`, `z`, `w`, `width`, `height`, `origin`, `size`, `real`, `imag` in lowcase, HIGHCASE and Capital
 

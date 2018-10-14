@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ctime>
+#include <vector>
 
 
 
@@ -80,6 +81,7 @@ namespace trace_out { namespace detail { namespace standard
 
 #include <memory>
 #include <string>
+#include <bitset>
 
 #if defined(TRACE_OUT_CPP11)
 	#include <tuple>
@@ -632,6 +634,53 @@ namespace trace_out { namespace detail
 	};
 
 
+	template <typename Iterator_t>
+	class pretty_range_closed
+	{
+	public:
+		pretty_range_closed(const Iterator_t &begin, const Iterator_t &end);
+		pretty_range_closed(const pretty_range_closed &another);
+
+		const Iterator_t &get_begin() const;
+		const Iterator_t &get_end() const;
+
+	private:
+		pretty_range_closed &operator =(const pretty_range_closed &another); // = delete
+
+#if defined(TRACE_OUT_CPP11)
+		pretty_range_closed &operator =(pretty_range_closed &&another); // = delete
+#endif // defined(TRACE_OUT_CPP11)
+
+	private:
+		const Iterator_t &_begin;
+		const Iterator_t &_end;
+	};
+
+
+	template <typename Iterator_t>
+	class pretty_range_open
+	{
+	public:
+		pretty_range_open(const Iterator_t &begin, const std::size_t &how_much);
+		pretty_range_open(const pretty_range_open &another);
+
+		const Iterator_t &get_begin() const;
+		const std::size_t &get_how_much() const;
+
+	private:
+		pretty_range_open &operator =(const pretty_range_open &another); // = delete
+
+#if defined(TRACE_OUT_CPP11)
+		pretty_range_open &operator =(pretty_range_open &&another); // = delete
+#endif // defined(TRACE_OUT_CPP11)
+
+	public:
+		const Iterator_t &_begin;
+		const std::size_t &_how_much;
+	};
+
+
+
 
 	template <typename Type_t>
 	typename enable_if<!is_iterable<Type_t>::value && is_dimensional<Type_t>::value, pretty_structural<Type_t> >::type make_pretty(const Type_t &value)
@@ -788,6 +837,94 @@ namespace trace_out { namespace detail
 		return _data;
 	}
 
+
+
+	template <typename Iterator_t>
+	pretty_range_closed<Iterator_t>::pretty_range_closed(const Iterator_t &begin, const Iterator_t &end)
+		:
+		_begin(begin),
+		_end(end)
+	{
+	}
+
+
+	template <typename Iterator_t>
+	pretty_range_closed<Iterator_t>::pretty_range_closed(const pretty_range_closed &another)
+		:
+		_begin(another._begin),
+		_end(another._end)
+	{
+	}
+
+
+	template <typename Iterator_t>
+	const Iterator_t &pretty_range_closed<Iterator_t>::get_begin() const
+	{
+		crash_on_bad_memory(_begin);
+
+		return _begin;
+	}
+
+
+	template <typename Iterator_t>
+	const Iterator_t &pretty_range_closed<Iterator_t>::get_end() const
+	{
+		crash_on_bad_memory(_end);
+
+		return _end;
+	}
+
+
+	template <typename Iterator_t>
+	pretty_range_open<Iterator_t>::pretty_range_open(const Iterator_t &begin, const std::size_t &how_much)
+		:
+		_begin(begin),
+		_how_much(how_much)
+	{
+	}
+
+
+	template <typename Iterator_t>
+	pretty_range_open<Iterator_t>::pretty_range_open(const pretty_range_open &another)
+		:
+		_begin(another._begin),
+		_how_much(another._how_much)
+	{
+	}
+
+
+	template <typename Iterator_t>
+	const Iterator_t &pretty_range_open<Iterator_t>::get_begin() const
+	{
+		crash_on_bad_memory(_begin);
+
+		return _begin;
+	}
+
+
+	template <typename Iterator_t>
+	const std::size_t &pretty_range_open<Iterator_t>::get_how_much() const
+	{
+		crash_on_bad_memory(_how_much);
+
+		return _how_much;
+	}
+
+
+
+	template <typename Iterator_t>
+	pretty_range_closed<Iterator_t> make_pretty_range(const Iterator_t &begin, const Iterator_t &end)
+	{
+		return pretty_range_closed<Iterator_t>(begin, end);
+	}
+
+
+	template <typename Iterator_t>
+	pretty_range_open<Iterator_t> make_pretty_range(const Iterator_t &begin, const std::size_t &how_much)
+	{
+		return pretty_range_open<Iterator_t>(begin, how_much);
+	}
+
 }
 }
 
@@ -937,16 +1074,25 @@ namespace trace_out { namespace detail
 #endif // defined(TRACE_OUT_CPP11)
 
 
+	template <std::size_t Size>
+	out_stream &operator <<(out_stream &stream, const pretty<std::bitset<Size> > &value);
+
 	template <typename Type_t>
 	out_stream &operator <<(out_stream &stream, const pretty_iterable<Type_t> &value);
 
-	template <typename Type_t>
-	out_stream &operator <<(out_stream &stream, const pretty<Type_t> &value);
+	template <typename Iterator_t>
+	out_stream &operator <<(out_stream &stream, const pretty_range_closed<Iterator_t> &value);
+
+	template <typename Iterator_t>
+	out_stream &operator <<(out_stream &stream, const pretty_range_open<Iterator_t> &value);
 
 	out_stream &operator <<(out_stream &stream, const pretty_condition<bool> &value);
 
 	template <typename Type_t>
 	out_stream &operator <<(out_stream &stream, const pretty_condition<Type_t> &value);
+
+	template <typename Type_t>
+	out_stream &operator <<(out_stream &stream, const pretty<Type_t> &value);
 
 }
 }
@@ -1420,6 +1566,15 @@ namespace trace_out { namespace detail
 #endif // defined(TRACE_OUT_CPP11)
 
 
+	template <std::size_t Size>
+	out_stream &operator <<(out_stream &stream, const pretty<std::bitset<Size> > &value)
+	{
+		stream << FLUSH;
+		const std::bitset<Size> &bits = value.get();
+		return stream << bits.to_string();
+	}
+
+
 	template <typename Type_t>
 	Type_t next_itr(Type_t iterator)
 	{
@@ -1450,12 +1605,45 @@ namespace trace_out { namespace detail
 	}
 
 
-	template <typename Type_t>
-	out_stream &operator <<(out_stream &stream, const pretty<Type_t> &value)
+	template <typename Iterator_t>
+	out_stream &operator <<(out_stream &stream, const pretty_range_closed<Iterator_t> &value)
 	{
-		stream << FLUSH;
-		value.get();
-		return stream << "<unknown type>";
+		stream << FLUSH << "[";
+
+		Iterator_t iterator = value.get_begin();
+		Iterator_t end = value.get_end();
+		if (iterator != end)
+		{
+			stream << make_pretty(*iterator);
+			for (++iterator; iterator != end; ++iterator)
+			{
+				stream << ", " << make_pretty(*iterator);
+			}
+		}
+
+		stream << "]";
+		return stream;
+	}
+
+
+	template <typename Iterator_t>
+	out_stream &operator <<(out_stream &stream, const pretty_range_open<Iterator_t> &value)
+	{
+		stream << FLUSH << "[";
+
+		Iterator_t iterator = value.get_begin();
+		std::size_t how_much = value.get_how_much();
+		if (how_much > 0)
+		{
+			stream << make_pretty(*iterator);
+			for (++iterator, --how_much; how_much > 0; ++iterator, --how_much)
+			{
+				stream << ", " << make_pretty(*iterator);
+			}
+		}
+
+		stream << "]";
+		return stream;
 	}
 
 
@@ -1466,6 +1654,15 @@ namespace trace_out { namespace detail
 		stream << (value.get() ? "true" : "false") << " (" << FLUSH;
 		stream << make_pretty(value.get()) << ")";
 		return stream;
+	}
+
+
+	template <typename Type_t>
+	out_stream &operator <<(out_stream &stream, const pretty<Type_t> &value)
+	{
+		stream << FLUSH;
+		value.get();
+		return stream << "<unknown-type>";
 	}
 
 }
@@ -1570,6 +1767,43 @@ namespace trace_out { namespace detail
 	}
 
 #endif // !defined(TRACE_OUT_CPP11)
+
+}
+}
+
+
+
+
+namespace trace_out { namespace detail
+{
+
+	template <typename Iterator_t>
+	void range(const std::string &filename_line, const char *begin_name, const char *end_name, const Iterator_t &begin, const Iterator_t &end);
+
+	template <typename Iterator_t>
+	void range(const std::string &filename_line, const char *begin_name, const char *how_much_name, const Iterator_t &begin, std::size_t how_much);
+
+}
+}
+
+
+namespace trace_out { namespace detail
+{
+
+	template <typename Iterator_t>
+	void range(const std::string &filename_line, const char *begin_name, const char *end_name, const Iterator_t &begin, const Iterator_t &end)
+	{
+		out_stream stream(filename_line);
+		stream << "[" << begin_name << ", " << end_name << ") = " << pretty_range_closed<Iterator_t>(begin, end) << ENDLINE;
+	}
+
+
+	template <typename Iterator_t>
+	void range(const std::string &filename_line, const char *begin_name, const char *how_much_name, const Iterator_t &begin, std::size_t how_much)
+	{
+		out_stream stream(filename_line);
+		stream << "[" << begin_name << ": " << how_much_name << "] = " << pretty_range_open<Iterator_t>(begin, how_much) << ENDLINE;
+	}
 
 }
 }
@@ -2078,8 +2312,9 @@ namespace trace_out { namespace detail
 {
 
 	void print_execution_time_in_milliseconds(const std::string &filename_line, const char *label, standard::uint64_t milliseconds);
-	void print_execution_time_in_clocks(const std::string &filename_line, const char *label, std::clock_t clocks, double seconds);
+	void print_execution_time_in_clocks(const std::string &filename_line, const char *label, std::clock_t clocks, double milliseconds);
 
+	void print_execution_statistics(const std::string &filename_line, const char *label, std::vector<standard::uint64_t> &results, const char *units);
 }
 }
 
@@ -2119,6 +2354,9 @@ namespace trace_out { namespace detail { namespace system
 
 	#define $w(...) \
 				trace_out::detail::watch(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__, ##__VA_ARGS__);
+
+	#define $r(begin, end_OR_how_much) \
+				trace_out::detail::range(TRACE_OUT_FILENAME_LINE, #begin, #end_OR_how_much, (begin), (end_OR_how_much));
 
 	#define $m(pointer, ...) \
 				trace_out::detail::print_memory(TRACE_OUT_FILENAME_LINE, #pointer, pointer, ##__VA_ARGS__);
@@ -2172,12 +2410,46 @@ namespace trace_out { namespace detail { namespace system
 	#define $clocks(label, ...) \
 				trace_out_private__clocks(trace_out_private__unify(trace_out_start_clocks), trace_out_private__unify(trace_out_execution_clocks), label, ##__VA_ARGS__)
 
+	#define trace_out_private__time_stats(start_time, execution_time, results, measurements, label, passes, ...) \
+				static std::vector<trace_out::detail::standard::uint64_t> results; \
+				results.reserve(passes); \
+				trace_out::detail::standard::uint64_t start_time = trace_out::detail::system::time_in_milliseconds(); \
+				__VA_ARGS__ \
+				trace_out::detail::standard::uint64_t execution_time = trace_out::detail::system::time_in_milliseconds() - start_time; \
+				results.push_back(execution_time); \
+				if (results.size() == passes) \
+				{ \
+					trace_out::detail::print_execution_statistics(TRACE_OUT_FILENAME_LINE, label, results, "ms"); \
+					results.clear(); \
+				}
+
+	#define $time_stats(label, passes, ...) \
+				trace_out_private__time_stats(trace_out_private__unify(trace_out_start_time), trace_out_private__unify(trace_out_execution_time), trace_out_private__unify(results), trace_out_private__unify(trace_out_measurements), label, passes, ##__VA_ARGS__)
+
+	#define trace_out_private__clock_stats(start_time, execution_time, results, measurements, label, passes, ...) \
+				static std::vector<trace_out::detail::standard::uint64_t> results; \
+				results.reserve(passes); \
+				trace_out::detail::standard::uint64_t start_time = trace_out::detail::system::time_in_milliseconds(); \
+				__VA_ARGS__ \
+				trace_out::detail::standard::uint64_t execution_time = trace_out::detail::system::time_in_milliseconds() - start_time; \
+				results.push_back(execution_time); \
+				if (results.size() == passes) \
+				{ \
+					trace_out::detail::print_execution_statistics(TRACE_OUT_FILENAME_LINE, label, results, "clocks"); \
+					results.clear(); \
+				}
+
+	#define $clock_stats(label, passes, ...) \
+				trace_out_private__clock_stats(trace_out_private__unify(trace_out_start_time), trace_out_private__unify(trace_out_execution_time), trace_out_private__unify(results), trace_out_private__unify(trace_out_measurements), label, passes, ##__VA_ARGS__)
+
 #elif defined(NDEBUG) || defined(TRACE_OUT_OFF)
 
 	#define $e(...) \
 				__VA_ARGS__
 
 	#define $w(...)
+
+	#define $r(...)
 
 	#define $m(pointer, ...)
 
@@ -2205,6 +2477,10 @@ namespace trace_out { namespace detail { namespace system
 	#define $clocks(label, ...) \
 				__VA_ARGS__
 
+	#define $time_stats(label, how_much, ...)
+
+	#define $clock_stats(label, how_much, ...)
+
 #endif
 
 
@@ -2219,6 +2495,150 @@ namespace trace_out { namespace detail { namespace system
 
 #endif
 
+
+#include <cassert>
+#include <utility>
+#include <numeric>
+#include <algorithm>
+#include <iterator>
+
+
+
+namespace trace_out { namespace detail
+{
+
+	template <typename Type_t>
+	struct valdist_t
+	{
+		Type_t value;
+		unsigned int occurances;
+
+		valdist_t(Type_t value, unsigned int occurances);
+	};
+
+
+	template <typename Type_t>
+	struct compare_distributions
+	{
+		bool operator ()(const valdist_t<Type_t> &first, const valdist_t<Type_t> &second);
+	};
+
+
+	template <typename Type_t, typename Iterator_t>
+	Type_t average_value(Iterator_t begin, Iterator_t end);
+
+	template <typename Type_t, typename Iterator_t>
+	Type_t median_value(Iterator_t begin, Iterator_t end);
+
+	template <typename Type_t, typename Iterator_t>
+	std::vector<valdist_t<Type_t> > values_distribution(Iterator_t begin, Iterator_t end);
+
+	template <typename Type_t, typename Iterator_t>
+	std::pair<std::vector<Type_t>, unsigned int> mode_values(Iterator_t begin, Iterator_t end);
+
+}
+}
+
+
+namespace trace_out { namespace detail
+{
+
+	template <typename Type_t>
+	valdist_t<Type_t>::valdist_t(Type_t value, unsigned int occurances)
+		:
+		value(value),
+		occurances(occurances)
+	{
+	}
+
+
+	template <typename Type_t>
+	bool compare_distributions<Type_t>::operator ()(const valdist_t<Type_t> &first, const valdist_t<Type_t> &second)
+	{
+		return first.occurances < second.occurances;
+	}
+
+
+	template <typename Type_t, typename Iterator_t>
+	Type_t average_value(Iterator_t begin, Iterator_t end)
+	{
+		Type_t full_time = std::accumulate(begin, end, Type_t(0));
+		return static_cast<Type_t>(full_time) / std::distance(begin, end);
+	}
+
+
+	template <typename Type_t, typename Iterator_t>
+	Type_t median_value(Iterator_t begin, Iterator_t end)
+	{
+		assert(begin != end);
+
+		typename Iterator_t::difference_type size = std::distance(begin, end);
+		assert(size > 0);
+
+		std::size_t half_size = static_cast<std::size_t>(size / 2);
+		if (size % 2 == 0)
+		{
+			Iterator_t next = begin;
+			std::advance(begin, half_size - 1);
+			std::advance(next, half_size);
+			return static_cast<Type_t>((*begin + *next) / Type_t(2));
+		}
+		else
+		{
+			std::advance(begin, half_size);
+			return static_cast<Type_t>(*begin);
+		}
+	}
+
+
+	template <typename Type_t, typename Iterator_t>
+	std::vector<valdist_t<Type_t> > values_distribution(Iterator_t begin, Iterator_t end)
+	{
+		if (begin == end)
+		{
+			return std::vector<valdist_t<Type_t> >();
+		}
+
+		std::vector<valdist_t<Type_t> > distributions;
+		Type_t current_value = *begin;
+		distributions.push_back(valdist_t<Type_t>(current_value, 1));
+
+		for (++begin; begin != end; ++begin)
+		{
+			if (*begin != current_value)
+			{
+				current_value = *begin;
+				distributions.push_back(valdist_t<Type_t>(current_value, 1));
+				continue;
+			}
+
+			++(distributions.back().occurances);
+		}
+
+		return distributions;
+	}
+
+
+	template <typename Type_t, typename Iterator_t>
+	std::pair<std::vector<Type_t>, unsigned int> mode_values(Iterator_t begin, Iterator_t end)
+	{
+		std::vector<valdist_t<standard::uint64_t> > distributions = values_distribution<standard::uint64_t>(begin, end);
+
+		unsigned int max_occurances = std::max_element(distributions.begin(), distributions.end(), compare_distributions<Type_t>())->occurances;
+		std::vector<Type_t> modes;
+		for (typename std::vector<valdist_t<Type_t> >::const_iterator itr = distributions.cbegin(); itr != distributions.cend(); ++itr)
+		{
+			if (itr->occurances == max_occurances)
+			{
+				modes.push_back(itr->value);
+			}
+		}
+
+		return std::pair<std::vector<Type_t>, unsigned int>(modes, max_occurances);
+	}
+
+}
+}
 
 
 
