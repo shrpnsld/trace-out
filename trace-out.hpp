@@ -94,29 +94,33 @@
 				trace_out_private__clocks(trace_out_private__unify(trace_out_start_clocks), trace_out_private__unify(trace_out_execution_clocks), label, ##__VA_ARGS__)
 
 	#define trace_out_private__time_stats(start_time, execution_time, results, measurements, label, how_much, ...) \
-				std::vector<trace_out::detail::standard::uint64_t> results; \
-				for (unsigned int measurements = how_much; measurements > 0; --measurements) \
+				static std::vector<trace_out::detail::standard::uint64_t> results; \
+				results.reserve(how_much); \
+				trace_out::detail::standard::uint64_t start_time = trace_out::detail::system::time_in_milliseconds(); \
+				__VA_ARGS__ \
+				trace_out::detail::standard::uint64_t execution_time = trace_out::detail::system::time_in_milliseconds() - start_time; \
+				results.push_back(execution_time); \
+				if (results.size() == how_much) \
 				{ \
-					trace_out::detail::standard::uint64_t start_time = trace_out::detail::system::time_in_milliseconds(); \
-					__VA_ARGS__ \
-					trace_out::detail::standard::uint64_t execution_time = trace_out::detail::system::time_in_milliseconds() - start_time; \
-					results.push_back(execution_time); \
-				} \
-				trace_out::detail::print_execution_statistics(TRACE_OUT_FILENAME_LINE, label, results, "ms");
+					trace_out::detail::print_execution_statistics(TRACE_OUT_FILENAME_LINE, label, results, "ms"); \
+					results.clear(); \
+				}
 
 	#define $time_stats(label, how_much, ...) \
 				trace_out_private__time_stats(trace_out_private__unify(trace_out_start_time), trace_out_private__unify(trace_out_execution_time), trace_out_private__unify(results), trace_out_private__unify(trace_out_measurements), label, how_much, ##__VA_ARGS__)
 
 	#define trace_out_private__clock_stats(start_time, execution_time, results, measurements, label, how_much, ...) \
-				std::vector<trace_out::detail::standard::uint64_t> results; \
-				for (unsigned int measurements = how_much; measurements > 0; --measurements) \
+				static std::vector<trace_out::detail::standard::uint64_t> results; \
+				results.reserve(how_much); \
+				trace_out::detail::standard::uint64_t start_time = trace_out::detail::system::time_in_milliseconds(); \
+				__VA_ARGS__ \
+				trace_out::detail::standard::uint64_t execution_time = trace_out::detail::system::time_in_milliseconds() - start_time; \
+				results.push_back(execution_time); \
+				if (results.size() == how_much) \
 				{ \
-					trace_out::detail::standard::uint64_t start_time = trace_out::detail::system::time_in_milliseconds(); \
-					__VA_ARGS__ \
-					trace_out::detail::standard::uint64_t execution_time = trace_out::detail::system::time_in_milliseconds() - start_time; \
-					results.push_back(execution_time); \
-				} \
-				trace_out::detail::print_execution_statistics(TRACE_OUT_FILENAME_LINE, label, results, "clocks");
+					trace_out::detail::print_execution_statistics(TRACE_OUT_FILENAME_LINE, label, results, "clocks"); \
+					results.clear(); \
+				}
 
 	#define $clock_stats(label, how_much, ...) \
 				trace_out_private__clock_stats(trace_out_private__unify(trace_out_start_time), trace_out_private__unify(trace_out_execution_time), trace_out_private__unify(results), trace_out_private__unify(trace_out_measurements), label, how_much, ##__VA_ARGS__)

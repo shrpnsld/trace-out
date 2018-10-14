@@ -79,7 +79,9 @@ namespace trace_out { namespace detail
 		assert(begin != end);
 
 		typename Iterator_t::difference_type size = std::distance(begin, end);
-		std::size_t half_size = size / 2;
+		assert(size > 0);
+
+		std::size_t half_size = static_cast<std::size_t>(size / 2);
 		if (size % 2 == 0)
 		{
 			Iterator_t next = begin;
