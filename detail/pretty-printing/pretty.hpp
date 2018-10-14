@@ -134,7 +134,7 @@ namespace trace_out { namespace detail
 	class pretty_range_open
 	{
 	public:
-		pretty_range_open(const Iterator_t &begin, std::size_t how_much);
+		pretty_range_open(const Iterator_t &begin, const std::size_t &how_much);
 		pretty_range_open(const pretty_range_open &another);
 
 		const Iterator_t &get_begin() const;
@@ -349,7 +349,7 @@ namespace trace_out { namespace detail
 
 
 	template <typename Iterator_t>
-	pretty_range_open<Iterator_t>::pretty_range_open(const Iterator_t &begin, std::size_t how_much)
+	pretty_range_open<Iterator_t>::pretty_range_open(const Iterator_t &begin, const std::size_t &how_much)
 		:
 		_begin(begin),
 		_how_much(how_much)
@@ -393,7 +393,7 @@ namespace trace_out { namespace detail
 
 
 	template <typename Iterator_t>
-	pretty_range_open<Iterator_t> make_pretty_range(const Iterator_t &begin, std::size_t how_much)
+	pretty_range_open<Iterator_t> make_pretty_range(const Iterator_t &begin, const std::size_t &how_much)
 	{
 		return pretty_range_open<Iterator_t>(begin, how_much);
 	}
