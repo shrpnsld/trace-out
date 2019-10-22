@@ -37,40 +37,56 @@ namespace trace_out { namespace detail
 
 #endif // defined(TRACE_OUT_CPP11)
 
-		auto_indentation _auto_indentation;
+		bool _value;
+	};
+
+
+	class if_block
+	{
+	public:
+		if_block(bool value);
+		if_block(const if_block &another);
+		~if_block();
+
+		operator bool() const;
+
+	private:
+		if_block &operator =(const if_block &another); // = delete
+
+#if defined(TRACE_OUT_CPP11)
+
+		if_block &operator =(if_block &&another); // = delete
+
+#endif
+
+	private:
 		bool _value;
 	};
 
 
 	template <typename Type_t>
-	block if_block(const std::string &filename_line, const char *condition, const Type_t &value);
+	if_block make_if_block(const std::string &filename_line, const char *condition, const Type_t &value);
 
-	template <typename Type_t>
-	block while_block(const std::string &filename_line, const char *condition, const Type_t &value);
-
-	block iteration_block(const std::string &filename_line, standard::size_t iteration);
+	block iteration_block(const std::string &filename_line, const char *loop, standard::size_t iteration);
 
 
 
-	class for_block
+	class loop_block
 	{
 	public:
-		for_block(const std::string &filename_line, const char *expression);
-		~for_block();
+		loop_block(const std::string &filename_line, const char *expression);
+		~loop_block();
 
 		operator bool() const;
 		standard::size_t iteration();
 
 	private:
+		const char *_expression;
 		standard::size_t _iteration_number;
 	};
 
 
-	for_block make_for_block(const std::string &filename_line, const char *expression);
-
-
-
-	void print_while_header(const std::string &filename_line, const char *condition);
+	loop_block make_loop_block(const std::string &filename_line, const char *expression);
 
 }
 }
@@ -80,28 +96,13 @@ namespace trace_out { namespace detail
 {
 
 	template <typename Type_t>
-	block if_block(const std::string &filename_line, const char *condition, const Type_t &value)
+	if_block make_if_block(const std::string &filename_line, const char *condition, const Type_t &value)
 	{
 		out_stream stream(filename_line);
 		stream << "if (" << condition << ") => " << FLUSH;
 		stream << make_pretty_condition(value) << ENDLINE;
 
-		return block(!!value);
-	}
-
-
-	template <typename Type_t>
-	block while_block(const std::string &filename_line, const char *condition, const Type_t &value)
-	{
-		{
-			auto_indentation auto_indentation;
-
-			out_stream stream(filename_line);
-			stream << "// while: " << condition << " => " << FLUSH;
-			stream << make_pretty_condition(value) << ENDLINE;
-		}
-
-		return block(!!value);
+		return if_block(!!value);
 	}
 
 }

@@ -21,7 +21,7 @@ namespace trace_out { namespace detail
 	{
 		indentation_remove();
 		out_stream stream(_filename_line);
-		stream << "}" << INDENTATION << "// " << _function_signature << NEWLINE << ENDLINE;
+		stream << "} // " << _function_signature << NEWLINE << ENDLINE;
 	}
 
 

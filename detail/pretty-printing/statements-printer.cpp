@@ -18,7 +18,6 @@ namespace trace_out { namespace detail
 
 	block::block(bool value)
 		:
-		_auto_indentation(),
 		_value(value)
 	{
 	}
@@ -26,7 +25,6 @@ namespace trace_out { namespace detail
 
 	block::block(const block &another)
 		:
-		_auto_indentation(),
 		_value(another._value)
 	{
 	}
@@ -45,58 +43,84 @@ namespace trace_out { namespace detail
 	}
 
 
-	block iteration_block(const std::string &filename_line, standard::size_t iteration)
-	{
-		{
-			auto_indentation auto_indentation;
 
-			out_stream stream(filename_line);
-			stream << "// for: iteration #" << make_pretty(iteration) << ENDLINE;
-		}
+	if_block::if_block(bool value)
+		:
+		_value(value)
+	{
+		out_stream() << "{" << ENDLINE;
+		indentation_add();
+	}
+
+
+	if_block::if_block(const if_block &another)
+		:
+		_value(another._value)
+	{
+		out_stream() << "{" << ENDLINE;
+		indentation_add();
+	}
+
+
+	if_block::~if_block()
+	{
+		indentation_remove();
+		out_stream() << "}" << NEWLINE << ENDLINE;
+	}
+
+
+	if_block::operator bool() const
+	{
+		return _value;
+	}
+
+
+
+	block iteration_block(const std::string &filename_line, const char *loop, standard::size_t iteration)
+	{
+		out_stream stream(filename_line);
+		stream << "//" << NEWLINE << "// " << loop << ": iteration #" << make_pretty(iteration) << ENDLINE;
 
 		return block(false);
 	}
 
 
 
-	for_block::for_block(const std::string &filename_line, const char *expression)
+	loop_block::loop_block(const std::string &filename_line, const char *expression)
 		:
+		_expression(expression),
 		_iteration_number(0)
 	{
 		out_stream stream(filename_line);
-		stream << "for (" << expression << ")" << ENDLINE;
+		stream << _expression << NEWLINE << "{" << ENDLINE;
+		indentation_add();
 	}
 
 
-	for_block::~for_block()
+	loop_block::~loop_block()
 	{
+		indentation_remove();
+		out_stream() << "} // " << _expression << NEWLINE << ENDLINE;
 	}
 
 
-	for_block::operator bool() const
+	loop_block::operator bool() const
 	{
 		return false;
 	}
 
 
-	standard::size_t for_block::iteration()
+	standard::size_t loop_block::iteration()
 	{
 		return ++_iteration_number;
 	}
 
 
-	for_block make_for_block(const std::string &filename_line, const char *expression)
+	loop_block make_loop_block(const std::string &filename_line, const char *expression)
 	{
-		return for_block(filename_line, expression);
-	}
-
-
-
-	void print_while_header(const std::string &filename_line, const char *condition)
-	{
-		out_stream stream(filename_line);
-		stream << "while (" << condition << ")" << ENDLINE;
+		return loop_block(filename_line, expression);
 	}
 
 }
 }
+

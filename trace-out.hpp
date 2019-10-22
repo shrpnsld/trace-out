@@ -51,19 +51,18 @@
 				return trace_out::detail::make_return_printer(TRACE_OUT_FILENAME_LINE) ,
 
 	#define $if(...) \
-				if (trace_out::detail::block trace_out_private__unify(trace_out_if_block) = trace_out::detail::if_block(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__, (__VA_ARGS__)))
+				if (trace_out::detail::if_block trace_out_private__unify(trace_out_if_block) = trace_out::detail::make_if_block(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__, (__VA_ARGS__)))
 
-	#define trace_out_private__for(block_variable_name, ...) \
-				if (trace_out::detail::for_block block_variable_name = trace_out::detail::make_for_block(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__)) {} else \
-					for (__VA_ARGS__) \
-						if (trace_out::detail::block trace_out_private__unify(trace_out_iteration_block) = trace_out::detail::iteration_block(TRACE_OUT_FILENAME_LINE, block_variable_name.iteration())) {} else
+	#define trace_out_private__loop(block_variable_name, loop, ...) \
+				if (trace_out::detail::loop_block block_variable_name = trace_out::detail::make_loop_block(TRACE_OUT_FILENAME_LINE, #loop" ("#__VA_ARGS__")")) {} else \
+					loop (__VA_ARGS__) \
+						if (trace_out::detail::block trace_out_private__unify(trace_out_iteration_block) = trace_out::detail::iteration_block(TRACE_OUT_FILENAME_LINE, #loop, block_variable_name.iteration())) {} else
 
 	#define $for(...) \
-				trace_out_private__for(trace_out_private__unify(trace_out_for_block), ##__VA_ARGS__)
+				trace_out_private__loop(trace_out_private__unify(trace_out_for_block), for, ##__VA_ARGS__)
 
 	#define $while(...) \
-				if (trace_out::detail::print_while_header(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__), false) {} else \
-					while (trace_out::detail::block trace_out_private__unify(trace_out_while_block) = trace_out::detail::while_block(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__, (__VA_ARGS__)))
+				trace_out_private__loop(trace_out_private__unify(trace_out_for_block), while, ##__VA_ARGS__)
 
 	#define $t(...) \
 				trace_out::detail::out_stream stream(TRACE_OUT_FILENAME_LINE); \
