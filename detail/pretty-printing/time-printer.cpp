@@ -48,7 +48,7 @@ namespace trace_out { namespace detail
 		std::pair<std::vector<standard::uint64_t>, unsigned int> result = mode_values<standard::uint64_t>(results.begin(), results.end());
 		std::vector<standard::uint64_t> modes = result.first;
 		unsigned int occurances = result.second;
-		float percentage = static_cast<float>(occurances) / results.size() * 100.0f;
+		float percentage = static_cast<float>(occurances) / static_cast<float>(results.size()) * 100.0f;
 		if (modes.size() == 1)
 		{
 			stream << "//      mode: " << to_string(modes.front()) << " (" << to_string(percentage) << "% of all values)";
@@ -63,7 +63,7 @@ namespace trace_out { namespace detail
 				stream << ", " << to_string(*itr);
 			}
 
-			stream << " (each = " << to_string(percentage) << "%, all = " << to_string(percentage * modes.size()) << "% of all values)";
+			stream << " (each = " << to_string(percentage) << "%, all = " << to_string(percentage * static_cast<float>(modes.size())) << "% of all values)";
 		}
 
 		stream << NEWLINE;
