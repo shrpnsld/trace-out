@@ -65,6 +65,12 @@
 				if (trace_out::detail::print_while_header(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__), false) {} else \
 					while (trace_out::detail::block trace_out_private__unify(trace_out_while_block) = trace_out::detail::while_block(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__, (__VA_ARGS__)))
 
+	#define $t(...) \
+				trace_out::detail::out_stream stream(TRACE_OUT_FILENAME_LINE); \
+				stream << #__VA_ARGS__ << trace_out::detail::FLUSH; \
+				__VA_ARGS__ \
+				stream << " // trace-out: statement passed" << trace_out::detail::ENDLINE;
+
 	#define $p(format, ...) \
 				{ \
 					trace_out::detail::out_stream stream(TRACE_OUT_FILENAME_LINE); \
@@ -151,6 +157,9 @@
 				while (__VA_ARGS__)
 
 	#define $p(format, ...)
+
+	#define $t(...) \
+				__VA_ARGS__
 
 	#define $thread(name)
 
