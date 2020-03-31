@@ -6,7 +6,7 @@
 namespace trace_out { namespace detail
 {
 
-	function_printer::function_printer(const std::string &filename_line, const char *function_signature)
+	function_printer::function_printer(const std::string &filename_line, const std::string &function_signature)
 		:
 		_filename_line(filename_line),
 		_function_signature(function_signature)
@@ -25,7 +25,7 @@ namespace trace_out { namespace detail
 	}
 
 
-	function_printer make_function_printer(const std::string &filename_line, const char *function_signature)
+	function_printer make_function_printer(const std::string &filename_line, const std::string &function_signature)
 	{
 		return function_printer(filename_line, function_signature);
 	}

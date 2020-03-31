@@ -11,7 +11,7 @@ namespace trace_out { namespace detail
 	class function_printer
 	{
 	public:
-		function_printer(const std::string &filename_line, const char *function_signature);
+		function_printer(const std::string &filename_line, const std::string &function_signature);
 		~function_printer();
 
 	private:
@@ -20,7 +20,7 @@ namespace trace_out { namespace detail
 	};
 
 
-	function_printer make_function_printer(const std::string &filename_line, const char *function_signature);
+	function_printer make_function_printer(const std::string &filename_line, const std::string &function_signature);
 
 
 
