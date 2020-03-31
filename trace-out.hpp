@@ -13,6 +13,7 @@
 #include "trace-out/detail/pretty-printing/statements-printer.hpp"
 #include "trace-out/detail/pretty-printing/time-printer.hpp"
 #include "trace-out/detail/system/time.hpp"
+#include "trace-out/detail/stuff/stuff.hpp"
 
 
 #if defined(TRACE_OUT_CLANG)
@@ -45,7 +46,7 @@
 				trace_out::detail::print_memory(TRACE_OUT_FILENAME_LINE, #pointer, pointer, ##__VA_ARGS__);
 
 	#define $f \
-				trace_out::detail::function_printer trace_out_private__unify(trace_out_f) = trace_out::detail::make_function_printer(TRACE_OUT_FILENAME_LINE, TRACE_OUT_FUNCTION_SIGNATURE);
+				trace_out::detail::function_printer trace_out_private__unify(trace_out_f) = trace_out::detail::make_function_printer(TRACE_OUT_FILENAME_LINE, trace_out_private__strip_namespaces(TRACE_OUT_FUNCTION_SIGNATURE));
 
 	#define $return \
 				return trace_out::detail::make_return_printer(TRACE_OUT_FILENAME_LINE) ,

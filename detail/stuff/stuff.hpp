@@ -37,6 +37,15 @@
 			trace_out_private__quotize_impl(something)
 
 
+#if defined(TRACE_OUT_STRIP_NAMESPACES)
+	#define trace_out_private__strip_namespaces(string) \
+				trace_out::detail::strip_namespaces(string, TRACE_OUT_STRIP_NAMESPACES)
+#else
+	#define trace_out_private__strip_namespaces(string) \
+				string
+#endif
+
+
 #define TRACE_OUT_FILENAME_LINE \
 			(trace_out::detail::filename_line_field(trace_out::detail::filename_from_path(__FILE__), static_cast<unsigned long>(__LINE__)))
 
@@ -82,6 +91,7 @@ namespace trace_out { namespace detail
 	std::string first_token(const std::string &tokens);
 	std::string rest_tokens(const std::string &tokens);
 
+	std::string strip_namespaces(const std::string &line, std::size_t parent_namespace_count = 0);
 
 
 	template <typename First_t, typename Second_t>
