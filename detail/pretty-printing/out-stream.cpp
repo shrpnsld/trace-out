@@ -150,6 +150,8 @@ namespace trace_out { namespace detail
 
 		(void)filename_line; // eliminating 'not used' warning
 
+		*this << MARKER;
+
 #if defined(TRACE_OUT_SHOW_THREAD)
 		if (!is_running_same_thread())
 		{
@@ -158,11 +160,9 @@ namespace trace_out { namespace detail
 			standard::size_t header_width = out_stream::width() - std::strlen(MARKER);
 			const std::string &header = thread_header(thread_id, thread_name, header_width);
 
-			*this << MARKER << header << "\n";
+			*this << header << "\n";
 		}
 #endif // defined(TRACE_OUT_SHOW_THREAD)
-
-		*this << MARKER;
 
 #if defined(TRACE_OUT_SHOW_FILE_LINE)
 		*this << filename_line << DELIMITER;
@@ -178,12 +178,14 @@ namespace trace_out { namespace detail
 	{
 		lock_output();
 
+		*this << MARKER;
+
 #if defined(TRACE_OUT_SHOW_FILE_LINE)
 		std::stringstream stream;
 		stream.fill(' ');
 		stream.width(FILENAME_FIELD_WIDTH + 1 + LINE_FIELD_WIDTH);
 		stream << "";
-		*this << MARKER << stream.str() << DELIMITER;
+		*this << stream.str() << DELIMITER;
 #endif // defined(TRACE_OUT_SHOW_FILE_LINE)
 
 		*this << indentation();
@@ -225,7 +227,7 @@ namespace trace_out { namespace detail
 
 	out_stream &out_stream::operator <<(const newline_manipulator &)
 	{
-		*this << "\n";
+		*this << "\n" << MARKER;
 
 #if defined(TRACE_OUT_SHOW_FILE_LINE)
 		std::stringstream stream;
@@ -234,7 +236,7 @@ namespace trace_out { namespace detail
 		stream << "";
 
 		_current_line_length = 0;
-		*this << MARKER << stream.str() << DELIMITER;
+		*this << stream.str() << DELIMITER;
 #endif // defined(TRACE_OUT_SHOW_FILE_LINE)
 
 		*this << indentation();
