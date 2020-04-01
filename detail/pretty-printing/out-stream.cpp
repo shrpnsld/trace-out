@@ -153,7 +153,7 @@ namespace trace_out { namespace detail
 #if defined(TRACE_OUT_SHOW_THREAD)
 		if (!is_running_same_thread())
 		{
-			std::string thread_id = thread_id_field(current_thread_id());
+			std::string thread_id = thread_id_field(system::current_thread_id());
 			const std::string &thread_name = current_thread_name();
 			standard::size_t header_width = out_stream::width() - std::strlen(MARKER);
 			const std::string &header = thread_header(thread_id, thread_name, header_width);
