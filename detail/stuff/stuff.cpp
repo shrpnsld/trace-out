@@ -6,11 +6,14 @@
 #include "trace-out/detail/stuff/stuff.hpp"
 
 
+#include <iostream>
+
 namespace trace_out { namespace detail
 {
 
 	static const std::string::value_type NAMESPACE_DELIMITER[] = "::";
 	static const std::string::value_type *NAMESPACE_DELIMITER_END = NAMESPACE_DELIMITER + (sizeof(NAMESPACE_DELIMITER) / sizeof(NAMESPACE_DELIMITER[0]) - 1);
+	std::iterator_traits<std::string::const_iterator>::difference_type NAMESPACE_DELIMITER_LENGTH = sizeof(NAMESPACE_DELIMITER) / sizeof(std::string::value_type) - 1;
 
 
 	bool is_delimiter(std::string::value_type character);
@@ -119,7 +122,11 @@ namespace trace_out { namespace detail
 	{
 		for ( ; parent_component_count > 0; --parent_component_count)
 		{
-			first = std::search(first, last, NAMESPACE_DELIMITER, NAMESPACE_DELIMITER_END) + 1;
+			first = std::search(first, last, NAMESPACE_DELIMITER, NAMESPACE_DELIMITER_END);
+			if (first != last)
+			{
+				first += NAMESPACE_DELIMITER_LENGTH;
+			}
 		}
 
 		return first;
