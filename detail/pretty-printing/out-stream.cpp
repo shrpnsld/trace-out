@@ -160,7 +160,7 @@ namespace trace_out { namespace detail
 			standard::size_t header_width = out_stream::width() - std::strlen(MARKER);
 			const std::string &header = thread_header(thread_id, thread_name, header_width);
 
-			*this << header << "\n";
+			*this << header << ENDLINE << MARKER;
 		}
 #endif // defined(TRACE_OUT_SHOW_THREAD)
 
