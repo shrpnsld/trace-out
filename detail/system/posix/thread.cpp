@@ -1,7 +1,7 @@
 //#include "trace-out/detail/stuff/platform-detection.hpp" // [amalgamate:uncomment]
 //#if defined(TRACE_OUT_POSIX) // [amalgamate:uncomment]
 
-#include <pthread.h>
+#include <pthread.h> // [amalgamate:leave]
 
 #include "trace-out/detail/system/thread.hpp"
 

@@ -1,8 +1,8 @@
 //#include "trace-out/detail/stuff/platform-detection.hpp" // [amalgamate:uncomment]
 //#if defined(TRACE_OUT_WINDOWS) // [amalgamate:uncomment]
 
-#include <cassert> // [amalgamate: leave]
-#include <windows.h>
+#include <cassert> // [amalgamate:leave]
+#include <windows.h> // [amalgamate:leave]
 
 #include "trace-out/detail/system/thread-local-storage.hpp"
 

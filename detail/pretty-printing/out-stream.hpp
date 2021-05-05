@@ -6,7 +6,7 @@
 
 #include "trace-out/detail/stuff/platform-detection.hpp"
 #if defined(TRACE_OUT_CPP11)
-	#include <tuple>
+	#include <tuple> // [amalgamate:leave]
 #endif
 
 #include "trace-out/detail/standard/integer.hpp"

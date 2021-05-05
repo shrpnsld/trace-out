@@ -1,7 +1,7 @@
 //#include "trace-out/detail/stuff/platform-detection.hpp" // [amalgamate:uncomment]
 //#if defined(TRACE_OUT_WINDOWS) // [amalgamate:uncomment]
 
-#include <windows.h>
+#include <windows.h> // [amalgamate:leave]
 
 #include "trace-out/detail/system/console.hpp"
 

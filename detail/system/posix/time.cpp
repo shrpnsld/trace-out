@@ -2,8 +2,8 @@
 //#if defined(TRACE_OUT_POSIX) // [amalgamate:uncomment]
 
 #include <cstddef>
-#include <cassert> // [amalgamate: leave]
-#include <sys/time.h>
+#include <cassert> // [amalgamate:leave]
+#include <sys/time.h> // [amalgamate:leave]
 
 #include "trace-out/detail/system/time.hpp"
 

@@ -5,9 +5,9 @@
 #include "trace-out/detail/stuff/platform-detection.hpp"
 
 #if defined(TRACE_OUT_CPP11)
-	#include <cstdint>
+	#include <cstdint> // [amalgamate:leave]
 #else
-	#include <stdint.h>
+	#include <stdint.h> // [amalgamate:leave]
 #endif
 
 

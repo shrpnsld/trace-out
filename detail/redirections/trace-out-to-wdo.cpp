@@ -1,7 +1,7 @@
-#include "trace-out/detail/stuff/platform-detection.hpp"
-#if defined(TRACE_OUT_WINDOWS)
+//#include "trace-out/detail/stuff/platform-detection.hpp" // [amalgamate:uncomment]
+//#if defined(TRACE_OUT_WINDOWS) // [amalgamate:uncomment]
 
-#include <windows.h>
+#include <windows.h> // [amalgamate:leave]
 
 #include "trace-out/detail/standard/integer.hpp"
 
@@ -27,4 +27,4 @@ namespace trace_out_to_wdo
 
 }
 
-#endif // defined(TRACE_OUT_WINDOWS)
+//#endif // defined(TRACE_OUT_WINDOWS) // [amalgamate:uncomment]
