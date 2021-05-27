@@ -227,7 +227,9 @@ namespace trace_out { namespace detail
 
 	out_stream &out_stream::operator <<(const newline_manipulator &)
 	{
-		*this << "\n" << MARKER;
+		*this << "\n";
+		_current_line_length = 0;
+		*this << MARKER;
 
 #if defined(TRACE_OUT_SHOW_FILE_LINE)
 		std::stringstream stream;
@@ -235,7 +237,6 @@ namespace trace_out { namespace detail
 		stream.width(FILENAME_FIELD_WIDTH + 1 + LINE_FIELD_WIDTH);
 		stream << "";
 
-		_current_line_length = 0;
 		*this << stream.str() << DELIMITER;
 #endif // defined(TRACE_OUT_SHOW_FILE_LINE)
 
