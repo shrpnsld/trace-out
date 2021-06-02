@@ -1,3 +1,8 @@
+#include <cstdio>
+#include <cstdlib>
+#include <fstream>
+#include <iostream>
+
 #include "trace-out.hpp"
 
 
@@ -193,12 +198,10 @@ namespace trace_out { namespace detail
 }
 
 
-
-
 namespace trace_out { namespace detail
 {
 
-	function_printer::function_printer(const std::string &filename_line, const char *function_signature)
+	function_printer::function_printer(const std::string &filename_line, const std::string &function_signature)
 		:
 		_filename_line(filename_line),
 		_function_signature(function_signature)
@@ -213,15 +216,14 @@ namespace trace_out { namespace detail
 	{
 		indentation_remove();
 		out_stream stream(_filename_line);
-		stream << "}" << INDENTATION << "// " << _function_signature << NEWLINE << ENDLINE;
+		stream << "} // " << _function_signature << NEWLINE << ENDLINE;
 	}
 
 
-	function_printer make_function_printer(const std::string &filename_line, const char *function_signature)
+	function_printer make_function_printer(const std::string &filename_line, const std::string &function_signature)
 	{
 		return function_printer(filename_line, function_signature);
 	}
-
 
 
 	return_printer::return_printer(const std::string &filename_line)
@@ -257,7 +259,6 @@ namespace trace_out { namespace detail
 
 	block::block(bool value)
 		:
-		_auto_indentation(),
 		_value(value)
 	{
 	}
@@ -265,7 +266,6 @@ namespace trace_out { namespace detail
 
 	block::block(const block &another)
 		:
-		_auto_indentation(),
 		_value(another._value)
 	{
 	}
@@ -284,64 +284,83 @@ namespace trace_out { namespace detail
 	}
 
 
-	block iteration_block(const std::string &filename_line, standard::size_t iteration)
+	if_block::if_block(bool value)
+		:
+		_value(value)
 	{
-		{
-			auto_indentation auto_indentation;
+		out_stream() << "{" << ENDLINE;
+		indentation_add();
+	}
 
-			out_stream stream(filename_line);
-			stream << "// for: iteration #" << make_pretty(iteration) << ENDLINE;
-		}
+
+	if_block::if_block(const if_block &another)
+		:
+		_value(another._value)
+	{
+		out_stream() << "{" << ENDLINE;
+		indentation_add();
+	}
+
+
+	if_block::~if_block()
+	{
+		indentation_remove();
+		out_stream() << "}" << NEWLINE << ENDLINE;
+	}
+
+
+	if_block::operator bool() const
+	{
+		return _value;
+	}
+
+
+	block iteration_block(const std::string &filename_line, const char *loop, standard::size_t iteration)
+	{
+		out_stream stream(filename_line);
+		stream << "//" << NEWLINE << "// " << loop << ": iteration #" << make_pretty(iteration) << ENDLINE;
 
 		return block(false);
 	}
 
 
-
-	for_block::for_block(const std::string &filename_line, const char *expression)
+	loop_block::loop_block(const std::string &filename_line, const char *expression)
 		:
+		_expression(expression),
 		_iteration_number(0)
 	{
 		out_stream stream(filename_line);
-		stream << "for (" << expression << ")" << ENDLINE;
+		stream << _expression << NEWLINE << "{" << ENDLINE;
+		indentation_add();
 	}
 
 
-	for_block::~for_block()
+	loop_block::~loop_block()
 	{
+		indentation_remove();
+		out_stream() << "} // " << _expression << NEWLINE << ENDLINE;
 	}
 
 
-	for_block::operator bool() const
+	loop_block::operator bool() const
 	{
 		return false;
 	}
 
 
-	standard::size_t for_block::iteration()
+	standard::size_t loop_block::iteration()
 	{
 		return ++_iteration_number;
 	}
 
 
-	for_block make_for_block(const std::string &filename_line, const char *expression)
+	loop_block make_loop_block(const std::string &filename_line, const char *expression)
 	{
-		return for_block(filename_line, expression);
-	}
-
-
-
-	void print_while_header(const std::string &filename_line, const char *condition)
-	{
-		out_stream stream(filename_line);
-		stream << "while (" << condition << ")" << ENDLINE;
+		return loop_block(filename_line, expression);
 	}
 
 }
 }
-#include <cstdlib>
-
-
 
 
 #if defined(TRACE_OUT_REDIRECTION)
@@ -483,19 +502,19 @@ namespace trace_out { namespace detail
 
 		(void)filename_line; // eliminating 'not used' warning
 
+		*this << MARKER;
+
 #if defined(TRACE_OUT_SHOW_THREAD)
 		if (!is_running_same_thread())
 		{
-			std::string thread_id = thread_id_field(current_thread_id());
+			std::string thread_id = thread_id_field(system::current_thread_id());
 			const std::string &thread_name = current_thread_name();
 			standard::size_t header_width = out_stream::width() - std::strlen(MARKER);
 			const std::string &header = thread_header(thread_id, thread_name, header_width);
 
-			*this << MARKER << header << "\n";
+			*this << header << ENDLINE << MARKER;
 		}
 #endif // defined(TRACE_OUT_SHOW_THREAD)
-
-		*this << MARKER;
 
 #if defined(TRACE_OUT_SHOW_FILE_LINE)
 		*this << filename_line << DELIMITER;
@@ -511,12 +530,14 @@ namespace trace_out { namespace detail
 	{
 		lock_output();
 
+		*this << MARKER;
+
 #if defined(TRACE_OUT_SHOW_FILE_LINE)
 		std::stringstream stream;
 		stream.fill(' ');
 		stream.width(FILENAME_FIELD_WIDTH + 1 + LINE_FIELD_WIDTH);
 		stream << "";
-		*this << MARKER << stream.str() << DELIMITER;
+		*this << stream.str() << DELIMITER;
 #endif // defined(TRACE_OUT_SHOW_FILE_LINE)
 
 		*this << indentation();
@@ -559,6 +580,8 @@ namespace trace_out { namespace detail
 	out_stream &out_stream::operator <<(const newline_manipulator &)
 	{
 		*this << "\n";
+		_current_line_length = 0;
+		*this << MARKER;
 
 #if defined(TRACE_OUT_SHOW_FILE_LINE)
 		std::stringstream stream;
@@ -566,8 +589,7 @@ namespace trace_out { namespace detail
 		stream.width(FILENAME_FIELD_WIDTH + 1 + LINE_FIELD_WIDTH);
 		stream << "";
 
-		_current_line_length = 0;
-		*this << MARKER << stream.str() << DELIMITER;
+		*this << stream.str() << DELIMITER;
 #endif // defined(TRACE_OUT_SHOW_FILE_LINE)
 
 		*this << indentation();
@@ -780,10 +802,6 @@ namespace trace_out { namespace detail
 }
 }
 
-#include <iostream>
-
-
-
 
 namespace trace_out { namespace detail
 {
@@ -824,7 +842,7 @@ namespace trace_out { namespace detail
 		std::pair<std::vector<standard::uint64_t>, unsigned int> result = mode_values<standard::uint64_t>(results.begin(), results.end());
 		std::vector<standard::uint64_t> modes = result.first;
 		unsigned int occurances = result.second;
-		float percentage = static_cast<float>(occurances) / results.size() * 100.0f;
+		float percentage = static_cast<float>(occurances) / static_cast<float>(results.size()) * 100.0f;
 		if (modes.size() == 1)
 		{
 			stream << "//      mode: " << to_string(modes.front()) << " (" << to_string(percentage) << "% of all values)";
@@ -839,7 +857,7 @@ namespace trace_out { namespace detail
 				stream << ", " << to_string(*itr);
 			}
 
-			stream << " (each = " << to_string(percentage) << "%, all = " << to_string(percentage * modes.size()) << "% of all values)";
+			stream << " (each = " << to_string(percentage) << "%, all = " << to_string(percentage * static_cast<float>(modes.size())) << "% of all values)";
 		}
 
 		stream << NEWLINE;
@@ -851,8 +869,6 @@ namespace trace_out { namespace detail
 
 }
 }
-
-
 
 
 namespace trace_out_to_stdout
@@ -901,7 +917,6 @@ namespace trace_out_to_stdout
 #include <windows.h>
 
 
-
 namespace trace_out_to_wdo
 {
 
@@ -924,8 +939,6 @@ namespace trace_out_to_wdo
 }
 
 #endif // defined(TRACE_OUT_WINDOWS)
-#include <fstream>
-
 
 
 #if !defined(TRACE_OUT_TO_FILE)
@@ -965,6 +978,24 @@ namespace trace_out_to_file
 
 }
 
+
+namespace trace_out { namespace detail
+{
+
+	static const std::string::value_type NAMESPACE_DELIMITER[] = "::";
+	static const std::string::value_type *NAMESPACE_DELIMITER_END = NAMESPACE_DELIMITER + (sizeof(NAMESPACE_DELIMITER) / sizeof(NAMESPACE_DELIMITER[0]) - 1);
+	std::iterator_traits<std::string::const_iterator>::difference_type NAMESPACE_DELIMITER_LENGTH = sizeof(NAMESPACE_DELIMITER) / sizeof(std::string::value_type) - 1;
+
+
+	bool is_delimiter(std::string::value_type character);
+
+	template <typename Iterator>
+	Iterator skip_components(Iterator first, Iterator last, std::size_t parent_component_count);
+
+	std::string::iterator find_identifier_start(std::string::iterator first, std::string::iterator last, std::size_t parent_component_count);
+
+}
+}
 
 
 namespace trace_out { namespace detail
@@ -1036,13 +1067,84 @@ namespace trace_out { namespace detail
 		return tokens.substr(from, tokens.size());
 	}
 
+
+	bool is_delimiter(std::string::value_type character)
+	{
+		switch (character)
+		{
+			case ' ':
+			case '(':
+			case ')':
+			case '<':
+			case '>':
+			case '[':
+			case ']':
+				return true;
+
+			default:
+				return false;
+		}
+	}
+
+
+	template <typename Iterator>
+	Iterator skip_components(Iterator first, Iterator last, std::size_t parent_component_count)
+	{
+		for ( ; parent_component_count > 0; --parent_component_count)
+		{
+			first = std::search(first, last, NAMESPACE_DELIMITER, NAMESPACE_DELIMITER_END);
+			if (first != last)
+			{
+				first += NAMESPACE_DELIMITER_LENGTH;
+			}
+		}
+
+		return first;
+	}
+
+
+	std::string::const_iterator find_identifier_start(std::string::const_iterator first, std::string::const_iterator last, std::size_t parent_component_count)
+	{
+		std::iterator_traits<std::string::const_iterator>::difference_type dist = std::distance(first, last);
+		std::string::const_reverse_iterator rfirst(first + dist);
+		std::string::const_reverse_iterator rlast(last - dist);
+
+		rfirst = skip_components(rfirst, rlast, parent_component_count);
+		std::string::const_reverse_iterator place = std::search(rfirst, rlast, NAMESPACE_DELIMITER, NAMESPACE_DELIMITER_END);
+		if (place == rlast)
+		{
+			return first;
+		}
+
+		return place.base();
+	}
+
+
+	std::string strip_namespaces(const std::string &line, std::size_t parent_namespace_count)
+	{
+		std::string stripped_string;
+		for (std::string::const_iterator itr = line.begin(); itr != line.end(); )
+		{
+			std::string::const_iterator token_end = std::find_if(itr, line.end(), is_delimiter);
+			std::string::const_iterator identifier_start = find_identifier_start(itr, token_end, parent_namespace_count);
+
+			if (token_end != line.cend())
+			{
+				++token_end;
+			}
+
+			std::copy(identifier_start, token_end, std::back_inserter(stripped_string));
+
+			itr = token_end;
+		}
+
+		return stripped_string;
+	}
+
 }
 }
 
 #if defined(TRACE_OUT_CLANG) || defined(TRACE_OUT_GCC) || defined(TRACE_OUT_MINGW)
-
-
-#include <cstdio>
 
 
 namespace trace_out { namespace detail { namespace standard
@@ -1067,8 +1169,6 @@ namespace trace_out { namespace detail { namespace standard
 
 #endif // defined(TRACE_OUT_CLANG) || defined(TRACE_OUT_GCC) || defined(TRACE_OUT_MINGW)
 #if defined(TRACE_OUT_MVS)
-
-
 
 
 namespace trace_out { namespace detail { namespace standard
@@ -1097,7 +1197,6 @@ namespace trace_out { namespace detail { namespace standard
 
 #include <cassert>
 #include <pthread.h>
-
 
 
 namespace trace_out { namespace detail { namespace system
@@ -1150,7 +1249,7 @@ namespace trace_out { namespace detail { namespace system
 
 #if defined(TRACE_OUT_POSIX)
 
-
+#include <pthread.h>
 
 
 namespace trace_out { namespace detail { namespace system
@@ -1172,7 +1271,6 @@ namespace trace_out { namespace detail { namespace system
 
 #include <sys/ioctl.h>
 #include <unistd.h>
-
 
 
 namespace trace_out { namespace detail { namespace system
@@ -1200,7 +1298,6 @@ namespace trace_out { namespace detail { namespace system
 #if defined(TRACE_OUT_POSIX)
 
 
-
 namespace trace_out { namespace detail { namespace system
 {
 
@@ -1216,7 +1313,7 @@ namespace trace_out { namespace detail { namespace system
 #if defined(TRACE_OUT_POSIX)
 
 #include <cassert>
-
+#include <pthread.h>
 
 
 namespace trace_out { namespace detail { namespace system
@@ -1272,7 +1369,6 @@ namespace trace_out { namespace detail { namespace system
 #include <sys/time.h>
 
 
-
 namespace trace_out { namespace detail { namespace system
 {
 
@@ -1295,7 +1391,6 @@ namespace trace_out { namespace detail { namespace system
 
 
 #endif // defined(TRACE_OUT_POSIX)
-
 
 
 namespace trace_out { namespace detail { namespace system
@@ -1325,7 +1420,7 @@ namespace trace_out { namespace detail { namespace system
 
 #if defined(TRACE_OUT_WINDOWS)
 
-
+#include <windows.h>
 
 
 namespace trace_out { namespace detail { namespace system
@@ -1372,7 +1467,7 @@ namespace trace_out { namespace detail { namespace system
 
 #if defined(TRACE_OUT_WINDOWS)
 
-
+#include <windows.h>
 
 
 namespace trace_out { namespace detail { namespace system
@@ -1392,7 +1487,7 @@ namespace trace_out { namespace detail { namespace system
 
 #if defined(TRACE_OUT_WINDOWS)
 
-
+#include <windows.h>
 
 
 namespace trace_out { namespace detail { namespace system
@@ -1422,7 +1517,6 @@ namespace trace_out { namespace detail { namespace system
 #if defined(TRACE_OUT_WINDOWS)
 
 
-
 namespace trace_out { namespace detail { namespace system
 {
 
@@ -1438,7 +1532,7 @@ namespace trace_out { namespace detail { namespace system
 #if defined(TRACE_OUT_WINDOWS)
 
 #include <cassert>
-
+#include <windows.h>
 
 
 namespace trace_out { namespace detail { namespace system
@@ -1491,7 +1585,7 @@ namespace trace_out { namespace detail { namespace system
 
 #if defined(TRACE_OUT_WINDOWS)
 
-
+#include <windows.h>
 
 
 namespace trace_out { namespace detail { namespace system
@@ -1517,4 +1611,3 @@ namespace trace_out { namespace detail { namespace system
 
 
 #endif // defined(TRACE_OUT_WINDOWS)
-

@@ -1,8 +1,21 @@
 #pragma once
 
+#include <algorithm>
+#include <bitset>
+#include <cassert>
+#include <cstdarg>
+#include <cstddef>
+#include <cstring>
 #include <ctime>
+#include <ios>
+#include <iterator>
+#include <limits>
+#include <memory>
+#include <numeric>
+#include <sstream>
+#include <string>
+#include <utility>
 #include <vector>
-
 
 
 #if defined(__clang__)
@@ -31,9 +44,6 @@
 #if __cplusplus >= 201103L || _MSC_VER >= 1800
 	#define TRACE_OUT_CPP11
 #endif
-
-
-#include <cstddef>
 
 
 #if defined(TRACE_OUT_CPP11)
@@ -79,20 +89,9 @@ namespace trace_out { namespace detail { namespace standard
 }
 
 
-#include <memory>
-#include <string>
-#include <bitset>
-
 #if defined(TRACE_OUT_CPP11)
 	#include <tuple>
 #endif
-
-
-#include <cstdarg>
-#include <cstring>
-#include <ios>
-#include <sstream>
-
 
 
 #define trace_out_private__concat_impl(a, b) \
@@ -120,6 +119,15 @@ namespace trace_out { namespace detail { namespace standard
 
 #define trace_out_private__quotize(something) \
 			trace_out_private__quotize_impl(something)
+
+
+#if defined(TRACE_OUT_STRIP_NAMESPACES)
+	#define trace_out_private__strip_namespaces(string) \
+				trace_out::detail::strip_namespaces(string, TRACE_OUT_STRIP_NAMESPACES)
+#else
+	#define trace_out_private__strip_namespaces(string) \
+				string
+#endif
 
 
 #define TRACE_OUT_FILENAME_LINE \
@@ -167,6 +175,7 @@ namespace trace_out { namespace detail
 	std::string first_token(const std::string &tokens);
 	std::string rest_tokens(const std::string &tokens);
 
+	std::string strip_namespaces(const std::string &line, std::size_t parent_namespace_count = 0);
 
 
 	template <typename First_t, typename Second_t>
@@ -191,7 +200,6 @@ namespace trace_out { namespace detail
 			value = false
 		};
 	};
-
 
 
 	template <typename Type_t>
@@ -260,7 +268,6 @@ namespace trace_out { namespace detail
 	};
 
 
-
 	template <typename Type_t>
 	struct is_primitive
 	{
@@ -269,7 +276,6 @@ namespace trace_out { namespace detail
 			value = is_fundamental<Type_t>::value || is_pointer<Type_t>::value
 		};
 	};
-
 
 
 	template <typename Type_t>
@@ -306,7 +312,6 @@ namespace trace_out { namespace detail
 	};
 
 
-
 	template <typename Type_t>
 	struct is_structural
 	{
@@ -315,7 +320,6 @@ namespace trace_out { namespace detail
 			value = !(is_primitive<Type_t>::value || is_array<Type_t>::value)
 		};
 	};
-
 
 
 	template <bool Condition, typename True_t, typename False_t>
@@ -330,7 +334,6 @@ namespace trace_out { namespace detail
 	{
 		typedef True_t type;
 	};
-
 
 
 	template <bool Condition, typename Type_t>
@@ -530,9 +533,6 @@ namespace trace_out { namespace detail
 }
 
 
-
-
-
 namespace trace_out { namespace detail
 {
 
@@ -557,7 +557,6 @@ namespace trace_out { namespace detail
 
 		const Type_t &_data;
 	};
-
 
 
 	template <typename Type_t>
@@ -586,7 +585,6 @@ namespace trace_out { namespace detail
 	pretty_condition<Type_t> make_pretty_condition(const Type_t &value);
 
 
-
 	template <typename Type_t>
 	class pretty_structural
 	{
@@ -608,7 +606,6 @@ namespace trace_out { namespace detail
 
 		const Type_t &_data;
 	};
-
 
 
 	template <typename Type_t>
@@ -680,8 +677,6 @@ namespace trace_out { namespace detail
 	};
 
 
-
-
 	template <typename Type_t>
 	typename enable_if<!is_iterable<Type_t>::value && is_dimensional<Type_t>::value, pretty_structural<Type_t> >::type make_pretty(const Type_t &value)
 	{
@@ -741,7 +736,6 @@ namespace trace_out { namespace detail
 	}
 
 
-
 	template <typename Type_t>
 	pretty_condition<Type_t>::pretty_condition(const Type_t &data)
 		:
@@ -770,7 +764,6 @@ namespace trace_out { namespace detail
 	{
 		return pretty_condition<Type_t>(value);
 	}
-
 
 
 	template <typename Type_t>
@@ -805,7 +798,6 @@ namespace trace_out { namespace detail
 	}
 
 
-
 	template <typename Type_t>
 	pretty_iterable<Type_t>::pretty_iterable(const Type_t &data)
 		:
@@ -836,7 +828,6 @@ namespace trace_out { namespace detail
 	{
 		return _data;
 	}
-
 
 
 	template <typename Iterator_t>
@@ -911,7 +902,6 @@ namespace trace_out { namespace detail
 	}
 
 
-
 	template <typename Iterator_t>
 	pretty_range_closed<Iterator_t> make_pretty_range(const Iterator_t &begin, const Iterator_t &end)
 	{
@@ -927,7 +917,6 @@ namespace trace_out { namespace detail
 
 }
 }
-
 
 
 namespace trace_out { namespace detail
@@ -1669,9 +1658,6 @@ namespace trace_out { namespace detail
 }
 
 
-
-
-
 namespace trace_out { namespace detail
 {
 
@@ -1772,8 +1758,6 @@ namespace trace_out { namespace detail
 }
 
 
-
-
 namespace trace_out { namespace detail
 {
 
@@ -1809,15 +1793,13 @@ namespace trace_out { namespace detail
 }
 
 
-
-
 namespace trace_out { namespace detail
 {
 
 	class function_printer
 	{
 	public:
-		function_printer(const std::string &filename_line, const char *function_signature);
+		function_printer(const std::string &filename_line, const std::string &function_signature);
 		~function_printer();
 
 	private:
@@ -1826,8 +1808,7 @@ namespace trace_out { namespace detail
 	};
 
 
-	function_printer make_function_printer(const std::string &filename_line, const char *function_signature);
-
+	function_printer make_function_printer(const std::string &filename_line, const std::string &function_signature);
 
 
 	class return_printer
@@ -1862,10 +1843,6 @@ namespace trace_out { namespace detail
 
 }
 }
-
-
-#include <limits>
-
 
 
 namespace trace_out { namespace detail
@@ -2203,9 +2180,6 @@ namespace trace_out { namespace detail
 }
 
 
-
-
-
 namespace trace_out { namespace detail
 {
 
@@ -2235,40 +2209,55 @@ namespace trace_out { namespace detail
 
 #endif // defined(TRACE_OUT_CPP11)
 
-		auto_indentation _auto_indentation;
+		bool _value;
+	};
+
+
+	class if_block
+	{
+	public:
+		if_block(bool value);
+		if_block(const if_block &another);
+		~if_block();
+
+		operator bool() const;
+
+	private:
+		if_block &operator =(const if_block &another); // = delete
+
+#if defined(TRACE_OUT_CPP11)
+
+		if_block &operator =(if_block &&another); // = delete
+
+#endif
+
+	private:
 		bool _value;
 	};
 
 
 	template <typename Type_t>
-	block if_block(const std::string &filename_line, const char *condition, const Type_t &value);
+	if_block make_if_block(const std::string &filename_line, const char *condition, const Type_t &value);
 
-	template <typename Type_t>
-	block while_block(const std::string &filename_line, const char *condition, const Type_t &value);
-
-	block iteration_block(const std::string &filename_line, standard::size_t iteration);
+	block iteration_block(const std::string &filename_line, const char *loop, standard::size_t iteration);
 
 
-
-	class for_block
+	class loop_block
 	{
 	public:
-		for_block(const std::string &filename_line, const char *expression);
-		~for_block();
+		loop_block(const std::string &filename_line, const char *expression);
+		~loop_block();
 
 		operator bool() const;
 		standard::size_t iteration();
 
 	private:
+		const char *_expression;
 		standard::size_t _iteration_number;
 	};
 
 
-	for_block make_for_block(const std::string &filename_line, const char *expression);
-
-
-
-	void print_while_header(const std::string &filename_line, const char *condition);
+	loop_block make_loop_block(const std::string &filename_line, const char *expression);
 
 }
 }
@@ -2278,34 +2267,17 @@ namespace trace_out { namespace detail
 {
 
 	template <typename Type_t>
-	block if_block(const std::string &filename_line, const char *condition, const Type_t &value)
+	if_block make_if_block(const std::string &filename_line, const char *condition, const Type_t &value)
 	{
 		out_stream stream(filename_line);
 		stream << "if (" << condition << ") => " << FLUSH;
 		stream << make_pretty_condition(value) << ENDLINE;
 
-		return block(!!value);
-	}
-
-
-	template <typename Type_t>
-	block while_block(const std::string &filename_line, const char *condition, const Type_t &value)
-	{
-		{
-			auto_indentation auto_indentation;
-
-			out_stream stream(filename_line);
-			stream << "// while: " << condition << " => " << FLUSH;
-			stream << make_pretty_condition(value) << ENDLINE;
-		}
-
-		return block(!!value);
+		return if_block(!!value);
 	}
 
 }
 }
-
-
 
 
 namespace trace_out { namespace detail
@@ -2319,8 +2291,6 @@ namespace trace_out { namespace detail
 }
 
 
-
-
 namespace trace_out { namespace detail { namespace system
 {
 
@@ -2329,7 +2299,6 @@ namespace trace_out { namespace detail { namespace system
 }
 }
 }
-
 
 
 #if defined(TRACE_OUT_CLANG)
@@ -2362,25 +2331,30 @@ namespace trace_out { namespace detail { namespace system
 				trace_out::detail::print_memory(TRACE_OUT_FILENAME_LINE, #pointer, pointer, ##__VA_ARGS__);
 
 	#define $f \
-				trace_out::detail::function_printer trace_out_private__unify(trace_out_f) = trace_out::detail::make_function_printer(TRACE_OUT_FILENAME_LINE, TRACE_OUT_FUNCTION_SIGNATURE);
+				trace_out::detail::function_printer trace_out_private__unify(trace_out_f) = trace_out::detail::make_function_printer(TRACE_OUT_FILENAME_LINE, trace_out_private__strip_namespaces(TRACE_OUT_FUNCTION_SIGNATURE));
 
 	#define $return \
 				return trace_out::detail::make_return_printer(TRACE_OUT_FILENAME_LINE) ,
 
 	#define $if(...) \
-				if (trace_out::detail::block trace_out_private__unify(trace_out_if_block) = trace_out::detail::if_block(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__, (__VA_ARGS__)))
+				if (trace_out::detail::if_block trace_out_private__unify(trace_out_if_block) = trace_out::detail::make_if_block(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__, (__VA_ARGS__)))
 
-	#define trace_out_private__for(block_variable_name, ...) \
-				if (trace_out::detail::for_block block_variable_name = trace_out::detail::make_for_block(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__)) {} else \
-					for (__VA_ARGS__) \
-						if (trace_out::detail::block trace_out_private__unify(trace_out_iteration_block) = trace_out::detail::iteration_block(TRACE_OUT_FILENAME_LINE, block_variable_name.iteration())) {} else
+	#define trace_out_private__loop(block_variable_name, loop, ...) \
+				if (trace_out::detail::loop_block block_variable_name = trace_out::detail::make_loop_block(TRACE_OUT_FILENAME_LINE, #loop" ("#__VA_ARGS__")")) {} else \
+					loop (__VA_ARGS__) \
+						if (trace_out::detail::block trace_out_private__unify(trace_out_iteration_block) = trace_out::detail::iteration_block(TRACE_OUT_FILENAME_LINE, #loop, block_variable_name.iteration())) {} else
 
 	#define $for(...) \
-				trace_out_private__for(trace_out_private__unify(trace_out_for_block), ##__VA_ARGS__)
+				trace_out_private__loop(trace_out_private__unify(trace_out_for_block), for, ##__VA_ARGS__)
 
 	#define $while(...) \
-				if (trace_out::detail::print_while_header(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__), false) {} else \
-					while (trace_out::detail::block trace_out_private__unify(trace_out_while_block) = trace_out::detail::while_block(TRACE_OUT_FILENAME_LINE, #__VA_ARGS__, (__VA_ARGS__)))
+				trace_out_private__loop(trace_out_private__unify(trace_out_for_block), while, ##__VA_ARGS__)
+
+	#define $t(...) \
+				trace_out::detail::out_stream stream(TRACE_OUT_FILENAME_LINE); \
+				stream << #__VA_ARGS__ << trace_out::detail::FLUSH; \
+				__VA_ARGS__ \
+				stream << " // trace-out: statement passed" << trace_out::detail::ENDLINE;
 
 	#define $p(format, ...) \
 				{ \
@@ -2469,6 +2443,9 @@ namespace trace_out { namespace detail { namespace system
 
 	#define $p(format, ...)
 
+	#define $t(...) \
+				__VA_ARGS__
+
 	#define $thread(name)
 
 	#define $time(label, ...) \
@@ -2484,7 +2461,6 @@ namespace trace_out { namespace detail { namespace system
 #endif
 
 
-
 #if defined(TRACE_OUT_CLANG)
 
 	#pragma clang diagnostic pop
@@ -2494,14 +2470,6 @@ namespace trace_out { namespace detail { namespace system
 	#pragma GCC diagnostic pop
 
 #endif
-
-
-#include <cassert>
-#include <utility>
-#include <numeric>
-#include <algorithm>
-#include <iterator>
-
 
 
 namespace trace_out { namespace detail
@@ -2563,7 +2531,7 @@ namespace trace_out { namespace detail
 	Type_t average_value(Iterator_t begin, Iterator_t end)
 	{
 		Type_t full_time = std::accumulate(begin, end, Type_t(0));
-		return static_cast<Type_t>(full_time) / std::distance(begin, end);
+		return static_cast<Type_t>(full_time) / static_cast<Type_t>(std::distance(begin, end));
 	}
 
 
@@ -2581,7 +2549,7 @@ namespace trace_out { namespace detail
 			Iterator_t next = begin;
 			std::advance(begin, half_size - 1);
 			std::advance(next, half_size);
-			return static_cast<Type_t>((*begin + *next) / Type_t(2));
+			return static_cast<Type_t>(*begin + *next) / Type_t(2);
 		}
 		else
 		{
@@ -2641,7 +2609,6 @@ namespace trace_out { namespace detail
 }
 
 
-
 namespace trace_out { namespace detail
 {
 
@@ -2667,8 +2634,6 @@ namespace trace_out { namespace detail
 
 }
 }
-
-
 
 
 namespace trace_out { namespace detail
@@ -2734,9 +2699,6 @@ namespace trace_out { namespace detail
 }
 
 
-
-
-
 namespace trace_out { namespace detail { namespace standard
 {
 
@@ -2746,7 +2708,6 @@ namespace trace_out { namespace detail { namespace standard
 }
 }
 }
-
 
 
 namespace trace_out { namespace detail { namespace system
@@ -2838,7 +2799,6 @@ namespace trace_out { namespace detail { namespace system
 }
 
 
-
 namespace trace_out { namespace detail { namespace system
 {
 
@@ -2849,7 +2809,6 @@ namespace trace_out { namespace detail { namespace system
 }
 
 
-
 namespace trace_out { namespace detail { namespace system
 {
 
@@ -2858,8 +2817,6 @@ namespace trace_out { namespace detail { namespace system
 }
 }
 }
-
-
 
 
 namespace trace_out { namespace detail { namespace system
@@ -2898,8 +2855,6 @@ namespace trace_out { namespace detail { namespace system
 }
 }
 }
-
-
 
 
 namespace trace_out { namespace detail { namespace system

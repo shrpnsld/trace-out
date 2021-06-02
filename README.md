@@ -42,10 +42,8 @@ int main()
 * No additional dependencies.
 * Output can be redirected.
 * Crossplatform. Tested with:
-  * Apple LLVM version 9.1.0
-  * GCC 5.4.0
-  * MinGW 6.3.0
-  * Microsoft Visual Studio 2010, 2012, 2013, 2015, 2017
+  * Apple LLVM version 12.0.5
+  * Microsoft Visual Studio 2019
 * Free for all ([MIT license](LICENSE.txt)).
 
 
@@ -189,6 +187,8 @@ There is an output synchronization that prevents outputs from different threads 
 `TRACE_OUT_SHOW_FILE_LINE` – print file and line information for every trace-out macro.
 
 `TRACE_OUT_INDENTATION` `<string>` – string that is used as an indentation for the actual output. Default value is 4 spaces.
+
+`TRACE_OUT_STRIP_NAMESPACES` `<how-much>` – leave only last `<how-much>` namespace names in identifiers. Default value is `1`.
 
 `TRACE_OUT_REDIRECTION` `<name>` – use redirection from namespace `<name>`.
 
