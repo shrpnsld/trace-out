@@ -27,4 +27,4 @@ namespace trace_out_to_wdo
 
 }
 
-#endif // defined(TRACE_OUT_WINDOWS) // [amalgamate:uncomment]
+#endif // defined(TRACE_OUT_WINDOWS)
