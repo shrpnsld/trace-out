@@ -50,7 +50,7 @@ int main()
 
 # Usage
 
-Simply add trace-out files to your project and you're ready to use it.
+Add trace-out files to your project and you're ready to go.
 
 
 ## Interface
@@ -198,6 +198,8 @@ There is an output synchronization that prevents outputs from different threads 
 
 `TRACE_OUT_WIDTH` `<how-much>` – width to which output is wrapped (actually only the thread header and memory output are wrapped). This macro overrides value returned by `<redirection-namespace>::width()` function. Default value for standard output is `79`.
 
+`TRACE_OUT_CPP_VERSION` `<number>` – specify C++ standard version using same format as `__cplusplus` macro. Why? Visual Studio defines `__cplusplus` macro with the wrong value, but has option to fix this – `/Zc:__cplusplus`, which still can break some old code. So, to preserve project integrity, this macro can be used and it will affect only trace-out.
+
 
 
 # Troubleshooting
@@ -211,3 +213,9 @@ There is an output synchronization that prevents outputs from different threads 
 	*Fix #1:* exclude `trace-out.cpp` from precompilation process.
 
 	*Fix #2:* the precompiled header should be manually included in the `trace-out.cpp` file.
+
+* Visual Studio errors on using `std::auto_ptr`.
+
+	*Fix #1:* define macro `TRACE_OUT_CPP_VERSION` with value `199711L`, `201103L` or `201402L`.
+
+	*Fix #2:* use compiler option `/Zc:__cplusplus`.

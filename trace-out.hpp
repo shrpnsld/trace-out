@@ -41,12 +41,14 @@
 #endif
 
 
-#if __cplusplus >= 201103L || _MSC_VER >= 1800
-	#define TRACE_OUT_CPP11
+// Visual Studio was defining '__cplusplus' macro as '199711L', and now they have '/Zc:__cplusplus' to fix this.
+// If, for some reason, you don't want to use this option, you can define macro 'TRACE_OUT_CPP_VERSION' with a valid '__cplusplus' macro value
+#if !defined(TRACE_OUT_CPP_VERSION)
+	#define TRACE_OUT_CPP_VERSION __cplusplus
 #endif
 
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 	#include <cstdint>
 #else
 	#include <stdint.h>
@@ -56,7 +58,7 @@
 namespace trace_out { namespace detail { namespace standard
 {
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 		typedef ::std::int8_t int8_t;
 		typedef ::std::int16_t int16_t;
 		typedef ::std::int32_t int32_t;
@@ -82,14 +84,14 @@ namespace trace_out { namespace detail { namespace standard
 
 		typedef ::size_t size_t;
 		typedef ::uintptr_t uintptr_t;
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 }
 }
 }
 
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 	#include <tuple>
 #endif
 
@@ -234,12 +236,12 @@ namespace trace_out { namespace detail
 	trace_out__define_is_fundamental(signed long int);
 	trace_out__define_is_fundamental(unsigned long int);
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 	trace_out__define_is_fundamental(signed long long);
 	trace_out__define_is_fundamental(unsigned long long);
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 	trace_out__define_is_fundamental(float);
 	trace_out__define_is_fundamental(double);
@@ -347,7 +349,7 @@ namespace trace_out { namespace detail
 	};
 
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 	// need this to fix printing of std::tuple
 	template <typename ...Types_t>
@@ -359,7 +361,7 @@ namespace trace_out { namespace detail
 		};
 	};
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 
 #define trace_out_private__define_has_member(name) \
@@ -549,11 +551,11 @@ namespace trace_out { namespace detail
 	private:
 		pretty &operator =(const pretty &another); // = delete
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 		pretty &operator =(pretty &&another); // = delete
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 		const Type_t &_data;
 	};
@@ -571,11 +573,11 @@ namespace trace_out { namespace detail
 	private:
 		pretty_condition &operator =(const pretty_condition &another); // = delete
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 		pretty_condition &operator =(pretty_condition &&another); // = delete
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 		const Type_t &_data;
 	};
@@ -598,11 +600,11 @@ namespace trace_out { namespace detail
 	private:
 		pretty_structural &operator =(const pretty_structural &another); // = delete
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 		pretty_structural &operator =(pretty_structural &&another); // = delete
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 		const Type_t &_data;
 	};
@@ -621,11 +623,11 @@ namespace trace_out { namespace detail
 	private:
 		pretty_iterable &operator =(const pretty_iterable &another); // = delete
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 		pretty_iterable &operator =(pretty_iterable &&another); // = delete
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 		const Type_t &_data;
 	};
@@ -644,9 +646,9 @@ namespace trace_out { namespace detail
 	private:
 		pretty_range_closed &operator =(const pretty_range_closed &another); // = delete
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 		pretty_range_closed &operator =(pretty_range_closed &&another); // = delete
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 	private:
 		const Iterator_t &_begin;
@@ -667,9 +669,9 @@ namespace trace_out { namespace detail
 	private:
 		pretty_range_open &operator =(const pretty_range_open &another); // = delete
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 		pretty_range_open &operator =(pretty_range_open &&another); // = delete
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 	public:
 		const Iterator_t &_begin;
@@ -973,12 +975,12 @@ namespace trace_out { namespace detail
 	out_stream &operator <<(out_stream &stream, const pretty<long> &value);
 	out_stream &operator <<(out_stream &stream, const pretty<unsigned long> &value);
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 	out_stream &operator <<(out_stream &stream, const pretty<long long> &value);
 	out_stream &operator <<(out_stream &stream, const pretty<unsigned long long> &value);
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 	out_stream &operator <<(out_stream &stream, const pretty<float> &value);
 	out_stream &operator <<(out_stream &stream, const pretty<double> &value);
@@ -1027,6 +1029,8 @@ namespace trace_out { namespace detail
 	template <typename Type_t>
 	typename enable_if<has_member_REAL<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
 
+#if TRACE_OUT_CPP_VERSION < 201703L
+
 #if defined(TRACE_OUT_GCC)
 	#pragma GCC diagnostic push
 	#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
@@ -1039,7 +1043,9 @@ namespace trace_out { namespace detail
 	#pragma GCC diagnostic pop
 #endif
 
-#if defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION < 201703L
+
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 	template <typename Type_t>
 	out_stream &operator <<(out_stream &stream, const pretty<std::unique_ptr<Type_t> > &value);
@@ -1050,17 +1056,17 @@ namespace trace_out { namespace detail
 	template <typename Type_t>
 	out_stream &operator <<(out_stream &stream, const pretty<std::weak_ptr<Type_t> > &value);
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 	template <typename First_t, typename Second_t>
 	out_stream &operator <<(out_stream &stream, const pretty<std::pair<First_t, Second_t> > &value);
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 	template <typename ...Types_t>
 	out_stream &operator <<(out_stream &stream, const pretty<std::tuple<Types_t ...> > &value);
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 
 	template <std::size_t Size>
@@ -1443,6 +1449,8 @@ namespace trace_out { namespace detail
 	}
 
 
+#if TRACE_OUT_CPP_VERSION < 201703L
+
 #if defined(TRACE_OUT_GCC)
 	#pragma GCC diagnostic push
 	#pragma GCC diagnostic ignored "-Wdeprecated-declarations" // seems it does not turn off the warning if there's no C++11
@@ -1460,8 +1468,10 @@ namespace trace_out { namespace detail
 	#pragma GCC diagnostic pop
 #endif
 
+#endif // TRACE_OUT_CPP_VERSION < 201703L
 
-#if defined(TRACE_OUT_CPP11)
+
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 	template <typename Type_t>
 	out_stream &operator <<(out_stream &stream, const pretty<std::unique_ptr<Type_t> > &value)
@@ -1498,7 +1508,7 @@ namespace trace_out { namespace detail
 		return stream;
 	}
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 
 	template <typename First_t, typename Second_t>
@@ -1513,7 +1523,7 @@ namespace trace_out { namespace detail
 	}
 
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 	template <standard::size_t Index, typename ...Types_t>
 	typename enable_if<Index == sizeof_pack<Types_t...>::value - 1, out_stream &>::type print_tuple(out_stream &stream, const std::tuple<Types_t...> &tuple)
@@ -1552,7 +1562,7 @@ namespace trace_out { namespace detail
 		return print_tuple<0>(stream, tuple);
 	}
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 
 	template <std::size_t Size>
@@ -1661,7 +1671,7 @@ namespace trace_out { namespace detail
 namespace trace_out { namespace detail
 {
 
-#if !defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION < 201103L
 
 	template <typename Type_t>
 	const Type_t &expression(const std::string &filename_line, const char *name, const Type_t &value);
@@ -1680,7 +1690,7 @@ namespace trace_out { namespace detail
 	template <typename ...Types_t>
 	void watch(const std::string &filename_line, const char *names, const Types_t &...values);
 
-#endif // !defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION < 201103L
 
 }
 }
@@ -1689,7 +1699,7 @@ namespace trace_out { namespace detail
 namespace trace_out { namespace detail
 {
 
-#if !defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION < 201103L
 
 	template <typename Type_t>
 	const Type_t &expression(const std::string &filename_line, const char *name, const Type_t &value)
@@ -1752,7 +1762,7 @@ namespace trace_out { namespace detail
 		}
 	}
 
-#endif // !defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION < 201103L
 
 }
 }
@@ -2203,11 +2213,11 @@ namespace trace_out { namespace detail
 	private:
 		block &operator =(const block &another); // = delete
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 		block &operator =(block &&another); // = delete
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 		bool _value;
 	};
@@ -2225,7 +2235,7 @@ namespace trace_out { namespace detail
 	private:
 		if_block &operator =(const if_block &another); // = delete
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 		if_block &operator =(if_block &&another); // = delete
 
@@ -2655,12 +2665,12 @@ namespace trace_out { namespace detail
 		resource(const resource &);
 		resource &operator =(const resource &);
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 		resource(resource &&another);
 		resource &operator =(resource &&another);
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 		Type_t _handle;
 		deleter_t _deleter;
@@ -2735,12 +2745,12 @@ namespace trace_out { namespace detail { namespace system
 		tls(const tls &another);
 		tls &operator =(const tls &another);
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 		tls(tls &&another);
 		tls &operator =(tls &&another);
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 		resource<tlskey_t> _key;
 	};
@@ -2842,12 +2852,12 @@ namespace trace_out { namespace detail { namespace system
 		mutex(const mutex &another);
 		mutex &operator =(const mutex &another);
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 		mutex(mutex &&another);
 		mutex &operator =(mutex &&another);
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 		resource<mutex_t> _handle;
 	};
