@@ -31,11 +31,11 @@ namespace trace_out { namespace detail
 	private:
 		block &operator =(const block &another); // = delete
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 		block &operator =(block &&another); // = delete
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 		bool _value;
 	};
@@ -53,7 +53,7 @@ namespace trace_out { namespace detail
 	private:
 		if_block &operator =(const if_block &another); // = delete
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 		if_block &operator =(if_block &&another); // = delete
 

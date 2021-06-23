@@ -11,7 +11,7 @@
 namespace trace_out { namespace detail
 {
 
-#if !defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION < 201103L
 
 	template <typename Type_t>
 	const Type_t &expression(const std::string &filename_line, const char *name, const Type_t &value);
@@ -30,7 +30,7 @@ namespace trace_out { namespace detail
 	template <typename ...Types_t>
 	void watch(const std::string &filename_line, const char *names, const Types_t &...values);
 
-#endif // !defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION < 201103L
 
 }
 }
@@ -39,7 +39,7 @@ namespace trace_out { namespace detail
 namespace trace_out { namespace detail
 {
 
-#if !defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION < 201103L
 
 	template <typename Type_t>
 	const Type_t &expression(const std::string &filename_line, const char *name, const Type_t &value)
@@ -102,7 +102,7 @@ namespace trace_out { namespace detail
 		}
 	}
 
-#endif // !defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION < 201103L
 
 }
 }

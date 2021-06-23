@@ -4,7 +4,7 @@
 
 #include "trace-out/detail/stuff/platform-detection.hpp"
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 	#include <cstdint> // [amalgamate:leave]
 #else
 	#include <stdint.h> // [amalgamate:leave]
@@ -14,7 +14,7 @@
 namespace trace_out { namespace detail { namespace standard
 {
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 		typedef ::std::int8_t int8_t;
 		typedef ::std::int16_t int16_t;
 		typedef ::std::int32_t int32_t;
@@ -40,7 +40,7 @@ namespace trace_out { namespace detail { namespace standard
 
 		typedef ::size_t size_t;
 		typedef ::uintptr_t uintptr_t;
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 }
 }

@@ -5,7 +5,7 @@
 #include <bitset>
 
 #include "trace-out/detail/stuff/platform-detection.hpp"
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 	#include <tuple> // [amalgamate:leave]
 #endif
 
@@ -68,12 +68,12 @@ namespace trace_out { namespace detail
 	out_stream &operator <<(out_stream &stream, const pretty<long> &value);
 	out_stream &operator <<(out_stream &stream, const pretty<unsigned long> &value);
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 	out_stream &operator <<(out_stream &stream, const pretty<long long> &value);
 	out_stream &operator <<(out_stream &stream, const pretty<unsigned long long> &value);
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 	out_stream &operator <<(out_stream &stream, const pretty<float> &value);
 	out_stream &operator <<(out_stream &stream, const pretty<double> &value);
@@ -122,6 +122,8 @@ namespace trace_out { namespace detail
 	template <typename Type_t>
 	typename enable_if<has_member_REAL<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
 
+#if TRACE_OUT_CPP_VERSION < 201703L
+
 #if defined(TRACE_OUT_GCC)
 	#pragma GCC diagnostic push
 	#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
@@ -134,7 +136,9 @@ namespace trace_out { namespace detail
 	#pragma GCC diagnostic pop
 #endif
 
-#if defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION < 201703L
+
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 	template <typename Type_t>
 	out_stream &operator <<(out_stream &stream, const pretty<std::unique_ptr<Type_t> > &value);
@@ -145,17 +149,17 @@ namespace trace_out { namespace detail
 	template <typename Type_t>
 	out_stream &operator <<(out_stream &stream, const pretty<std::weak_ptr<Type_t> > &value);
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 	template <typename First_t, typename Second_t>
 	out_stream &operator <<(out_stream &stream, const pretty<std::pair<First_t, Second_t> > &value);
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 	template <typename ...Types_t>
 	out_stream &operator <<(out_stream &stream, const pretty<std::tuple<Types_t ...> > &value);
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 
 	template <std::size_t Size>
@@ -538,6 +542,8 @@ namespace trace_out { namespace detail
 	}
 
 
+#if TRACE_OUT_CPP_VERSION < 201703L
+
 #if defined(TRACE_OUT_GCC)
 	#pragma GCC diagnostic push
 	#pragma GCC diagnostic ignored "-Wdeprecated-declarations" // seems it does not turn off the warning if there's no C++11
@@ -555,8 +561,10 @@ namespace trace_out { namespace detail
 	#pragma GCC diagnostic pop
 #endif
 
+#endif // TRACE_OUT_CPP_VERSION < 201703L
 
-#if defined(TRACE_OUT_CPP11)
+
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 	template <typename Type_t>
 	out_stream &operator <<(out_stream &stream, const pretty<std::unique_ptr<Type_t> > &value)
@@ -593,7 +601,7 @@ namespace trace_out { namespace detail
 		return stream;
 	}
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 
 	template <typename First_t, typename Second_t>
@@ -608,7 +616,7 @@ namespace trace_out { namespace detail
 	}
 
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 	template <standard::size_t Index, typename ...Types_t>
 	typename enable_if<Index == sizeof_pack<Types_t...>::value - 1, out_stream &>::type print_tuple(out_stream &stream, const std::tuple<Types_t...> &tuple)
@@ -647,7 +655,7 @@ namespace trace_out { namespace detail
 		return print_tuple<0>(stream, tuple);
 	}
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 
 	template <std::size_t Size>

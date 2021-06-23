@@ -27,12 +27,12 @@ namespace trace_out { namespace detail { namespace system
 		mutex(const mutex &another);
 		mutex &operator =(const mutex &another);
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 		mutex(mutex &&another);
 		mutex &operator =(mutex &&another);
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 		resource<mutex_t> _handle;
 	};

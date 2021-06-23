@@ -22,12 +22,12 @@ namespace trace_out { namespace detail
 		resource(const resource &);
 		resource &operator =(const resource &);
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 		resource(resource &&another);
 		resource &operator =(resource &&another);
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 		Type_t _handle;
 		deleter_t _deleter;

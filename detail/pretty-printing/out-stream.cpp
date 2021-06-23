@@ -389,7 +389,7 @@ namespace trace_out { namespace detail
 	}
 
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 	out_stream &operator <<(out_stream &stream, const pretty<long long> &value)
 	{
@@ -404,7 +404,7 @@ namespace trace_out { namespace detail
 		return stream << to_string(value.get());
 	}
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 
 	out_stream &operator <<(out_stream &stream, const pretty<float> &value)

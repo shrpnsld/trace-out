@@ -151,12 +151,12 @@ namespace trace_out { namespace detail
 	trace_out__define_is_fundamental(signed long int);
 	trace_out__define_is_fundamental(unsigned long int);
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 	trace_out__define_is_fundamental(signed long long);
 	trace_out__define_is_fundamental(unsigned long long);
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 	trace_out__define_is_fundamental(float);
 	trace_out__define_is_fundamental(double);
@@ -269,7 +269,7 @@ namespace trace_out { namespace detail
 	};
 
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 	// need this to fix printing of std::tuple
 	template <typename ...Types_t>
@@ -281,7 +281,7 @@ namespace trace_out { namespace detail
 		};
 	};
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 
 #define trace_out_private__define_has_member(name) \

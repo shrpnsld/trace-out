@@ -24,7 +24,9 @@
 #endif
 
 
-#if __cplusplus >= 201103L || _MSC_VER >= 1800
-	#define TRACE_OUT_CPP11
+// Visual Studio was defining '__cplusplus' macro as '199711L', and now they have '/Zc:__cplusplus' to fix this.
+// If, for some reason, you don't want to use this option, you can define macro 'TRACE_OUT_CPP_VERSION' with a valid '__cplusplus' macro value
+#if !defined(TRACE_OUT_CPP_VERSION)
+	#define TRACE_OUT_CPP_VERSION __cplusplus
 #endif
 

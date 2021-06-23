@@ -29,12 +29,12 @@ namespace trace_out { namespace detail { namespace system
 		tls(const tls &another);
 		tls &operator =(const tls &another);
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 		tls(tls &&another);
 		tls &operator =(tls &&another);
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 		resource<tlskey_t> _key;
 	};

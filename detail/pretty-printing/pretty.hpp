@@ -22,11 +22,11 @@ namespace trace_out { namespace detail
 	private:
 		pretty &operator =(const pretty &another); // = delete
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 		pretty &operator =(pretty &&another); // = delete
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 		const Type_t &_data;
 	};
@@ -45,11 +45,11 @@ namespace trace_out { namespace detail
 	private:
 		pretty_condition &operator =(const pretty_condition &another); // = delete
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 		pretty_condition &operator =(pretty_condition &&another); // = delete
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 		const Type_t &_data;
 	};
@@ -73,11 +73,11 @@ namespace trace_out { namespace detail
 	private:
 		pretty_structural &operator =(const pretty_structural &another); // = delete
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 		pretty_structural &operator =(pretty_structural &&another); // = delete
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 		const Type_t &_data;
 	};
@@ -97,11 +97,11 @@ namespace trace_out { namespace detail
 	private:
 		pretty_iterable &operator =(const pretty_iterable &another); // = delete
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 
 		pretty_iterable &operator =(pretty_iterable &&another); // = delete
 
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 		const Type_t &_data;
 	};
@@ -120,9 +120,9 @@ namespace trace_out { namespace detail
 	private:
 		pretty_range_closed &operator =(const pretty_range_closed &another); // = delete
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 		pretty_range_closed &operator =(pretty_range_closed &&another); // = delete
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 	private:
 		const Iterator_t &_begin;
@@ -143,9 +143,9 @@ namespace trace_out { namespace detail
 	private:
 		pretty_range_open &operator =(const pretty_range_open &another); // = delete
 
-#if defined(TRACE_OUT_CPP11)
+#if TRACE_OUT_CPP_VERSION >= 201103L
 		pretty_range_open &operator =(pretty_range_open &&another); // = delete
-#endif // defined(TRACE_OUT_CPP11)
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 	public:
 		const Iterator_t &_begin;
