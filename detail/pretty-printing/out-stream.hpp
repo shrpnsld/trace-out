@@ -655,7 +655,7 @@ namespace trace_out { namespace detail
 		stream << FLUSH;
 		const std::pair<First_t, Second_t> &pair = value.get();
 		stream << "{";
-		stream << make_pretty(pair.first) << ": ";
+		stream << make_pretty(pair.first) << ", ";
 		stream << make_pretty(pair.second) << "}";
 		return stream;
 	}
@@ -720,6 +720,19 @@ namespace trace_out { namespace detail
 	}
 
 
+	// Using this to infer type of iterator in a pre C++11 way
+	template <typename Iterator_t>
+	void print_begin_end(out_stream &stream, Iterator_t begin, Iterator_t end)
+	{
+		Iterator_t iterator = begin;
+		stream << make_pretty(*iterator);
+		for (++iterator; iterator != end; ++iterator)
+		{
+			stream << ", " << make_pretty(*iterator);
+		}
+	}
+
+
 	template <typename Type_t>
 	out_stream &operator <<(out_stream &stream, const pretty_iterable<Type_t> &value)
 	{
@@ -728,16 +741,10 @@ namespace trace_out { namespace detail
 		const Type_t &container = value.get();
 		if (!container.empty())
 		{
-			typename Type_t::const_iterator iterator = container.begin();
-			stream << make_pretty(*iterator);
-			for (++iterator; iterator != container.end(); ++iterator)
-			{
-				stream << ", " << make_pretty(*iterator);
-			}
+			print_begin_end(stream, container.begin(), container.end());
 		}
 
 		stream << "]";
-
 		return stream;
 	}
 
