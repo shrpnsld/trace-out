@@ -89,38 +89,93 @@ namespace trace_out { namespace detail
 	template <typename Type_t, standard::size_t Size>
 	out_stream &operator <<(out_stream &stream, const pretty<Type_t[Size]> &value);
 
-	template <typename Type_t>
-	typename enable_if<has_member_x<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	//
+	// Common member combinations
 
 	template <typename Type_t>
-	typename enable_if<has_member_X<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+	typename enable_if<has_members_x_y<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
 
 	template <typename Type_t>
-	typename enable_if<has_member_width<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+	typename enable_if<has_members_X_Y<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
 
 	template <typename Type_t>
-	typename enable_if<has_member_Width<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+	typename enable_if<has_members_x_y_z<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
 
 	template <typename Type_t>
-	typename enable_if<has_member_WIDTH<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+	typename enable_if<has_members_X_Y_Z<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
 
 	template <typename Type_t>
-	typename enable_if<has_member_origin<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+	typename enable_if<has_members_x_y_z_w<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
 
 	template <typename Type_t>
-	typename enable_if<has_member_Origin<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+	typename enable_if<has_members_X_Y_Z_W<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
 
 	template <typename Type_t>
-	typename enable_if<has_member_ORIGIN<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+	typename enable_if<has_members_width_height<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
 
 	template <typename Type_t>
-	typename enable_if<has_member_real<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+	typename enable_if<has_members_Width_Height<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
 
 	template <typename Type_t>
-	typename enable_if<has_member_Real<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+	typename enable_if<has_members_x_y_width_height<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
 
 	template <typename Type_t>
-	typename enable_if<has_member_REAL<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+	typename enable_if<has_members_X_Y_Width_Height<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	template <typename Type_t>
+	typename enable_if<has_members_origin_size<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	template <typename Type_t>
+	typename enable_if<has_members_real_imag<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+
+	//
+	// WinApi
+
+	template <typename Type_t>
+	typename enable_if<has_members_cx_cy<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+
+	template <typename Type_t>
+	typename enable_if<has_members_left_top_right_bottom<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+
+	//
+	// Unreal Engine
+
+	template <typename Type_t>
+	typename enable_if<has_members_v1_v2<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	template <typename Type_t>
+	typename enable_if<has_members_Origin_Direction<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	template <typename Type_t>
+	typename enable_if<has_members_Vertex_Count<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	template <typename Type_t>
+	typename enable_if<has_members_Pitch_Roll_Yaw<Type_t>::value, out_stream>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	template <typename Type_t>
+	typename enable_if<has_members_GetLowerBound_GetUpperBound<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	template <typename Type_t>
+	typename enable_if<has_members_GetValue_IsExclusive_IsInclusive_IsOpen<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	template <typename Type_t>
+	typename enable_if<has_members_Min_Max_bIsValid<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	template <typename Type_t>
+	typename enable_if<has_members_Center_W<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	template <typename Type_t>
+	typename enable_if<has_members_Center_Radius_Orientation_Length<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	template <typename Type_t>
+	typename enable_if<has_members_Center_AxisX_AxisY_AxisZ_ExtentX_ExtentY_ExtentZ<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	template <typename Type_t>
+	typename enable_if<has_members_Origin_BoxExtent_SphereRadius<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
 
 #if TRACE_OUT_CPP_VERSION < 201703L
 
@@ -233,313 +288,303 @@ namespace trace_out { namespace detail
 
 
 	template <typename Structure_t, typename Type_t>
-	void print_member_value(out_stream &stream, const Structure_t &instance, Type_t (Structure_t::*member_function)() const)
+	Type_t get_member_value(const Structure_t &instance, Type_t (Structure_t::*member_function)() const)
 	{
-		Type_t value = (instance.*member_function)();
-		stream << make_pretty(value);
+		return (instance.*member_function)();
 	}
 
 
 	template <typename Structure_t, typename Type_t>
-	void print_member_value(out_stream &stream, const Structure_t &instance, Type_t Structure_t::*data_member)
+	Type_t get_member_value(const Structure_t &instance, Type_t Structure_t::*data_member)
 	{
-		Type_t value = instance.*data_member;
-		stream << make_pretty(value);
+		return instance.*data_member;
 	}
 
 
-	template <typename Type_t>
-	typename enable_if<has_member_w<Type_t>::value, out_stream &>::type print_w(out_stream &stream, const pretty_structural<Type_t> &value)
-	{
-		stream << FLUSH;
-		const Type_t &point = value.unsafe_get();
-		stream << ", ";
-		print_member_value(stream, point, &Type_t::w);
-		return stream << ")";
-	}
-
+	//
+	// Common member combinations
 
 	template <typename Type_t>
-	typename enable_if<has_member_W<Type_t>::value, out_stream &>::type print_w(out_stream &stream, const pretty_structural<Type_t> &value)
-	{
-		stream << FLUSH;
-		const Type_t &point = value.unsafe_get();
-		stream << ", ";
-		print_member_value(stream, point, &Type_t::W);
-		return stream << ")";
-	}
-
-
-	template <typename Type_t>
-	typename enable_if<!(has_member_w<Type_t>::value || has_member_W<Type_t>::value), out_stream &>::type print_w(out_stream &stream, const pretty_structural<Type_t> &)
-	{
-		return stream << ")";
-	}
-
-
-	template <typename Type_t>
-	typename enable_if<has_member_z<Type_t>::value, out_stream &>::type print_z(out_stream &stream, const pretty_structural<Type_t> &value)
-	{
-		stream << FLUSH;
-		const Type_t &point = value.unsafe_get();
-		stream << ", ";
-		print_member_value(stream, point, &Type_t::z);
-		return print_w(stream, value);
-	}
-
-
-	template <typename Type_t>
-	typename enable_if<has_member_Z<Type_t>::value, out_stream &>::type print_z(out_stream &stream, const pretty_structural<Type_t> &value)
-	{
-		stream << FLUSH;
-		const Type_t &point = value.unsafe_get();
-		stream << ", ";
-		print_member_value(stream, point, &Type_t::Z);
-		return print_w(stream, value);
-	}
-
-
-	template <typename Type_t>
-	typename enable_if<!(has_member_z<Type_t>::value || has_member_Z<Type_t>::value), out_stream &>::type print_z(out_stream &stream, const pretty_structural<Type_t> &)
-	{
-		return stream << ")";
-	}
-
-
-	template <typename Type_t>
-	typename enable_if<has_member_y<Type_t>::value, out_stream &>::type print_y(out_stream &stream, const pretty_structural<Type_t> &value)
-	{
-		stream << FLUSH;
-		const Type_t &point = value.unsafe_get();
-		stream << ", ";
-		print_member_value(stream, point, &Type_t::y);
-		return print_z(stream, value);
-	}
-
-
-	template <typename Type_t>
-	typename enable_if<has_member_Y<Type_t>::value, out_stream &>::type print_y(out_stream &stream, const pretty_structural<Type_t> &value)
-	{
-		stream << FLUSH;
-		const Type_t &point = value.unsafe_get();
-		stream << ", ";
-		print_member_value(stream, point, &Type_t::Y);
-		return print_z(stream, value);
-	}
-
-
-	template <typename Type_t>
-	typename enable_if<has_member_x<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_x_y<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
 		const Type_t &point = value.get();
-		stream << "(";
-		print_member_value(stream, point, &Type_t::x);
-		return print_y(stream, value);
+		stream << "(" << make_pretty(get_member_value(point, &Type_t::x)) << ", " << make_pretty(get_member_value(point, &Type_t::y)) << ")";
+		return stream;
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<has_member_X<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_X_Y<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
 		const Type_t &point = value.get();
-		stream << "(";
-		print_member_value(stream, point, &Type_t::X);
-		return print_y(stream, value);
+		stream << "(" << make_pretty(get_member_value(point, &Type_t::X)) << ", " << make_pretty(get_member_value(point, &Type_t::Y)) << ")";
+		return stream;
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<has_member_height<Type_t>::value, out_stream &>::type print_height(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_x_y_z<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
-		const Type_t &size = value.unsafe_get();
-		stream << " x ";
-		print_member_value(stream, size, &Type_t::height);
-		return stream << ")";
+		const Type_t &point = value.get();
+		stream << "(" << make_pretty(get_member_value(point, &Type_t::x)) << ", " << make_pretty(get_member_value(point, &Type_t::y)) << ", " << make_pretty(get_member_value(point, &Type_t::z)) << ")";
+		return stream;
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<has_member_Height<Type_t>::value, out_stream &>::type print_height(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_X_Y_Z<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
-		const Type_t &size = value.unsafe_get();
-		stream << " x ";
-		print_member_value(stream, size, &Type_t::Height);
-		return stream << ")";
+		const Type_t &point = value.get();
+		stream << "(" << make_pretty(get_member_value(point, &Type_t::X)) << ", " << make_pretty(get_member_value(point, &Type_t::Y)) << ", " << make_pretty(get_member_value(point, &Type_t::Z)) << ")";
+		return stream;
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<has_member_HEIGHT<Type_t>::value, out_stream &>::type print_height(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_x_y_z_w<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
-		const Type_t &size = value.unsafe_get();
-		stream << " x ";
-		print_member_value(stream, size, &Type_t::HEIGHT);
-		return stream << ")";
+		const Type_t &point = value.get();
+		stream << "(" << make_pretty(get_member_value(point, &Type_t::x)) << ", " << make_pretty(get_member_value(point, &Type_t::y)) << ", " << make_pretty(get_member_value(point, &Type_t::z)) << ", " << make_pretty(get_member_value(point, &Type_t::w)) << ")";
+		return stream;
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<has_member_width<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_X_Y_Z_W<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t &point = value.get();
+		stream << "(" << make_pretty(get_member_value(point, &Type_t::X)) << ", " << make_pretty(get_member_value(point, &Type_t::Y)) << ", " << make_pretty(get_member_value(point, &Type_t::Z)) << ", " << make_pretty(get_member_value(point, &Type_t::W)) << ")";
+		return stream;
+	}
+
+
+	template <typename Type_t>
+	typename enable_if<has_members_width_height<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
 		const Type_t &size = value.get();
-		stream << "(";
-		print_member_value(stream, size, &Type_t::width);
-		return print_height(stream, value);
+		stream << "(" << make_pretty(get_member_value(size, &Type_t::width)) << " x " << make_pretty(get_member_value(size, &Type_t::height)) << ")";
+		return stream;
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<has_member_Width<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_Width_Height<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
 		const Type_t &size = value.get();
-		stream << "(";
-		print_member_value(stream, size, &Type_t::Width);
-		return print_height(stream, value);
+		stream << "(" << make_pretty(get_member_value(size, &Type_t::Width)) << " x " << make_pretty(get_member_value(size, &Type_t::Height)) << ")";
+		return stream;
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<has_member_WIDTH<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_x_y_width_height<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t origin_size = value.get();
+		stream << "(" << make_pretty(get_member_value(origin_size, &Type_t::x)) << ", " << make_pretty(get_member_value(origin_size, &Type_t::y)) << ") (" << make_pretty(get_member_value(origin_size, &Type_t::width)) << " x " << make_pretty(get_member_value(origin_size, &Type_t::height)) << ")";
+		return stream;
+	}
+
+
+	template <typename Type_t>
+	typename enable_if<has_members_X_Y_Width_Height<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t origin_size = value.get();
+		stream << "(" << make_pretty(get_member_value(origin_size, &Type_t::X)) << ", " << make_pretty(get_member_value(origin_size, &Type_t::Y)) << ") (" << make_pretty(get_member_value(origin_size, &Type_t::Width)) << " x " << make_pretty(get_member_value(origin_size, &Type_t::Height)) << ")";
+		return stream;
+	}
+
+
+	template <typename Type_t>
+	typename enable_if<has_members_origin_size<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t &rect = value.get();
+		stream << make_pretty(get_member_value(rect, &Type_t::origin)) << " " << make_pretty(get_member_value(rect, &Type_t::size));
+		return stream;
+	}
+
+
+	template <typename Type_t>
+	typename enable_if<has_members_real_imag<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t &complex = value.get();
+		stream << "(" << make_pretty(get_member_value(complex, &Type_t::real)) << ", " << make_pretty(get_member_value(complex, &Type_t::imag)) << ")";
+		return stream;
+	}
+
+
+	//
+	// WinApi
+
+	template <typename Type_t>
+	typename enable_if<has_members_cx_cy<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
 		const Type_t &size = value.get();
-		stream << "(";
-		print_member_value(stream, size, &Type_t::WIDTH);
-		return print_height(stream, value);
-	}
-
-
-	template <typename Type_t>
-	typename enable_if<has_member_size<Type_t>::value, out_stream &>::type print_size(out_stream &stream, const pretty_structural<Type_t> &value)
-	{
-		stream << FLUSH;
-		const Type_t &rect = value.unsafe_get();
-		stream << " ";
-		print_member_value(stream, rect, &Type_t::size);
+		stream << "(" << make_pretty(get_member_value(size, &Type_t::cx)) << " x " << make_pretty(get_member_value(size, &Type_t::cy)) << ")";
 		return stream;
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<has_member_Size<Type_t>::value, out_stream &>::type print_size(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_left_top_right_bottom<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
-		const Type_t &rect = value.unsafe_get();
-		stream << " ";
-		print_member_value(stream, rect, &Type_t::Size);
+		const Type_t origin_size = value.get();
+		stream << "(" << make_pretty(get_member_value(origin_size, &Type_t::left)) << ", " << make_pretty(get_member_value(origin_size, &Type_t::top)) << ") (" << make_pretty(get_member_value(origin_size, &Type_t::right)) << " x " << make_pretty(get_member_value(origin_size, &Type_t::bottom)) << ")";
+		return stream;
+	}
+
+
+	//
+	// Unreal Engine
+
+	template <typename Type_t>
+	typename enable_if<has_members_Key_Value<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t &vectors = value.get();
+		stream << "{" << make_pretty(get_member_value(vectors, &Type_t::Key)) << ": " << make_pretty(get_member_value(vectors, &Type_t::Value)) << "}";
 		return stream;
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<has_member_SIZE<Type_t>::value, out_stream &>::type print_size(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_v1_v2<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
-		const Type_t &rect = value.unsafe_get();
-		stream << " ";
-		print_member_value(stream, rect, &Type_t::SIZE);
+		const Type_t &vectors = value.get();
+		stream << make_pretty(get_member_value(vectors, &Type_t::v1)) << " " << make_pretty(get_member_value(vectors, &Type_t::v2));
 		return stream;
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<has_member_origin<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_Origin_Direction<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
-		const Type_t &rect = value.get();
-		print_member_value(stream, rect, &Type_t::origin);
-		return print_size(stream, value);
-	}
-
-
-	template <typename Type_t>
-	typename enable_if<has_member_Origin<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
-	{
-		stream << FLUSH;
-		const Type_t &rect = value.get();
-		print_member_value(stream, rect, &Type_t::Origin);
-		return print_size(stream, value);
-	}
-
-
-	template <typename Type_t>
-	typename enable_if<has_member_ORIGIN<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
-	{
-		stream << FLUSH;
-		const Type_t &rect = value.get();
-		print_member_value(stream, rect, &Type_t::ORIGIN);
-		return print_size(stream, value);
-	}
-
-
-	template <typename Type_t>
-	typename enable_if<has_member_imag<Type_t>::value, out_stream &>::type print_size(out_stream &stream, const pretty_structural<Type_t> &value)
-	{
-		stream << FLUSH;
-		const Type_t &complex = value.unsafe_get();
-		stream << " ";
-		print_member_value(stream, complex, &Type_t::imag);
+		const Type_t &ray = value.get();
+		stream << make_pretty(get_member_value(ray, &Type_t::Origin)) << " " << make_pretty(get_member_value(ray, &Type_t::Direction));
 		return stream;
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<has_member_Imag<Type_t>::value, out_stream &>::type print_size(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_Vertex_Count<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
-		const Type_t &complex = value.unsafe_get();
-		stream << " ";
-		print_member_value(stream, complex, &Type_t::Imag);
+		const Type_t &edge = value.get();
+		stream << "[" << make_pretty(get_member_value(edge, &Type_t::Vertex)[0]) << ", " << make_pretty(get_member_value(edge, &Type_t::Vertex)[1]) << "], " << make_pretty(get_member_value(edge, &Type_t::Count));
 		return stream;
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<has_member_IMAG<Type_t>::value, out_stream &>::type print_size(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_Pitch_Roll_Yaw<Type_t>::value, out_stream>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
-		const Type_t &complex = value.unsafe_get();
-		stream << " ";
-		print_member_value(stream, complex, &Type_t::IMAG);
+		const Type_t &rotator = value.get();
+		stream << "(" << make_pretty(get_member_value(rotator, &Type_t::Pitch)) << ", " << make_pretty(get_member_value(rotator, &Type_t::Roll)) << ", " << make_pretty(get_member_value(rotator, &Type_t::Yaw)) << ")";
 		return stream;
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<has_member_real<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_GetLowerBound_GetUpperBound<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
-		const Type_t &complex = value.get();
-		print_member_value(stream, complex, &Type_t::real);
-		return print_size(stream, value);
+		const Type_t &range = value.get();
+		stream << "<" << make_pretty(get_member_value(range, &Type_t::GetLowerBound)) << ", " << make_pretty(get_member_value(range, &Type_t::GetUpperBound)) << ">";
+		return stream;
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<has_member_Real<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_GetValue_IsExclusive_IsInclusive_IsOpen<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
-		const Type_t &complex = value.get();
-		print_member_value(stream, complex, &Type_t::Real);
-		return print_size(stream, value);
+		const Type_t &bound_range = value.get();
+		const char *range_type = "<unknown range type>";
+		if (bound_range.IsExclusive())
+		{
+			range_type = "Exclusive";
+		}
+		else if (bound_range.IsInclusive())
+		{
+			range_type = "Inclusive";
+		}
+		else if (bound_range.IsOpen())
+		{
+			range_type = "Open";
+		}
+
+		stream << "<" << make_pretty(get_member_value(bound_range, &Type_t::GetValue)) << ", " << range_type;
+		return stream;
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<has_member_REAL<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_Min_Max_bIsValid<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
-		const Type_t &complex = value.get();
-		print_member_value(stream, complex, &Type_t::REAL);
-		return print_size(stream, value);
+		const Type_t &box = value.get();
+		bool validity = get_member_value(box, &Type_t::bIsValid);
+		const char *validity_string = validity ? "valid" : "invalid";
+		stream << "(" << hmake_pretty(get_member_value(box, &Type_t::Min)) << "..." << make_pretty(get_member_value(box, &Type_t::Max)) << "), " << validity_string;
+		return stream;
 	}
+
+
+	template <typename Type_t>
+	typename enable_if<has_members_Center_W<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t &sphere = value.get();
+		stream << make_pretty(get_member_value(sphere, &Type_t::Center)) << " " << make_pretty(get_member_value(sphere, &Type_t::W));
+		return stream;
+	}
+
+
+	template <typename Type_t>
+	typename enable_if<has_members_Center_Radius_Orientation_Length<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t &capsule = value.get();
+		stream << make_pretty(get_member_value(capsule, &Type_t::Center)) << " " << make_pretty(get_member_value(capsule, &Type_t::Radius)) << " " << make_pretty(get_member_value(capsule, &Type_t::Orientation) << " " << make_pretty(get_member_value(capsule, &Type_t::Length)));
+		return stream;
+	}
+
+
+	template <typename Type_t>
+	typename enable_if<has_members_Center_AxisX_AxisY_AxisZ_ExtentX_ExtentY_ExtentZ<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t &box = value.get();
+		stream << make_pretty(get_member_value(box, &Type_t::Center)) << " (" << make_pretty(get_member_value(box, &Type_t::AxisX)) << " " << make_pretty(get_member_value(box, &Type_t::AsixY) << " " << make_pretty(get_member_value(box, &Type_t::AxisZ))) << ") (" << make_pretty(get_member_value(box, &Type_t::ExtentX)) << " " << make_pretty(get_member_value(box, &Type_t::ExtentY)) << " " << make_pretty(get_member_value(box, &Type_t::ExtentZ)) << ")";
+		return stream;
+	}
+
+
+	template <typename Type_t>
+	typename enable_if<has_members_Origin_BoxExtent_SphereRadius<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t &bounds = value.get();
+		stream << make_pretty(get_member_value(bounds, &Type_t::Origin)) << " " << make_pretty(get_member_value(bounds, &Type_t::BoxExtent)) << " " << make_pretty(get_member_value(bounds, &Type_t::SphereRadius));
+		return stream;
+	}
+
 
 
 #if TRACE_OUT_CPP_VERSION < 201703L

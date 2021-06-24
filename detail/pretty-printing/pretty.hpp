@@ -156,7 +156,7 @@ namespace trace_out { namespace detail
 
 
 	template <typename Type_t>
-	typename enable_if<!is_iterable<Type_t>::value && is_dimensional<Type_t>::value, pretty_structural<Type_t> >::type make_pretty(const Type_t &value)
+	typename enable_if<!is_iterable<Type_t>::value && has_supported_members<Type_t>::value, pretty_structural<Type_t> >::type make_pretty(const Type_t &value)
 	{
 		return pretty_structural<Type_t>(value);
 	}
@@ -170,7 +170,7 @@ namespace trace_out { namespace detail
 
 
 	template <typename Type_t>
-	typename enable_if<!is_iterable<Type_t>::value && !is_dimensional<Type_t>::value, pretty<Type_t> >::type make_pretty(const Type_t &value)
+	typename enable_if<!is_iterable<Type_t>::value && !has_supported_members<Type_t>::value, pretty<Type_t> >::type make_pretty(const Type_t &value)
 	{
 		return pretty<Type_t>(value);
 	}
