@@ -774,6 +774,13 @@ namespace trace_out { namespace detail
 	template <typename Iterator_t>
 	void print_begin_end(out_stream &stream, Iterator_t begin, Iterator_t end)
 	{
+		// Unreal Engine has only 'operator !=' overloaded for its iterators,
+		// and I want this to be an early return
+		if (!(begin != end))
+		{
+			return;
+		}
+
 		Iterator_t iterator = begin;
 		stream << make_pretty(*iterator);
 		for (++iterator; iterator != end; ++iterator)
@@ -789,10 +796,7 @@ namespace trace_out { namespace detail
 		stream << FLUSH << "[";
 
 		const Type_t &container = value.get();
-		if (!container.empty())
-		{
-			print_begin_end(stream, container.begin(), container.end());
-		}
+		print_begin_end(stream, container.begin(), container.end());
 
 		stream << "]";
 		return stream;
