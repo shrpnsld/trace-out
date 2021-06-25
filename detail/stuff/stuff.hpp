@@ -118,126 +118,30 @@ namespace trace_out { namespace detail
 	};
 
 
-
-	template <typename Type_t>
-	struct is_fundamental
-	{
-		enum
-		{
-			value = false
-		};
-	};
-
-
-#define trace_out__define_is_fundamental(type) \
-			template <> \
-			struct is_fundamental<type> \
-			{ \
-				enum \
-				{ \
-					value = true \
-				}; \
-			}
-
-
-	trace_out__define_is_fundamental(bool);
-	trace_out__define_is_fundamental(char);
-	trace_out__define_is_fundamental(signed char);
-	trace_out__define_is_fundamental(unsigned char);
-	trace_out__define_is_fundamental(signed short int);
-	trace_out__define_is_fundamental(unsigned short int);
-	trace_out__define_is_fundamental(signed int);
-	trace_out__define_is_fundamental(unsigned int);
-	trace_out__define_is_fundamental(signed long int);
-	trace_out__define_is_fundamental(unsigned long int);
-
-#if TRACE_OUT_CPP_VERSION >= 201103L
-
-	trace_out__define_is_fundamental(signed long long);
-	trace_out__define_is_fundamental(unsigned long long);
-
-#endif // TRACE_OUT_CPP_VERSION >= 201103L
-
-	trace_out__define_is_fundamental(float);
-	trace_out__define_is_fundamental(double);
-	trace_out__define_is_fundamental(long double);
-
-#undef trace_out__define_is_fundamental
-
-
-	template <typename Type_t>
-	struct is_pointer
-	{
-		enum
-		{
-			value = false
-		};
-	};
-
-
-	template <typename Type_t>
-	struct is_pointer<Type_t *>
-	{
-		enum
-		{
-			value = true
-		};
-	};
-
-
-
-	template <typename Type_t>
-	struct is_primitive
-	{
-		enum
-		{
-			value = is_fundamental<Type_t>::value || is_pointer<Type_t>::value
-		};
-	};
-
-
-
-	template <typename Type_t>
-	struct is_array;
-
-
-	template <typename Type_t>
-	struct is_array<Type_t[]>
-	{
-		enum
-		{
-			value = true
-		};
-	};
-
-
-	template <typename Type_t, standard::size_t Size>
-	struct is_array<Type_t[Size]>
-	{
-		enum
-		{
-			value = true
-		};
-	};
-
-
-	template <typename Type_t>
-	struct is_array
-	{
-		enum
-		{
-			value = false
-		};
-	};
-
-
-
 	template <typename Type_t>
 	struct is_structural
 	{
+		typedef standard::uint8_t yes;
+		typedef standard::uint16_t no;
+
+
+		template <typename Some_t>
+		static yes do_check(int Some_t::*)
+		{
+			return yes();
+		}
+
+
+		template <typename Some_t>
+		static no do_check(...)
+		{
+			return no();
+		}
+
+
 		enum
 		{
-			value = !(is_primitive<Type_t>::value || is_array<Type_t>::value)
+			value = sizeof(do_check<Type_t>(0)) == sizeof(yes)
 		};
 	};
 
@@ -311,10 +215,10 @@ namespace trace_out { namespace detail
 				}; \
 				\
 				template <typename Type_t, Type_t> \
-				struct check; \
+				struct do_check; \
 				\
 				template <typename Type_t> \
-				static char (&function(check<int fallback::*, &Type_t::name> *))[1]; \
+				static char (&function(do_check<int fallback::*, &Type_t::name> *))[1]; \
 				\
 				template <typename Type_t> \
 				static char (&function(...))[2]; \
