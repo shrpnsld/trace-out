@@ -510,7 +510,7 @@ namespace trace_out { namespace detail
 		stream << FLUSH;
 		const Type_t &range = value.get();
 
-		if (range.GetLowerBound().IsOopen())
+		if (range.GetLowerBound().IsOpen())
 		{
 			stream << "(-inf";
 		}
@@ -525,17 +525,17 @@ namespace trace_out { namespace detail
 
 		stream << ", ";
 
-		if (range.GetUpperBound().IsOopen())
+		if (range.GetUpperBound().IsOpen())
 		{
-			stream << "(-inf";
+			stream << "+inf)";
 		}
 		else if (range.GetUpperBound().IsExclusive())
 		{
-			stream << "(" << make_pretty(range.GetUpperBound().GetValue());
+			stream << make_pretty(range.GetUpperBound().GetValue()) << ")";
 		}
 		else
 		{
-			stream << "[" << make_pretty(range.GetUpperBound().GetValue());
+			stream << make_pretty(range.GetUpperBound().GetValue()) << "]";
 		}
 
 		return stream;
@@ -624,7 +624,7 @@ namespace trace_out { namespace detail
 	{
 		stream << FLUSH;
 		const Type_t &box = value.get();
-		stream << "C:" << make_pretty(box.Center) << " A:(" << make_pretty(box.AxisX) << ", " << make_pretty(box.AxisY) << ", " << make_pretty(box.AxisZ) << "), E:(" << make_pretty(box.ExtentX) << ", " << make_pretty(box.ExtentY) << ", " << make_pretty(box.ExtentZ) << ")";
+		stream << "C:" << make_pretty(box.Center) << ", A:(" << make_pretty(box.AxisX) << ", " << make_pretty(box.AxisY) << ", " << make_pretty(box.AxisZ) << "), E:(" << make_pretty(box.ExtentX) << ", " << make_pretty(box.ExtentY) << ", " << make_pretty(box.ExtentZ) << ")";
 		return stream;
 	}
 
