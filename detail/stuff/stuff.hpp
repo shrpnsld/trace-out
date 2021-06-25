@@ -392,6 +392,7 @@ namespace trace_out { namespace detail
 	trace_out_private__define_has_member(ExtentY);
 	trace_out_private__define_has_member(ExtentZ);
 	trace_out_private__define_has_member(bIsValid);
+	trace_out_private__define_has_member(IsValid);
 	trace_out_private__define_has_member(BoxExtent);
 	trace_out_private__define_has_member(SphereRadius);
 
@@ -500,15 +501,19 @@ namespace trace_out { namespace detail
 	trace_out_private__define_has_members(GetValue_IsExclusive_IsInclusive_IsOpen, Type_t,
 		has_member_GetValue<Type_t>::value && has_member_IsExclusive<Type_t>::value && has_member_IsInclusive<Type_t>::value && has_member_IsOpen<Type_t>::value);
 
-	// FBox/FBox2D
+	// FBox2D
 	trace_out_private__define_has_members(Min_Max_bIsValid, Type_t,
 		has_member_Min<Type_t>::value && has_member_Max<Type_t>::value && has_member_bIsValid<Type_t>::value);
+
+	// FBox
+	trace_out_private__define_has_members(Min_Max_IsValid, Type_t,
+		has_member_Min<Type_t>::value && has_member_Max<Type_t>::value && has_member_IsValid<Type_t>::value);
 
 	// FSphere
 	trace_out_private__define_has_members(Center_W, Type_t,
 		has_member_Center<Type_t>::value && has_member_W<Type_t>::value);
 
-	// FCapsuleSphere
+	// FCapsuleShape
 	trace_out_private__define_has_members(Center_Radius_Orientation_Length, Type_t,
 		has_member_Center<Type_t>::value && has_member_Radius<Type_t>::value && has_member_Orientation<Type_t>::value && has_member_Length<Type_t>::value);
 
@@ -551,6 +556,7 @@ namespace trace_out { namespace detail
 				has_members_GetLowerBound_GetUpperBound<Type_t>::value ||
 				has_members_GetValue_IsExclusive_IsInclusive_IsOpen<Type_t>::value ||
 				has_members_Min_Max_bIsValid<Type_t>::value ||
+				has_members_Min_Max_IsValid<Type_t>::value ||
 				has_members_Center_W<Type_t>::value ||
 				has_members_Center_Radius_Orientation_Length<Type_t>::value ||
 				has_members_Center_AxisX_AxisY_AxisZ_ExtentX_ExtentY_ExtentZ<Type_t>::value ||

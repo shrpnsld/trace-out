@@ -455,8 +455,8 @@ namespace trace_out { namespace detail
 	typename enable_if<has_members_Key_Value<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
-		const Type_t &vectors = value.get();
-		stream << "{" << make_pretty(get_member_value(vectors, &Type_t::Key)) << ": " << make_pretty(get_member_value(vectors, &Type_t::Value)) << "}";
+		const Type_t &key_value = value.get();
+		//stream << "{" << make_pretty(get_member_value(key_value, &Type_t::Key)) << ": " << make_pretty(get_member_value(key_value, &Type_t::Value)) << "}";
 		return stream;
 	}
 
@@ -466,7 +466,7 @@ namespace trace_out { namespace detail
 	{
 		stream << FLUSH;
 		const Type_t &vectors = value.get();
-		stream << make_pretty(get_member_value(vectors, &Type_t::v1)) << " " << make_pretty(get_member_value(vectors, &Type_t::v2));
+		stream << make_pretty(vectors.v1) << ", " << make_pretty(vectors.v2);
 		return stream;
 	}
 
@@ -476,7 +476,7 @@ namespace trace_out { namespace detail
 	{
 		stream << FLUSH;
 		const Type_t &ray = value.get();
-		stream << make_pretty(get_member_value(ray, &Type_t::Origin)) << " " << make_pretty(get_member_value(ray, &Type_t::Direction));
+		stream << "O:" << make_pretty(ray.Origin) << ", D:" << make_pretty(ray.Direction);
 		return stream;
 	}
 
@@ -486,7 +486,7 @@ namespace trace_out { namespace detail
 	{
 		stream << FLUSH;
 		const Type_t &edge = value.get();
-		stream << "[" << make_pretty(get_member_value(edge, &Type_t::Vertex)[0]) << ", " << make_pretty(get_member_value(edge, &Type_t::Vertex)[1]) << "], " << make_pretty(get_member_value(edge, &Type_t::Count));
+		stream << make_pretty(edge.Vertex[0]) << ", " << make_pretty(edge.Vertex[1]);
 		return stream;
 	}
 
@@ -496,7 +496,7 @@ namespace trace_out { namespace detail
 	{
 		stream << FLUSH;
 		const Type_t &rotator = value.get();
-		stream << "(" << make_pretty(get_member_value(rotator, &Type_t::Pitch)) << ", " << make_pretty(get_member_value(rotator, &Type_t::Roll)) << ", " << make_pretty(get_member_value(rotator, &Type_t::Yaw)) << ")";
+		stream << "(" << make_pretty(rotator.Pitch) << ", " << make_pretty(rotator.Roll) << ", " << make_pretty(rotator.Yaw) << ")";
 		return stream;
 	}
 
@@ -506,7 +506,35 @@ namespace trace_out { namespace detail
 	{
 		stream << FLUSH;
 		const Type_t &range = value.get();
-		stream << "<" << make_pretty(get_member_value(range, &Type_t::GetLowerBound)) << ", " << make_pretty(get_member_value(range, &Type_t::GetUpperBound)) << ">";
+
+		if (range.GetLowerBound().IsOopen())
+		{
+			stream << "(-inf";
+		}
+		else if (range.GetLowerBound().IsExclusive())
+		{
+			stream << "(" << make_pretty(range.GetLowerBound().GetValue());
+		}
+		else
+		{
+			stream << "[" << make_pretty(range.GetLowerBound().GetValue());
+		}
+
+		stream << ", ";
+
+		if (range.GetUpperBound().IsOopen())
+		{
+			stream << "(-inf";
+		}
+		else if (range.GetUpperBound().IsExclusive())
+		{
+			stream << "(" << make_pretty(range.GetUpperBound().GetValue());
+		}
+		else
+		{
+			stream << "[" << make_pretty(range.GetUpperBound().GetValue());
+		}
+
 		return stream;
 	}
 
@@ -516,21 +544,23 @@ namespace trace_out { namespace detail
 	{
 		stream << FLUSH;
 		const Type_t &bound_range = value.get();
-		const char *range_type = "<unknown range type>";
-		if (bound_range.IsExclusive())
+		if (bound_range.IsOpen())
 		{
-			range_type = "Exclusive";
+			stream << "Open";
 		}
-		else if (bound_range.IsInclusive())
+		else
 		{
-			range_type = "Inclusive";
-		}
-		else if (bound_range.IsOpen())
-		{
-			range_type = "Open";
+			stream << make_pretty(bound_range.GetValue()) << "|";
+			if (bound_range.IsExclusive())
+			{
+				stream << "Exclusive";
+			}
+			else if (bound_range, &Type_t::IsInclusive)
+			{
+				stream << "Inclusive";
+			}
 		}
 
-		stream << "<" << make_pretty(get_member_value(bound_range, &Type_t::GetValue)) << ", " << range_type;
 		return stream;
 	}
 
@@ -540,9 +570,28 @@ namespace trace_out { namespace detail
 	{
 		stream << FLUSH;
 		const Type_t &box = value.get();
-		bool validity = get_member_value(box, &Type_t::bIsValid);
-		const char *validity_string = validity ? "valid" : "invalid";
-		stream << "(" << hmake_pretty(get_member_value(box, &Type_t::Min)) << "..." << make_pretty(get_member_value(box, &Type_t::Max)) << "), " << validity_string;
+		stream << make_pretty(box.Min) << ", " << make_pretty(box.Max);
+		bool validity = box.bIsValid;
+		if (!validity)
+		{
+			stream << " - invalid";
+		}
+		return stream;
+	}
+
+
+	template <typename Type_t>
+	typename enable_if<has_members_Min_Max_IsValid<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t &box = value.get();
+		stream << make_pretty(box.Min) << ", " << make_pretty(box.Max);
+		bool validity = static_cast<bool>(box.IsValid);
+		if (!validity)
+		{
+			stream << " - invalid";
+		}
+
 		return stream;
 	}
 
@@ -552,7 +601,7 @@ namespace trace_out { namespace detail
 	{
 		stream << FLUSH;
 		const Type_t &sphere = value.get();
-		stream << make_pretty(get_member_value(sphere, &Type_t::Center)) << " " << make_pretty(get_member_value(sphere, &Type_t::W));
+		stream << "C:" << make_pretty(sphere.Center) << ", R:" << make_pretty(sphere.W);
 		return stream;
 	}
 
@@ -562,7 +611,7 @@ namespace trace_out { namespace detail
 	{
 		stream << FLUSH;
 		const Type_t &capsule = value.get();
-		stream << make_pretty(get_member_value(capsule, &Type_t::Center)) << " " << make_pretty(get_member_value(capsule, &Type_t::Radius)) << " " << make_pretty(get_member_value(capsule, &Type_t::Orientation) << " " << make_pretty(get_member_value(capsule, &Type_t::Length)));
+		stream << "C:" << make_pretty(capsule.Center) << ", R:" << make_pretty(capsule.Radius) << ", O:" << make_pretty(capsule.Orientation) << ", L:" << make_pretty(capsule.Length);
 		return stream;
 	}
 
@@ -572,7 +621,7 @@ namespace trace_out { namespace detail
 	{
 		stream << FLUSH;
 		const Type_t &box = value.get();
-		stream << make_pretty(get_member_value(box, &Type_t::Center)) << " (" << make_pretty(get_member_value(box, &Type_t::AxisX)) << " " << make_pretty(get_member_value(box, &Type_t::AsixY) << " " << make_pretty(get_member_value(box, &Type_t::AxisZ))) << ") (" << make_pretty(get_member_value(box, &Type_t::ExtentX)) << " " << make_pretty(get_member_value(box, &Type_t::ExtentY)) << " " << make_pretty(get_member_value(box, &Type_t::ExtentZ)) << ")";
+		stream << "C:" << make_pretty(box.Center) << " A:(" << make_pretty(box.AxisX) << ", " << make_pretty(box.AxisY) << ", " << make_pretty(box.AxisZ) << "), E:(" << make_pretty(box.ExtentX) << ", " << make_pretty(box.ExtentY) << ", " << make_pretty(box.ExtentZ) << ")";
 		return stream;
 	}
 
@@ -582,7 +631,7 @@ namespace trace_out { namespace detail
 	{
 		stream << FLUSH;
 		const Type_t &bounds = value.get();
-		stream << make_pretty(get_member_value(bounds, &Type_t::Origin)) << " " << make_pretty(get_member_value(bounds, &Type_t::BoxExtent)) << " " << make_pretty(get_member_value(bounds, &Type_t::SphereRadius));
+		stream << "O:" << make_pretty(bounds.Origin) << ", E:" << make_pretty(bounds.BoxExtent) << ", R:" << make_pretty(bounds.SphereRadius);
 		return stream;
 	}
 
