@@ -321,6 +321,13 @@ namespace trace_out { namespace detail
 	}
 
 
+	out_stream &operator <<(out_stream &stream, const pretty<wchar_t> &value)
+	{
+		stream << FLUSH;
+		return stream << "'" << value.get() << "'";
+	}
+
+
 	out_stream &operator <<(out_stream &stream, const pretty<unsigned char> &value)
 	{
 		stream << FLUSH;
