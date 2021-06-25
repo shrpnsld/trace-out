@@ -205,121 +205,29 @@ namespace trace_out { namespace detail
 
 
 	template <typename Type_t>
-	struct is_fundamental
-	{
-		enum
-		{
-			value = false
-		};
-	};
-
-
-#define trace_out__define_is_fundamental(type) \
-			template <> \
-			struct is_fundamental<type> \
-			{ \
-				enum \
-				{ \
-					value = true \
-				}; \
-			}
-
-
-	trace_out__define_is_fundamental(bool);
-	trace_out__define_is_fundamental(char);
-	trace_out__define_is_fundamental(signed char);
-	trace_out__define_is_fundamental(unsigned char);
-	trace_out__define_is_fundamental(signed short int);
-	trace_out__define_is_fundamental(unsigned short int);
-	trace_out__define_is_fundamental(signed int);
-	trace_out__define_is_fundamental(unsigned int);
-	trace_out__define_is_fundamental(signed long int);
-	trace_out__define_is_fundamental(unsigned long int);
-
-#if TRACE_OUT_CPP_VERSION >= 201103L
-
-	trace_out__define_is_fundamental(signed long long);
-	trace_out__define_is_fundamental(unsigned long long);
-
-#endif // TRACE_OUT_CPP_VERSION >= 201103L
-
-	trace_out__define_is_fundamental(float);
-	trace_out__define_is_fundamental(double);
-	trace_out__define_is_fundamental(long double);
-
-#undef trace_out__define_is_fundamental
-
-
-	template <typename Type_t>
-	struct is_pointer
-	{
-		enum
-		{
-			value = false
-		};
-	};
-
-
-	template <typename Type_t>
-	struct is_pointer<Type_t *>
-	{
-		enum
-		{
-			value = true
-		};
-	};
-
-
-	template <typename Type_t>
-	struct is_primitive
-	{
-		enum
-		{
-			value = is_fundamental<Type_t>::value || is_pointer<Type_t>::value
-		};
-	};
-
-
-	template <typename Type_t>
-	struct is_array;
-
-
-	template <typename Type_t>
-	struct is_array<Type_t[]>
-	{
-		enum
-		{
-			value = true
-		};
-	};
-
-
-	template <typename Type_t, standard::size_t Size>
-	struct is_array<Type_t[Size]>
-	{
-		enum
-		{
-			value = true
-		};
-	};
-
-
-	template <typename Type_t>
-	struct is_array
-	{
-		enum
-		{
-			value = false
-		};
-	};
-
-
-	template <typename Type_t>
 	struct is_structural
 	{
+		typedef standard::uint8_t yes;
+		typedef standard::uint16_t no;
+
+
+		template <typename Some_t>
+		static yes do_check(int Some_t::*)
+		{
+			return yes();
+		}
+
+
+		template <typename Some_t>
+		static no do_check(...)
+		{
+			return no();
+		}
+
+
 		enum
 		{
-			value = !(is_primitive<Type_t>::value || is_array<Type_t>::value)
+			value = sizeof(do_check<Type_t>(0)) == sizeof(yes)
 		};
 	};
 
@@ -391,10 +299,10 @@ namespace trace_out { namespace detail
 				}; \
 				\
 				template <typename Type_t, Type_t> \
-				struct check; \
+				struct do_check; \
 				\
 				template <typename Type_t> \
-				static char (&function(check<int fallback::*, &Type_t::name> *))[1]; \
+				static char (&function(do_check<int fallback::*, &Type_t::name> *))[1]; \
 				\
 				template <typename Type_t> \
 				static char (&function(...))[2]; \
@@ -405,55 +313,249 @@ namespace trace_out { namespace detail
 				}; \
 			}
 
+	//
+	// Common members
+
 	trace_out_private__define_has_member(x);
 	trace_out_private__define_has_member(y);
 	trace_out_private__define_has_member(z);
 	trace_out_private__define_has_member(w);
-
 	trace_out_private__define_has_member(X);
 	trace_out_private__define_has_member(Y);
 	trace_out_private__define_has_member(Z);
 	trace_out_private__define_has_member(W);
-
 	trace_out_private__define_has_member(width);
 	trace_out_private__define_has_member(height);
-
 	trace_out_private__define_has_member(Width);
 	trace_out_private__define_has_member(Height);
-
-	trace_out_private__define_has_member(WIDTH);
-	trace_out_private__define_has_member(HEIGHT);
-
 	trace_out_private__define_has_member(origin);
 	trace_out_private__define_has_member(size);
-
-	trace_out_private__define_has_member(Origin);
-	trace_out_private__define_has_member(Size);
-
-	trace_out_private__define_has_member(ORIGIN);
-	trace_out_private__define_has_member(SIZE);
-
 	trace_out_private__define_has_member(real);
 	trace_out_private__define_has_member(imag);
-
-	trace_out_private__define_has_member(Real);
-	trace_out_private__define_has_member(Imag);
-
-	trace_out_private__define_has_member(REAL);
-	trace_out_private__define_has_member(IMAG);
-
 	trace_out_private__define_has_member(begin);
 	trace_out_private__define_has_member(end);
+
+
+	//
+	// WinApi
+
+	trace_out_private__define_has_member(cx);
+	trace_out_private__define_has_member(cy);
+	trace_out_private__define_has_member(left);
+	trace_out_private__define_has_member(top);
+	trace_out_private__define_has_member(right);
+	trace_out_private__define_has_member(bottom);
+
+
+	//
+	// Unreal Engine
+
+	trace_out_private__define_has_member(Key);
+	trace_out_private__define_has_member(Value);
+	trace_out_private__define_has_member(v1);
+	trace_out_private__define_has_member(v2);
+	trace_out_private__define_has_member(Origin);
+	trace_out_private__define_has_member(Direction);
+	trace_out_private__define_has_member(Pitch);
+	trace_out_private__define_has_member(Roll);
+	trace_out_private__define_has_member(Yaw);
+	trace_out_private__define_has_member(GetLowerBound);
+	trace_out_private__define_has_member(GetUpperBound);
+	trace_out_private__define_has_member(GetValue);
+	trace_out_private__define_has_member(IsExclusive);
+	trace_out_private__define_has_member(IsInclusive);
+	trace_out_private__define_has_member(IsOpen);
+	trace_out_private__define_has_member(Vertex);
+	trace_out_private__define_has_member(Count);
+	trace_out_private__define_has_member(Min);
+	trace_out_private__define_has_member(Max);
+	trace_out_private__define_has_member(Center);
+	trace_out_private__define_has_member(Radius);
+	trace_out_private__define_has_member(Orientation);
+	trace_out_private__define_has_member(Length);
+	trace_out_private__define_has_member(AxisX);
+	trace_out_private__define_has_member(AxisY);
+	trace_out_private__define_has_member(AxisZ);
+	trace_out_private__define_has_member(ExtentX);
+	trace_out_private__define_has_member(ExtentY);
+	trace_out_private__define_has_member(ExtentZ);
+	trace_out_private__define_has_member(bIsValid);
+	trace_out_private__define_has_member(IsValid);
+	trace_out_private__define_has_member(BoxExtent);
+	trace_out_private__define_has_member(SphereRadius);
+	trace_out_private__define_has_member(GetCharArray);
 
 #undef trace_out_private__define_has_member
 
 
+#define trace_out_private__define_has_members(name, template_parameter_name, ...) \
+	template <typename template_parameter_name> \
+	struct has_members_##name \
+	{ \
+		enum \
+		{ \
+			value = __VA_ARGS__ \
+		}; \
+	}
+
+
+	//
+	// Common member combinations
+
+	trace_out_private__define_has_members(x_y, Type_t,
+		has_member_x<Type_t>::value && has_member_y<Type_t>::value &&
+		!has_member_z<Type_t>::value && !has_member_w<Type_t>::value && !has_member_width<Type_t>::value && !has_member_height<Type_t>::value);
+
+	trace_out_private__define_has_members(X_Y, Type_t,
+		has_member_X<Type_t>::value && has_member_Y<Type_t>::value &&
+		!has_member_Z<Type_t>::value && !has_member_W<Type_t>::value && !has_member_Width<Type_t>::value && !has_member_Height<Type_t>::value);
+
+	trace_out_private__define_has_members(x_y_z, Type_t,
+		has_member_x<Type_t>::value && has_member_y<Type_t>::value && has_member_z<Type_t>::value &&
+		!has_member_w<Type_t>::value);
+
+	trace_out_private__define_has_members(X_Y_Z, Type_t,
+		has_member_X<Type_t>::value && has_member_Y<Type_t>::value && has_member_Z<Type_t>::value &&
+		!has_member_W<Type_t>::value);
+
+	trace_out_private__define_has_members(x_y_z_w, Type_t,
+		has_member_x<Type_t>::value && has_member_y<Type_t>::value && has_member_z<Type_t>::value && has_member_w<Type_t>::value);
+
+	trace_out_private__define_has_members(X_Y_Z_W, Type_t,
+		has_member_X<Type_t>::value && has_member_Y<Type_t>::value && has_member_Z<Type_t>::value && has_member_W<Type_t>::value);
+
+	trace_out_private__define_has_members(width_height, Type_t,
+		has_member_width<Type_t>::value && has_member_height<Type_t>::value &&
+		!has_member_x<Type_t>::value && !has_member_y<Type_t>::value);
+
+	trace_out_private__define_has_members(Width_Height, Type_t,
+		has_member_Width<Type_t>::value && has_member_Height<Type_t>::value &&
+		!has_member_X<Type_t>::value && !has_member_Y<Type_t>::value);
+
+	trace_out_private__define_has_members(x_y_width_height, Type_t,
+		has_member_x<Type_t>::value && has_member_y<Type_t>::value && has_member_width<Type_t>::value && has_member_height<Type_t>::value);
+
+	trace_out_private__define_has_members(X_Y_Width_Height, Type_t,
+		has_member_X<Type_t>::value && has_member_Y<Type_t>::value && has_member_Width<Type_t>::value && has_member_Height<Type_t>::value);
+
+	trace_out_private__define_has_members(origin_size, Type_t,
+		has_member_origin<Type_t>::value && has_member_size<Type_t>::value);
+
+	trace_out_private__define_has_members(real_imag, Type_t,
+		has_member_real<Type_t>::value && has_member_imag<Type_t>::value);
+
+	trace_out_private__define_has_members(begin_end, Type_t,
+		has_member_begin<Type_t>::value && has_member_end<Type_t>::value &&
+		!has_member_GetCharArray<Type_t>::value);
+
+
+	//
+	// WinApi
+
+	// SIZE
+	trace_out_private__define_has_members(cx_cy, Type_t,
+		has_member_cx<Type_t>::value && has_member_cy<Type_t>::value);
+
+	// RECTs
+	trace_out_private__define_has_members(left_top_right_bottom, Type_t,
+		has_member_left<Type_t>::value && has_member_top<Type_t>::value && has_member_right<Type_t>::value && has_member_bottom<Type_t>::value);
+
+
+	//
+	// Unreal Engine
+
+	trace_out_private__define_has_members(Key_Value, Type_t,
+		has_member_Key<Type_t>::value && has_member_Value<Type_t>::value);
+
+	// FTwoVectors
+	trace_out_private__define_has_members(v1_v2, Type_t,
+		has_member_v1<Type_t>::value && has_member_v2<Type_t>::value);
+
+	// FRay
+	trace_out_private__define_has_members(Origin_Direction, Type_t,
+		has_member_Origin<Type_t>::value && has_member_Direction<Type_t>::value);
+
+	// FEdge
+	trace_out_private__define_has_members(Vertex_Count, Type_t,
+		has_member_Vertex<Type_t>::value && has_member_Count<Type_t>::value);
+
+	// FRotator
+	trace_out_private__define_has_members(Pitch_Roll_Yaw, Type_t,
+		has_member_Pitch<Type_t>::value && has_member_Roll<Type_t>::value && has_member_Yaw<Type_t>::value);
+
+	// TRange
+	trace_out_private__define_has_members(GetLowerBound_GetUpperBound, Type_t,
+		has_member_GetLowerBound<Type_t>::value && has_member_GetUpperBound<Type_t>::value);
+
+	// TRangeBound
+	trace_out_private__define_has_members(GetValue_IsExclusive_IsInclusive_IsOpen, Type_t,
+		has_member_GetValue<Type_t>::value && has_member_IsExclusive<Type_t>::value && has_member_IsInclusive<Type_t>::value && has_member_IsOpen<Type_t>::value);
+
+	// FBox2D
+	trace_out_private__define_has_members(Min_Max_bIsValid, Type_t,
+		has_member_Min<Type_t>::value && has_member_Max<Type_t>::value && has_member_bIsValid<Type_t>::value);
+
+	// FBox
+	trace_out_private__define_has_members(Min_Max_IsValid, Type_t,
+		has_member_Min<Type_t>::value && has_member_Max<Type_t>::value && has_member_IsValid<Type_t>::value);
+
+	// FSphere
+	trace_out_private__define_has_members(Center_W, Type_t,
+		has_member_Center<Type_t>::value && has_member_W<Type_t>::value);
+
+	// FCapsuleShape
+	trace_out_private__define_has_members(Center_Radius_Orientation_Length, Type_t,
+		has_member_Center<Type_t>::value && has_member_Radius<Type_t>::value && has_member_Orientation<Type_t>::value && has_member_Length<Type_t>::value);
+
+	// FOrientedBox
+	trace_out_private__define_has_members(Center_AxisX_AxisY_AxisZ_ExtentX_ExtentY_ExtentZ, Type_t,
+		has_member_Center<Type_t>::value && has_member_AxisX<Type_t>::value && has_member_AxisY<Type_t>::value && has_member_AxisZ<Type_t>::value && has_member_ExtentX<Type_t>::value && has_member_ExtentY<Type_t>::value && has_member_ExtentZ<Type_t>::value);
+
+	// FBoxSphereBounds
+	trace_out_private__define_has_members(Origin_BoxExtent_SphereRadius, Type_t,
+		has_member_Origin<Type_t>::value && has_member_BoxExtent<Type_t>::value && has_member_SphereRadius<Type_t>::value);
+
+	// FString
+	trace_out_private__define_has_members(GetCharArray, Type_t,
+		has_member_GetCharArray<Type_t>::value);
+
+#undef trace_out_private__define_has_members
+
+
 	template <typename Type_t>
-	struct is_dimensional
+	struct has_supported_members
 	{
 		enum
 		{
-			value = has_member_x<Type_t>::value || has_member_X<Type_t>::value || has_member_width<Type_t>::value || has_member_Width<Type_t>::value || has_member_WIDTH<Type_t>::value || has_member_origin<Type_t>::value || has_member_Origin<Type_t>::value || has_member_ORIGIN<Type_t>::value || has_member_real<Type_t>::value || has_member_Real<Type_t>::value || has_member_REAL<Type_t>::value
+			value =
+				has_members_x_y<Type_t>::value ||
+				has_members_X_Y<Type_t>::value ||
+				has_members_x_y_z<Type_t>::value ||
+				has_members_X_Y_Z<Type_t>::value ||
+				has_members_x_y_z_w<Type_t>::value ||
+				has_members_X_Y_Z_W<Type_t>::value ||
+				has_members_width_height<Type_t>::value ||
+				has_members_Width_Height<Type_t>::value ||
+				has_members_x_y_width_height<Type_t>::value ||
+				has_members_X_Y_Width_Height<Type_t>::value ||
+				has_members_origin_size<Type_t>::value ||
+				has_members_real_imag<Type_t>::value ||
+				has_members_cx_cy<Type_t>::value ||
+				has_members_left_top_right_bottom<Type_t>::value ||
+				has_members_Key_Value<Type_t>::value ||
+				has_members_v1_v2<Type_t>::value ||
+				has_members_Origin_Direction<Type_t>::value ||
+				has_members_Vertex_Count<Type_t>::value ||
+				has_members_Pitch_Roll_Yaw<Type_t>::value ||
+				has_members_GetLowerBound_GetUpperBound<Type_t>::value ||
+				has_members_GetValue_IsExclusive_IsInclusive_IsOpen<Type_t>::value ||
+				has_members_Min_Max_bIsValid<Type_t>::value ||
+				has_members_Min_Max_IsValid<Type_t>::value ||
+				has_members_Center_W<Type_t>::value ||
+				has_members_Center_Radius_Orientation_Length<Type_t>::value ||
+				has_members_Center_AxisX_AxisY_AxisZ_ExtentX_ExtentY_ExtentZ<Type_t>::value ||
+				has_members_Origin_BoxExtent_SphereRadius<Type_t>::value ||
+				has_members_GetCharArray<Type_t>::value
 		};
 	};
 
@@ -463,7 +565,7 @@ namespace trace_out { namespace detail
 	{
 		enum
 		{
-			value = has_member_begin<Type_t>::value && has_member_end<Type_t>::value && !is_same<Type_t, std::string>::value
+			value = has_members_begin_end<Type_t>::value && !is_same<Type_t, std::string>::value
 		};
 	};
 
@@ -680,7 +782,7 @@ namespace trace_out { namespace detail
 
 
 	template <typename Type_t>
-	typename enable_if<!is_iterable<Type_t>::value && is_dimensional<Type_t>::value, pretty_structural<Type_t> >::type make_pretty(const Type_t &value)
+	typename enable_if<!is_iterable<Type_t>::value && has_supported_members<Type_t>::value, pretty_structural<Type_t> >::type make_pretty(const Type_t &value)
 	{
 		return pretty_structural<Type_t>(value);
 	}
@@ -694,7 +796,7 @@ namespace trace_out { namespace detail
 
 
 	template <typename Type_t>
-	typename enable_if<!is_iterable<Type_t>::value && !is_dimensional<Type_t>::value, pretty<Type_t> >::type make_pretty(const Type_t &value)
+	typename enable_if<!is_iterable<Type_t>::value && !has_supported_members<Type_t>::value, pretty<Type_t> >::type make_pretty(const Type_t &value)
 	{
 		return pretty<Type_t>(value);
 	}
@@ -965,6 +1067,7 @@ namespace trace_out { namespace detail
 
 	out_stream &operator <<(out_stream &stream, const pretty<bool> &value);
 	out_stream &operator <<(out_stream &stream, const pretty<char> &value);
+	out_stream &operator <<(out_stream &stream, const pretty<wchar_t> &value);
 	out_stream &operator <<(out_stream &stream, const pretty<unsigned char> &value);
 	out_stream &operator <<(out_stream &stream, const pretty<const char *> &value);
 	out_stream &operator <<(out_stream &stream, const pretty<std::string> &value);
@@ -996,38 +1099,96 @@ namespace trace_out { namespace detail
 	template <typename Type_t, standard::size_t Size>
 	out_stream &operator <<(out_stream &stream, const pretty<Type_t[Size]> &value);
 
-	template <typename Type_t>
-	typename enable_if<has_member_x<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	//
+	// Common member combinations
 
 	template <typename Type_t>
-	typename enable_if<has_member_X<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+	typename enable_if<has_members_x_y<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
 
 	template <typename Type_t>
-	typename enable_if<has_member_width<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+	typename enable_if<has_members_X_Y<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
 
 	template <typename Type_t>
-	typename enable_if<has_member_Width<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+	typename enable_if<has_members_x_y_z<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
 
 	template <typename Type_t>
-	typename enable_if<has_member_WIDTH<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+	typename enable_if<has_members_X_Y_Z<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
 
 	template <typename Type_t>
-	typename enable_if<has_member_origin<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+	typename enable_if<has_members_x_y_z_w<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
 
 	template <typename Type_t>
-	typename enable_if<has_member_Origin<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+	typename enable_if<has_members_X_Y_Z_W<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
 
 	template <typename Type_t>
-	typename enable_if<has_member_ORIGIN<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+	typename enable_if<has_members_width_height<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
 
 	template <typename Type_t>
-	typename enable_if<has_member_real<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+	typename enable_if<has_members_Width_Height<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
 
 	template <typename Type_t>
-	typename enable_if<has_member_Real<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+	typename enable_if<has_members_x_y_width_height<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
 
 	template <typename Type_t>
-	typename enable_if<has_member_REAL<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+	typename enable_if<has_members_X_Y_Width_Height<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	template <typename Type_t>
+	typename enable_if<has_members_origin_size<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	template <typename Type_t>
+	typename enable_if<has_members_real_imag<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+
+	//
+	// WinApi
+
+	template <typename Type_t>
+	typename enable_if<has_members_cx_cy<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+
+	template <typename Type_t>
+	typename enable_if<has_members_left_top_right_bottom<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+
+	//
+	// Unreal Engine
+
+	template <typename Type_t>
+	typename enable_if<has_members_v1_v2<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	template <typename Type_t>
+	typename enable_if<has_members_Origin_Direction<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	template <typename Type_t>
+	typename enable_if<has_members_Vertex_Count<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	template <typename Type_t>
+	typename enable_if<has_members_Pitch_Roll_Yaw<Type_t>::value, out_stream>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	template <typename Type_t>
+	typename enable_if<has_members_GetLowerBound_GetUpperBound<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	template <typename Type_t>
+	typename enable_if<has_members_GetValue_IsExclusive_IsInclusive_IsOpen<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	template <typename Type_t>
+	typename enable_if<has_members_Min_Max_bIsValid<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	template <typename Type_t>
+	typename enable_if<has_members_Center_W<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	template <typename Type_t>
+	typename enable_if<has_members_Center_Radius_Orientation_Length<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	template <typename Type_t>
+	typename enable_if<has_members_Center_AxisX_AxisY_AxisZ_ExtentX_ExtentY_ExtentZ<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	template <typename Type_t>
+	typename enable_if<has_members_Origin_BoxExtent_SphereRadius<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	template <typename Type_t>
+	typename enable_if<has_members_GetCharArray<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
 
 #if TRACE_OUT_CPP_VERSION < 201703L
 
@@ -1140,312 +1301,372 @@ namespace trace_out { namespace detail
 
 
 	template <typename Structure_t, typename Type_t>
-	void print_member_value(out_stream &stream, const Structure_t &instance, Type_t (Structure_t::*member_function)() const)
+	Type_t get_member_value(const Structure_t &instance, Type_t (Structure_t::*member_function)() const)
 	{
-		Type_t value = (instance.*member_function)();
-		stream << make_pretty(value);
+		return (instance.*member_function)();
 	}
 
 
 	template <typename Structure_t, typename Type_t>
-	void print_member_value(out_stream &stream, const Structure_t &instance, Type_t Structure_t::*data_member)
+	Type_t get_member_value(const Structure_t &instance, Type_t Structure_t::*data_member)
 	{
-		Type_t value = instance.*data_member;
-		stream << make_pretty(value);
+		return instance.*data_member;
 	}
 
 
-	template <typename Type_t>
-	typename enable_if<has_member_w<Type_t>::value, out_stream &>::type print_w(out_stream &stream, const pretty_structural<Type_t> &value)
-	{
-		stream << FLUSH;
-		const Type_t &point = value.unsafe_get();
-		stream << ", ";
-		print_member_value(stream, point, &Type_t::w);
-		return stream << ")";
-	}
-
+	//
+	// Common member combinations
 
 	template <typename Type_t>
-	typename enable_if<has_member_W<Type_t>::value, out_stream &>::type print_w(out_stream &stream, const pretty_structural<Type_t> &value)
-	{
-		stream << FLUSH;
-		const Type_t &point = value.unsafe_get();
-		stream << ", ";
-		print_member_value(stream, point, &Type_t::W);
-		return stream << ")";
-	}
-
-
-	template <typename Type_t>
-	typename enable_if<!(has_member_w<Type_t>::value || has_member_W<Type_t>::value), out_stream &>::type print_w(out_stream &stream, const pretty_structural<Type_t> &)
-	{
-		return stream << ")";
-	}
-
-
-	template <typename Type_t>
-	typename enable_if<has_member_z<Type_t>::value, out_stream &>::type print_z(out_stream &stream, const pretty_structural<Type_t> &value)
-	{
-		stream << FLUSH;
-		const Type_t &point = value.unsafe_get();
-		stream << ", ";
-		print_member_value(stream, point, &Type_t::z);
-		return print_w(stream, value);
-	}
-
-
-	template <typename Type_t>
-	typename enable_if<has_member_Z<Type_t>::value, out_stream &>::type print_z(out_stream &stream, const pretty_structural<Type_t> &value)
-	{
-		stream << FLUSH;
-		const Type_t &point = value.unsafe_get();
-		stream << ", ";
-		print_member_value(stream, point, &Type_t::Z);
-		return print_w(stream, value);
-	}
-
-
-	template <typename Type_t>
-	typename enable_if<!(has_member_z<Type_t>::value || has_member_Z<Type_t>::value), out_stream &>::type print_z(out_stream &stream, const pretty_structural<Type_t> &)
-	{
-		return stream << ")";
-	}
-
-
-	template <typename Type_t>
-	typename enable_if<has_member_y<Type_t>::value, out_stream &>::type print_y(out_stream &stream, const pretty_structural<Type_t> &value)
-	{
-		stream << FLUSH;
-		const Type_t &point = value.unsafe_get();
-		stream << ", ";
-		print_member_value(stream, point, &Type_t::y);
-		return print_z(stream, value);
-	}
-
-
-	template <typename Type_t>
-	typename enable_if<has_member_Y<Type_t>::value, out_stream &>::type print_y(out_stream &stream, const pretty_structural<Type_t> &value)
-	{
-		stream << FLUSH;
-		const Type_t &point = value.unsafe_get();
-		stream << ", ";
-		print_member_value(stream, point, &Type_t::Y);
-		return print_z(stream, value);
-	}
-
-
-	template <typename Type_t>
-	typename enable_if<has_member_x<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_x_y<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
 		const Type_t &point = value.get();
-		stream << "(";
-		print_member_value(stream, point, &Type_t::x);
-		return print_y(stream, value);
+		stream << "(" << make_pretty(get_member_value(point, &Type_t::x)) << ", " << make_pretty(get_member_value(point, &Type_t::y)) << ")";
+		return stream;
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<has_member_X<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_X_Y<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
 		const Type_t &point = value.get();
-		stream << "(";
-		print_member_value(stream, point, &Type_t::X);
-		return print_y(stream, value);
+		stream << "(" << make_pretty(get_member_value(point, &Type_t::X)) << ", " << make_pretty(get_member_value(point, &Type_t::Y)) << ")";
+		return stream;
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<has_member_height<Type_t>::value, out_stream &>::type print_height(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_x_y_z<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
-		const Type_t &size = value.unsafe_get();
-		stream << " x ";
-		print_member_value(stream, size, &Type_t::height);
-		return stream << ")";
+		const Type_t &point = value.get();
+		stream << "(" << make_pretty(get_member_value(point, &Type_t::x)) << ", " << make_pretty(get_member_value(point, &Type_t::y)) << ", " << make_pretty(get_member_value(point, &Type_t::z)) << ")";
+		return stream;
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<has_member_Height<Type_t>::value, out_stream &>::type print_height(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_X_Y_Z<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
-		const Type_t &size = value.unsafe_get();
-		stream << " x ";
-		print_member_value(stream, size, &Type_t::Height);
-		return stream << ")";
+		const Type_t &point = value.get();
+		stream << "(" << make_pretty(get_member_value(point, &Type_t::X)) << ", " << make_pretty(get_member_value(point, &Type_t::Y)) << ", " << make_pretty(get_member_value(point, &Type_t::Z)) << ")";
+		return stream;
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<has_member_HEIGHT<Type_t>::value, out_stream &>::type print_height(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_x_y_z_w<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
-		const Type_t &size = value.unsafe_get();
-		stream << " x ";
-		print_member_value(stream, size, &Type_t::HEIGHT);
-		return stream << ")";
+		const Type_t &point = value.get();
+		stream << "(" << make_pretty(get_member_value(point, &Type_t::x)) << ", " << make_pretty(get_member_value(point, &Type_t::y)) << ", " << make_pretty(get_member_value(point, &Type_t::z)) << ", " << make_pretty(get_member_value(point, &Type_t::w)) << ")";
+		return stream;
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<has_member_width<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_X_Y_Z_W<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t &point = value.get();
+		stream << "(" << make_pretty(get_member_value(point, &Type_t::X)) << ", " << make_pretty(get_member_value(point, &Type_t::Y)) << ", " << make_pretty(get_member_value(point, &Type_t::Z)) << ", " << make_pretty(get_member_value(point, &Type_t::W)) << ")";
+		return stream;
+	}
+
+
+	template <typename Type_t>
+	typename enable_if<has_members_width_height<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
 		const Type_t &size = value.get();
-		stream << "(";
-		print_member_value(stream, size, &Type_t::width);
-		return print_height(stream, value);
+		stream << "(" << make_pretty(get_member_value(size, &Type_t::width)) << " x " << make_pretty(get_member_value(size, &Type_t::height)) << ")";
+		return stream;
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<has_member_Width<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_Width_Height<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
 		const Type_t &size = value.get();
-		stream << "(";
-		print_member_value(stream, size, &Type_t::Width);
-		return print_height(stream, value);
+		stream << "(" << make_pretty(get_member_value(size, &Type_t::Width)) << " x " << make_pretty(get_member_value(size, &Type_t::Height)) << ")";
+		return stream;
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<has_member_WIDTH<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_x_y_width_height<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t origin_size = value.get();
+		stream << "(" << make_pretty(get_member_value(origin_size, &Type_t::x)) << ", " << make_pretty(get_member_value(origin_size, &Type_t::y)) << ") (" << make_pretty(get_member_value(origin_size, &Type_t::width)) << " x " << make_pretty(get_member_value(origin_size, &Type_t::height)) << ")";
+		return stream;
+	}
+
+
+	template <typename Type_t>
+	typename enable_if<has_members_X_Y_Width_Height<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t origin_size = value.get();
+		stream << "(" << make_pretty(get_member_value(origin_size, &Type_t::X)) << ", " << make_pretty(get_member_value(origin_size, &Type_t::Y)) << ") (" << make_pretty(get_member_value(origin_size, &Type_t::Width)) << " x " << make_pretty(get_member_value(origin_size, &Type_t::Height)) << ")";
+		return stream;
+	}
+
+
+	template <typename Type_t>
+	typename enable_if<has_members_origin_size<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t &rect = value.get();
+		stream << make_pretty(get_member_value(rect, &Type_t::origin)) << " " << make_pretty(get_member_value(rect, &Type_t::size));
+		return stream;
+	}
+
+
+	template <typename Type_t>
+	typename enable_if<has_members_real_imag<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t &complex = value.get();
+		stream << "(" << make_pretty(get_member_value(complex, &Type_t::real)) << ", " << make_pretty(get_member_value(complex, &Type_t::imag)) << ")";
+		return stream;
+	}
+
+
+	//
+	// WinApi
+
+	template <typename Type_t>
+	typename enable_if<has_members_cx_cy<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
 		const Type_t &size = value.get();
-		stream << "(";
-		print_member_value(stream, size, &Type_t::WIDTH);
-		return print_height(stream, value);
-	}
-
-
-	template <typename Type_t>
-	typename enable_if<has_member_size<Type_t>::value, out_stream &>::type print_size(out_stream &stream, const pretty_structural<Type_t> &value)
-	{
-		stream << FLUSH;
-		const Type_t &rect = value.unsafe_get();
-		stream << " ";
-		print_member_value(stream, rect, &Type_t::size);
+		stream << "(" << make_pretty(get_member_value(size, &Type_t::cx)) << " x " << make_pretty(get_member_value(size, &Type_t::cy)) << ")";
 		return stream;
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<has_member_Size<Type_t>::value, out_stream &>::type print_size(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_left_top_right_bottom<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
-		const Type_t &rect = value.unsafe_get();
-		stream << " ";
-		print_member_value(stream, rect, &Type_t::Size);
+		const Type_t origin_size = value.get();
+		stream << "(" << make_pretty(get_member_value(origin_size, &Type_t::left)) << ", " << make_pretty(get_member_value(origin_size, &Type_t::top)) << ") (" << make_pretty(get_member_value(origin_size, &Type_t::right)) << " x " << make_pretty(get_member_value(origin_size, &Type_t::bottom)) << ")";
+		return stream;
+	}
+
+
+	//
+	// Unreal Engine
+
+	template <typename Type_t>
+	typename enable_if<has_members_Key_Value<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t &key_value = value.get();
+		//stream << "{" << make_pretty(get_member_value(key_value, &Type_t::Key)) << ": " << make_pretty(get_member_value(key_value, &Type_t::Value)) << "}";
 		return stream;
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<has_member_SIZE<Type_t>::value, out_stream &>::type print_size(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_v1_v2<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
-		const Type_t &rect = value.unsafe_get();
-		stream << " ";
-		print_member_value(stream, rect, &Type_t::SIZE);
+		const Type_t &vectors = value.get();
+		stream << make_pretty(vectors.v1) << ", " << make_pretty(vectors.v2);
 		return stream;
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<has_member_origin<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_Origin_Direction<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
-		const Type_t &rect = value.get();
-		print_member_value(stream, rect, &Type_t::origin);
-		return print_size(stream, value);
-	}
-
-
-	template <typename Type_t>
-	typename enable_if<has_member_Origin<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
-	{
-		stream << FLUSH;
-		const Type_t &rect = value.get();
-		print_member_value(stream, rect, &Type_t::Origin);
-		return print_size(stream, value);
-	}
-
-
-	template <typename Type_t>
-	typename enable_if<has_member_ORIGIN<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
-	{
-		stream << FLUSH;
-		const Type_t &rect = value.get();
-		print_member_value(stream, rect, &Type_t::ORIGIN);
-		return print_size(stream, value);
-	}
-
-
-	template <typename Type_t>
-	typename enable_if<has_member_imag<Type_t>::value, out_stream &>::type print_size(out_stream &stream, const pretty_structural<Type_t> &value)
-	{
-		stream << FLUSH;
-		const Type_t &complex = value.unsafe_get();
-		stream << " ";
-		print_member_value(stream, complex, &Type_t::imag);
+		const Type_t &ray = value.get();
+		stream << "O:" << make_pretty(ray.Origin) << ", D:" << make_pretty(ray.Direction);
 		return stream;
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<has_member_Imag<Type_t>::value, out_stream &>::type print_size(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_Vertex_Count<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
-		const Type_t &complex = value.unsafe_get();
-		stream << " ";
-		print_member_value(stream, complex, &Type_t::Imag);
+		const Type_t &edge = value.get();
+		stream << make_pretty(edge.Vertex[0]) << ", " << make_pretty(edge.Vertex[1]);
 		return stream;
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<has_member_IMAG<Type_t>::value, out_stream &>::type print_size(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_Pitch_Roll_Yaw<Type_t>::value, out_stream>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
-		const Type_t &complex = value.unsafe_get();
-		stream << " ";
-		print_member_value(stream, complex, &Type_t::IMAG);
+		const Type_t &rotator = value.get();
+		stream << "(" << make_pretty(rotator.Pitch) << ", " << make_pretty(rotator.Roll) << ", " << make_pretty(rotator.Yaw) << ")";
 		return stream;
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<has_member_real<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_GetLowerBound_GetUpperBound<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
-		const Type_t &complex = value.get();
-		print_member_value(stream, complex, &Type_t::real);
-		return print_size(stream, value);
+		const Type_t &range = value.get();
+
+		if (range.GetLowerBound().IsOpen())
+		{
+			stream << "(-inf";
+		}
+		else if (range.GetLowerBound().IsExclusive())
+		{
+			stream << "(" << make_pretty(range.GetLowerBound().GetValue());
+		}
+		else
+		{
+			stream << "[" << make_pretty(range.GetLowerBound().GetValue());
+		}
+
+		stream << ", ";
+
+		if (range.GetUpperBound().IsOpen())
+		{
+			stream << "+inf)";
+		}
+		else if (range.GetUpperBound().IsExclusive())
+		{
+			stream << make_pretty(range.GetUpperBound().GetValue()) << ")";
+		}
+		else
+		{
+			stream << make_pretty(range.GetUpperBound().GetValue()) << "]";
+		}
+
+		return stream;
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<has_member_Real<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_GetValue_IsExclusive_IsInclusive_IsOpen<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
-		const Type_t &complex = value.get();
-		print_member_value(stream, complex, &Type_t::Real);
-		return print_size(stream, value);
+		const Type_t &bound_range = value.get();
+		if (bound_range.IsOpen())
+		{
+			stream << "Open";
+		}
+		else
+		{
+			stream << make_pretty(bound_range.GetValue()) << "|";
+			if (bound_range.IsExclusive())
+			{
+				stream << "Exclusive";
+			}
+			else if (bound_range, &Type_t::IsInclusive)
+			{
+				stream << "Inclusive";
+			}
+		}
+
+		return stream;
 	}
 
 
 	template <typename Type_t>
-	typename enable_if<has_member_REAL<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	typename enable_if<has_members_Min_Max_bIsValid<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
 	{
 		stream << FLUSH;
-		const Type_t &complex = value.get();
-		print_member_value(stream, complex, &Type_t::REAL);
-		return print_size(stream, value);
+		const Type_t &box = value.get();
+		stream << make_pretty(box.Min) << ", " << make_pretty(box.Max);
+		bool validity = box.bIsValid;
+		if (!validity)
+		{
+			stream << " - invalid";
+		}
+		return stream;
+	}
+
+
+	template <typename Type_t>
+	typename enable_if<has_members_Min_Max_IsValid<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t &box = value.get();
+		stream << make_pretty(box.Min) << ", " << make_pretty(box.Max);
+		bool validity = static_cast<bool>(box.IsValid);
+		if (!validity)
+		{
+			stream << " - invalid";
+		}
+
+		return stream;
+	}
+
+
+	template <typename Type_t>
+	typename enable_if<has_members_Center_W<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t &sphere = value.get();
+		stream << "C:" << make_pretty(sphere.Center) << ", R:" << make_pretty(sphere.W);
+		return stream;
+	}
+
+
+	template <typename Type_t>
+	typename enable_if<has_members_Center_Radius_Orientation_Length<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t &capsule = value.get();
+		stream << "C:" << make_pretty(capsule.Center) << ", R:" << make_pretty(capsule.Radius) << ", O:" << make_pretty(capsule.Orientation) << ", L:" << make_pretty(capsule.Length);
+		return stream;
+	}
+
+
+	template <typename Type_t>
+	typename enable_if<has_members_Center_AxisX_AxisY_AxisZ_ExtentX_ExtentY_ExtentZ<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t &box = value.get();
+		stream << "C:" << make_pretty(box.Center) << ", A:(" << make_pretty(box.AxisX) << ", " << make_pretty(box.AxisY) << ", " << make_pretty(box.AxisZ) << "), E:(" << make_pretty(box.ExtentX) << ", " << make_pretty(box.ExtentY) << ", " << make_pretty(box.ExtentZ) << ")";
+		return stream;
+	}
+
+
+	template <typename Type_t>
+	typename enable_if<has_members_Origin_BoxExtent_SphereRadius<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t &bounds = value.get();
+		stream << "O:" << make_pretty(bounds.Origin) << ", E:" << make_pretty(bounds.BoxExtent) << ", R:" << make_pretty(bounds.SphereRadius);
+		return stream;
+	}
+
+
+	template <typename Iterator_t>
+	void print_string(out_stream &stream, Iterator_t begin, Iterator_t end)
+	{
+		for ( ; begin != end; ++begin)
+		{
+			stream << *begin;
+		}
+	}
+
+
+	template <typename Type_t>
+	typename enable_if<has_members_GetCharArray<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t &str = value.get();
+		stream << "\"";
+		print_string(stream, str.begin(), str.end());
+		stream << "\"";
+		return stream;
 	}
 
 
@@ -1517,7 +1738,7 @@ namespace trace_out { namespace detail
 		stream << FLUSH;
 		const std::pair<First_t, Second_t> &pair = value.get();
 		stream << "{";
-		stream << make_pretty(pair.first) << ": ";
+		stream << make_pretty(pair.first) << ", ";
 		stream << make_pretty(pair.second) << "}";
 		return stream;
 	}
@@ -1582,24 +1803,35 @@ namespace trace_out { namespace detail
 	}
 
 
+	// Using this to infer type of iterator in a pre C++11 way
+	template <typename Iterator_t>
+	void print_begin_end(out_stream &stream, Iterator_t begin, Iterator_t end)
+	{
+		// Unreal Engine has only 'operator !=' overloaded for its iterators,
+		// and I want this to be an early return
+		if (!(begin != end))
+		{
+			return;
+		}
+
+		Iterator_t iterator = begin;
+		stream << make_pretty(*iterator);
+		for (++iterator; iterator != end; ++iterator)
+		{
+			stream << ", " << make_pretty(*iterator);
+		}
+	}
+
+
 	template <typename Type_t>
 	out_stream &operator <<(out_stream &stream, const pretty_iterable<Type_t> &value)
 	{
 		stream << FLUSH << "[";
 
 		const Type_t &container = value.get();
-		if (!container.empty())
-		{
-			typename Type_t::const_iterator iterator = container.begin();
-			stream << make_pretty(*iterator);
-			for (++iterator; iterator != container.end(); ++iterator)
-			{
-				stream << ", " << make_pretty(*iterator);
-			}
-		}
+		print_begin_end(stream, container.begin(), container.end());
 
 		stream << "]";
-
 		return stream;
 	}
 

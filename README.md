@@ -122,7 +122,8 @@ Macros `$w`, `$e`, `$return`, `$if` and `$while` support following types:
 
 * all fundamental types, raw pointers, standard smart pointers, `std::string`, `std::pair`, `std::tuple`, `std::bitset`
 * types that define member functions `.begin()` and `.end()` which return iterators
-* sturctures and classes with data members or member functions `x`, `y`, `z`, `w`, `width`, `height`, `origin`, `size`, `real`, `imag` in lowcase, HIGHCASE and Capital
+* sturctures and classes with data members or member functions `x`, `y`, `z`, `w`, `width`, `height`, `origin`, `size`, `left`, `top`, `right`, `bottom`, `real`, `imag` in both lowcase and Capital
+* Unreal Engine 4 data types and containers (currently except `TMap`)
 
 ---
 
