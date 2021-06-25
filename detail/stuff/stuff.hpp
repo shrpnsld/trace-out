@@ -395,6 +395,7 @@ namespace trace_out { namespace detail
 	trace_out_private__define_has_member(IsValid);
 	trace_out_private__define_has_member(BoxExtent);
 	trace_out_private__define_has_member(SphereRadius);
+	trace_out_private__define_has_member(GetCharArray);
 
 #undef trace_out_private__define_has_member
 
@@ -456,7 +457,8 @@ namespace trace_out { namespace detail
 		has_member_real<Type_t>::value && has_member_imag<Type_t>::value);
 
 	trace_out_private__define_has_members(begin_end, Type_t,
-		has_member_begin<Type_t>::value && has_member_end<Type_t>::value);
+		has_member_begin<Type_t>::value && has_member_end<Type_t>::value &&
+		!has_member_GetCharArray<Type_t>::value);
 
 
 	//
@@ -525,6 +527,10 @@ namespace trace_out { namespace detail
 	trace_out_private__define_has_members(Origin_BoxExtent_SphereRadius, Type_t,
 		has_member_Origin<Type_t>::value && has_member_BoxExtent<Type_t>::value && has_member_SphereRadius<Type_t>::value);
 
+	// FString
+	trace_out_private__define_has_members(GetCharArray, Type_t,
+		has_member_GetCharArray<Type_t>::value);
+
 #undef trace_out_private__define_has_members
 
 
@@ -560,7 +566,8 @@ namespace trace_out { namespace detail
 				has_members_Center_W<Type_t>::value ||
 				has_members_Center_Radius_Orientation_Length<Type_t>::value ||
 				has_members_Center_AxisX_AxisY_AxisZ_ExtentX_ExtentY_ExtentZ<Type_t>::value ||
-				has_members_Origin_BoxExtent_SphereRadius<Type_t>::value
+				has_members_Origin_BoxExtent_SphereRadius<Type_t>::value ||
+				has_members_GetCharArray<Type_t>::value
 		};
 	};
 

@@ -178,6 +178,9 @@ namespace trace_out { namespace detail
 	template <typename Type_t>
 	typename enable_if<has_members_Origin_BoxExtent_SphereRadius<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
 
+	template <typename Type_t>
+	typename enable_if<has_members_GetCharArray<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
 #if TRACE_OUT_CPP_VERSION < 201703L
 
 #if defined(TRACE_OUT_GCC)
@@ -632,6 +635,28 @@ namespace trace_out { namespace detail
 		stream << FLUSH;
 		const Type_t &bounds = value.get();
 		stream << "O:" << make_pretty(bounds.Origin) << ", E:" << make_pretty(bounds.BoxExtent) << ", R:" << make_pretty(bounds.SphereRadius);
+		return stream;
+	}
+
+
+	template <typename Iterator_t>
+	void print_string(out_stream &stream, Iterator_t begin, Iterator_t end)
+	{
+		for ( ; begin != end; ++begin)
+		{
+			stream << *begin;
+		}
+	}
+
+
+	template <typename Type_t>
+	typename enable_if<has_members_GetCharArray<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t &str = value.get();
+		stream << "\"";
+		print_string(stream, str.begin(), str.end());
+		stream << "\"";
 		return stream;
 	}
 
