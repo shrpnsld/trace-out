@@ -65,11 +65,14 @@
 	#define $while(...) \
 				trace_out_private__loop(trace_out_private__unify(trace_out_for_block), while, ##__VA_ARGS__)
 
-	#define $t(...) \
-				trace_out::detail::out_stream stream(TRACE_OUT_FILENAME_LINE); \
-				stream << #__VA_ARGS__ << trace_out::detail::FLUSH; \
+	#define trace_out_private__trace(stream_variable_name, ...) \
+				trace_out::detail::out_stream stream_variable_name(TRACE_OUT_FILENAME_LINE); \
+				stream_variable_name << #__VA_ARGS__ << trace_out::detail::FLUSH; \
 				__VA_ARGS__ \
-				stream << " // trace-out: statement passed" << trace_out::detail::ENDLINE;
+				stream_variable_name << " // trace-out: statement passed" << trace_out::detail::ENDLINE;
+
+	#define $t(...) \
+				trace_out_private__trace(trace_out_private__unify(trace_out_tracing_stream), ##__VA_ARGS__)
 
 	#define $p(format, ...) \
 				{ \
