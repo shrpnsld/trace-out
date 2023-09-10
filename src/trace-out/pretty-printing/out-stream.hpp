@@ -122,6 +122,9 @@ namespace trace_out { namespace detail
 	typename enable_if<has_members_x_y_width_height<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
 
 	template <typename Type_t>
+	typename enable_if<has_members_x_y_Width_Height<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
+
+	template <typename Type_t>
 	typename enable_if<has_members_X_Y_Width_Height<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value);
 
 	template <typename Type_t>
@@ -394,6 +397,16 @@ namespace trace_out { namespace detail
 		stream << FLUSH;
 		const Type_t origin_size = value.get();
 		stream << "{" << make_pretty(get_member_value(origin_size, &Type_t::x)) << ", " << make_pretty(get_member_value(origin_size, &Type_t::y)) << "} {" << make_pretty(get_member_value(origin_size, &Type_t::width)) << " x " << make_pretty(get_member_value(origin_size, &Type_t::height)) << "}";
+		return stream;
+	}
+
+
+	template <typename Type_t>
+	typename enable_if<has_members_x_y_Width_Height<Type_t>::value, out_stream &>::type operator <<(out_stream &stream, const pretty_structural<Type_t> &value)
+	{
+		stream << FLUSH;
+		const Type_t origin_size = value.get();
+		stream << "{" << make_pretty(get_member_value(origin_size, &Type_t::x)) << ", " << make_pretty(get_member_value(origin_size, &Type_t::y)) << "} {" << make_pretty(get_member_value(origin_size, &Type_t::Width)) << " x " << make_pretty(get_member_value(origin_size, &Type_t::Height)) << "}";
 		return stream;
 	}
 

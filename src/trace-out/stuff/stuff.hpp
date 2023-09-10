@@ -320,7 +320,7 @@ namespace trace_out { namespace detail
 
 	trace_out_private__define_has_members(x_y, Type_t,
 		has_member_x<Type_t>::value && has_member_y<Type_t>::value &&
-		!has_member_z<Type_t>::value && !has_member_w<Type_t>::value && !has_member_width<Type_t>::value && !has_member_height<Type_t>::value);
+		!has_member_z<Type_t>::value && !has_member_w<Type_t>::value && !has_member_width<Type_t>::value && !has_member_height<Type_t>::value && !has_member_Width<Type_t>::value && !has_member_Height<Type_t>::value);
 
 	trace_out_private__define_has_members(X_Y, Type_t,
 		has_member_X<Type_t>::value && has_member_Y<Type_t>::value &&
@@ -342,14 +342,17 @@ namespace trace_out { namespace detail
 
 	trace_out_private__define_has_members(width_height, Type_t,
 		has_member_width<Type_t>::value && has_member_height<Type_t>::value &&
-		!has_member_x<Type_t>::value && !has_member_y<Type_t>::value);
+		!has_member_x<Type_t>::value && !has_member_y<Type_t>::value && !has_member_X<Type_t>::value && !has_member_Y<Type_t>::value);
 
 	trace_out_private__define_has_members(Width_Height, Type_t,
 		has_member_Width<Type_t>::value && has_member_Height<Type_t>::value &&
-		!has_member_X<Type_t>::value && !has_member_Y<Type_t>::value);
+		!has_member_x<Type_t>::value && !has_member_y<Type_t>::value && !has_member_X<Type_t>::value && !has_member_Y<Type_t>::value);
 
 	trace_out_private__define_has_members(x_y_width_height, Type_t,
 		has_member_x<Type_t>::value && has_member_y<Type_t>::value && has_member_width<Type_t>::value && has_member_height<Type_t>::value);
+
+	trace_out_private__define_has_members(x_y_Width_Height, Type_t,
+		has_member_x<Type_t>::value && has_member_y<Type_t>::value && has_member_Width<Type_t>::value && has_member_Height<Type_t>::value);
 
 	trace_out_private__define_has_members(X_Y_Width_Height, Type_t,
 		has_member_X<Type_t>::value && has_member_Y<Type_t>::value && has_member_Width<Type_t>::value && has_member_Height<Type_t>::value);
@@ -453,6 +456,7 @@ namespace trace_out { namespace detail
 				has_members_width_height<Type_t>::value ||
 				has_members_Width_Height<Type_t>::value ||
 				has_members_x_y_width_height<Type_t>::value ||
+				has_members_x_y_Width_Height<Type_t>::value ||
 				has_members_X_Y_Width_Height<Type_t>::value ||
 				has_members_origin_size<Type_t>::value ||
 				has_members_real_imag<Type_t>::value ||
