@@ -253,11 +253,11 @@ namespace trace_out { namespace detail
 	{
 		stream << FLUSH;
 		const Type_t *pointer = value.get();
-		stream << make_pretty(static_cast<const void *>(pointer)) << " ";
+		stream << make_pretty(static_cast<const void *>(pointer));
 		if (pointer != NULL)
 		{
 			stream << FLUSH;
-			stream << "-> " << make_pretty(*pointer);
+			stream << " -> " << make_pretty(*pointer);
 		}
 
 		return stream;
@@ -313,7 +313,7 @@ namespace trace_out { namespace detail
 	{
 		stream << FLUSH;
 		const Type_t &point = value.get();
-		stream << "(" << make_pretty(get_member_value(point, &Type_t::x)) << ", " << make_pretty(get_member_value(point, &Type_t::y)) << ")";
+		stream << "{" << make_pretty(get_member_value(point, &Type_t::x)) << ", " << make_pretty(get_member_value(point, &Type_t::y)) << "}";
 		return stream;
 	}
 
@@ -323,7 +323,7 @@ namespace trace_out { namespace detail
 	{
 		stream << FLUSH;
 		const Type_t &point = value.get();
-		stream << "(" << make_pretty(get_member_value(point, &Type_t::X)) << ", " << make_pretty(get_member_value(point, &Type_t::Y)) << ")";
+		stream << "{" << make_pretty(get_member_value(point, &Type_t::X)) << ", " << make_pretty(get_member_value(point, &Type_t::Y)) << "}";
 		return stream;
 	}
 
@@ -333,7 +333,7 @@ namespace trace_out { namespace detail
 	{
 		stream << FLUSH;
 		const Type_t &point = value.get();
-		stream << "(" << make_pretty(get_member_value(point, &Type_t::x)) << ", " << make_pretty(get_member_value(point, &Type_t::y)) << ", " << make_pretty(get_member_value(point, &Type_t::z)) << ")";
+		stream << "{" << make_pretty(get_member_value(point, &Type_t::x)) << ", " << make_pretty(get_member_value(point, &Type_t::y)) << ", " << make_pretty(get_member_value(point, &Type_t::z)) << "}";
 		return stream;
 	}
 
@@ -343,7 +343,7 @@ namespace trace_out { namespace detail
 	{
 		stream << FLUSH;
 		const Type_t &point = value.get();
-		stream << "(" << make_pretty(get_member_value(point, &Type_t::X)) << ", " << make_pretty(get_member_value(point, &Type_t::Y)) << ", " << make_pretty(get_member_value(point, &Type_t::Z)) << ")";
+		stream << "{" << make_pretty(get_member_value(point, &Type_t::X)) << ", " << make_pretty(get_member_value(point, &Type_t::Y)) << ", " << make_pretty(get_member_value(point, &Type_t::Z)) << "}";
 		return stream;
 	}
 
@@ -353,7 +353,7 @@ namespace trace_out { namespace detail
 	{
 		stream << FLUSH;
 		const Type_t &point = value.get();
-		stream << "(" << make_pretty(get_member_value(point, &Type_t::x)) << ", " << make_pretty(get_member_value(point, &Type_t::y)) << ", " << make_pretty(get_member_value(point, &Type_t::z)) << ", " << make_pretty(get_member_value(point, &Type_t::w)) << ")";
+		stream << "{" << make_pretty(get_member_value(point, &Type_t::x)) << ", " << make_pretty(get_member_value(point, &Type_t::y)) << ", " << make_pretty(get_member_value(point, &Type_t::z)) << ", " << make_pretty(get_member_value(point, &Type_t::w)) << "}";
 		return stream;
 	}
 
@@ -363,7 +363,7 @@ namespace trace_out { namespace detail
 	{
 		stream << FLUSH;
 		const Type_t &point = value.get();
-		stream << "(" << make_pretty(get_member_value(point, &Type_t::X)) << ", " << make_pretty(get_member_value(point, &Type_t::Y)) << ", " << make_pretty(get_member_value(point, &Type_t::Z)) << ", " << make_pretty(get_member_value(point, &Type_t::W)) << ")";
+		stream << "{" << make_pretty(get_member_value(point, &Type_t::X)) << ", " << make_pretty(get_member_value(point, &Type_t::Y)) << ", " << make_pretty(get_member_value(point, &Type_t::Z)) << ", " << make_pretty(get_member_value(point, &Type_t::W)) << "}";
 		return stream;
 	}
 
@@ -373,7 +373,7 @@ namespace trace_out { namespace detail
 	{
 		stream << FLUSH;
 		const Type_t &size = value.get();
-		stream << "(" << make_pretty(get_member_value(size, &Type_t::width)) << " x " << make_pretty(get_member_value(size, &Type_t::height)) << ")";
+		stream << "{" << make_pretty(get_member_value(size, &Type_t::width)) << " x " << make_pretty(get_member_value(size, &Type_t::height)) << "}";
 		return stream;
 	}
 
@@ -383,7 +383,7 @@ namespace trace_out { namespace detail
 	{
 		stream << FLUSH;
 		const Type_t &size = value.get();
-		stream << "(" << make_pretty(get_member_value(size, &Type_t::Width)) << " x " << make_pretty(get_member_value(size, &Type_t::Height)) << ")";
+		stream << "{" << make_pretty(get_member_value(size, &Type_t::Width)) << " x " << make_pretty(get_member_value(size, &Type_t::Height)) << "}";
 		return stream;
 	}
 
@@ -393,7 +393,7 @@ namespace trace_out { namespace detail
 	{
 		stream << FLUSH;
 		const Type_t origin_size = value.get();
-		stream << "(" << make_pretty(get_member_value(origin_size, &Type_t::x)) << ", " << make_pretty(get_member_value(origin_size, &Type_t::y)) << ") (" << make_pretty(get_member_value(origin_size, &Type_t::width)) << " x " << make_pretty(get_member_value(origin_size, &Type_t::height)) << ")";
+		stream << "{" << make_pretty(get_member_value(origin_size, &Type_t::x)) << ", " << make_pretty(get_member_value(origin_size, &Type_t::y)) << "} {" << make_pretty(get_member_value(origin_size, &Type_t::width)) << " x " << make_pretty(get_member_value(origin_size, &Type_t::height)) << "}";
 		return stream;
 	}
 
@@ -403,7 +403,7 @@ namespace trace_out { namespace detail
 	{
 		stream << FLUSH;
 		const Type_t origin_size = value.get();
-		stream << "(" << make_pretty(get_member_value(origin_size, &Type_t::X)) << ", " << make_pretty(get_member_value(origin_size, &Type_t::Y)) << ") (" << make_pretty(get_member_value(origin_size, &Type_t::Width)) << " x " << make_pretty(get_member_value(origin_size, &Type_t::Height)) << ")";
+		stream << "{" << make_pretty(get_member_value(origin_size, &Type_t::X)) << ", " << make_pretty(get_member_value(origin_size, &Type_t::Y)) << "} {" << make_pretty(get_member_value(origin_size, &Type_t::Width)) << " x " << make_pretty(get_member_value(origin_size, &Type_t::Height)) << "}";
 		return stream;
 	}
 
@@ -423,7 +423,7 @@ namespace trace_out { namespace detail
 	{
 		stream << FLUSH;
 		const Type_t &complex = value.get();
-		stream << "(" << make_pretty(get_member_value(complex, &Type_t::real)) << ", " << make_pretty(get_member_value(complex, &Type_t::imag)) << ")";
+		stream << "{" << make_pretty(get_member_value(complex, &Type_t::real)) << ", " << make_pretty(get_member_value(complex, &Type_t::imag)) << "}";
 		return stream;
 	}
 
@@ -436,7 +436,7 @@ namespace trace_out { namespace detail
 	{
 		stream << FLUSH;
 		const Type_t &size = value.get();
-		stream << "(" << make_pretty(get_member_value(size, &Type_t::cx)) << " x " << make_pretty(get_member_value(size, &Type_t::cy)) << ")";
+		stream << "{" << make_pretty(get_member_value(size, &Type_t::cx)) << " x " << make_pretty(get_member_value(size, &Type_t::cy)) << "}";
 		return stream;
 	}
 
@@ -446,7 +446,7 @@ namespace trace_out { namespace detail
 	{
 		stream << FLUSH;
 		const Type_t origin_size = value.get();
-		stream << "(" << make_pretty(get_member_value(origin_size, &Type_t::left)) << ", " << make_pretty(get_member_value(origin_size, &Type_t::top)) << ") (" << make_pretty(get_member_value(origin_size, &Type_t::right)) << " x " << make_pretty(get_member_value(origin_size, &Type_t::bottom)) << ")";
+		stream << "{" << make_pretty(get_member_value(origin_size, &Type_t::left)) << ", " << make_pretty(get_member_value(origin_size, &Type_t::top)) << "} {" << make_pretty(get_member_value(origin_size, &Type_t::right)) << " x " << make_pretty(get_member_value(origin_size, &Type_t::bottom)) << "}";
 		return stream;
 	}
 
