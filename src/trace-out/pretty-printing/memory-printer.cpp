@@ -74,11 +74,56 @@ namespace trace_out { namespace detail
 		"f8", "f9", "fa", "fb", "fc", "fd", "fe", "ff"
 	};
 
-	const char *const BASE_NAMES[] = {"binary", "signed decimal", "unsigned decimal", "hexadecimal", "float", "double", "long double"};
-	const standard::size_t BASE_NAMES_LENGTH = sizeof(BASE_NAMES) / sizeof(BASE_NAMES[0]);
 
-	const char *const BYTE_ORDER_NAMES[] = {"little-endian", "big-endian"};
-	const standard::size_t BYTE_ORDER_NAMES_LENGTH = sizeof(BYTE_ORDER_NAMES) / sizeof(BYTE_ORDER_NAMES[0]);
+	memory_display_options_t::memory_display_options_t(standard::size_t column_count, base_t base, endianness_t endianness)
+		:
+		column_count(column_count),
+		base(base),
+		endianness(endianness)
+	{
+	}
+
+
+	void memory_display_options_t::set_option(standard::size_t value)
+	{
+		column_count = value;
+	}
+
+
+	void memory_display_options_t::set_option(base_t value)
+	{
+		base = value;
+	}
+
+
+	void memory_display_options_t::set_option(endianness_t value)
+	{
+		endianness = value;
+	}
+
+
+	void memory_display_options_t::set_option(memory_display_options_t::nothing)
+	{
+	}
+
+
+	check_column_start_t::check_column_start_t(standard::size_t columns)
+		:
+		_columns(columns)
+	{
+	}
+
+
+	bool check_column_start_t::operator ()(standard::size_t index) const
+	{
+		return index > 0 && index % _columns == 0;
+	}
+
+
+	bool ignore_column_start_t::operator ()(standard::size_t) const
+	{
+		return false;
+	}
 
 
 	template <typename T>
@@ -100,39 +145,44 @@ namespace trace_out { namespace detail
 	}
 
 
-	option_t base_value_from_options(option_t options, option_t default_value)
+	const char *base_option_name(base_t value)
 	{
-		option_t base = options & (static_cast<option_t>(0x0000ffff) << OPTIONS_START_BASE);
-		if (base == 0)
+		switch (value)
 		{
-			return default_value;
-		}
+			case BIN:
+				return "binary";
 
-		return base;
+			case SDEC:
+				return "signed decimal";
+
+			case UDEC:
+				return "unsigned decimal";
+
+			case HEX:
+				return "hexadecimal";
+
+			case FLT:
+				return "float";
+
+			case DBL:
+				return "double";
+
+			case LDBL:
+				return "long double";
+		}
 	}
 
 
-	option_t byte_order_value_from_options(option_t options, option_t default_value)
+	const char *endianness_option_name(endianness_t value)
 	{
-		option_t byte_order = options & (static_cast<option_t>(0x0000ffff) << OPTIONS_START_BYTE_ORDER);
-		if (byte_order == 0)
+		switch (value)
 		{
-			return default_value;
+			case LITTLE:
+				return "little-endian";
+
+			case BIG:
+				return "big-endian";
 		}
-
-		return byte_order;
-	}
-
-
-	const char *option_name(option_t option, const char *const names[], standard::size_t names_length, const char *default_name)
-	{
-		standard::size_t index = first_set_bit(option);
-		if (index >= names_length)
-		{
-			return default_name;
-		}
-
-		return names[index];
 	}
 
 
@@ -148,7 +198,7 @@ namespace trace_out { namespace detail
 	}
 
 
-	option_t current_byte_order()
+	endianness_t current_byte_order()
 	{
 		const standard::uint16_t VALUE = static_cast<standard::uint16_t>(0x0001);
 		const standard::uint8_t FIRST_BYTE = *reinterpret_cast<const standard::uint8_t *>(&VALUE);
@@ -161,6 +211,12 @@ namespace trace_out { namespace detail
 		{
 			return LITTLE;
 		}
+	}
+
+
+	void do_not_reverse_bytes(void *destination, const void *source, standard::size_t size)
+	{
+		std::memcpy(destination, source, size);
 	}
 
 
@@ -177,15 +233,15 @@ namespace trace_out { namespace detail
 	}
 
 
-	void order_bytes(void *ordered_bytes, const void *unordered_bytes, standard::size_t size, option_t byte_order)
+	void (*select_byte_ordering_function(endianness_t byte_order))(void *, const void *, standard::size_t)
 	{
 		if (current_byte_order() != byte_order)
 		{
-			reverse_bytes(ordered_bytes, unordered_bytes, size);
+			return reverse_bytes;
 		}
 		else
 		{
-			std::memcpy(ordered_bytes, unordered_bytes, size);
+			return do_not_reverse_bytes;
 		}
 	}
 

@@ -9,43 +9,46 @@
 #include "trace-out/pretty-printing/out-stream.hpp"
 
 
-namespace trace_out { namespace detail
-{
-
-	typedef standard::uint32_t option_t;
-
-	const standard::size_t OPTIONS_START_BASE = 0;
-	const standard::size_t OPTIONS_START_BYTE_ORDER = 16;
-
-}
-}
-
-
 namespace trace_out
 {
 
-	const detail::option_t BIN = static_cast<detail::option_t>(0x1) << (detail::OPTIONS_START_BASE + 0);
-	const detail::option_t SDEC = static_cast<detail::option_t>(0x1) << (detail::OPTIONS_START_BASE + 1);
-	const detail::option_t UDEC = static_cast<detail::option_t>(0x1) << (detail::OPTIONS_START_BASE + 2);
-	const detail::option_t HEX = static_cast<detail::option_t>(0x1) << (detail::OPTIONS_START_BASE + 3);
-	const detail::option_t FLT = static_cast<detail::option_t>(0x1) << (detail::OPTIONS_START_BASE + 4);
-	const detail::option_t DBL = static_cast<detail::option_t>(0x1) << (detail::OPTIONS_START_BASE + 5);
-	const detail::option_t LDBL = static_cast<detail::option_t>(0x1) << (detail::OPTIONS_START_BASE + 6);
+	enum base_t
+	{
+		BIN,
+		SDEC,
+		UDEC,
+		HEX,
+		FLT,
+		DBL,
+		LDBL
+	};
 
-	const detail::option_t LITTLE = static_cast<detail::option_t>(0x1) << (detail::OPTIONS_START_BYTE_ORDER + 0);
-	const detail::option_t BIG = static_cast<detail::option_t>(0x1) << (detail::OPTIONS_START_BYTE_ORDER + 1);
-
+	enum endianness_t
+	{
+		BIG,
+		LITTLE
+	};
 }
 
 
 namespace trace_out { namespace detail
 {
 
-	extern const char *const BASE_NAMES[];
-	extern const standard::size_t BASE_NAMES_LENGTH;
+	struct memory_display_options_t
+	{
+		struct nothing {};
 
-	extern const char *const BYTE_ORDER_NAMES[];
-	extern const standard::size_t BYTE_ORDER_NAMES_LENGTH;
+		memory_display_options_t(standard::size_t column_count, base_t base, endianness_t endianness);
+
+		void set_option(standard::size_t value);
+		void set_option(base_t value);
+		void set_option(endianness_t value);
+		void set_option(nothing);
+
+		standard::size_t column_count;
+		base_t base;
+		endianness_t endianness;
+	};
 
 	typedef std::streamsize outputwidth_t;
 
@@ -73,7 +76,7 @@ namespace trace_out { namespace detail
 	{
 		typedef standard::uint8_t unit_t;
 		static const outputwidth_t field_width = 2;
-		static const option_t default_base = HEX;
+		static const base_t default_base = HEX;
 		typedef void signed_t;
 		typedef void unsigned_t;
 	};
@@ -84,7 +87,7 @@ namespace trace_out { namespace detail
 		{ \
 			typedef unit_type unit_t; \
 			static const outputwidth_t field_width = field_width_value; \
-			static const option_t default_base = default_base_value; \
+			static const base_t default_base = default_base_value; \
 			typedef to_signed_type signed_t; \
 			typedef to_unsigned_type unsigned_t; \
 		}
@@ -116,14 +119,43 @@ namespace trace_out { namespace detail
 	};
 
 
-	option_t base_value_from_options(option_t options, option_t default_value);
-	option_t byte_order_value_from_options(option_t options, option_t default_value);
-	const char *option_name(option_t option, const char *const names[], standard::size_t names_length, const char *default_name);
+	class is_column_start_t
+	{
+	public:
+		virtual bool operator ()(standard::size_t index) const = 0;
+	};
+
+
+	class check_column_start_t
+		:
+		public is_column_start_t
+	{
+	public:
+		check_column_start_t(standard::size_t columns);
+
+		bool operator ()(standard::size_t index) const;
+
+	private:
+		standard::size_t _columns;
+	};
+
+
+	class ignore_column_start_t
+		:
+		public is_column_start_t
+	{
+	public:
+		bool operator ()(standard::size_t index) const;
+	};
+
+
+	const char *base_option_name(base_t value);
+	const char *endianness_option_name(endianness_t value);
 	const char *byte_to_binary(standard::uint8_t byte);
 	const char *byte_to_hexadecimal(standard::uint8_t byte);
 
 	template <typename Type_t>
-	outputwidth_t field_width(option_t base);
+	outputwidth_t field_width(base_t base);
 
 	template <typename Type_t>
 	const std::string bytes_to_binary_string(Type_t value);
@@ -141,14 +173,18 @@ namespace trace_out { namespace detail
 	const std::string bytes_to_hexadecimal_string(Type_t value);
 
 	template <typename Type_t>
-	const std::string (*select_conversion(option_t base))(Type_t);
+	const std::string (*select_conversion(base_t base))(Type_t);
 
-	option_t current_byte_order();
+	endianness_t current_byte_order();
+	void do_not_reverse_bytes(void *destination, const void *source, standard::size_t size);
 	void reverse_bytes(void *destination, const void *source, standard::size_t size);
-	void order_bytes(void *ordered_bytes, const void *unordered_bytes, standard::size_t size, option_t byte_order);
+	void (*select_byte_ordering_function(endianness_t byte_order))(void *, const void *, standard::size_t);
 
 	template <typename Type_t>
-	void print_memory(const std::string &filename_line, const char *name, const Type_t *pointer, standard::size_t size = sizeof(Type_t), option_t options = 0);
+	void print_memory_content(out_stream &stream, const Type_t *pointer, standard::size_t size, outputwidth_t column_width, const is_column_start_t &is_column_start, const std::string (*bytes_to_string)(Type_t), void (*order_bytes)(void *, const void *, standard::size_t));
+
+	template <typename Type_t>
+	void print_memory_impl(const std::string &filename_line, const char *name, const Type_t *pointer, standard::size_t size, memory_display_options_t options);
 
 }
 }
@@ -158,7 +194,7 @@ namespace trace_out { namespace detail
 {
 
 	template <typename Type_t>
-	outputwidth_t field_width(option_t base)
+	outputwidth_t field_width(base_t base)
 	{
 		switch (base)
 		{
@@ -247,7 +283,7 @@ namespace trace_out { namespace detail
 
 
 	template <typename Type_t>
-	const std::string (*select_conversion(option_t base))(Type_t)
+	const std::string (*select_conversion(base_t base))(Type_t)
 	{
 		switch (base)
 		{
@@ -273,31 +309,30 @@ namespace trace_out { namespace detail
 
 
 	template <typename Type_t>
-	void print_memory_contents(out_stream &stream, const Type_t *pointer, standard::size_t size, outputwidth_t column_width, const std::string (*bytes_to_string)(Type_t), option_t byte_order)
+	void print_memory_content(out_stream &stream, const Type_t *pointer, standard::size_t size, outputwidth_t column_width, const is_column_start_t &is_column_start, const std::string (*bytes_to_string)(Type_t), void (*order_bytes)(void *, const void *, standard::size_t))
 	{
 		std::stringstream string_stream;
 
-		const Type_t *iterator = pointer;
 		standard::size_t length = size / sizeof(Type_t);
 
-		stream << make_pretty(static_cast<const void *>(iterator)) << ":";
+		stream << make_pretty(static_cast<const void *>(pointer)) << ":";
 		for (standard::size_t index = 0; index < length; ++index)
 		{
 			const std::string string_representation = string_stream.str();
-			if (string_representation.length() + static_cast<standard::size_t>(column_width) + 1 > stream.width_left())
+			if (string_representation.length() + static_cast<standard::size_t>(column_width) + 1 > stream.width_left() || is_column_start(index))
 			{
 				stream << string_representation;
 				string_stream.str("");
 
-				stream << NEWLINE << make_pretty(static_cast<const void *>(&iterator[index])) << ":";
+				stream << NEWLINE << make_pretty(static_cast<const void *>(&pointer[index])) << ":";
 			}
 
-			const Type_t &bytes = iterator[index];
+			const Type_t &bytes = pointer[index];
 
 			crash_on_bad_memory(bytes);
 
 			Type_t ordered_bytes;
-			order_bytes(&ordered_bytes, &bytes, sizeof(Type_t), byte_order);
+			order_bytes(&ordered_bytes, &bytes, sizeof(Type_t));
 
 			string_stream << " ";
 			string_stream.fill(' ');
@@ -316,28 +351,43 @@ namespace trace_out { namespace detail
 
 
 	template <typename Type_t>
-	void print_memory(const std::string &filename_line, const char *name, const Type_t *pointer, standard::size_t size, option_t options)
+	void print_memory_impl(const std::string &filename_line, const char *name, const Type_t *pointer, standard::size_t size, memory_display_options_t options)
 	{
 		typedef typename print_traits<Type_t>::unit_t unit_t;
 
-		option_t base = base_value_from_options(options, print_traits<Type_t>::default_base);
-		option_t byte_order = byte_order_value_from_options(options, current_byte_order());
-
-		const char *base_name = option_name((base >> OPTIONS_START_BASE), BASE_NAMES, BASE_NAMES_LENGTH, "?");
-		const char *byte_order_name = option_name((byte_order >> OPTIONS_START_BYTE_ORDER), BYTE_ORDER_NAMES, BYTE_ORDER_NAMES_LENGTH, "?");
+		const char *base_name = base_option_name(options.base);
+		const char *byte_order_name = endianness_option_name(options.endianness);
 
 		out_stream stream(filename_line);
-		stream << name << " (" << base_name << ", " << byte_order_name << "):";
+		stream << name << ", " << to_string(size) << " bytes; " << base_name << ", " << byte_order_name;
 		indentation_add();
 		stream << NEWLINE;
 
-		const std::string (*bytes_to_string)(Type_t) = select_conversion<Type_t>(base);
-		outputwidth_t column_width = field_width<Type_t>(base);
-		print_memory_contents(stream, static_cast<const unit_t *>(pointer), size, column_width, bytes_to_string, byte_order);
+		const std::string (*bytes_to_string_function)(Type_t) = select_conversion<Type_t>(options.base);
+		outputwidth_t column_width = field_width<Type_t>(options.base);
+
+		standard::size_t max_column_count = (stream.width_left() - (to_string(static_cast<void *>(0), std::hex, std::showbase, NULL).size() + 1)) / (1 + column_width);
+		bool use_custom_column_count = options.column_count > 0 && options.column_count < max_column_count;
+		const is_column_start_t &is_column_start = use_custom_column_count ? static_cast<const is_column_start_t &>(check_column_start_t(options.column_count)) : static_cast<const is_column_start_t &>(ignore_column_start_t());
+
+		void (*order_bytes)(void *, const void *, standard::size_t) = select_byte_ordering_function(options.endianness);
+
+		print_memory_content(stream, static_cast<const unit_t *>(pointer), size, column_width, is_column_start, bytes_to_string_function, order_bytes);
 
 		indentation_remove();
-
 		stream << ENDLINE;
+	}
+
+
+	template <typename Type_t, typename Option1_t = memory_display_options_t::nothing, typename Option2_t = memory_display_options_t::nothing, typename Option3_t = memory_display_options_t::nothing>
+	void print_memory(const std::string &filename_line, const char *name, const Type_t *pointer, standard::size_t size, Option1_t option1 = Option1_t(), Option2_t option2 = Option2_t(), Option3_t option3 = Option3_t())
+	{
+		memory_display_options_t options(0, print_traits<Type_t>::default_base, current_byte_order());
+		options.set_option(option1);
+		options.set_option(option2);
+		options.set_option(option3);
+
+		print_memory_impl(filename_line, name, pointer, size, options);
 	}
 
 }
