@@ -8,6 +8,8 @@ project(
 	LANGUAGES CXX
 )
 
+enable_testing()
+
 add_library(trace-out)
 add_library(trace-out::lib ALIAS trace-out)
 
