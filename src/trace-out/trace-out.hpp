@@ -43,7 +43,7 @@
 				trace_out::detail::range(TRACE_OUT_FILENAME_LINE, #begin, #end_OR_how_much, (begin), (end_OR_how_much));
 
 	#define $m(pointer, ...) \
-				trace_out::detail::print_memory(TRACE_OUT_FILENAME_LINE, #pointer, pointer, ##__VA_ARGS__);
+				trace_out::detail::print_memory(TRACE_OUT_FILENAME_LINE, #pointer, reinterpret_cast<const trace_out::detail::standard::uint8_t *>(pointer), ##__VA_ARGS__);
 
 	#define $f \
 				trace_out::detail::function_printer trace_out_private__unify(trace_out_f) = trace_out::detail::make_function_printer(TRACE_OUT_FILENAME_LINE, trace_out_private__strip_namespaces(TRACE_OUT_FUNCTION_SIGNATURE));
