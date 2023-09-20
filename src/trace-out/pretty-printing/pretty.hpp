@@ -4,6 +4,7 @@
 
 #include "trace-out/stuff/platform-detection.hpp"
 #include "trace-out/stuff/stuff.hpp"
+#include "trace-out/stuff/has-member.hpp"
 
 
 namespace trace_out { namespace detail

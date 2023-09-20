@@ -87,7 +87,6 @@ namespace trace_out { namespace detail
 	}
 
 
-
 	bool is_delimiter(std::string::value_type character)
 	{
 		switch (character)
