@@ -9,28 +9,28 @@ namespace trace_out { namespace detail { namespace system
 
 	typedef struct _mutex *mutex_t;
 
-	mutex_t mutex_new();
-	void mutex_delete(mutex_t mutex);
-	void mutex_lock(mutex_t mutex);
-	void mutex_unlock(mutex_t mutex);
+	inline mutex_t mutex_new();
+	inline void mutex_delete(mutex_t mutex);
+	inline void mutex_lock(mutex_t mutex);
+	inline void mutex_unlock(mutex_t mutex);
 
 
 	class mutex
 	{
 	public:
-		mutex();
+		inline mutex();
 
-		void lock();
-		void unlock();
+		inline void lock();
+		inline void unlock();
 
 	private:
-		mutex(const mutex &another);
-		mutex &operator =(const mutex &another);
+		inline mutex(const mutex &another);
+		inline mutex &operator =(const mutex &another);
 
 #if TRACE_OUT_CPP_VERSION >= 201103L
 
-		mutex(mutex &&another);
-		mutex &operator =(mutex &&another);
+		inline mutex(mutex &&another);
+		inline mutex &operator =(mutex &&another);
 
 #endif // TRACE_OUT_CPP_VERSION >= 201103L
 
@@ -40,4 +40,125 @@ namespace trace_out { namespace detail { namespace system
 }
 }
 }
+
+namespace trace_out { namespace detail { namespace system
+{
+
+	mutex::mutex()
+		:
+		_handle(mutex_new(), mutex_delete)
+	{
+	}
+
+
+	void mutex::lock()
+	{
+		mutex_lock(_handle.get());
+	}
+
+
+	void mutex::unlock()
+	{
+		mutex_unlock(_handle.get());
+	}
+
+}
+}
+}
+
+#if defined(TRACE_OUT_POSIX)
+
+#include <cstddef>
+#include <cassert> // [amalgamate:leave]
+#include <pthread.h> // [amalgamate:leave]
+
+namespace trace_out { namespace detail { namespace system
+{
+
+	struct _mutex
+	{
+		pthread_mutex_t value;
+	};
+
+
+	mutex_t mutex_new()
+	{
+		mutex_t mutex = new _mutex;
+		int retval = pthread_mutex_init(&mutex->value, NULL);
+		assert(retval == 0);
+
+		return mutex;
+	}
+
+
+	void mutex_delete(mutex_t mutex)
+	{
+		int retval = pthread_mutex_destroy(&mutex->value);
+		assert(retval == 0);
+
+		delete mutex;
+	}
+
+
+	void mutex_lock(mutex_t mutex)
+	{
+		int retval = pthread_mutex_lock(&mutex->value);
+		assert(retval == 0);
+	}
+
+
+	void mutex_unlock(mutex_t mutex)
+	{
+		int retval = pthread_mutex_unlock(&mutex->value);
+		assert(retval == 0);
+	}
+
+}
+}
+}
+
+#elif defined(TRACE_OUT_WINDOWS)
+
+#include <windows.h> // [amalgamate:leave]
+
+namespace trace_out { namespace detail { namespace system
+{
+
+	struct _mutex
+	{
+		CRITICAL_SECTION value;
+	};
+
+
+	mutex_t mutex_new()
+	{
+		mutex_t mutex = new _mutex;
+		InitializeCriticalSection(&mutex->value);
+
+		return mutex;
+	}
+
+
+	void mutex_delete(mutex_t mutex)
+	{
+		DeleteCriticalSection(&mutex->value);
+	}
+
+
+	void mutex_lock(mutex_t mutex)
+	{
+		EnterCriticalSection(&mutex->value);
+	}
+
+
+	void mutex_unlock(mutex_t mutex)
+	{
+		LeaveCriticalSection(&mutex->value);
+	}
+
+}
+}
+}
+
+#endif
 
