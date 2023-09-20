@@ -1,6 +1,6 @@
 #pragma once
 
-#include "trace-out/stuff/stuff.hpp"
+#include "trace-out/stuff/nothing.hpp"
 #include <string>
 #include <sstream>
 

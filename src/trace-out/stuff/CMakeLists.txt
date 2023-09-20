@@ -10,5 +10,6 @@ target_sources(trace-out
 		filename-line.hpp
 		macro-magic.hpp
 		template-magic.hpp
+		nothing.hpp
 )
 
