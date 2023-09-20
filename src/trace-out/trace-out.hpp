@@ -15,6 +15,7 @@
 #include "trace-out/system/time.hpp"
 #include "trace-out/stuff/stuff.hpp"
 #include "trace-out/stuff/strip-namespaces.hpp"
+#include "trace-out/stuff/filename-line.hpp"
 
 
 #if defined(TRACE_OUT_CLANG)

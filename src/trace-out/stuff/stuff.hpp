@@ -1,10 +1,7 @@
 #pragma once
 
-#include <cstdarg>
 #include <cstring>
 #include <string>
-#include <ios>
-#include <sstream>
 
 #include "trace-out/standard/integer.hpp"
 #include "trace-out/stuff/platform-detection.hpp"
@@ -37,10 +34,6 @@
 			trace_out_private__quotize_impl(something)
 
 
-#define TRACE_OUT_FILENAME_LINE \
-			(trace_out::detail::filename_line_field(trace_out::detail::filename_from_path(__FILE__), static_cast<unsigned long>(__LINE__)))
-
-
 #if defined(TRACE_OUT_CLANG) || defined(TRACE_OUT_GCC) || defined(TRACE_OUT_MINGW)
 	#define TRACE_OUT_FUNCTION_SIGNATURE __PRETTY_FUNCTION__
 #elif defined(TRACE_OUT_MVS)
@@ -54,9 +47,6 @@ namespace trace_out { namespace detail
 {
 
 	struct nothing {};
-
-	const std::string filename_from_path(const char *path);
-	const std::string filename_line_field(const std::string &file, unsigned long line);
 
 	template <typename Type_t>
 	Type_t &reference(Type_t &object);

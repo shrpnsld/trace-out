@@ -9,5 +9,6 @@ target_sources(trace-out
 		stuff.hpp
 		to-string.hpp
 		strip-namespaces.hpp
+		filename-line.hpp
 )
 
