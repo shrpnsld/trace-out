@@ -14,6 +14,7 @@
 #include "trace-out/pretty-printing/time-printer.hpp"
 #include "trace-out/system/time.hpp"
 #include "trace-out/stuff/stuff.hpp"
+#include "trace-out/stuff/strip-namespaces.hpp"
 
 
 #if defined(TRACE_OUT_CLANG)

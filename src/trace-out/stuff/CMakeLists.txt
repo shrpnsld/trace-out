@@ -8,5 +8,6 @@ target_sources(trace-out
 		stuff.cpp
 		stuff.hpp
 		to-string.hpp
+		strip-namespaces.hpp
 )
 
