@@ -9,6 +9,7 @@
 #include "trace-out/pretty-printing/watch-printer.hpp"
 #include "trace-out/pretty-printing/range-printer.hpp"
 #include "trace-out/pretty-printing/function-printer.hpp"
+#include "trace-out/pretty-printing/return-printer.hpp"
 #include "trace-out/pretty-printing/memory-printer.hpp"
 #include "trace-out/pretty-printing/statements-printer.hpp"
 #include "trace-out/pretty-printing/time-printer.hpp"
