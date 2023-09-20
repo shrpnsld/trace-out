@@ -16,6 +16,7 @@
 #include "trace-out/stuff/stuff.hpp"
 #include "trace-out/stuff/strip-namespaces.hpp"
 #include "trace-out/stuff/filename-line.hpp"
+#include "trace-out/stuff/macro-magic.hpp"
 
 
 #if defined(TRACE_OUT_CLANG)

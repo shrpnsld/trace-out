@@ -8,5 +8,6 @@ target_sources(trace-out
 		to-string.hpp
 		strip-namespaces.hpp
 		filename-line.hpp
+		macro-magic.hpp
 )
 

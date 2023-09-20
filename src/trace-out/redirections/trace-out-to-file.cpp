@@ -2,7 +2,7 @@
 #include <cassert>
 
 #include "trace-out/standard/integer.hpp"
-#include "trace-out/stuff/stuff.hpp"
+#include "trace-out/stuff/macro-magic.hpp"
 
 
 #if !defined(TRACE_OUT_TO_FILE)
