@@ -9,30 +9,30 @@ namespace trace_out { namespace detail { namespace system
 
 	typedef struct _tlskey *tlskey_t;
 
-	tlskey_t tls_new_key();
-	void tls_delete_key(tlskey_t key);
-	void *tls_get(tlskey_t key);
-	void tls_set(tlskey_t key, void *data);
+	inline tlskey_t tls_new_key();
+	inline void tls_delete_key(tlskey_t key);
+	inline void *tls_get(tlskey_t key);
+	inline void tls_set(tlskey_t key, void *data);
 
 
 	template <typename Type_t>
 	class tls
 	{
 	public:
-		tls();
-		~tls();
+		inline tls();
+		inline ~tls();
 
-		void set(const Type_t &value);
-		const Type_t &get() const;
+		inline void set(const Type_t &value);
+		inline const Type_t &get() const;
 
 	private:
-		tls(const tls &another);
-		tls &operator =(const tls &another);
+		inline tls(const tls &another);
+		inline tls &operator =(const tls &another);
 
 #if TRACE_OUT_CPP_VERSION >= 201103L
 
-		tls(tls &&another);
-		tls &operator =(tls &&another);
+		inline tls(tls &&another);
+		inline tls &operator =(tls &&another);
 
 #endif // TRACE_OUT_CPP_VERSION >= 201103L
 
@@ -91,4 +91,106 @@ namespace trace_out { namespace detail { namespace system
 }
 }
 }
+
+#if defined(TRACE_OUT_POSIX)
+
+#include <cstddef>
+#include <cassert> // [amalgamate:leave]
+#include <pthread.h> // [amalgamate:leave]
+
+namespace trace_out { namespace detail { namespace system
+{
+
+	struct _tlskey
+	{
+		pthread_key_t value;
+	};
+
+
+	tlskey_t tls_new_key()
+	{
+		tlskey_t key = new _tlskey;
+		int retval = pthread_key_create(&key->value, NULL);
+		assert(retval == 0);
+
+		return key;
+	}
+
+
+	void tls_delete_key(tlskey_t key)
+	{
+		int retval = pthread_key_delete(key->value);
+		assert(retval == 0);
+
+		delete key;
+	}
+
+
+	void *tls_get(tlskey_t key)
+	{
+		return pthread_getspecific(key->value);
+	}
+
+
+	void tls_set(tlskey_t key, void *data)
+	{
+		int retval = pthread_setspecific(key->value, data);
+		assert(retval == 0);
+	}
+
+}
+}
+}
+
+#elif defined(TRACE_OUT_WINDOWS)
+
+#include <cassert> // [amalgamate:leave]
+#include <windows.h> // [amalgamate:leave]
+
+namespace trace_out { namespace detail { namespace system
+{
+
+	struct _tlskey
+	{
+		DWORD value;
+	};
+
+
+	tlskey_t tls_new_key()
+	{
+		tlskey_t key = new _tlskey;
+		DWORD retval = TlsAlloc();
+		assert(retval != TLS_OUT_OF_INDEXES);
+
+		key->value = retval;
+		return key;
+	}
+
+
+	void tls_delete_key(tlskey_t key)
+	{
+		int retval = TlsFree(key->value);
+		assert(retval != 0);
+
+		delete key;
+	}
+
+
+	void *tls_get(tlskey_t key)
+	{
+		return TlsGetValue(key->value);
+	}
+
+
+	void tls_set(tlskey_t key, void *data)
+	{
+		BOOL retval = TlsSetValue(key->value, data);
+		assert(retval != 0);
+	}
+
+}
+}
+}
+
+#endif
 
