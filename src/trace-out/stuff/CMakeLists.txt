@@ -7,5 +7,6 @@ target_sources(trace-out
 		statistics.hpp
 		stuff.cpp
 		stuff.hpp
+		to-string.hpp
 )
 

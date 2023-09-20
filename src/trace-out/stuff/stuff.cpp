@@ -64,11 +64,6 @@ namespace trace_out { namespace detail
 	}
 
 
-	void apply_io_manipulators(std::ostream &, const nothing &)
-	{
-	}
-
-
 	std::string first_token(const std::string &tokens)
 	{
 		return tokens.substr(0, tokens.find(','));
