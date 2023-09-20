@@ -11,5 +11,6 @@ target_sources(trace-out
 		macro-magic.hpp
 		template-magic.hpp
 		nothing.hpp
+		try-memory.hpp
 )
 

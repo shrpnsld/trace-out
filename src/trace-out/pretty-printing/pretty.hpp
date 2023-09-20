@@ -3,7 +3,7 @@
 #include <string>
 
 #include "trace-out/stuff/platform-detection.hpp"
-#include "trace-out/stuff/stuff.hpp"
+#include "trace-out/stuff/try-memory.hpp"
 #include "trace-out/stuff/has-member.hpp"
 
 
@@ -202,7 +202,7 @@ namespace trace_out { namespace detail
 	template <typename Type_t>
 	const Type_t &pretty<Type_t>::get() const
 	{
-		crash_on_bad_memory(_data);
+		try_memory(_data);
 
 		return _data;
 	}
@@ -266,7 +266,7 @@ namespace trace_out { namespace detail
 	template <typename Type_t>
 	const Type_t &pretty_structural<Type_t>::get() const
 	{
-		crash_on_bad_memory(_data);
+		try_memory(_data);
 
 		return _data;
 	}
@@ -299,7 +299,7 @@ namespace trace_out { namespace detail
 	template <typename Type_t>
 	const Type_t &pretty_iterable<Type_t>::get() const
 	{
-		crash_on_bad_memory(_data);
+		try_memory(_data);
 
 		return _data;
 	}
@@ -334,7 +334,7 @@ namespace trace_out { namespace detail
 	template <typename Iterator_t>
 	const Iterator_t &pretty_range_closed<Iterator_t>::get_begin() const
 	{
-		crash_on_bad_memory(_begin);
+		try_memory(_begin);
 
 		return _begin;
 	}
@@ -343,7 +343,7 @@ namespace trace_out { namespace detail
 	template <typename Iterator_t>
 	const Iterator_t &pretty_range_closed<Iterator_t>::get_end() const
 	{
-		crash_on_bad_memory(_end);
+		try_memory(_end);
 
 		return _end;
 	}
@@ -370,7 +370,7 @@ namespace trace_out { namespace detail
 	template <typename Iterator_t>
 	const Iterator_t &pretty_range_open<Iterator_t>::get_begin() const
 	{
-		crash_on_bad_memory(_begin);
+		try_memory(_begin);
 
 		return _begin;
 	}
@@ -379,7 +379,7 @@ namespace trace_out { namespace detail
 	template <typename Iterator_t>
 	const std::size_t &pretty_range_open<Iterator_t>::get_how_much() const
 	{
-		crash_on_bad_memory(_how_much);
+		try_memory(_how_much);
 
 		return _how_much;
 	}
