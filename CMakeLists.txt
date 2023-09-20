@@ -10,11 +10,11 @@ project(
 
 enable_testing()
 
-add_library(trace-out)
+add_library(trace-out INTERFACE)
 add_library(trace-out::lib ALIAS trace-out)
 
 target_include_directories(trace-out
-	PUBLIC src
+	INTERFACE src
 )
 
 add_subdirectory(src)
