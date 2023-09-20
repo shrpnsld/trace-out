@@ -8,7 +8,6 @@ target_sources(trace-out
 		out-stream.hpp
 		pretty.hpp
 		range-printer.hpp
-		statements-printer.cpp
 		statements-printer.hpp
 		time-printer.cpp
 		time-printer.hpp
