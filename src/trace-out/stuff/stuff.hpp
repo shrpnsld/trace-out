@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstring>
-#include <string>
 
 #include "trace-out/standard/integer.hpp"
 #include "trace-out/stuff/platform-detection.hpp"
@@ -62,10 +61,6 @@ namespace trace_out { namespace detail
 
 	template <typename Type_t>
 	void crash_on_bad_memory(const Type_t &variable);
-
-
-	std::string first_token(const std::string &tokens);
-	std::string rest_tokens(const std::string &tokens);
 
 
 	template <typename First_t, typename Second_t>

@@ -5,7 +5,6 @@ target_sources(trace-out
 		platform-detection.hpp
 		resource.hpp
 		statistics.hpp
-		stuff.cpp
 		stuff.hpp
 		to-string.hpp
 		strip-namespaces.hpp

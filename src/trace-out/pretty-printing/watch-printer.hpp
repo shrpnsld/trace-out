@@ -39,6 +39,10 @@ namespace trace_out { namespace detail
 namespace trace_out { namespace detail
 {
 
+	inline std::string first_token(const std::string &tokens);
+	inline std::string rest_tokens(const std::string &tokens);
+
+
 #if TRACE_OUT_CPP_VERSION < 201103L
 
 	template <typename Type_t>
@@ -103,6 +107,24 @@ namespace trace_out { namespace detail
 	}
 
 #endif // TRACE_OUT_CPP_VERSION < 201103L
+
+
+	std::string first_token(const std::string &tokens)
+	{
+		return tokens.substr(0, tokens.find(','));
+	}
+
+
+	std::string rest_tokens(const std::string &tokens)
+	{
+		standard::size_t from = tokens.find(',') + 1;
+		while (tokens[from] == ' ')
+		{
+			++from;
+		}
+
+		return tokens.substr(from, tokens.size());
+	}
 
 }
 }
