@@ -1,5 +1,3 @@
-#include "trace-out/stuff/constants.hpp"
-
 #include "trace-out/pretty-printing/function-printer.hpp"
 
 
