@@ -1,7 +1,7 @@
 target_sources(trace-out
 	PRIVATE
-		trace-out-to-file.cpp
-		trace-out-to-stdout.cpp
-		trace-out-to-wdo.cpp
+		trace-out-to-file.hpp
+		trace-out-to-stdout.hpp
+		trace-out-to-wdo.hpp
 )
 

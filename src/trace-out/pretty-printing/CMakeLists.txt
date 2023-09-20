@@ -3,7 +3,6 @@ target_sources(trace-out
 		function-printer.hpp
 		return-printer.hpp
 		memory-printer.hpp
-		out-stream.cpp
 		out-stream.hpp
 		pretty.hpp
 		range-printer.hpp

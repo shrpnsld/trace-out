@@ -6,7 +6,17 @@
 #include "trace-out/standard/integer.hpp"
 
 
-namespace trace_out_to_wdo
+namespace trace_out_stream
+{
+
+	inline void print(const char *string);
+	inline void flush();
+	inline unsigned int width();
+
+}
+
+
+namespace trace_out_stream
 {
 
 	void print(const char *string)
@@ -20,7 +30,7 @@ namespace trace_out_to_wdo
 	}
 
 
-	trace_out::detail::standard::size_t width()
+	unsigned int width()
 	{
 		return 120;
 	}
