@@ -3,7 +3,6 @@
 #include <string>
 
 #include "trace-out/stuff/platform-detection.hpp"
-#include "trace-out/stuff/stuff.hpp"
 #include "trace-out/pretty-printing/pretty.hpp"
 #include "trace-out/pretty-printing/out-stream.hpp"
 

@@ -2,7 +2,6 @@
 #include <algorithm>
 #include <iostream>
 
-#include "trace-out/stuff/stuff.hpp"
 #include "trace-out/stuff/statistics.hpp"
 #include "trace-out/pretty-printing/out-stream.hpp"
 

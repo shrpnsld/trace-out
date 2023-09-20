@@ -5,7 +5,6 @@
 #include <sstream>
 #include <string>
 #include "trace-out/standard/integer.hpp"
-#include "trace-out/stuff/stuff.hpp"
 #include "trace-out/stuff/nothing.hpp"
 #include "trace-out/stuff/to-string.hpp"
 #include "trace-out/pretty-printing/out-stream.hpp"

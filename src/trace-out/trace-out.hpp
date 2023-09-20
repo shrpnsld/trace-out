@@ -13,7 +13,6 @@
 #include "trace-out/pretty-printing/statements-printer.hpp"
 #include "trace-out/pretty-printing/time-printer.hpp"
 #include "trace-out/system/time.hpp"
-#include "trace-out/stuff/stuff.hpp"
 #include "trace-out/stuff/strip-namespaces.hpp"
 #include "trace-out/stuff/filename-line.hpp"
 #include "trace-out/stuff/macro-magic.hpp"

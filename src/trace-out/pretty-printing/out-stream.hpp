@@ -10,7 +10,6 @@
 #endif
 
 #include "trace-out/standard/integer.hpp"
-#include "trace-out/stuff/stuff.hpp"
 #include "trace-out/stuff/to-string.hpp"
 #include "trace-out/stuff/has-member.hpp"
 #include "trace-out/pretty-printing/pretty.hpp"
