@@ -444,7 +444,7 @@ namespace trace_out { namespace detail
 		}
 
 		standard::uintptr_t numeric_value = reinterpret_cast<standard::uintptr_t>(value.get());
-		return stream << to_string(numeric_value, std::hex, std::showbase, NULL);
+		return stream << to_string(numeric_value, std::hex, std::showbase);
 	}
 
 

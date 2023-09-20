@@ -95,8 +95,6 @@ namespace trace_out { namespace detail
 
 	struct memory_display_options_t
 	{
-		struct nothing {};
-
 		memory_display_options_t(base_t base, standard::size_t grouping, byte_order_t byte_order, standard::size_t column_count);
 
 		void set_option(const bin_or_hex_option &option);
@@ -227,7 +225,7 @@ namespace trace_out { namespace detail
 	{
 		Type_t number = *reinterpret_cast<const Type_t *>(chunk);
 		typename printable_number_t<Type_t>::type printable_number = number;
-		std::string printed_value = (std::stringstream() << std::setprecision(std::numeric_limits<Type_t>::digits10) << printable_number).str();
+		std::string printed_value = to_string(printable_number, std::setprecision(std::numeric_limits<Type_t>::digits10));
 
 		for (standard::size_t padding_width = field_width - printed_value.size(); padding_width > 0; --padding_width)
 		{

@@ -64,18 +64,8 @@ namespace trace_out { namespace detail
 	}
 
 
-	void apply_io_manipulators(std::ostream &stream, va_list manipulators)
+	void apply_io_manipulators(std::ostream &, const nothing &)
 	{
-		for (;;)
-		{
-			manipulator_t manipulator = va_arg(manipulators, manipulator_t);
-			if (manipulator == NULL)
-			{
-				break;
-			}
-
-			stream << manipulator;
-		}
 	}
 
 
