@@ -133,7 +133,7 @@ namespace trace_out { namespace detail
 	};
 
 
-	template <typename Option1_t = memory_display_options_t::nothing, typename Option2_t = memory_display_options_t::nothing>
+	template <typename Option1_t = nothing, typename Option2_t = nothing>
 	void print_memory(const std::string &filename_line, const char *name, const standard::uint8_t *memory, standard::size_t size, Option1_t option1 = Option1_t(), Option2_t option2 = Option2_t());
 
 }
@@ -199,7 +199,7 @@ namespace trace_out { namespace detail
 				column = 0;
 			}
 
-			stream << " ";
+			stream << " " << FLUSH;
 			print_chunk(stream, chunk, options.grouping, field_width);
 			++column;
 		}
@@ -211,7 +211,7 @@ namespace trace_out { namespace detail
 			stream << NEWLINE << NEWLINE << "leftovers:" << NEWLINE << make_pretty(static_cast<const void *>(leftovers)) << ":";
 			for ( ; leftovers < leftovers_end; ++leftovers)
 			{
-				stream << " ";
+				stream << " " << FLUSH;
 				print_hexadecimal_chunk(stream, leftovers, 1, 2);
 			}
 		}
