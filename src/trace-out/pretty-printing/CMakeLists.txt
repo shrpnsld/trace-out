@@ -2,7 +2,6 @@ target_sources(trace-out
 	PRIVATE
 		function-printer.hpp
 		return-printer.hpp
-		memory-printer.cpp
 		memory-printer.hpp
 		out-stream.cpp
 		out-stream.hpp
