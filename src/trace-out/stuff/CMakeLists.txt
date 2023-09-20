@@ -9,5 +9,6 @@ target_sources(trace-out
 		strip-namespaces.hpp
 		filename-line.hpp
 		macro-magic.hpp
+		template-magic.hpp
 )
 
