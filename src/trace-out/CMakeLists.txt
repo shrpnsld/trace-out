@@ -1,11 +1,35 @@
 target_sources(trace-out
 	PUBLIC
+		console.hpp
+		filename-line.hpp
+		function-printer.hpp
+		has-member.hpp
+		integer.hpp
+		macro-magic.hpp
+		memory-printer.hpp
+		mutex.hpp
+		nothing.hpp
+		out-stream.hpp
+		platform-detection.hpp
+		pretty.hpp
+		printfamily.hpp
+		range-printer.hpp
+		resource.hpp
+		return-printer.hpp
+		statements-printer.hpp
+		statistics.hpp
+		strip-namespaces.hpp
+		template-magic.hpp
+		thread-local-storage.hpp
+		thread.hpp
+		time-printer.hpp
+		time.hpp
+		to-string.hpp
+		trace-out-to-file.hpp
+		trace-out-to-stdout.hpp
+		trace-out-to-wdo.hpp
 		trace-out.hpp
+		try-memory.hpp
+		watch-printer.hpp
 )
-
-add_subdirectory(pretty-printing)
-add_subdirectory(redirections)
-add_subdirectory(standard)
-add_subdirectory(stuff)
-add_subdirectory(system)
 

@@ -1,19 +1,19 @@
 #pragma once
 
-#include "trace-out/pretty-printing/function-printer.hpp"
-#include "trace-out/pretty-printing/memory-printer.hpp"
-#include "trace-out/pretty-printing/out-stream.hpp"
-#include "trace-out/pretty-printing/range-printer.hpp"
-#include "trace-out/pretty-printing/return-printer.hpp"
-#include "trace-out/pretty-printing/statements-printer.hpp"
-#include "trace-out/pretty-printing/time-printer.hpp"
-#include "trace-out/pretty-printing/watch-printer.hpp"
-#include "trace-out/standard/integer.hpp"
-#include "trace-out/stuff/filename-line.hpp"
-#include "trace-out/stuff/macro-magic.hpp"
-#include "trace-out/stuff/platform-detection.hpp"
-#include "trace-out/stuff/strip-namespaces.hpp"
-#include "trace-out/system/time.hpp"
+#include "trace-out/function-printer.hpp"
+#include "trace-out/memory-printer.hpp"
+#include "trace-out/out-stream.hpp"
+#include "trace-out/range-printer.hpp"
+#include "trace-out/return-printer.hpp"
+#include "trace-out/statements-printer.hpp"
+#include "trace-out/time-printer.hpp"
+#include "trace-out/watch-printer.hpp"
+#include "trace-out/integer.hpp"
+#include "trace-out/filename-line.hpp"
+#include "trace-out/macro-magic.hpp"
+#include "trace-out/platform-detection.hpp"
+#include "trace-out/strip-namespaces.hpp"
+#include "trace-out/time.hpp"
 #include <ctime>
 #include <vector>
 
