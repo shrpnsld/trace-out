@@ -5,35 +5,37 @@
 
 #include "trace-out/standard/integer.hpp"
 
+//
+// Public
 
 namespace trace_out_stream
 {
 
-	inline void print(const char *string);
-	inline void flush();
-	inline unsigned int width();
+inline void print(const char *string);
+inline void flush();
+inline unsigned int width();
 
 }
 
+//
+// Implementation
 
 namespace trace_out_stream
 {
 
-	void print(const char *string)
-	{
-		OutputDebugStringA(string);
-	}
+void print(const char *string)
+{
+	OutputDebugStringA(string);
+}
 
+void flush()
+{
+}
 
-	void flush()
-	{
-	}
-
-
-	unsigned int width()
-	{
-		return 120;
-	}
+unsigned int width()
+{
+	return 120;
+}
 
 }
 

@@ -1,5 +1,7 @@
 #pragma once
 
+//
+// Public
 
 #if defined(__clang__)
 	#define TRACE_OUT_CLANG
@@ -22,7 +24,6 @@
 #else
 	#error Failed to detect platform
 #endif
-
 
 // Visual Studio was defining '__cplusplus' macro as '199711L', and now they have '/Zc:__cplusplus' to fix this.
 // If, for some reason, you don't want to use this option, you can define macro 'TRACE_OUT_CPP_VERSION' with a valid '__cplusplus' macro value

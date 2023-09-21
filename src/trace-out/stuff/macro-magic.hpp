@@ -2,6 +2,8 @@
 
 #include "trace-out/stuff/platform-detection.hpp"
 
+//
+// Public
 
 #define trace_out_private__concat_impl(a, b) \
 			a##b

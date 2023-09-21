@@ -1,10 +1,11 @@
 #pragma once
 
+//
+// Public
 
-namespace trace_out { namespace detail
+namespace trace_out
 {
 
-	struct nothing {};
+struct nothing {};
 
-}
 }
