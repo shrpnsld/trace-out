@@ -1,6 +1,7 @@
 #include "trace-out/trace-out.hpp"
 #include "test-stream.hpp"
 #include <catch2/catch_test_macros.hpp>
+#include <sstream>
 #include <vector>
 
 TEST_CASE("indentation inside '$if(...)'", "[indentation][if]")
@@ -318,26 +319,30 @@ TEST_CASE("indentation outside '$r(...)'", "[indentation][r]")
 	REQUIRE(test::stream.str() == expected);
 }
 
-//TEST_CASE("indentation outside '$m(...)'", "[indentation][m]")
-//{
-//	test::stream.str(std::string {});
-//
-//	int some {456};
-//	$if (some == 456)
-//	{
-//		... memory ...
-//		$m(memory ...)
-//	}
-//
-//	const char *expected {
-//		"if (some == 456) => true\n"
-//		"{\n"
-//		"    ...\n"
-//		"}\n"
-//		"\n"
-//	};
-//	REQUIRE(test::stream.str() == expected);
-//}
+TEST_CASE("indentation outside '$m(...)'", "[indentation][m]")
+{
+	test::stream.str(std::string {});
+
+	int some {456};
+	char str[11] {"hellomoto!"};
+	$if (some == 456)
+	{
+		$m(str, sizeof(str))
+	}
+
+	std::stringstream expected;
+	expected <<
+		"if (some == 456) => true\n"
+		"{\n"
+		"    str, 11 bytes of 1-byte hexadecimal\n"
+		"        " << static_cast<const void *>(str + 0) << ": 68 65 6c 6c 6f 6d 6f 74\n"
+		"        " << static_cast<const void *>(str + 8) << ": 6f 21 00\n"
+		"        \n"
+		"}\n"
+		"\n";
+
+	REQUIRE(test::stream.str() == expected.str());
+}
 
 TEST_CASE("indentation outside '$t(...)'", "[indentation][t]")
 {

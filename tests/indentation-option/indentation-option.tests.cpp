@@ -318,26 +318,29 @@ TEST_CASE("TRACE_OUT_INDENTATION outside '$r(...)'", "[indentation][TRACE_OUT_IN
 	REQUIRE(test::stream.str() == expected);
 }
 
-//TEST_CASE("TRACE_OUT_INDENTATION outside '$m(...)'", "[indentation][TRACE_OUT_INDENTATION][m]")
-//{
-//	test::stream.str(std::string {});
-//
-//	int some {456};
-//	$if (some == 456)
-//	{
-//		... memory ...
-//		$m(memory ...)
-//	}
-//
-//	const char *expected {
-//		"if (some == 456) => true\n"
-//		"{\n"
-//		"    ...\n"
-//		"}\n"
-//		"\n"
-//	};
-//	REQUIRE(test::stream.str() == expected);
-//}
+TEST_CASE("TRACE_OUT_INDENTATION outside '$m(...)'", "[indentation][TRACE_OUT_INDENTATION][m]")
+{
+	test::stream.str(std::string {});
+
+	int some {456};
+	char str[11] {"hellomoto!"};
+	$if (some == 456)
+	{
+		$m(str, sizeof(str))
+	}
+
+	std::stringstream expected;
+	expected <<
+		"if (some == 456) => true\n"
+		"{\n"
+		"  str, 11 bytes of 1-byte hexadecimal\n"
+		"    " << static_cast<const void *>(str + 0) << ": 68 65 6c 6c 6f 6d 6f 74 6f 21 00\n"
+		"    \n"
+		"}\n"
+		"\n";
+
+	REQUIRE(test::stream.str() == expected.str());
+}
 
 TEST_CASE("TRACE_OUT_INDENTATION outside '$t(...)'", "[indentation][TRACE_OUT_INDENTATION][t]")
 {
