@@ -1,4 +1,4 @@
-#include "helpers/test-stream.hpp"
+#include "test-stream.hpp"
 
 namespace test
 {

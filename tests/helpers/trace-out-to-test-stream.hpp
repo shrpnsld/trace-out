@@ -1,6 +1,6 @@
 #pragma once
 
-#include "helpers/test-stream.hpp"
+#include "test-stream.hpp"
 
 namespace trace_out_stream
 {
