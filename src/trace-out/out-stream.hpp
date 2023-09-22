@@ -313,20 +313,20 @@ namespace trace_out
 
 	void out_stream_mutex_lock()
 	{
-#if defined(TRACE_OUT_OUTPUT_SYNC_ON)
+#if defined(TRACE_OUT_SYNC_OUTPUT)
 
 		private_out_stream_mutex().lock();
 
-#endif // defined(TRACE_OUT_OUTPUT_SYNC_ON)
+#endif // defined(TRACE_OUT_SYNC_OUTPUT)
 	}
 
 	void out_stream_mutex_unlock()
 	{
-#if defined(TRACE_OUT_OUTPUT_SYNC_ON)
+#if defined(TRACE_OUT_SYNC_OUTPUT)
 
 		private_out_stream_mutex().unlock();
 
-#endif // defined(TRACE_OUT_OUTPUT_SYNC_ON)
+#endif // defined(TRACE_OUT_SYNC_OUTPUT)
 	}
 
 	inline system::tls<std::string> &private_tls_thread_name()
