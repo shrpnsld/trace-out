@@ -27,7 +27,7 @@
 	#pragma GCC diagnostic ignored "-Wvariadic-macros" // seems it does not turn off the warning if there's no C++11
 #endif
 
-#if (!defined(NDEBUG) && !defined(TRACE_OUT_OFF)) || defined(TRACE_OUT_ON)
+#if !defined(TRACE_OUT_OFF)
 
 //
 // Public
@@ -136,7 +136,7 @@
 				results.clear(); \
 			}
 
-#elif defined(NDEBUG) || defined(TRACE_OUT_OFF)
+#else
 
 #define $e(...) \
 			__VA_ARGS__
