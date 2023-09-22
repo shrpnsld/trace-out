@@ -15,8 +15,8 @@
 namespace trace_out
 {
 
-inline const std::string filename_from_path(const char *path);
-inline const std::string filename_line_field(const std::string &file, unsigned long line);
+static const standard::size_t FILENAME_FIELD_WIDTH = 20;
+static const standard::size_t LINE_FIELD_WIDTH = 4;
 
 }
 
@@ -28,8 +28,6 @@ namespace trace_out
 
 static const char FILENAME_FIELD_EXCESS_PADDING[] = "~";
 static const standard::size_t FILENAME_FIELD_EXCESS_PADDING_SIZE = sizeof(FILENAME_FIELD_EXCESS_PADDING);
-static const standard::size_t FILENAME_FIELD_WIDTH = 20;
-static const standard::size_t LINE_FIELD_WIDTH = 4;
 
 static const char FILE_PATH_COMPONENT_DELIMITER =
 #if defined(TRACE_OUT_POSIX)
@@ -38,6 +36,9 @@ static const char FILE_PATH_COMPONENT_DELIMITER =
 	'\\'
 #endif
 	;
+
+inline const std::string filename_from_path(const char *path);
+inline const std::string filename_line_field(const std::string &file, unsigned long line);
 
 }
 

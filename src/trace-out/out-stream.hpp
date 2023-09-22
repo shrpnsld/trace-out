@@ -1,5 +1,6 @@
 #pragma once
 
+#include "trace-out/filename-line.hpp"
 #include "trace-out/pretty.hpp"
 #include "trace-out/integer.hpp"
 #include "trace-out/printfamily.hpp"
