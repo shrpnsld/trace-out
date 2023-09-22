@@ -12,7 +12,6 @@
 #include "trace-out/filename-line.hpp"
 #include "trace-out/macro-magic.hpp"
 #include "trace-out/platform-detection.hpp"
-#include "trace-out/strip-namespaces.hpp"
 #include "trace-out/time.hpp"
 #include <ctime>
 #include <vector>
@@ -45,7 +44,7 @@
 			trace_out::print_memory(TRACE_OUT_FILENAME_LINE, #pointer, reinterpret_cast<const trace_out::standard::uint8_t *>(pointer), ##__VA_ARGS__);
 
 #define $f \
-			trace_out::function_printer trace_out_private__unify(trace_out_f) = trace_out::make_function_printer(TRACE_OUT_FILENAME_LINE, trace_out_private__strip_namespaces(TRACE_OUT_FUNCTION_SIGNATURE));
+			trace_out::function_printer trace_out_private__unify(trace_out_f) = trace_out::make_function_printer(TRACE_OUT_FILENAME_LINE, TRACE_OUT_FUNCTION_SIGNATURE);
 
 #define $return \
 			return trace_out::make_return_printer(TRACE_OUT_FILENAME_LINE) ,

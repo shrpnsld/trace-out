@@ -1,6 +1,7 @@
 #pragma once
 
 #include "trace-out/out-stream.hpp"
+#include "trace-out/strip-namespaces.hpp"
 #include <string>
 
 //
@@ -49,7 +50,7 @@ function_printer::~function_printer()
 
 function_printer make_function_printer(const std::string &filename_line, const std::string &function_signature)
 {
-	return function_printer(filename_line, function_signature);
+	return function_printer(filename_line, trace_out_private__strip_namespaces(function_signature));
 }
 
 }
