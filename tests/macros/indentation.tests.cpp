@@ -9,6 +9,7 @@ TEST_CASE("indentation inside '$if(...)'", "[indentation][if]")
 	test::stream.str(std::string {});
 
 	int some {456};
+
 	$if (some == 456)
 	{
 		$w(some)
@@ -36,23 +37,18 @@ TEST_CASE("indentation inside '$for(...)'", "[indentation][for]")
 	const char *expected {
 		"for (unsigned int i {0}; i < 5; ++i)\n"
 		"{\n"
-		"    //\n"
 		"    // for: iteration #1\n"
 		"    i = 0\n"
 		"    \n"
-		"    //\n"
 		"    // for: iteration #2\n"
 		"    i = 1\n"
 		"    \n"
-		"    //\n"
 		"    // for: iteration #3\n"
 		"    i = 2\n"
 		"    \n"
-		"    //\n"
 		"    // for: iteration #4\n"
 		"    i = 3\n"
 		"    \n"
-		"    //\n"
 		"    // for: iteration #5\n"
 		"    i = 4\n"
 		"    \n"
@@ -67,6 +63,7 @@ TEST_CASE("indentation inside '$while(...)'", "[indentation][while]")
 	test::stream.str(std::string {});
 
 	unsigned int i {0};
+
 	$while (i < 5)
 	{
 		$w(i)
@@ -76,23 +73,18 @@ TEST_CASE("indentation inside '$while(...)'", "[indentation][while]")
 	const char *expected {
 		"while (i < 5)\n"
 		"{\n"
-		"    //\n"
 		"    // while: iteration #1\n"
 		"    i = 0\n"
 		"    \n"
-		"    //\n"
 		"    // while: iteration #2\n"
 		"    i = 1\n"
 		"    \n"
-		"    //\n"
 		"    // while: iteration #3\n"
 		"    i = 2\n"
 		"    \n"
-		"    //\n"
 		"    // while: iteration #4\n"
 		"    i = 3\n"
 		"    \n"
-		"    //\n"
 		"    // while: iteration #5\n"
 		"    i = 4\n"
 		"    \n"
@@ -127,6 +119,7 @@ TEST_CASE("indentation outside '$if(...)'", "[indentation][if]")
 
 	int first {456};
 	int second {789};
+
 	$if (first > 400)
 	{
 		$w(first)
@@ -156,6 +149,7 @@ TEST_CASE("indentation outside '$for(...)'", "[indentation][for]")
 	test::stream.str(std::string {});
 
 	int first {456};
+
 	$if (first > 400)
 	{
 		$w(first)
@@ -171,7 +165,6 @@ TEST_CASE("indentation outside '$for(...)'", "[indentation][for]")
 		"    first = 456\n"
 		"    for (unsigned int i {0}; i < 1; ++i)\n"
 		"    {\n"
-		"        //\n"
 		"        // for: iteration #1\n"
 		"        i = 0\n"
 		"        \n"
@@ -188,6 +181,7 @@ TEST_CASE("indentation outside '$while(...)'", "[indentation][while]")
 	test::stream.str(std::string {});
 
 	int first {456};
+
 	$if (first > 400)
 	{
 		$w(first)
@@ -205,7 +199,6 @@ TEST_CASE("indentation outside '$while(...)'", "[indentation][while]")
 		"    first = 456\n"
 		"    while (i < 1)\n"
 		"    {\n"
-		"        //\n"
 		"        // while: iteration #1\n"
 		"        i = 0\n"
 		"        \n"
@@ -223,6 +216,7 @@ TEST_CASE("indentation outside '$f'", "[indentation][f]")
 	test::stream.str(std::string {});
 
 	int first {456};
+
 	$if (first > 400)
 	{
 		subject_func9();
@@ -263,6 +257,7 @@ TEST_CASE("indentation outside '$w(...)'", "[indentation][w]")
 	test::stream.str(std::string {});
 
 	int some {456};
+
 	$if (some == 456)
 	{
 		$w(some)
@@ -283,6 +278,7 @@ TEST_CASE("indentation outside '$e(...)'", "[indentation][e]")
 	test::stream.str(std::string {});
 
 	int some {456};
+
 	$if (some == 456)
 	{
 		$e(some);
@@ -303,6 +299,7 @@ TEST_CASE("indentation outside '$r(...)'", "[indentation][r]")
 	test::stream.str(std::string {});
 
 	int some {456};
+
 	$if (some == 456)
 	{
 		std::vector arr {1, 2, 3, 4, 5};
@@ -325,6 +322,7 @@ TEST_CASE("indentation outside '$m(...)'", "[indentation][m]")
 
 	int some {456};
 	char str[11] {"hellomoto!"};
+
 	$if (some == 456)
 	{
 		$m(str, sizeof(str))
@@ -349,6 +347,7 @@ TEST_CASE("indentation outside '$t(...)'", "[indentation][t]")
 	test::stream.str(std::string {});
 
 	int some {456};
+
 	$if (some == 456)
 	{
 		$t(some = 789;)
@@ -369,6 +368,7 @@ TEST_CASE("indentation outside '$p(...)'", "[indentation][p]")
 	test::stream.str(std::string {});
 
 	int some {456};
+
 	$if (some == 456)
 	{
 		$p("%s", "hellomoto!")

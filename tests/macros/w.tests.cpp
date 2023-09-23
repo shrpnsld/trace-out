@@ -42,21 +42,6 @@ TEST_CASE("$w(value)", "[w]")
 		REQUIRE(test::stream.str() == expected.str());
 	}
 
-	//SECTION("wchar_t")
-	//{
-	//	wchar_t subject {L'a'};
-	//	$w(subject)
-	//
-	//	expected << "subject = '" << subject << '\'' << std::endl;
-
-	//	subject = L'0';
-	//	$w(subject)
-	//
-	//	expected << "subject = '" << subject << '\'' << std::endl;
-
-	//	REQUIRE(test::stream.str() == expected.str());
-	//}
-
 	SECTION("const char *")
 	{
 		auto value = GENERATE("", "hellomoto!", "wazzzup!", "hello\nmoto!");
@@ -424,6 +409,7 @@ TEST_CASE("$w(value)", "[w]")
 			REQUIRE(test::stream.str() == expected.str());
 
 			decltype(subject) another {subject};
+
 			$w(subject)
 
 			expected << "subject = " << subject.get() << " (use_count: 2) -> 456\n";
@@ -1314,6 +1300,7 @@ TEST_CASE("$w(values...)", "[w]")
 	std::string string {"hellomoto!"};
 
 	$w(boolean, integer, floating, string)
+
 	const char *expected {
 		"boolean = true\n"
 		"integer = 456\n"

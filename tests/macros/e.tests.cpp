@@ -45,21 +45,6 @@ TEST_CASE("$e(value)", "[e]")
 		REQUIRE(test::stream.str() == expected.str());
 	}
 
-	//SECTION("wchar_t")
-	//{
-	//	wchar_t subject {L'a'};
-	//	simulated_expression($e(subject));
-	//
-	//	expected << "subject = '" << subject << '\'' << std::endl;
-
-	//	subject = L'0';
-	//	simulated_expression($e(subject));
-	//
-	//	expected << "subject = '" << subject << '\'' << std::endl;
-
-	//	REQUIRE(test::stream.str() == expected.str());
-	//}
-
 	SECTION("const char *")
 	{
 		auto value = GENERATE("", "hellomoto!", "wazzzup!", "hello\nmoto!");

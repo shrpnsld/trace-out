@@ -6,29 +6,31 @@
 void subject_func11() {$f }
 int subject_func12() { $return 789; }
 
-TEST_CASE("TRACE_OUT_MARKER with '$w(...)'", "[TRACE_OUT_MARKER][w]")
+TEST_CASE("'TRACE_OUT_MARKER' with '$w(...)'", "[TRACE_OUT_MARKER][w]")
 {
 	test::stream.str(std::string {});
 
 	const char *str {"hellomoto!"};
 
 	$w(str)
+
 	const char *expected {"@@ str = \"hellomoto!\"\n"};
 	REQUIRE(test::stream.str() == expected);
 }
 
-TEST_CASE("TRACE_OUT_MARKER with '$e(...)'", "[TRACE_OUT_MARKER][e]")
+TEST_CASE("'TRACE_OUT_MARKER' with '$e(...)'", "[TRACE_OUT_MARKER][e]")
 {
 	test::stream.str(std::string {});
 
 	const char *str {"hellomoto!"};
 
 	$e(str);
+
 	const char *expected {"@@ str = \"hellomoto!\"\n"};
 	REQUIRE(test::stream.str() == expected);
 }
 
-TEST_CASE("TRACE_OUT_MARKER with '$r(...)'", "[TRACE_OUT_MARKER][r]")
+TEST_CASE("'TRACE_OUT_MARKER' with '$r(...)'", "[TRACE_OUT_MARKER][r]")
 {
 	test::stream.str(std::string {});
 
@@ -36,11 +38,12 @@ TEST_CASE("TRACE_OUT_MARKER with '$r(...)'", "[TRACE_OUT_MARKER][r]")
 	std::size_t length {11};
 
 	$r(str, str + length)
+
 	const char *expected {"@@ [str, str + length) = ['h', 'e', 'l', 'l', 'o', 'm', 'o', 't', 'o', '!', '']\n"};
 	REQUIRE(test::stream.str() == expected);
 }
 
-TEST_CASE("TRACE_OUT_MARKER with '$m(...)'", "[TRACE_OUT_MARKER][m]")
+TEST_CASE("'TRACE_OUT_MARKER' with '$m(...)'", "[TRACE_OUT_MARKER][m]")
 {
 	test::stream.str(std::string {});
 
@@ -48,6 +51,7 @@ TEST_CASE("TRACE_OUT_MARKER with '$m(...)'", "[TRACE_OUT_MARKER][m]")
 	std::size_t length {11};
 
 	$m(str, length)
+
 	std::stringstream expected;
 	expected <<
 		"@@ str, 11 bytes of 1-byte hexadecimal\n"
@@ -57,29 +61,32 @@ TEST_CASE("TRACE_OUT_MARKER with '$m(...)'", "[TRACE_OUT_MARKER][m]")
 	REQUIRE(test::stream.str() == expected.str());
 }
 
-TEST_CASE("TRACE_OUT_MARKER with '$p(...)'", "[TRACE_OUT_MARKER][p]")
+TEST_CASE("'TRACE_OUT_MARKER' with '$p(...)'", "[TRACE_OUT_MARKER][p]")
 {
 	test::stream.str(std::string {});
 
 	$p("wazzzup!")
+
 	const char *expected {"@@ // wazzzup!\n"};
 	REQUIRE(test::stream.str() == expected);
 }
 
-TEST_CASE("TRACE_OUT_MARKER with '$t(...)'", "[TRACE_OUT_MARKER][t]")
+TEST_CASE("'TRACE_OUT_MARKER' with '$t(...)'", "[TRACE_OUT_MARKER][t]")
 {
 	test::stream.str(std::string {});
 
 	$t(char character {'h'};)
+
 	const char *expected {"@@ char character {'h'}; // trace-out: statement passed\n"};
 	REQUIRE(test::stream.str() == expected);
 }
 
-TEST_CASE("TRACE_OUT_MARKER with '$f'", "[TRACE_OUT_MARKER][f]")
+TEST_CASE("'TRACE_OUT_MARKER' with '$f'", "[TRACE_OUT_MARKER][f]")
 {
 	test::stream.str(std::string {});
 
 	subject_func11();
+
 	const char *expected {
 		"@@ void subject_func11()\n"
 		"@@ {\n"
@@ -89,24 +96,26 @@ TEST_CASE("TRACE_OUT_MARKER with '$f'", "[TRACE_OUT_MARKER][f]")
 	REQUIRE(test::stream.str() == expected);
 }
 
-TEST_CASE("TRACE_OUT_MARKER with '$return'", "[TRACE_OUT_MARKER][return]")
+TEST_CASE("'TRACE_OUT_MARKER' with '$return'", "[TRACE_OUT_MARKER][return]")
 {
 	test::stream.str(std::string {});
 
 	subject_func12();
+
 	const char *expected {
 		"@@ return 789\n"
 	};
 	REQUIRE(test::stream.str() == expected);
 }
 
-TEST_CASE("TRACE_OUT_MARKER with '$if(...)'", "[TRACE_OUT_MARKER][if]")
+TEST_CASE("'TRACE_OUT_MARKER' with '$if(...)'", "[TRACE_OUT_MARKER][if]")
 {
 	test::stream.str(std::string {});
 
 	$if (true)
 	{
 	}
+
 	const char *expected {
 		"@@ if (true) => true\n"
 		"@@ {\n"
@@ -116,7 +125,7 @@ TEST_CASE("TRACE_OUT_MARKER with '$if(...)'", "[TRACE_OUT_MARKER][if]")
 	REQUIRE(test::stream.str() == expected);
 }
 
-TEST_CASE("TRACE_OUT_MARKER with '$for(...)'", "[TRACE_OUT_MARKER][for]")
+TEST_CASE("'TRACE_OUT_MARKER' with '$for(...)'", "[TRACE_OUT_MARKER][for]")
 {
 	test::stream.str(std::string {});
 
@@ -124,10 +133,10 @@ TEST_CASE("TRACE_OUT_MARKER with '$for(...)'", "[TRACE_OUT_MARKER][for]")
 	{
 		break;
 	}
+
 	const char *expected {
 		"@@ for (; true;)\n"
 		"@@ {\n"
-		"@@     //\n"
 		"@@     // for: iteration #1\n"
 		"@@     \n"
 		"@@ } // for (; true;)\n"
@@ -136,7 +145,7 @@ TEST_CASE("TRACE_OUT_MARKER with '$for(...)'", "[TRACE_OUT_MARKER][for]")
 	REQUIRE(test::stream.str() == expected);
 }
 
-TEST_CASE("TRACE_OUT_MARKER with '$while(...)'", "[TRACE_OUT_MARKER][while]")
+TEST_CASE("'TRACE_OUT_MARKER' with '$while(...)'", "[TRACE_OUT_MARKER][while]")
 {
 	test::stream.str(std::string {});
 
@@ -144,10 +153,10 @@ TEST_CASE("TRACE_OUT_MARKER with '$while(...)'", "[TRACE_OUT_MARKER][while]")
 	{
 		break;
 	}
+
 	const char *expected {
 		"@@ while (true)\n"
 		"@@ {\n"
-		"@@     //\n"
 		"@@     // while: iteration #1\n"
 		"@@     \n"
 		"@@ } // while (true)\n"

@@ -5,11 +5,12 @@
 
 void some_func() { $f $f }
 
-TEST_CASE("no deadlock with TRACE_OUT_SYNC_STREAM and '$w(...)'", "[TRACE_OUT_SYNC_STREAM][w]")
+TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$w(...)'", "[TRACE_OUT_SYNC_STREAM][w]")
 {
 	test::stream.str(std::string {});
 
 	int some {456};
+
 	$w(some)
 	$w(some)
 
@@ -20,11 +21,12 @@ TEST_CASE("no deadlock with TRACE_OUT_SYNC_STREAM and '$w(...)'", "[TRACE_OUT_SY
 	REQUIRE(test::stream.str() == expected);
 }
 
-TEST_CASE("no deadlock with TRACE_OUT_SYNC_STREAM and '$e(...)'", "[TRACE_OUT_SYNC_STREAM][e]")
+TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$e(...)'", "[TRACE_OUT_SYNC_STREAM][e]")
 {
 	test::stream.str(std::string {});
 
 	int some {456};
+
 	$e(some);
 	$e(some);
 
@@ -35,7 +37,7 @@ TEST_CASE("no deadlock with TRACE_OUT_SYNC_STREAM and '$e(...)'", "[TRACE_OUT_SY
 	REQUIRE(test::stream.str() == expected);
 }
 
-TEST_CASE("no deadlock with TRACE_OUT_SYNC_STREAM and '$r(...)'", "[TRACE_OUT_SYNC_STREAM][r]")
+TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$r(...)'", "[TRACE_OUT_SYNC_STREAM][r]")
 {
 	test::stream.str(std::string {});
 
@@ -51,7 +53,7 @@ TEST_CASE("no deadlock with TRACE_OUT_SYNC_STREAM and '$r(...)'", "[TRACE_OUT_SY
 	REQUIRE(test::stream.str() == expected);
 }
 
-TEST_CASE("no deadlock with TRACE_OUT_SYNC_STREAM and '$m(...)'", "[TRACE_OUT_SYNC_STREAM][m]")
+TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$m(...)'", "[TRACE_OUT_SYNC_STREAM][m]")
 {
 	test::stream.str(std::string {});
 
@@ -76,7 +78,7 @@ TEST_CASE("no deadlock with TRACE_OUT_SYNC_STREAM and '$m(...)'", "[TRACE_OUT_SY
 	REQUIRE(test::stream.str() == expected.str());
 }
 
-TEST_CASE("no deadlock with TRACE_OUT_SYNC_STREAM and '$p(...)'", "[TRACE_OUT_SYNC_STREAM][p]")
+TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$p(...)'", "[TRACE_OUT_SYNC_STREAM][p]")
 {
 	test::stream.str(std::string {});
 
@@ -90,7 +92,7 @@ TEST_CASE("no deadlock with TRACE_OUT_SYNC_STREAM and '$p(...)'", "[TRACE_OUT_SY
 	REQUIRE(test::stream.str() == expected);
 }
 
-TEST_CASE("no deadlock with TRACE_OUT_SYNC_STREAM and '$t(...)'", "[TRACE_OUT_SYNC_STREAM][t]")
+TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$t(...)'", "[TRACE_OUT_SYNC_STREAM][t]")
 {
 	test::stream.str(std::string {});
 
@@ -104,7 +106,7 @@ TEST_CASE("no deadlock with TRACE_OUT_SYNC_STREAM and '$t(...)'", "[TRACE_OUT_SY
 	REQUIRE(test::stream.str() == expected);
 }
 
-TEST_CASE("no deadlock with TRACE_OUT_SYNC_STREAM and '$f(...)'", "[TRACE_OUT_SYNC_STREAM][f]")
+TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$f(...)'", "[TRACE_OUT_SYNC_STREAM][f]")
 {
 	test::stream.str(std::string {});
 
@@ -123,7 +125,7 @@ TEST_CASE("no deadlock with TRACE_OUT_SYNC_STREAM and '$f(...)'", "[TRACE_OUT_SY
 	REQUIRE(test::stream.str() == expected);
 }
 
-TEST_CASE("no deadlock with TRACE_OUT_SYNC_STREAM and '$if(...)'", "[TRACE_OUT_SYNC_STREAM][if]")
+TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$if(...)'", "[TRACE_OUT_SYNC_STREAM][if]")
 {
 	test::stream.str(std::string {});
 
@@ -147,7 +149,7 @@ TEST_CASE("no deadlock with TRACE_OUT_SYNC_STREAM and '$if(...)'", "[TRACE_OUT_S
 	REQUIRE(test::stream.str() == expected);
 }
 
-TEST_CASE("no deadlock with TRACE_OUT_SYNC_STREAM and '$for(...)'", "[TRACE_OUT_SYNC_STREAM][for]")
+TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$for(...)'", "[TRACE_OUT_SYNC_STREAM][for]")
 {
 	test::stream.str(std::string {});
 
@@ -164,11 +166,9 @@ TEST_CASE("no deadlock with TRACE_OUT_SYNC_STREAM and '$for(...)'", "[TRACE_OUT_
 	const char *expected {
 		"for (; true;)\n"
 		"{\n"
-		"    //\n"
 		"    // for: iteration #1\n"
 		"    for (; true;)\n"
 		"    {\n"
-		"        //\n"
 		"        // for: iteration #1\n"
 		"        \n"
 		"    } // for (; true;)\n"
@@ -180,7 +180,7 @@ TEST_CASE("no deadlock with TRACE_OUT_SYNC_STREAM and '$for(...)'", "[TRACE_OUT_
 	REQUIRE(test::stream.str() == expected);
 }
 
-TEST_CASE("no deadlock with TRACE_OUT_SYNC_STREAM and '$while(...)'", "[TRACE_OUT_SYNC_STREAM][while]")
+TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$while(...)'", "[TRACE_OUT_SYNC_STREAM][while]")
 {
 	test::stream.str(std::string {});
 
@@ -197,11 +197,9 @@ TEST_CASE("no deadlock with TRACE_OUT_SYNC_STREAM and '$while(...)'", "[TRACE_OU
 	const char *expected {
 		"while (true)\n"
 		"{\n"
-		"    //\n"
 		"    // while: iteration #1\n"
 		"    while (true)\n"
 		"    {\n"
-		"        //\n"
 		"        // while: iteration #1\n"
 		"        \n"
 		"    } // while (true)\n"

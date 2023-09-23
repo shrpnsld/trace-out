@@ -1,3 +1,5 @@
+#pragma once
+
 #include "trace-out/integer.hpp"
 #include <cassert>
 #include <fstream>

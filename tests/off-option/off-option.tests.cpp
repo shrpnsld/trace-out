@@ -6,26 +6,29 @@
 void subject_func11() {$f }
 int subject_func12() { $return 789; }
 
-TEST_CASE("TRACE_OUT_MARKER with '$w(...)'", "[TRACE_OUT_MARKER][w]")
+TEST_CASE("'TRACE_OUT_OFF' with '$w(...)'", "[TRACE_OUT_OFF][w]")
 {
 	test::stream.str(std::string {});
 
 	const char *str {"hellomoto!"};
 
 	$w(str)
+
 	REQUIRE(test::stream.str() == "");
 }
 
-TEST_CASE("TRACE_OUT_MARKER with '$e(...)'", "[TRACE_OUT_MARKER][e]")
+TEST_CASE("'TRACE_OUT_OFF' with '$e(...)'", "[TRACE_OUT_OFF][e]")
 {
 	test::stream.str(std::string {});
 
 	const char *str {"hellomoto!"};
+
 	char character = $e(str[0]);
+
 	REQUIRE(test::stream.str() == "");
 }
 
-TEST_CASE("TRACE_OUT_MARKER with '$r(...)'", "[TRACE_OUT_MARKER][r]")
+TEST_CASE("'TRACE_OUT_OFF' with '$r(...)'", "[TRACE_OUT_OFF][r]")
 {
 	test::stream.str(std::string {});
 
@@ -33,10 +36,11 @@ TEST_CASE("TRACE_OUT_MARKER with '$r(...)'", "[TRACE_OUT_MARKER][r]")
 	std::size_t length {11};
 
 	$r(str, str + length)
+
 	REQUIRE(test::stream.str() == "");
 }
 
-TEST_CASE("TRACE_OUT_MARKER with '$m(...)'", "[TRACE_OUT_MARKER][m]")
+TEST_CASE("'TRACE_OUT_OFF' with '$m(...)'", "[TRACE_OUT_OFF][m]")
 {
 	test::stream.str(std::string {});
 
@@ -44,52 +48,58 @@ TEST_CASE("TRACE_OUT_MARKER with '$m(...)'", "[TRACE_OUT_MARKER][m]")
 	std::size_t length {11};
 
 	$m(str, length)
+
 	REQUIRE(test::stream.str() == "");
 }
 
-TEST_CASE("TRACE_OUT_MARKER with '$p(...)'", "[TRACE_OUT_MARKER][p]")
+TEST_CASE("'TRACE_OUT_OFF' with '$p(...)'", "[TRACE_OUT_OFF][p]")
 {
 	test::stream.str(std::string {});
 
 	$p("wazzzup!")
+
 	REQUIRE(test::stream.str() == "");
 }
 
-TEST_CASE("TRACE_OUT_MARKER with '$t(...)'", "[TRACE_OUT_MARKER][t]")
+TEST_CASE("'TRACE_OUT_OFF' with '$t(...)'", "[TRACE_OUT_OFF][t]")
 {
 	test::stream.str(std::string {});
 
 	$t(char character {'h'};)
+
 	REQUIRE(test::stream.str() == "");
 }
 
-TEST_CASE("TRACE_OUT_MARKER with '$f'", "[TRACE_OUT_MARKER][f]")
+TEST_CASE("'TRACE_OUT_OFF' with '$f'", "[TRACE_OUT_OFF][f]")
 {
 	test::stream.str(std::string {});
 
 	subject_func11();
+
 	REQUIRE(test::stream.str() == "");
 }
 
-TEST_CASE("TRACE_OUT_MARKER with '$return'", "[TRACE_OUT_MARKER][return]")
+TEST_CASE("'TRACE_OUT_OFF' with '$return'", "[TRACE_OUT_OFF][return]")
 {
 	test::stream.str(std::string {});
 
 	subject_func12();
+
 	REQUIRE(test::stream.str() == "");
 }
 
-TEST_CASE("TRACE_OUT_MARKER with '$if(...)'", "[TRACE_OUT_MARKER][if]")
+TEST_CASE("'TRACE_OUT_OFF' with '$if(...)'", "[TRACE_OUT_OFF][if]")
 {
 	test::stream.str(std::string {});
 
 	$if (true)
 	{
 	}
+
 	REQUIRE(test::stream.str() == "");
 }
 
-TEST_CASE("TRACE_OUT_MARKER with '$for(...)'", "[TRACE_OUT_MARKER][for]")
+TEST_CASE("'TRACE_OUT_OFF' with '$for(...)'", "[TRACE_OUT_OFF][for]")
 {
 	test::stream.str(std::string {});
 
@@ -97,10 +107,11 @@ TEST_CASE("TRACE_OUT_MARKER with '$for(...)'", "[TRACE_OUT_MARKER][for]")
 	{
 		break;
 	}
+
 	REQUIRE(test::stream.str() == "");
 }
 
-TEST_CASE("TRACE_OUT_MARKER with '$while(...)'", "[TRACE_OUT_MARKER][while]")
+TEST_CASE("'TRACE_OUT_OFF' with '$while(...)'", "[TRACE_OUT_OFF][while]")
 {
 	test::stream.str(std::string {});
 
@@ -108,6 +119,7 @@ TEST_CASE("TRACE_OUT_MARKER with '$while(...)'", "[TRACE_OUT_MARKER][while]")
 	{
 		break;
 	}
+
 	REQUIRE(test::stream.str() == "");
 }
 

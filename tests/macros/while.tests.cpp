@@ -7,6 +7,7 @@ TEST_CASE("$while(...) - 5 iterations", "[while]")
 	test::stream.str(std::string {});
 
 	unsigned int i {0};
+
 	$while (i < 5)
 	{
 		++i;
@@ -15,19 +16,14 @@ TEST_CASE("$while(...) - 5 iterations", "[while]")
 	const char *expected {
 		"while (i < 5)\n"
 		"{\n"
-		"    //\n"
 		"    // while: iteration #1\n"
 		"    \n"
-		"    //\n"
 		"    // while: iteration #2\n"
 		"    \n"
-		"    //\n"
 		"    // while: iteration #3\n"
 		"    \n"
-		"    //\n"
 		"    // while: iteration #4\n"
 		"    \n"
-		"    //\n"
 		"    // while: iteration #5\n"
 		"    \n"
 		"} // while (i < 5)\n"
@@ -41,6 +37,7 @@ TEST_CASE("$while(...) - 0 iterations", "[while]")
 	test::stream.str(std::string {});
 
 	unsigned int i {5};
+
 	$while (i < 5)
 	{
 		++i;

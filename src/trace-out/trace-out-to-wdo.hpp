@@ -1,3 +1,5 @@
+#pragma once
+
 #include "trace-out/platform-detection.hpp"
 #if defined(TRACE_OUT_WINDOWS)
 

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "trace-out/out-stream.hpp"
 #include "trace-out/integer.hpp"
 #include "trace-out/nothing.hpp"
+#include "trace-out/out-stream.hpp"
 #include "trace-out/to-string.hpp"
 #include <iomanip>
 #include <limits>

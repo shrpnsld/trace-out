@@ -1,3 +1,5 @@
+#pragma once
+
 #include "trace-out/console.hpp"
 #include <iostream>
 

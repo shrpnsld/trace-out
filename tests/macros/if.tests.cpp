@@ -9,7 +9,9 @@ TEST_CASE("$if(...)", "[if]")
 	SECTION("true")
 	{
 		int value {456};
+
 		$if (value == 456) {}
+
 		const char *expected {
 			"if (value == 456) => true\n"
 			"{\n"
@@ -22,7 +24,9 @@ TEST_CASE("$if(...)", "[if]")
 	SECTION("true")
 	{
 		int value {789};
+
 		$if (value == 456) {}
+
 		const char *expected {
 			"if (value == 456) => false\n"
 			"{\n"

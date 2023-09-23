@@ -9,7 +9,7 @@
 void subject_func1(const char *what) {$f $w(what) }
 const char *subject_func2(const char *what) { $return what; }
 
-TEST_CASE("TRACE_OUT_SHOW_THREAD with '$w(...)'", "[TRACE_OUT_SHOW_THREAD][w]")
+TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$w(...)'", "[TRACE_OUT_SHOW_THREAD][w]")
 {
 	using Catch::Matchers::Matches;
 
@@ -34,7 +34,7 @@ what = "hellomoto!"
 )"));
 }
 
-TEST_CASE("TRACE_OUT_SHOW_THREAD with '$e(...)'", "[TRACE_OUT_SHOW_THREAD][e]")
+TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$e(...)'", "[TRACE_OUT_SHOW_THREAD][e]")
 {
 	using Catch::Matchers::Matches;
 
@@ -59,7 +59,7 @@ what = "hellomoto!"
 )"));
 }
 
-TEST_CASE("TRACE_OUT_SHOW_THREAD with '$r(...)'", "[TRACE_OUT_SHOW_THREAD][r]")
+TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$r(...)'", "[TRACE_OUT_SHOW_THREAD][r]")
 {
 	using Catch::Matchers::Matches;
 
@@ -86,7 +86,7 @@ R"(\[Thread\: 0x[0-9a-f]+ two\]~+
 )"));
 }
 
-TEST_CASE("TRACE_OUT_SHOW_THREAD with '$m(...)'", "[TRACE_OUT_SHOW_THREAD][m]")
+TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$m(...)'", "[TRACE_OUT_SHOW_THREAD][m]")
 {
 	using Catch::Matchers::Matches;
 
@@ -118,7 +118,7 @@ what, 10 bytes of 1-byte hexadecimal
 )"));
 }
 
-TEST_CASE("TRACE_OUT_SHOW_THREAD with '$p(...)'", "[TRACE_OUT_SHOW_THREAD][p]")
+TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$p(...)'", "[TRACE_OUT_SHOW_THREAD][p]")
 {
 	using Catch::Matchers::Matches;
 
@@ -143,7 +143,7 @@ R"(\[Thread\: 0x[0-9a-f]+ two\]~+
 )"));
 }
 
-TEST_CASE("TRACE_OUT_SHOW_THREAD with '$t(...)'", "[TRACE_OUT_SHOW_THREAD][t]")
+TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$t(...)'", "[TRACE_OUT_SHOW_THREAD][t]")
 {
 	using Catch::Matchers::Matches;
 
@@ -167,7 +167,7 @@ const char \*what \{"hellomoto!"\}; // trace-out: statement passed
 )"));
 }
 
-TEST_CASE("TRACE_OUT_SHOW_THREAD with '$f'", "[TRACE_OUT_SHOW_THREAD][f]")
+TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$f'", "[TRACE_OUT_SHOW_THREAD][f]")
 {
 	using Catch::Matchers::Matches;
 
@@ -199,7 +199,7 @@ void subject_func1\(const char \*\)
 )"));
 }
 
-TEST_CASE("TRACE_OUT_SHOW_THREAD with '$return'", "[TRACE_OUT_SHOW_THREAD][return]")
+TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$return'", "[TRACE_OUT_SHOW_THREAD][return]")
 {
 	using Catch::Matchers::Matches;
 
@@ -223,7 +223,7 @@ return "hellomoto!"
 )"));
 }
 
-TEST_CASE("TRACE_OUT_SHOW_THREAD with '$if(...)'", "[TRACE_OUT_SHOW_THREAD][if]")
+TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$if(...)'", "[TRACE_OUT_SHOW_THREAD][if]")
 {
 	using Catch::Matchers::Matches;
 
@@ -258,7 +258,7 @@ if \(what\) => true \("hellomoto!"\)
 )"));
 }
 
-TEST_CASE("TRACE_OUT_SHOW_THREAD with '$for(...)'", "[TRACE_OUT_SHOW_THREAD][for]")
+TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$for(...)'", "[TRACE_OUT_SHOW_THREAD][for]")
 {
 	using Catch::Matchers::Matches;
 
@@ -284,7 +284,6 @@ TEST_CASE("TRACE_OUT_SHOW_THREAD with '$for(...)'", "[TRACE_OUT_SHOW_THREAD][for
 R"(\[Thread\: 0x[0-9a-f]+ two\]~+
 for \(;;\)
 \{
-    //
     // for: iteration #1
     
 \} // for \(;;\)
@@ -292,7 +291,6 @@ for \(;;\)
 \[Thread\: 0x[0-9a-f]+ one\]~+
 for \(;;\)
 \{
-    //
     // for: iteration #1
     
 \} // for \(;;\)
@@ -300,7 +298,7 @@ for \(;;\)
 )"));
 }
 
-TEST_CASE("TRACE_OUT_SHOW_THREAD with '$while(...)'", "[TRACE_OUT_SHOW_THREAD][for]")
+TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$while(...)'", "[TRACE_OUT_SHOW_THREAD][for]")
 {
 	using Catch::Matchers::Matches;
 
@@ -326,7 +324,6 @@ TEST_CASE("TRACE_OUT_SHOW_THREAD with '$while(...)'", "[TRACE_OUT_SHOW_THREAD][f
 R"(\[Thread\: 0x[0-9a-f]+ two\]~+
 while \(true\)
 \{
-    //
     // while: iteration #1
     
 \} // while \(true\)
@@ -334,7 +331,6 @@ while \(true\)
 \[Thread\: 0x[0-9a-f]+ one\]~+
 while \(true\)
 \{
-    //
     // while: iteration #1
     
 \} // while \(true\)

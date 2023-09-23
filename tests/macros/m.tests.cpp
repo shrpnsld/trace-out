@@ -935,6 +935,7 @@ TEST_CASE("$m(...) printing leftovers", "[m]")
 	SECTION("1 leftover with $udec(2, $be)")
 	{
 		std::size_t type_size {2};
+
 		$m(subject.data(), type_size * 64 + 1, $udec(type_size, $be))
 
 		std::stringstream expected;
@@ -1055,6 +1056,7 @@ TEST_CASE("$m(...) printing leftovers", "[m]")
 	SECTION("6 leftovers with $udec(8, $be)")
 	{
 		std::size_t type_size {8};
+
 		$m(subject.data(), type_size * 16 + 6, $udec(type_size, $be))
 
 		std::stringstream expected;
@@ -1079,6 +1081,7 @@ TEST_CASE("$m(...) printing leftovers", "[m]")
 	SECTION("7 leftovers with $udec(8, $be)")
 	{
 		std::size_t type_size {8};
+
 		$m(subject.data(), type_size * 16 + 7, $udec(type_size, $be))
 
 		std::stringstream expected;

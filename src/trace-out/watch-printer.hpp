@@ -1,8 +1,8 @@
 #pragma once
 
 #include "trace-out/out-stream.hpp"
-#include "trace-out/pretty.hpp"
 #include "trace-out/platform-detection.hpp"
+#include "trace-out/pretty.hpp"
 #include <string>
 
 //

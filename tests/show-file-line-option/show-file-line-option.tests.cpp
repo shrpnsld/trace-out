@@ -14,7 +14,7 @@ int subject_func12()
 	$return 789;
 }
 
-TEST_CASE("TRACE_OUT_SHOW_FILE_LINE with '$w(...)'", "[TRACE_OUT_SHOW_FILE_LINE][w]")
+TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$w(...)'", "[TRACE_OUT_SHOW_FILE_LINE][w]")
 {
 	test::stream.str(std::string {});
 
@@ -28,7 +28,7 @@ TEST_CASE("TRACE_OUT_SHOW_FILE_LINE with '$w(...)'", "[TRACE_OUT_SHOW_FILE_LINE]
 	REQUIRE(test::stream.str() == expected.str());
 }
 
-TEST_CASE("TRACE_OUT_SHOW_FILE_LINE with '$e(...)'", "[TRACE_OUT_SHOW_FILE_LINE][e]")
+TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$e(...)'", "[TRACE_OUT_SHOW_FILE_LINE][e]")
 {
 	test::stream.str(std::string {});
 
@@ -42,7 +42,7 @@ TEST_CASE("TRACE_OUT_SHOW_FILE_LINE with '$e(...)'", "[TRACE_OUT_SHOW_FILE_LINE]
 	REQUIRE(test::stream.str() == expected.str());
 }
 
-TEST_CASE("TRACE_OUT_SHOW_FILE_LINE with '$r(...)'", "[TRACE_OUT_SHOW_FILE_LINE][r]")
+TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$r(...)'", "[TRACE_OUT_SHOW_FILE_LINE][r]")
 {
 	test::stream.str(std::string {});
 
@@ -57,7 +57,7 @@ TEST_CASE("TRACE_OUT_SHOW_FILE_LINE with '$r(...)'", "[TRACE_OUT_SHOW_FILE_LINE]
 	REQUIRE(test::stream.str() == expected.str());
 }
 
-TEST_CASE("TRACE_OUT_SHOW_FILE_LINE with '$m(...)'", "[TRACE_OUT_SHOW_FILE_LINE][m]")
+TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$m(...)'", "[TRACE_OUT_SHOW_FILE_LINE][m]")
 {
 	test::stream.str(std::string {});
 
@@ -75,7 +75,7 @@ TEST_CASE("TRACE_OUT_SHOW_FILE_LINE with '$m(...)'", "[TRACE_OUT_SHOW_FILE_LINE]
 	REQUIRE(test::stream.str() == expected.str());
 }
 
-TEST_CASE("TRACE_OUT_SHOW_FILE_LINE with '$p(...)'", "[TRACE_OUT_SHOW_FILE_LINE][p]")
+TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$p(...)'", "[TRACE_OUT_SHOW_FILE_LINE][p]")
 {
 	test::stream.str(std::string {});
 
@@ -87,7 +87,7 @@ TEST_CASE("TRACE_OUT_SHOW_FILE_LINE with '$p(...)'", "[TRACE_OUT_SHOW_FILE_LINE]
 	REQUIRE(test::stream.str() == expected.str());
 }
 
-TEST_CASE("TRACE_OUT_SHOW_FILE_LINE with '$t(...)'", "[TRACE_OUT_SHOW_FILE_LINE][t]")
+TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$t(...)'", "[TRACE_OUT_SHOW_FILE_LINE][t]")
 {
 	test::stream.str(std::string {});
 
@@ -99,7 +99,7 @@ TEST_CASE("TRACE_OUT_SHOW_FILE_LINE with '$t(...)'", "[TRACE_OUT_SHOW_FILE_LINE]
 	REQUIRE(test::stream.str() == expected.str());
 }
 
-TEST_CASE("TRACE_OUT_SHOW_FILE_LINE with '$f'", "[TRACE_OUT_SHOW_FILE_LINE][f]")
+TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$f'", "[TRACE_OUT_SHOW_FILE_LINE][f]")
 {
 	test::stream.str(std::string {});
 
@@ -114,7 +114,7 @@ TEST_CASE("TRACE_OUT_SHOW_FILE_LINE with '$f'", "[TRACE_OUT_SHOW_FILE_LINE][f]")
 	REQUIRE(test::stream.str() == expected.str());
 }
 
-TEST_CASE("TRACE_OUT_SHOW_FILE_LINE with '$return'", "[TRACE_OUT_SHOW_FILE_LINE][return]")
+TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$return'", "[TRACE_OUT_SHOW_FILE_LINE][return]")
 {
 	test::stream.str(std::string {});
 
@@ -125,7 +125,7 @@ TEST_CASE("TRACE_OUT_SHOW_FILE_LINE with '$return'", "[TRACE_OUT_SHOW_FILE_LINE]
 	REQUIRE(test::stream.str() == expected.str());
 }
 
-TEST_CASE("TRACE_OUT_SHOW_FILE_LINE with '$if(...)'", "[TRACE_OUT_SHOW_FILE_LINE][if]")
+TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$if(...)'", "[TRACE_OUT_SHOW_FILE_LINE][if]")
 {
 	test::stream.str(std::string {});
 
@@ -142,7 +142,7 @@ TEST_CASE("TRACE_OUT_SHOW_FILE_LINE with '$if(...)'", "[TRACE_OUT_SHOW_FILE_LINE
 	REQUIRE(test::stream.str() == expected.str());
 }
 
-TEST_CASE("TRACE_OUT_SHOW_FILE_LINE with '$for(...)'", "[TRACE_OUT_SHOW_FILE_LINE][for]")
+TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$for(...)'", "[TRACE_OUT_SHOW_FILE_LINE][for]")
 {
 	test::stream.str(std::string {});
 
@@ -155,15 +155,14 @@ TEST_CASE("TRACE_OUT_SHOW_FILE_LINE with '$for(...)'", "[TRACE_OUT_SHOW_FILE_LIN
 	std::stringstream expected;
 	expected << " show-file-line-opt~:" << line << "  |  for (; true;)\n"
 		"                          |  {\n"
-		" show-file-line-opt~:" << line << "  |      //\n"
-		"                          |      // for: iteration #1\n"
+		" show-file-line-opt~:" << line << "  |      // for: iteration #1\n"
 		"                          |      \n"
 		"                          |  } // for (; true;)\n"
 		"                          |  \n";
 	REQUIRE(test::stream.str() == expected.str());
 }
 
-TEST_CASE("TRACE_OUT_SHOW_FILE_LINE with '$while(...)'", "[TRACE_OUT_SHOW_FILE_LINE][while]")
+TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$while(...)'", "[TRACE_OUT_SHOW_FILE_LINE][while]")
 {
 	test::stream.str(std::string {});
 
@@ -176,8 +175,7 @@ TEST_CASE("TRACE_OUT_SHOW_FILE_LINE with '$while(...)'", "[TRACE_OUT_SHOW_FILE_L
 	std::stringstream expected;
 	expected << " show-file-line-opt~:" << line << "  |  while (true)\n"
 		"                          |  {\n"
-		" show-file-line-opt~:" << line << "  |      //\n"
-		"                          |      // while: iteration #1\n"
+		" show-file-line-opt~:" << line << "  |      // while: iteration #1\n"
 		"                          |      \n"
 		"                          |  } // while (true)\n"
 		"                          |  \n";

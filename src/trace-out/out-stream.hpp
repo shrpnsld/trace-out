@@ -1,16 +1,16 @@
 #pragma once
 
 #include "trace-out/filename-line.hpp"
-#include "trace-out/pretty.hpp"
-#include "trace-out/integer.hpp"
-#include "trace-out/printfamily.hpp"
 #include "trace-out/has-member.hpp"
-#include "trace-out/platform-detection.hpp"
-#include "trace-out/template-magic.hpp"
-#include "trace-out/to-string.hpp"
+#include "trace-out/integer.hpp"
 #include "trace-out/mutex.hpp"
+#include "trace-out/platform-detection.hpp"
+#include "trace-out/pretty.hpp"
+#include "trace-out/printfamily.hpp"
+#include "trace-out/template-magic.hpp"
 #include "trace-out/thread-local-storage.hpp"
 #include "trace-out/thread.hpp"
+#include "trace-out/to-string.hpp"
 #include <bitset>
 #include <cstdarg>
 #include <cstdlib>

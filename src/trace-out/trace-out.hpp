@@ -1,18 +1,18 @@
 #pragma once
 
+#include "trace-out/filename-line.hpp"
 #include "trace-out/function-printer.hpp"
+#include "trace-out/integer.hpp"
+#include "trace-out/macro-magic.hpp"
 #include "trace-out/memory-printer.hpp"
 #include "trace-out/out-stream.hpp"
+#include "trace-out/platform-detection.hpp"
 #include "trace-out/range-printer.hpp"
 #include "trace-out/return-printer.hpp"
 #include "trace-out/statements-printer.hpp"
 #include "trace-out/time-printer.hpp"
-#include "trace-out/watch-printer.hpp"
-#include "trace-out/integer.hpp"
-#include "trace-out/filename-line.hpp"
-#include "trace-out/macro-magic.hpp"
-#include "trace-out/platform-detection.hpp"
 #include "trace-out/time.hpp"
+#include "trace-out/watch-printer.hpp"
 #include <ctime>
 #include <vector>
 

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "trace-out/out-stream.hpp"
-#include "trace-out/pretty.hpp"
 #include "trace-out/integer.hpp"
+#include "trace-out/out-stream.hpp"
 #include "trace-out/platform-detection.hpp"
+#include "trace-out/pretty.hpp"
 #include <string>
 
 //
@@ -166,7 +166,7 @@ if_block make_if_block(const std::string &filename_line, const char *condition, 
 block iteration_block(const std::string &filename_line, const char *loop, standard::size_t iteration)
 {
 	out_stream stream(filename_line);
-	stream << "//" << NEWLINE << "// " << loop << ": iteration #" << make_pretty(iteration) << ENDLINE;
+	stream << "// " << loop << ": iteration #" << make_pretty(iteration) << ENDLINE;
 
 	return block(false);
 }

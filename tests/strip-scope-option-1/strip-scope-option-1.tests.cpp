@@ -37,7 +37,7 @@ void func() { $f }
 ::framework::type func1(::framework::type){ $f return {}; }
 ::framework::library::type func2(::framework::library::type){ $f return {}; }
 
-TEST_CASE("TRACE_OUT_STRIP_SCOPE=1 with nothing to strip", "[TRACE_OUT_STRIP_SCOPE][f]")
+TEST_CASE("'TRACE_OUT_STRIP_SCOPE=1' with nothing to strip", "[TRACE_OUT_STRIP_SCOPE][f]")
 {
 	test::stream.str(std::string {});
 
@@ -81,7 +81,7 @@ TEST_CASE("TRACE_OUT_STRIP_SCOPE=1 with nothing to strip", "[TRACE_OUT_STRIP_SCO
 	}
 }
 
-TEST_CASE("TRACE_OUT_STRIP_SCOPE=1 with something to strip", "[TRACE_OUT_STRIP_SCOPE][f]")
+TEST_CASE("'TRACE_OUT_STRIP_SCOPE=1' with something to strip", "[TRACE_OUT_STRIP_SCOPE][f]")
 {
 	test::stream.str(std::string {});
 
