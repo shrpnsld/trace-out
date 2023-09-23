@@ -18,7 +18,7 @@ target_sources(trace-out
 		return-printer.hpp
 		statements-printer.hpp
 		statistics.hpp
-		strip-namespaces.hpp
+		strip-scope.hpp
 		template-magic.hpp
 		thread-local-storage.hpp
 		thread.hpp

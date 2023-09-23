@@ -8,20 +8,13 @@
 //
 // Public
 
-#if defined(TRACE_OUT_STRIP_NAMESPACES)
-	#define trace_out_private__strip_namespaces(string) \
-				trace_out::strip_namespaces(string, TRACE_OUT_STRIP_NAMESPACES)
+#if defined(TRACE_OUT_STRIP_SCOPE)
+	#define trace_out_private__strip_scope(string) \
+				trace_out::strip_scope(string, TRACE_OUT_STRIP_SCOPE)
 #else
-	#define trace_out_private__strip_namespaces(string) \
+	#define trace_out_private__strip_scope(string) \
 				string
 #endif
-
-namespace trace_out
-{
-
-inline std::string strip_namespaces(const std::string &line, standard::size_t parent_namespace_count = 0);
-
-}
 
 //
 // Private
@@ -29,10 +22,11 @@ inline std::string strip_namespaces(const std::string &line, standard::size_t pa
 namespace trace_out
 {
 
-static const std::string::value_type NAMESPACE_DELIMITER[] = "::";
-static const std::string::value_type *NAMESPACE_DELIMITER_END = NAMESPACE_DELIMITER + (sizeof(NAMESPACE_DELIMITER) / sizeof(NAMESPACE_DELIMITER[0]) - 1);
-static std::iterator_traits<std::string::const_iterator>::difference_type NAMESPACE_DELIMITER_LENGTH = sizeof(NAMESPACE_DELIMITER) / sizeof(std::string::value_type) - 1;
+static const std::string::value_type SCOPE_DELIMITER[] = "::";
+static const std::string::value_type *SCOPE_DELIMITER_END = SCOPE_DELIMITER + (sizeof(SCOPE_DELIMITER) / sizeof(SCOPE_DELIMITER[0]) - 1);
+static std::iterator_traits<std::string::const_iterator>::difference_type SCOPE_DELIMITER_LENGTH = sizeof(SCOPE_DELIMITER) / sizeof(std::string::value_type) - 1;
 
+inline std::string strip_scope(const std::string &line, standard::size_t parent_scope_count = 0);
 inline bool is_delimiter(std::string::value_type character);
 
 template <typename Iterator>
@@ -48,13 +42,13 @@ inline std::string::const_iterator find_identifier_start(std::string::const_iter
 namespace trace_out
 {
 
-std::string strip_namespaces(const std::string &line, standard::size_t parent_namespace_count)
+std::string strip_scope(const std::string &line, standard::size_t parent_scope_count)
 {
 	std::string stripped_string;
 	for (std::string::const_iterator itr = line.begin(); itr != line.end(); )
 	{
 		std::string::const_iterator token_end = std::find_if(itr, line.end(), is_delimiter);
-		std::string::const_iterator identifier_start = find_identifier_start(itr, token_end, parent_namespace_count);
+		std::string::const_iterator identifier_start = find_identifier_start(itr, token_end, parent_scope_count);
 
 		if (token_end != line.cend())
 		{
@@ -92,10 +86,10 @@ Iterator skip_components(Iterator first, Iterator last, standard::size_t parent_
 {
 	for ( ; parent_component_count > 0; --parent_component_count)
 	{
-		first = std::search(first, last, NAMESPACE_DELIMITER, NAMESPACE_DELIMITER_END);
+		first = std::search(first, last, SCOPE_DELIMITER, SCOPE_DELIMITER_END);
 		if (first != last)
 		{
-			first += NAMESPACE_DELIMITER_LENGTH;
+			first += SCOPE_DELIMITER_LENGTH;
 		}
 	}
 
@@ -109,7 +103,7 @@ std::string::const_iterator find_identifier_start(std::string::const_iterator fi
 	std::string::const_reverse_iterator rlast(last - dist);
 
 	rfirst = skip_components(rfirst, rlast, parent_component_count);
-	std::string::const_reverse_iterator place = std::search(rfirst, rlast, NAMESPACE_DELIMITER, NAMESPACE_DELIMITER_END);
+	std::string::const_reverse_iterator place = std::search(rfirst, rlast, SCOPE_DELIMITER, SCOPE_DELIMITER_END);
 	if (place == rlast)
 	{
 		return first;
