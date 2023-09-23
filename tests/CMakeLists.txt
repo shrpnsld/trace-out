@@ -11,4 +11,5 @@ add_subdirectory(show-thread-option)
 add_subdirectory(strip-scope-option-0)
 add_subdirectory(strip-scope-option-1)
 add_subdirectory(strip-scope-option-2)
+add_subdirectory(sync-stream-option)
 
