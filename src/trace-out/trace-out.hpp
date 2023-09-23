@@ -92,10 +92,9 @@
 					if (trace_out::block trace_out_private__unify(trace_out_iteration_block) = trace_out::iteration_block(TRACE_OUT_FILENAME_LINE, #loop, block_variable_name.iteration())) {} else
 
 #define trace_out_private__trace(stream_variable_name, ...) \
-			trace_out::out_stream stream_variable_name(TRACE_OUT_FILENAME_LINE); \
-			stream_variable_name << #__VA_ARGS__ << trace_out::FLUSH; \
+			trace_out::out_stream(TRACE_OUT_FILENAME_LINE) << #__VA_ARGS__; \
 			__VA_ARGS__ \
-			stream_variable_name << " // trace-out: statement passed" << trace_out::ENDLINE;
+			trace_out::out_stream(trace_out::CONTINUE) << " // trace-out: statement passed" << trace_out::ENDLINE;
 
 #define trace_out_private__time(start_time, execution_time, label, ...) \
 			trace_out::standard::uint64_t start_time = trace_out::system::time_in_milliseconds(); \

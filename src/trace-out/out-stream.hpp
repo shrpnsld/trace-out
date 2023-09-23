@@ -44,6 +44,7 @@
 namespace trace_out
 {
 
+	static const class continue_tag {} CONTINUE = continue_tag();
 	static const class newline_manipulator {} NEWLINE = newline_manipulator();
 	static const class endline_manipulator {} ENDLINE = endline_manipulator();
 	static const class flush_manipulator {} FLUSH = flush_manipulator();
@@ -53,6 +54,7 @@ namespace trace_out
 	public:
 		inline out_stream(const std::string &filename_line);
 		inline out_stream();
+		inline out_stream(const continue_tag &);
 		inline ~out_stream();
 
 		inline out_stream &operator <<(char character);
@@ -452,6 +454,13 @@ namespace trace_out
 #endif // defined(TRACE_OUT_SHOW_FILE_LINE)
 
 		*this << indentation();
+	}
+
+	out_stream::out_stream(const continue_tag &)
+		:
+		_current_line_length(0)
+	{
+		out_stream_mutex_lock();
 	}
 
 	out_stream::~out_stream()

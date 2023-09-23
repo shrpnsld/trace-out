@@ -154,9 +154,11 @@ if_block::operator bool() const
 template <typename Type_t>
 if_block make_if_block(const std::string &filename_line, const char *condition, const Type_t &value)
 {
-	out_stream stream(filename_line);
-	stream << "if (" << condition << ") => " << FLUSH;
-	stream << make_pretty_condition(value) << ENDLINE;
+	{
+		out_stream stream(filename_line);
+		stream << "if (" << condition << ") => " << FLUSH;
+		stream << make_pretty_condition(value) << ENDLINE;
+	}
 
 	return if_block(!!value);
 }
