@@ -25,6 +25,7 @@ target_link_libraries(macros-tests
 
 target_sources(macros-tests
 	PRIVATE
+		clocks.tests.cpp
 		e.tests.cpp
 		f.tests.cpp
 		for.tests.cpp
@@ -35,6 +36,7 @@ target_sources(macros-tests
 		r.tests.cpp
 		return.tests.cpp
 		t.tests.cpp
+		time.tests.cpp
 		w.tests.cpp
 		while.tests.cpp
 )
