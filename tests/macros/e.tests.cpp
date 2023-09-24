@@ -350,8 +350,6 @@ TEST_CASE("$e(value)", "[e]")
 	SECTION("int[]")
 	{
 		int subject[] = {456, 789, 123, 0, 1};
-		std::size_t subject_length {sizeof(subject) / sizeof(*subject)};
-		int *subject_end {subject + subject_length};
 
 		simulated_expression($e(subject));
 

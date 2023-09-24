@@ -13,6 +13,12 @@ enable_testing()
 add_library(trace-out INTERFACE)
 add_library(trace-out::lib ALIAS trace-out)
 
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang|GNU")
+	target_compile_options(trace-out INTERFACE -Wall -Wextra -Wpedantic -Wno-dollar-in-identifier-extension)
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+	target_compile_options(trace-out INTERFACE /W4)
+endif()
+
 target_include_directories(trace-out
 	INTERFACE src
 )

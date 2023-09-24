@@ -214,7 +214,7 @@ void print_memory(const std::string &filename_line, const char *name, const stan
 }
 
 template <typename Type_t>
-void print_number_chunk(out_stream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t field_width)
+void print_number_chunk(out_stream &stream, const standard::uint8_t *chunk, standard::size_t, standard::size_t field_width)
 {
 	Type_t number = *reinterpret_cast<const Type_t *>(chunk);
 	typename printable_number_t<Type_t>::type printable_number = number;
@@ -662,7 +662,7 @@ print_chunk_t select_print_chunk_function(base_t base, standard::size_t chunk_si
 	}
 }
 
-void print_binary_chunk(out_stream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t field_width)
+void print_binary_chunk(out_stream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t)
 {
 	for (const standard::uint8_t *end = chunk + size; chunk < end; ++chunk)
 	{
@@ -670,7 +670,7 @@ void print_binary_chunk(out_stream &stream, const standard::uint8_t *chunk, stan
 	}
 }
 
-void print_hexadecimal_chunk(out_stream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t field_width)
+void print_hexadecimal_chunk(out_stream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t)
 {
 	for (const standard::uint8_t *end = chunk + size; chunk < end; ++chunk)
 	{
