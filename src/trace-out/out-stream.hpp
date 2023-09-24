@@ -29,11 +29,11 @@
 #if defined(TRACE_OUT_STREAM)
 	#include TRACE_OUT_STREAM
 #elif defined(TRACE_OUT_TO_FILE)
-	#include "trace-out/redirections/trace-out-to-file.hpp"
+	#include "trace-out/trace-out-to-file.hpp"
 #elif defined(TRACE_OUT_TO_WDO)
-	#include "trace-out/redirections/trace-out-to-wdo.hpp"
+	#include "trace-out/trace-out-to-wdo.hpp"
 #elif defined(TRACE_OUT_TO_STDOUT)
-	#include "trace-out/redirections/trace-out-to-stdout.hpp"
+	#include "trace-out/trace-out-to-stdout.hpp"
 #else
 	#error no output stream is specified
 #endif

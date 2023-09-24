@@ -1,21 +1,5 @@
 #pragma once
 
-#include "trace-out/filename-line.hpp"
-#include "trace-out/function-printer.hpp"
-#include "trace-out/integer.hpp"
-#include "trace-out/macro-magic.hpp"
-#include "trace-out/memory-printer.hpp"
-#include "trace-out/out-stream.hpp"
-#include "trace-out/platform-detection.hpp"
-#include "trace-out/range-printer.hpp"
-#include "trace-out/return-printer.hpp"
-#include "trace-out/statements-printer.hpp"
-#include "trace-out/time-printer.hpp"
-#include "trace-out/time.hpp"
-#include "trace-out/watch-printer.hpp"
-#include <ctime>
-#include <vector>
-
 #if !defined(TRACE_OUT_OFF)
 
 //
@@ -29,6 +13,17 @@
 
 #define $r(begin, end_OR_how_much) \
 			trace_out::range(TRACE_OUT_FILENAME_LINE, #begin, #end_OR_how_much, (begin), (end_OR_how_much));
+
+#define $bin trace_out::bin_or_hex_option(trace_out::BIN)
+#define $hex trace_out::bin_or_hex_option(trace_out::HEX)
+#define $sdec trace_out::decimal_option(trace_out::SDEC)
+#define $udec trace_out::decimal_option(trace_out::UDEC)
+#define $flt trace_out::floating_point_option(trace_out::FLT)
+#define $dbl trace_out::floating_point_option(trace_out::DBL)
+#define $ldbl trace_out::floating_point_option(trace_out::LDBL)
+#define $be trace_out::BIG
+#define $le trace_out::LITTLE
+#define $col(value) trace_out::column_count_option(value)
 
 #define $m(pointer, ...) \
 			trace_out::print_memory(TRACE_OUT_FILENAME_LINE, #pointer, reinterpret_cast<const trace_out::standard::uint8_t *>(pointer), ##__VA_ARGS__);
@@ -168,4 +163,19 @@
 
 #endif
 
+#include "trace-out/filename-line.hpp"
+#include "trace-out/function-printer.hpp"
+#include "trace-out/integer.hpp"
+#include "trace-out/macro-magic.hpp"
+#include "trace-out/memory-printer.hpp"
+#include "trace-out/out-stream.hpp"
+#include "trace-out/platform-detection.hpp"
+#include "trace-out/range-printer.hpp"
+#include "trace-out/return-printer.hpp"
+#include "trace-out/statements-printer.hpp"
+#include "trace-out/time-printer.hpp"
+#include "trace-out/time.hpp"
+#include "trace-out/watch-printer.hpp"
+#include <ctime>
+#include <vector>
 

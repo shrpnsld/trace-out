@@ -35,7 +35,7 @@ void flush()
 
 unsigned int width()
 {
-	int width = trace_out::detail::system::console_width();
+	int width = trace_out::system::console_width();
 	if (width == -1)
 	{
 		return DEFAULT_WIDTH;

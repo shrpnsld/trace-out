@@ -12,19 +12,6 @@
 //
 // Public
 
-#define $bin trace_out::bin_or_hex_option(trace_out::BIN)
-#define $hex trace_out::bin_or_hex_option(trace_out::HEX)
-#define $sdec trace_out::decimal_option(trace_out::SDEC)
-#define $udec trace_out::decimal_option(trace_out::UDEC)
-#define $flt trace_out::floating_point_option(trace_out::FLT)
-#define $dbl trace_out::floating_point_option(trace_out::DBL)
-#define $ldbl trace_out::floating_point_option(trace_out::LDBL)
-
-#define $be trace_out::BIG
-#define $le trace_out::LITTLE
-
-#define $col(value) trace_out::column_count_option(value)
-
 namespace trace_out
 {
 
