@@ -1,6 +1,8 @@
+#include "dummy.hpp"
 #include "trace-out/trace-out.hpp"
 #include "test-stream.hpp"
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 #include <sstream>
 
 void some_func() { $f $f }
@@ -209,5 +211,105 @@ TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$while(...)'", "[TRACE_
 		"\n"
 	};
 	REQUIRE(test::stream.str() == expected);
+}
+
+TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$time(...)'", "[TRACE_OUT_SYNC_STREAM][time]")
+{
+	test::stream.str(std::string {});
+
+	using Catch::Matchers::Matches;
+
+	test::stream.str(std::string {});
+
+	$time("dummy", dummy();)
+	$time("dummy", dummy();)
+
+	REQUIRE_THAT(test::stream.str(), Matches(
+R"(// execution time "dummy": [0-9]+ ms
+// execution time "dummy": [0-9]+ ms
+)"));
+}
+
+TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$time_stats(...)'", "[TRACE_OUT_SYNC_STREAM][time_stats]")
+{
+	using Catch::Matchers::Matches;
+
+	test::stream.str(std::string {});
+
+	$thread(one)
+
+	$thread(two)
+	for (std::size_t passes {10}; passes > 0; --passes)
+	{
+		$time_stats("dummy", 10, dummy();)
+	}
+
+	for (std::size_t passes {10}; passes > 0; --passes)
+	{
+		$time_stats("dummy", 10, dummy();)
+	}
+
+	REQUIRE_THAT(test::stream.str(), Matches(
+R"(// execution time statistics \(ms\) for "dummy":
+//   avg/med: [0-9\.]+ / [0-9\.]+
+//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)
+//     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]
+
+// execution time statistics \(ms\) for "dummy":
+//   avg/med: [0-9\.]+ / [0-9\.]+
+//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)
+//     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]
+
+)"));
+}
+
+TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$clocks(...)'", "[TRACE_OUT_SYNC_STREAM][clocks]")
+{
+	test::stream.str(std::string {});
+
+	using Catch::Matchers::Matches;
+
+	test::stream.str(std::string {});
+
+	$clocks("dummy", dummy();)
+	$clocks("dummy", dummy();)
+
+	REQUIRE_THAT(test::stream.str(), Matches(
+R"(// execution time "dummy": [0-9]+ clocks \([0-9\.]+ ms\)
+// execution time "dummy": [0-9]+ clocks \([0-9\.]+ ms\)
+)"));
+}
+
+TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$clock_stats(...)'", "[TRACE_OUT_SYNC_STREAM][clock_stats]")
+{
+	using Catch::Matchers::Matches;
+
+	test::stream.str(std::string {});
+
+	$thread(one)
+
+	$thread(two)
+	for (std::size_t passes {10}; passes > 0; --passes)
+	{
+		$clock_stats("dummy", 10, dummy();)
+	}
+
+	for (std::size_t passes {10}; passes > 0; --passes)
+	{
+		$clock_stats("dummy", 10, dummy();)
+	}
+
+	REQUIRE_THAT(test::stream.str(), Matches(
+R"(// execution time statistics \(clocks\) for "dummy":
+//   avg/med: [0-9\.]+ / [0-9\.]+
+//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)
+//     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]
+
+// execution time statistics \(clocks\) for "dummy":
+//   avg/med: [0-9\.]+ / [0-9\.]+
+//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)
+//     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]
+
+)"));
 }
 

@@ -1,6 +1,8 @@
+#include "dummy.hpp"
 #include "trace-out/trace-out.hpp"
 #include "test-stream.hpp"
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 #include <vector>
 
 TEST_CASE("'TRACE_OUT_INDENTATION' inside '$if(...)'", "[indentation][TRACE_OUT_INDENTATION][if]")
@@ -380,5 +382,99 @@ TEST_CASE("'TRACE_OUT_INDENTATION' outside '$p(...)'", "[indentation][TRACE_OUT_
 		"\n"
 	};
 	REQUIRE(test::stream.str() == expected);
+}
+
+TEST_CASE("'TRACE_OUT_INDENTATION' outside '$time(...)'", "[indentation][TRACE_OUT_INDENTATION][time]")
+{
+	using Catch::Matchers::Matches;
+
+	test::stream.str(std::string {});
+
+	$if (true)
+	{
+		$time("dummy", dummy();)
+	}
+
+	REQUIRE_THAT(test::stream.str(), Matches(
+R"(if \(true\) => true
+\{
+  // execution time "dummy": [0-9]+ ms
+\}
+
+)"));
+}
+
+TEST_CASE("'TRACE_OUT_INDENTATION' outside '$time_stats(...)'", "[indentation][TRACE_OUT_INDENTATION][time_stats]")
+{
+	using Catch::Matchers::Matches;
+
+	test::stream.str(std::string {});
+
+	$if (true)
+	{
+		for (std::size_t passes {10}; passes > 0; --passes)
+		{
+			$time_stats("dummy", 10, dummy();)
+		}
+	}
+
+	REQUIRE_THAT(test::stream.str(), Matches(
+R"(if \(true\) => true
+\{
+  // execution time statistics \(ms\) for "dummy":
+  //   avg/med: [0-9\.]+ / [0-9\.]+
+  //     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)
+  //     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]
+  
+\}
+
+)"));
+}
+
+TEST_CASE("'TRACE_OUT_INDENTATION' outside '$clocks(...)'", "[indentation][TRACE_OUT_INDENTATION][clocks]")
+{
+	using Catch::Matchers::Matches;
+
+	test::stream.str(std::string {});
+
+	$if (true)
+	{
+		$clocks("dummy", dummy();)
+	}
+
+	REQUIRE_THAT(test::stream.str(), Matches(
+R"(if \(true\) => true
+\{
+  // execution time "dummy": [0-9]+ clocks \([0-9\.]+ ms\)
+\}
+
+)"));
+}
+
+TEST_CASE("'TRACE_OUT_INDENTATION' outside '$clock_stats(...)'", "[indentation][TRACE_OUT_INDENTATION][clock_stats]")
+{
+	using Catch::Matchers::Matches;
+
+	test::stream.str(std::string {});
+
+	$if (true)
+	{
+		for (std::size_t passes {10}; passes > 0; --passes)
+		{
+			$clock_stats("dummy", 10, dummy();)
+		}
+	}
+
+	REQUIRE_THAT(test::stream.str(), Matches(
+R"(if \(true\) => true
+\{
+  // execution time statistics \(clocks\) for "dummy":
+  //   avg/med: [0-9\.]+ / [0-9\.]+
+  //     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)
+  //     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]
+  
+\}
+
+)"));
 }
 

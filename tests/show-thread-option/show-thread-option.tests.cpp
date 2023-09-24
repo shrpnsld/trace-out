@@ -1,3 +1,4 @@
+#include "dummy.hpp"
 #include "trace-out/trace-out.hpp"
 #include "test-stream.hpp"
 #include <catch2/catch_test_macros.hpp>
@@ -334,6 +335,130 @@ while \(true\)
     // while: iteration #1
     
 \} // while \(true\)
+
+)"));
+}
+
+TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$time(...)'", "[TRACE_OUT_SHOW_THREAD][time]")
+{
+	using Catch::Matchers::Matches;
+
+	test::stream.str(std::string {});
+
+	$thread(one)
+
+	std::thread {[]()
+	{
+		$thread(two)
+		$time("dummy", dummy();)
+	}}.join();
+
+	$time("dummy", dummy();)
+
+	REQUIRE_THAT(test::stream.str(), Matches(
+R"(\[Thread\: 0x[0-9a-f]+ two\]~+
+// execution time "dummy": [0-9]+ ms
+\[Thread\: 0x[0-9a-f]+ one\]~+
+// execution time "dummy": [0-9]+ ms
+)"));
+}
+
+TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$time_stats(...)'", "[TRACE_OUT_SHOW_THREAD][time_stats]")
+{
+	using Catch::Matchers::Matches;
+
+	test::stream.str(std::string {});
+
+	$thread(one)
+
+	std::thread {[]()
+	{
+		$thread(two)
+		for (std::size_t passes {10}; passes > 0; --passes)
+		{
+			$time_stats("dummy", 10, dummy();)
+		}
+	}}.join();
+
+	for (std::size_t passes {10}; passes > 0; --passes)
+	{
+		$time_stats("dummy", 10, dummy();)
+	}
+
+	REQUIRE_THAT(test::stream.str(), Matches(
+R"(\[Thread\: 0x[0-9a-f]+ two\]~+
+// execution time statistics \(ms\) for "dummy":
+//   avg/med: [0-9\.]+ / [0-9\.]+
+//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)
+//     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]
+
+\[Thread\: 0x[0-9a-f]+ one\]~+
+// execution time statistics \(ms\) for "dummy":
+//   avg/med: [0-9\.]+ / [0-9\.]+
+//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)
+//     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]
+
+)"));
+}
+
+TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$clocks(...)'", "[TRACE_OUT_SHOW_THREAD][clocks]")
+{
+	using Catch::Matchers::Matches;
+
+	test::stream.str(std::string {});
+
+	$thread(one)
+
+	std::thread {[]()
+	{
+		$thread(two)
+		$clocks("dummy", dummy();)
+	}}.join();
+
+	$clocks("dummy", dummy();)
+
+	REQUIRE_THAT(test::stream.str(), Matches(
+R"(\[Thread\: 0x[0-9a-f]+ two\]~+
+// execution time "dummy": [0-9]+ clocks \([0-9\.]+ ms\)
+\[Thread\: 0x[0-9a-f]+ one\]~+
+// execution time "dummy": [0-9]+ clocks \([0-9\.]+ ms\)
+)"));
+}
+
+TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$clock_stats(...)'", "[TRACE_OUT_SHOW_THREAD][clock_stats]")
+{
+	using Catch::Matchers::Matches;
+
+	test::stream.str(std::string {});
+
+	$thread(one)
+
+	std::thread {[]()
+	{
+		$thread(two)
+		for (std::size_t passes {10}; passes > 0; --passes)
+		{
+			$clock_stats("dummy", 10, dummy();)
+		}
+	}}.join();
+
+	for (std::size_t passes {10}; passes > 0; --passes)
+	{
+		$clock_stats("dummy", 10, dummy();)
+	}
+
+	REQUIRE_THAT(test::stream.str(), Matches(
+R"(\[Thread\: 0x[0-9a-f]+ two\]~+
+// execution time statistics \(clocks\) for "dummy":
+//   avg/med: [0-9\.]+ / [0-9\.]+
+//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)
+//     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]
+
+\[Thread\: 0x[0-9a-f]+ one\]~+
+// execution time statistics \(clocks\) for "dummy":
+//   avg/med: [0-9\.]+ / [0-9\.]+
+//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)
+//     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]
 
 )"));
 }

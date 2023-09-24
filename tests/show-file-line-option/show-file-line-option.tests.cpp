@@ -1,6 +1,8 @@
+#include "dummy.hpp"
 #include "trace-out/trace-out.hpp"
 #include "test-stream.hpp"
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 #include <sstream>
 
 const long int subject_func11_line {__LINE__ + 2};
@@ -180,5 +182,79 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$while(...)'", "[TRACE_OUT_SHOW_FILE
 		"                          |  } // while (true)\n"
 		"                          |  \n";
 	REQUIRE(test::stream.str() == expected.str());
+}
+
+TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$time(...)'", "[TRACE_OUT_SHOW_FILE_LINE][time]")
+{
+	using Catch::Matchers::Matches;
+
+	test::stream.str(std::string {});
+
+	long int line {__LINE__ + 1};
+	$time("dummy", dummy();)
+
+	std::stringstream expected;
+	expected << " show-file-line-opt~:" << line << "  \\|  // execution time \"dummy\": [0-9]+ ms\n";
+	REQUIRE_THAT(test::stream.str(), Matches(expected.str()));
+}
+
+TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$time_stats(...)'", "[TRACE_OUT_SHOW_FILE_LINE][time_stats]")
+{
+	using Catch::Matchers::Matches;
+
+	test::stream.str(std::string {});
+
+	long int line {__LINE__ + 3};
+	for (std::size_t passes {10}; passes > 0; --passes)
+	{
+		$time_stats("dummy", 10, dummy();)
+	}
+
+	std::stringstream expected;
+	expected << " show-file-line-opt~:" << line <<
+							"  \\|  // execution time statistics \\(ms\\) for \"dummy\":\n"
+		"                          \\|  //   avg/med: [0-9\\.]+ / [0-9\\.]+\n"
+		"                          \\|  //     ( mode|modes): [0-9\\.]+(, [0-9\\.]+)* \\((each = [0-9\\.]+%, all = )?[0-9\\.]+% of all values\\)\n"
+		"                          \\|  //     range: [0-9\\.]+ \\[[0-9\\.]+\\.\\.\\.[0-9\\.]+\\]\n"
+		"                          \\|  \n";
+
+	REQUIRE_THAT(test::stream.str(), Matches(expected.str()));
+}
+
+TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$clocks(...)'", "[TRACE_OUT_SHOW_FILE_LINE][clocks]")
+{
+	using Catch::Matchers::Matches;
+
+	test::stream.str(std::string {});
+
+	long int line {__LINE__ + 1};
+	$clocks("dummy", dummy();)
+
+	std::stringstream expected;
+	expected << " show-file-line-opt~:" << line << "  \\|  // execution time \"dummy\": [0-9]+ clocks \\([0-9\\.]+ ms\\)\n";
+	REQUIRE_THAT(test::stream.str(), Matches(expected.str()));
+}
+
+TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$clock_stats(...)'", "[TRACE_OUT_SHOW_FILE_LINE][clock_stats]")
+{
+	using Catch::Matchers::Matches;
+
+	test::stream.str(std::string {});
+
+	long int line {__LINE__ + 3};
+	for (std::size_t passes {10}; passes > 0; --passes)
+	{
+		$clock_stats("dummy", 10, dummy();)
+	}
+
+	std::stringstream expected;
+	expected << " show-file-line-opt~:" << line <<
+							"  \\|  // execution time statistics \\(clocks\\) for \"dummy\":\n"
+		"                          \\|  //   avg/med: [0-9\\.]+ / [0-9\\.]+\n"
+		"                          \\|  //     ( mode|modes): [0-9\\.]+(, [0-9\\.]+)* \\((each = [0-9\\.]+%, all = )?[0-9\\.]+% of all values\\)\n"
+		"                          \\|  //     range: [0-9\\.]+ \\[[0-9\\.]+\\.\\.\\.[0-9\\.]+\\]\n"
+		"                          \\|  \n";
+
+	REQUIRE_THAT(test::stream.str(), Matches(expected.str()));
 }
 

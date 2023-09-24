@@ -1,6 +1,8 @@
+#include "dummy.hpp"
 #include "trace-out/trace-out.hpp"
 #include "test-stream.hpp"
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 #include <sstream>
 #include <vector>
 
@@ -382,5 +384,99 @@ TEST_CASE("indentation outside '$p(...)'", "[indentation][p]")
 		"\n"
 	};
 	REQUIRE(test::stream.str() == expected);
+}
+
+TEST_CASE("indentation outside '$time(...)'", "[indentation][time]")
+{
+	using Catch::Matchers::Matches;
+
+	test::stream.str(std::string {});
+
+	$if (true)
+	{
+		$time("dummy", dummy();)
+	}
+
+	REQUIRE_THAT(test::stream.str(), Matches(
+R"(if \(true\) => true
+\{
+    // execution time "dummy": [0-9]+ ms
+\}
+
+)"));
+}
+
+TEST_CASE("indentation outside '$time_stats(...)'", "[indentation][time_stats]")
+{
+	using Catch::Matchers::Matches;
+
+	test::stream.str(std::string {});
+
+	$if (true)
+	{
+		for (std::size_t passes {10}; passes > 0; --passes)
+		{
+			$time_stats("dummy", 10, dummy();)
+		}
+	}
+
+	REQUIRE_THAT(test::stream.str(), Matches(
+R"(if \(true\) => true
+\{
+    // execution time statistics \(ms\) for "dummy":
+    //   avg/med: [0-9\.]+ / [0-9\.]+
+    //     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)
+    //     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]
+    
+\}
+
+)"));
+}
+
+TEST_CASE("indentation outside '$clocks(...)'", "[indentation][clocks]")
+{
+	using Catch::Matchers::Matches;
+
+	test::stream.str(std::string {});
+
+	$if (true)
+	{
+		$clocks("dummy", dummy();)
+	}
+
+	REQUIRE_THAT(test::stream.str(), Matches(
+R"(if \(true\) => true
+\{
+    // execution time "dummy": [0-9]+ clocks \([0-9\.]+ ms\)
+\}
+
+)"));
+}
+
+TEST_CASE("indentation outside '$clock_stats(...)'", "[indentation][clock_stats]")
+{
+	using Catch::Matchers::Matches;
+
+	test::stream.str(std::string {});
+
+	$if (true)
+	{
+		for (std::size_t passes {10}; passes > 0; --passes)
+		{
+			$clock_stats("dummy", 10, dummy();)
+		}
+	}
+
+	REQUIRE_THAT(test::stream.str(), Matches(
+R"(if \(true\) => true
+\{
+    // execution time statistics \(clocks\) for "dummy":
+    //   avg/med: [0-9\.]+ / [0-9\.]+
+    //     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)
+    //     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]
+    
+\}
+
+)"));
 }
 

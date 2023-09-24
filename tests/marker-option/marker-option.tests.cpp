@@ -1,6 +1,8 @@
+#include "dummy.hpp"
 #include "trace-out/trace-out.hpp"
 #include "test-stream.hpp"
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 #include <sstream>
 
 void subject_func11() {$f }
@@ -163,5 +165,67 @@ TEST_CASE("'TRACE_OUT_MARKER' with '$while(...)'", "[TRACE_OUT_MARKER][while]")
 		"@@ \n"
 	};
 	REQUIRE(test::stream.str() == expected);
+}
+
+TEST_CASE("'TRACE_OUT_MARKER' with '$time(...)'", "[TRACE_OUT_MARKER][time]")
+{
+	using Catch::Matchers::Matches;
+
+	test::stream.str(std::string {});
+
+	$time("dummy", dummy();)
+
+	REQUIRE_THAT(test::stream.str(), Matches(R"(@@ // execution time "dummy": [0-9]+ ms\n)"));
+}
+
+TEST_CASE("'TRACE_OUT_MARKER' with '$time_stats(...)'", "[TRACE_OUT_MARKER][time_stats]")
+{
+	using Catch::Matchers::Matches;
+
+	test::stream.str(std::string {});
+
+	for (std::size_t passes {10}; passes > 0; --passes)
+	{
+		$time_stats("dummy", 10, dummy();)
+	}
+
+	REQUIRE_THAT(test::stream.str(), Matches(
+R"(@@ // execution time statistics \(ms\) for "dummy":
+@@ //   avg/med: [0-9\.]+ / [0-9\.]+
+@@ //     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)
+@@ //     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]
+@@ 
+)"));
+}
+
+TEST_CASE("'TRACE_OUT_MARKER' with '$clocks(...)'", "[TRACE_OUT_MARKER][clocks]")
+{
+	using Catch::Matchers::Matches;
+
+	test::stream.str(std::string {});
+
+	$clocks("dummy", dummy();)
+
+	REQUIRE_THAT(test::stream.str(), Matches(R"(@@ // execution time "dummy": [0-9]+ clocks \([0-9\.]+ ms\)\n)"));
+}
+
+TEST_CASE("'TRACE_OUT_MARKER' with '$clock_stats(...)'", "[TRACE_OUT_MARKER][clock_stats]")
+{
+	using Catch::Matchers::Matches;
+
+	test::stream.str(std::string {});
+
+	for (std::size_t passes {10}; passes > 0; --passes)
+	{
+		$clock_stats("dummy", 10, dummy();)
+	}
+
+	REQUIRE_THAT(test::stream.str(), Matches(
+R"(@@ // execution time statistics \(clocks\) for "dummy":
+@@ //   avg/med: [0-9\.]+ / [0-9\.]+
+@@ //     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)
+@@ //     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]
+@@ 
+)"));
 }
 

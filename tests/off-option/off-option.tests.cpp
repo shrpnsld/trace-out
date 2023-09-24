@@ -1,3 +1,4 @@
+#include "dummy.hpp"
 #include "trace-out/trace-out.hpp"
 #include "test-stream.hpp"
 #include <catch2/catch_test_macros.hpp>
@@ -118,6 +119,48 @@ TEST_CASE("'TRACE_OUT_OFF' with '$while(...)'", "[TRACE_OUT_OFF][while]")
 	$while (true)
 	{
 		break;
+	}
+
+	REQUIRE(test::stream.str() == "");
+}
+
+TEST_CASE("'TRACE_OUT_OFF' with '$time(...)'", "[TRACE_OUT_OFF][time]")
+{
+	test::stream.str(std::string {});
+
+	$time("dummy", dummy();)
+
+	REQUIRE(test::stream.str() == "");
+}
+
+TEST_CASE("'TRACE_OUT_OFF' with '$time_stats(...)'", "[TRACE_OUT_OFF][time_stats]")
+{
+	test::stream.str(std::string {});
+
+	for (std::size_t passes {10}; passes > 0; --passes)
+	{
+		$time_stats("dummy", 10, dummy();)
+	}
+
+	REQUIRE(test::stream.str() == "");
+}
+
+TEST_CASE("'TRACE_OUT_OFF' with '$clocks(...)'", "[TRACE_OUT_OFF][clocks]")
+{
+	test::stream.str(std::string {});
+
+	$clocks("dummy", dummy();)
+
+	REQUIRE(test::stream.str() == "");
+}
+
+TEST_CASE("'TRACE_OUT_OFF' with '$clock_stats(...)'", "[TRACE_OUT_OFF][clock_stats]")
+{
+	test::stream.str(std::string {});
+
+	for (std::size_t passes {10}; passes > 0; --passes)
+	{
+		$clock_stats("dummy", 10, dummy();)
 	}
 
 	REQUIRE(test::stream.str() == "");
