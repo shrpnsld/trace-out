@@ -29,6 +29,103 @@ target_sources(sync-stream-option-tests
 		sync-stream-option.tests.cpp
 )
 
-# TODO: add tests manually with timeout
-catch_discover_tests(sync-stream-option-tests)
+add_test(NAME [[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$w(...)']]
+	COMMAND
+		${CMAKE_CURRENT_BINARY_DIR}/sync-stream-option-tests
+		[["no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$w(...)'"]]
+)
+set_tests_properties([[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$w(...)']]
+	PROPERTIES
+		TIMEOUT 5
+)
+
+add_test(NAME [[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$e(...)']]
+	COMMAND
+		${CMAKE_CURRENT_BINARY_DIR}/sync-stream-option-tests
+		[["no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$e(...)'"]]
+)
+set_tests_properties([[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$e(...)']]
+	PROPERTIES
+		TIMEOUT 5
+)
+
+add_test(NAME [[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$r(...)']]
+	COMMAND
+		${CMAKE_CURRENT_BINARY_DIR}/sync-stream-option-tests
+		[["no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$r(...)'"]]
+)
+set_tests_properties([[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$r(...)']]
+	PROPERTIES
+		TIMEOUT 5
+)
+
+add_test(NAME [[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$m(...)']]
+	COMMAND
+		${CMAKE_CURRENT_BINARY_DIR}/sync-stream-option-tests
+		[["no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$m(...)'"]]
+)
+set_tests_properties([[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$m(...)']]
+	PROPERTIES
+		TIMEOUT 5
+)
+
+add_test(NAME [[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$p(...)']]
+	COMMAND
+		${CMAKE_CURRENT_BINARY_DIR}/sync-stream-option-tests
+		[["no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$p(...)'"]]
+)
+set_tests_properties([[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$p(...)']]
+	PROPERTIES
+		TIMEOUT 5
+)
+
+add_test(NAME [[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$t(...)']]
+	COMMAND
+		${CMAKE_CURRENT_BINARY_DIR}/sync-stream-option-tests
+		[["no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$t(...)'"]]
+)
+set_tests_properties([[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$t(...)']]
+	PROPERTIES
+		TIMEOUT 5
+)
+
+add_test(NAME [[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$f(...)']]
+	COMMAND
+		${CMAKE_CURRENT_BINARY_DIR}/sync-stream-option-tests
+		[["no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$f(...)'"]]
+)
+set_tests_properties([[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$f(...)']]
+	PROPERTIES
+		TIMEOUT 5
+)
+
+add_test(NAME [[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$if(...)']]
+	COMMAND
+		${CMAKE_CURRENT_BINARY_DIR}/sync-stream-option-tests
+		[["no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$if(...)'"]]
+)
+set_tests_properties([[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$if(...)']]
+	PROPERTIES
+		TIMEOUT 5
+)
+
+add_test(NAME [[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$for(...)']]
+	COMMAND
+		${CMAKE_CURRENT_BINARY_DIR}/sync-stream-option-tests
+		[["no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$for(...)'"]]
+)
+set_tests_properties([[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$for(...)']]
+	PROPERTIES
+		TIMEOUT 5
+)
+
+add_test(NAME [[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$while(...)']]
+	COMMAND
+		${CMAKE_CURRENT_BINARY_DIR}/sync-stream-option-tests
+		[["no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$while(...)'"]]
+)
+set_tests_properties([[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$while(...)']]
+	PROPERTIES
+		TIMEOUT 5
+)
 
