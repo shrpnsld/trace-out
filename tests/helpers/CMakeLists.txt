@@ -2,6 +2,7 @@ add_library(helpers)
 
 target_sources(helpers
 	INTERFACE
+		dummy.hpp
 		trace-out-to-test-stream.hpp
 		framework-library-component.hpp
 
@@ -9,6 +10,7 @@ target_sources(helpers
 		test-stream.hpp
 
 	PRIVATE
+		dummy.cpp
 		test-stream.cpp
 )
 
