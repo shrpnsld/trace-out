@@ -3,6 +3,7 @@ add_library(helpers)
 target_sources(helpers
 	INTERFACE
 		trace-out-to-test-stream.hpp
+		framework-library-component.hpp
 
 	PUBLIC
 		test-stream.hpp

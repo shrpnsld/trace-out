@@ -1,41 +1,8 @@
+#include "framework-library-component.hpp"
 #include "test-stream.hpp"
 #include "trace-out/trace-out.hpp"
 #include <catch2/catch_test_macros.hpp>
 #include <sstream>
-
-namespace framework
-{
-
-using type = int;
-type func(type) { $f return {}; }
-
-}
-
-namespace framework { namespace library
-{
-
-using type = int;
-type func(type) { $f return {}; }
-
-}
-}
-
-namespace framework { namespace library { namespace component
-{
-
-using type = int;
-type func(type) { $f return {}; }
-
-}
-}
-}
-
-using type = int;
-
-void func() { $f }
-::type func0(::type) { $f return {}; }
-::framework::type func1(::framework::type){ $f return {}; }
-::framework::library::type func2(::framework::library::type){ $f return {}; }
 
 TEST_CASE("'TRACE_OUT_STRIP_SCOPE=1' with nothing to strip", "[TRACE_OUT_STRIP_SCOPE][f]")
 {
