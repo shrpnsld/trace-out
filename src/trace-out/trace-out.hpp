@@ -16,16 +16,6 @@
 #include <ctime>
 #include <vector>
 
-#if defined(TRACE_OUT_CLANG)
-	#pragma clang diagnostic push
-	#pragma clang diagnostic ignored "-Wdollar-in-identifier-extension"
-	#pragma clang diagnostic ignored "-Wvariadic-macros"
-	#pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
-#elif defined(TRACE_OUT_GCC) || defined(TRACE_OUT_MINGW)
-	#pragma GCC diagnostic push
-	#pragma GCC diagnostic ignored "-Wvariadic-macros" // seems it does not turn off the warning if there's no C++11
-#endif
-
 #if !defined(TRACE_OUT_OFF)
 
 //
@@ -178,9 +168,4 @@
 
 #endif
 
-#if defined(TRACE_OUT_CLANG)
-	#pragma clang diagnostic pop
-#elif defined(TRACE_OUT_GCC) || defined(TRACE_OUT_MINGW)
-	#pragma GCC diagnostic pop
-#endif
 
