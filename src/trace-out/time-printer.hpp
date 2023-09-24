@@ -54,7 +54,7 @@ void print_execution_statistics(const std::string &filename_line, const char *la
 	// average & median
 	float average = average_value<float>(results.begin(), results.end());
 	float median = median_value<float>(results.begin(), results.end());
-	stream << "// execution time statistics (" << units << ") for \"" << label << "\": " << NEWLINE;
+	stream << "// execution time statistics (" << units << ") for \"" << label << "\":" << NEWLINE;
 	stream << "//   avg/med: " << to_string(average) << " / " << to_string(median) << NEWLINE;
 
 	// modes
