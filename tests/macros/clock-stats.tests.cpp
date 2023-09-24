@@ -1,9 +1,9 @@
+#include "dummy.hpp"
 #include "trace-out/trace-out.hpp"
 #include "test-stream.hpp"
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 #include <chrono>
-#include <thread>
 #include <vector>
 
 TEST_CASE("$clock_stats(...)", "[clock_stats]")
@@ -13,17 +13,13 @@ TEST_CASE("$clock_stats(...)", "[clock_stats]")
 
 	test::stream.str(std::string {});
 
-	std::vector<std::chrono::milliseconds> durations {10ms, 20ms, 10ms, 15ms, 10ms, 17ms, 9ms, 10ms, 7ms, 10ms};
-
-	for (std::chrono::milliseconds duration : durations)
+	for (std::size_t passes {10}; passes > 0; --passes)
 	{
-		$clock_stats("sleeping", 10,
-			std::this_thread::sleep_for(duration);
-		)
+		$clock_stats("dummy", 10, dummy();)
 	}
 
 	REQUIRE_THAT(test::stream.str(), Matches(
-		R"(// execution time statistics \(clocks\) for "sleeping":\n)"
+		R"(// execution time statistics \(clocks\) for "dummy":\n)"
 		R"(//   avg/med: [0-9\.]+ / [0-9\.]+\n)"
 		R"(//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)"
 		R"(//     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)"
