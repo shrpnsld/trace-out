@@ -14,6 +14,6 @@ TEST_CASE("$time(...)", "[time]")
 
 	$time("sleeping", std::this_thread::sleep_for(2000ms);)
 
-	REQUIRE_THAT(test::stream.str(), Matches(R"(// execution time "sleeping": 2[0-9]{3} ms\n)"));
+	REQUIRE_THAT(test::stream.str(), Matches(R"(// execution time for "sleeping": 2[0-9]{3} ms\n)"));
 }
 

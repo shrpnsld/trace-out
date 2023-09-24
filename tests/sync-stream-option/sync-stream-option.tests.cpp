@@ -225,9 +225,9 @@ TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$time(...)'", "[TRACE_O
 	$time("dummy", dummy();)
 
 	REQUIRE_THAT(test::stream.str(), Matches(
-R"(// execution time "dummy": [0-9]+ ms
-// execution time "dummy": [0-9]+ ms
-)"));
+		R"(// execution time for "dummy": [0-9]+ ms\n)"
+		R"(// execution time for "dummy": [0-9]+ ms\n)"
+	));
 }
 
 TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$time_stats(...)'", "[TRACE_OUT_SYNC_STREAM][time_stats]")
@@ -250,17 +250,17 @@ TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$time_stats(...)'", "[T
 	}
 
 	REQUIRE_THAT(test::stream.str(), Matches(
-R"(// execution time statistics \(ms\) for "dummy":
-//   avg/med: [0-9\.]+ / [0-9\.]+
-//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)
-//     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]
-
-// execution time statistics \(ms\) for "dummy":
-//   avg/med: [0-9\.]+ / [0-9\.]+
-//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)
-//     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]
-
-)"));
+		R"(// execution time statistics \(ms\) for "dummy":\n)"
+		R"(//   avg/med: [0-9\.]+ / [0-9\.]+\n)"
+		R"(//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)"
+		R"(//     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)"
+		R"(\n)"
+		R"(// execution time statistics \(ms\) for "dummy":\n)"
+		R"(//   avg/med: [0-9\.]+ / [0-9\.]+\n)"
+		R"(//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)"
+		R"(//     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)"
+		R"(\n)"
+	));
 }
 
 TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$clocks(...)'", "[TRACE_OUT_SYNC_STREAM][clocks]")
@@ -275,9 +275,9 @@ TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$clocks(...)'", "[TRACE
 	$clocks("dummy", dummy();)
 
 	REQUIRE_THAT(test::stream.str(), Matches(
-R"(// execution time "dummy": [0-9]+ clocks \([0-9\.]+ ms\)
-// execution time "dummy": [0-9]+ clocks \([0-9\.]+ ms\)
-)"));
+		R"(// execution time for "dummy": [0-9]+ clocks \([0-9\.]+ ms\)\n)"
+		R"(// execution time for "dummy": [0-9]+ clocks \([0-9\.]+ ms\)\n)"
+	));
 }
 
 TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$clock_stats(...)'", "[TRACE_OUT_SYNC_STREAM][clock_stats]")
@@ -300,16 +300,16 @@ TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$clock_stats(...)'", "[
 	}
 
 	REQUIRE_THAT(test::stream.str(), Matches(
-R"(// execution time statistics \(clocks\) for "dummy":
-//   avg/med: [0-9\.]+ / [0-9\.]+
-//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)
-//     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]
-
-// execution time statistics \(clocks\) for "dummy":
-//   avg/med: [0-9\.]+ / [0-9\.]+
-//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)
-//     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]
-
-)"));
+		R"(// execution time statistics \(clocks\) for "dummy":\n)"
+		R"(//   avg/med: [0-9\.]+ / [0-9\.]+\n)"
+		R"(//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)"
+		R"(//     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)"
+		R"(\n)"
+		R"(// execution time statistics \(clocks\) for "dummy":\n)"
+		R"(//   avg/med: [0-9\.]+ / [0-9\.]+\n)"
+		R"(//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)"
+		R"(//     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)"
+		R"(\n)"
+	));
 }
 

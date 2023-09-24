@@ -23,11 +23,11 @@ TEST_CASE("$time_stats(...)", "[time_stats]")
 	}
 
 	REQUIRE_THAT(test::stream.str(), Matches(
-R"(// execution time statistics \(ms\) for "sleeping":
-//   avg/med: [0-9\.]+ / [0-9\.]+
-//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)
-//     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]
-
-)"));
+		R"(// execution time statistics \(ms\) for "sleeping":\n)"
+		R"(//   avg/med: [0-9\.]+ / [0-9\.]+\n)"
+		R"(//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)"
+		R"(//     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)"
+		R"(\n)"
+	));
 }
 

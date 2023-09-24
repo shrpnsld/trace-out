@@ -109,10 +109,10 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$f'", "[TRACE_OUT_SHOW_FILE_LINE][f]
 
 	std::stringstream expected;
 	expected <<
-		" show-file-line-opt~:" << subject_func11_line << "    |  void subject_func11()\n"
-									"                          |  {\n"
-		" show-file-line-opt~:" << subject_func11_line << "    |  } // void subject_func11()\n"
-									"                          |  \n";
+		" show-file-line-opt~:" << subject_func11_line << "   |  void subject_func11()\n"
+		"                          |  {\n"
+		" show-file-line-opt~:" << subject_func11_line << "   |  } // void subject_func11()\n"
+		"                          |  \n";
 	REQUIRE(test::stream.str() == expected.str());
 }
 
@@ -194,7 +194,7 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$time(...)'", "[TRACE_OUT_SHOW_FILE_
 	$time("dummy", dummy();)
 
 	std::stringstream expected;
-	expected << " show-file-line-opt~:" << line << "  \\|  // execution time \"dummy\": [0-9]+ ms\n";
+	expected << " show-file-line-opt~:" << line << "  \\|  // execution time for \"dummy\": [0-9]+ ms\n";
 	REQUIRE_THAT(test::stream.str(), Matches(expected.str()));
 }
 
@@ -231,7 +231,7 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$clocks(...)'", "[TRACE_OUT_SHOW_FIL
 	$clocks("dummy", dummy();)
 
 	std::stringstream expected;
-	expected << " show-file-line-opt~:" << line << "  \\|  // execution time \"dummy\": [0-9]+ clocks \\([0-9\\.]+ ms\\)\n";
+	expected << " show-file-line-opt~:" << line << "  \\|  // execution time for \"dummy\": [0-9]+ clocks \\([0-9\\.]+ ms\\)\n";
 	REQUIRE_THAT(test::stream.str(), Matches(expected.str()));
 }
 
