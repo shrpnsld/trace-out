@@ -94,10 +94,10 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$t(...)'", "[TRACE_OUT_SHOW_FILE_LIN
 	test::stream.str(std::string {});
 
 	long int line {__LINE__ + 1};
-	$t(char character {'h'};)
+	$t(dummy();)
 
 	std::stringstream expected;
-	expected << " show-file-line-opt~:" << line << "   |  char character {'h'}; // trace-out: statement passed\n";
+	expected << " show-file-line-opt~:" << line << "   |  dummy(); // trace-out: statement passed\n";
 	REQUIRE(test::stream.str() == expected.str());
 }
 

@@ -98,12 +98,12 @@ TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$t(...)'", "[TRACE_OUT_
 {
 	test::stream.str(std::string {});
 
-	$t(const char *one {"hellomoto!"};)
-	$t(const char *two {"wazzzup!"};)
+	$t(dummy("hellomoto!");)
+	$t(dummy("wazzzup!");)
 
 	const char *expected {
-		"const char *one {\"hellomoto!\"}; // trace-out: statement passed\n"
-		"const char *two {\"wazzzup!\"}; // trace-out: statement passed\n"
+		"dummy(\"hellomoto!\"); // trace-out: statement passed\n"
+		"dummy(\"wazzzup!\"); // trace-out: statement passed\n"
 	};
 	REQUIRE(test::stream.str() == expected);
 }

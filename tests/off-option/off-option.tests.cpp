@@ -12,6 +12,7 @@ TEST_CASE("'TRACE_OUT_OFF' with '$w(...)'", "[TRACE_OUT_OFF][w]")
 	test::stream.str(std::string {});
 
 	const char *str {"hellomoto!"};
+	dummy(str);
 
 	$w(str)
 
@@ -24,7 +25,7 @@ TEST_CASE("'TRACE_OUT_OFF' with '$e(...)'", "[TRACE_OUT_OFF][e]")
 
 	const char *str {"hellomoto!"};
 
-	char character = $e(str[0]);
+	dummy($e(str[0]));
 
 	REQUIRE(test::stream.str() == "");
 }
@@ -35,6 +36,7 @@ TEST_CASE("'TRACE_OUT_OFF' with '$r(...)'", "[TRACE_OUT_OFF][r]")
 
 	const char *str {"hellomoto!"};
 	std::size_t length {11};
+	dummy(str, length);
 
 	$r(str, str + length)
 
@@ -47,6 +49,7 @@ TEST_CASE("'TRACE_OUT_OFF' with '$m(...)'", "[TRACE_OUT_OFF][m]")
 
 	const char *str {"hellomoto!"};
 	std::size_t length {11};
+	dummy(str, length);
 
 	$m(str, length)
 
@@ -66,7 +69,7 @@ TEST_CASE("'TRACE_OUT_OFF' with '$t(...)'", "[TRACE_OUT_OFF][t]")
 {
 	test::stream.str(std::string {});
 
-	$t(char character {'h'};)
+	$t(dummy();)
 
 	REQUIRE(test::stream.str() == "");
 }

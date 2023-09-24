@@ -1,4 +1,10 @@
 #pragma once
 
-void dummy();
+int dummy();
+
+template <typename ...Args_t>
+int dummy(Args_t &&...)
+{
+	return 0;
+}
 

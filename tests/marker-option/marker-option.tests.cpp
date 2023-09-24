@@ -13,6 +13,7 @@ TEST_CASE("'TRACE_OUT_MARKER' with '$w(...)'", "[TRACE_OUT_MARKER][w]")
 	test::stream.str(std::string {});
 
 	const char *str {"hellomoto!"};
+	dummy(str);
 
 	$w(str)
 
@@ -25,6 +26,7 @@ TEST_CASE("'TRACE_OUT_MARKER' with '$e(...)'", "[TRACE_OUT_MARKER][e]")
 	test::stream.str(std::string {});
 
 	const char *str {"hellomoto!"};
+	dummy(str);
 
 	$e(str);
 
@@ -38,6 +40,7 @@ TEST_CASE("'TRACE_OUT_MARKER' with '$r(...)'", "[TRACE_OUT_MARKER][r]")
 
 	const char *str {"hellomoto!"};
 	std::size_t length {11};
+	dummy(str, length);
 
 	$r(str, str + length)
 
@@ -51,6 +54,7 @@ TEST_CASE("'TRACE_OUT_MARKER' with '$m(...)'", "[TRACE_OUT_MARKER][m]")
 
 	const char *str {"hellomoto!"};
 	std::size_t length {11};
+	dummy(str, length);
 
 	$m(str, length)
 
@@ -77,9 +81,9 @@ TEST_CASE("'TRACE_OUT_MARKER' with '$t(...)'", "[TRACE_OUT_MARKER][t]")
 {
 	test::stream.str(std::string {});
 
-	$t(char character {'h'};)
+	$t(dummy();)
 
-	const char *expected {"@@ char character {'h'}; // trace-out: statement passed\n"};
+	const char *expected {"@@ dummy(); // trace-out: statement passed\n"};
 	REQUIRE(test::stream.str() == expected);
 }
 

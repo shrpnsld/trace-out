@@ -155,16 +155,16 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$t(...)'", "[TRACE_OUT_SHOW_THREAD][t]"
 	std::thread {[]()
 	{
 		$thread(two)
-		$t(const char *what {"wazzzup!"};)
+		$t(dummy("wazzzup!");)
 	}}.join();
 
-	$t(const char *what {"hellomoto!"};)
+	$t(dummy("hellomoto!");)
 
 	REQUIRE_THAT(test::stream.str(), Matches(
 R"(\[Thread\: 0x[0-9a-f]+ two\]~+
-const char \*what \{"wazzzup!"\}; // trace-out: statement passed
+dummy\("wazzzup!"\); // trace-out: statement passed
 \[Thread\: 0x[0-9a-f]+ one\]~+
-const char \*what \{"hellomoto!"\}; // trace-out: statement passed
+dummy\("hellomoto!"\); // trace-out: statement passed
 )"));
 }
 

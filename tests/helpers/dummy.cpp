@@ -1,6 +1,7 @@
 #include "dummy.hpp"
 
-void dummy()
+int dummy()
 {
+	return 0;
 }
 
