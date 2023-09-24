@@ -277,7 +277,7 @@ namespace trace_out
 #endif
 
 	static const char THREAD_HEADER_SEPARATOR = '~';
-	static const char DELIMITER[] = " |  ";
+	static const char DELIMITER[] = " | ";
 	static const standard::size_t INDENTATION_WIDTH = sizeof(INDENTATION) - 1;
 
 	inline system::mutex &private_out_stream_mutex();
