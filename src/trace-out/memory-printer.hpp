@@ -15,17 +15,6 @@
 namespace trace_out
 {
 
-template <typename Option1_t = nothing, typename Option2_t = nothing>
-void print_memory(const std::string &filename_line, const char *name, const standard::uint8_t *memory, standard::size_t size, Option1_t option1 = Option1_t(), Option2_t option2 = Option2_t());
-
-}
-
-//
-// Private
-
-namespace trace_out
-{
-
 enum base_t
 {
 	BIN,
@@ -42,6 +31,22 @@ enum byte_order_t
 	BIG,
 	LITTLE
 };
+
+inline void print_memory(const std::string &filename_line, const char *name, const standard::uint8_t *memory, standard::size_t size);
+
+template <typename Option1_t>
+void print_memory(const std::string &filename_line, const char *name, const standard::uint8_t *memory, standard::size_t size, const Option1_t &option1);
+
+template <typename Option1_t, typename Option2_t>
+void print_memory(const std::string &filename_line, const char *name, const standard::uint8_t *memory, standard::size_t size, const Option1_t &option1, const Option2_t &option2);
+
+}
+
+//
+// Private
+
+namespace trace_out
+{
 
 struct bin_or_hex_option
 {
@@ -138,6 +143,8 @@ void print_number_chunk(out_stream &stream, const standard::uint8_t *chunk, stan
 template <typename Type_t>
 void print_number_chunk_reverse(out_stream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t field_width);
 
+inline void print_memory_with_display_options(const std::string &filename_line, const char *name, const standard::uint8_t *memory, standard::size_t size, const memory_display_options_t &options);
+
 }
 
 //
@@ -146,13 +153,32 @@ void print_number_chunk_reverse(out_stream &stream, const standard::uint8_t *chu
 namespace trace_out
 {
 
+void print_memory(const std::string &filename_line, const char *name, const standard::uint8_t *memory, standard::size_t size)
+{
+	print_memory_with_display_options(filename_line, name, memory, size, memory_display_options_t(HEX, 1, current_byte_order(), 0));
+}
+
+template <typename Option1_t>
+void print_memory(const std::string &filename_line, const char *name, const standard::uint8_t *memory, standard::size_t size, const Option1_t &option1)
+{
+	memory_display_options_t options(HEX, 1, current_byte_order(), 0);
+	options.set_option(option1);
+
+	print_memory_with_display_options(filename_line, name, memory, size, options);
+}
+
 template <typename Option1_t, typename Option2_t>
-void print_memory(const std::string &filename_line, const char *name, const standard::uint8_t *memory, standard::size_t size, Option1_t option1, Option2_t option2)
+void print_memory(const std::string &filename_line, const char *name, const standard::uint8_t *memory, standard::size_t size, const Option1_t &option1, const Option2_t &option2)
 {
 	memory_display_options_t options(HEX, 1, current_byte_order(), 0);
 	options.set_option(option1);
 	options.set_option(option2);
 
+	print_memory_with_display_options(filename_line, name, memory, size, options);
+}
+
+void print_memory_with_display_options(const std::string &filename_line, const char *name, const standard::uint8_t *memory, standard::size_t size, const memory_display_options_t &options)
+{
 	standard::size_t field_width = field_width_for_base_and_grouping(options.base, options.grouping);
 	print_chunk_t print_chunk = select_print_chunk_function(options.base, options.grouping, options.byte_order);
 
