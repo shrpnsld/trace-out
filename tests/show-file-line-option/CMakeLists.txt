@@ -2,7 +2,7 @@ add_executable(show-file-line-option-test)
 
 target_compile_features(show-file-line-option-test
 	PUBLIC
-		cxx_std_20
+		cxx_std_11
 )
 
 target_compile_definitions(show-file-line-option-test

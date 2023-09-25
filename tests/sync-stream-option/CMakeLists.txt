@@ -2,7 +2,7 @@ add_executable(sync-stream-option-tests)
 
 target_compile_features(sync-stream-option-tests
 	PUBLIC
-		cxx_std_20
+		cxx_std_11
 )
 
 target_compile_definitions(sync-stream-option-tests

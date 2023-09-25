@@ -303,7 +303,7 @@ TEST_CASE("'TRACE_OUT_INDENTATION' outside '$r(...)'", "[indentation][TRACE_OUT_
 
 	$if (some == 456)
 	{
-		std::vector arr {1, 2, 3, 4, 5};
+		std::vector<int> arr {1, 2, 3, 4, 5};
 		$r(arr.begin(), arr.end());
 	}
 

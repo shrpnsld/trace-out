@@ -2,7 +2,7 @@ add_executable(marker-option-tests)
 
 target_compile_features(marker-option-tests
 	PUBLIC
-		cxx_std_20
+		cxx_std_11
 )
 
 target_compile_definitions(marker-option-tests

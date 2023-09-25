@@ -2,7 +2,7 @@ add_executable(show-thread-option-tests)
 
 target_compile_features(show-thread-option-tests
 	PUBLIC
-		cxx_std_20
+		cxx_std_11
 )
 
 target_compile_definitions(show-thread-option-tests

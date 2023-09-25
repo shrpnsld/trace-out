@@ -2,7 +2,7 @@ add_executable(off-option-tests)
 
 target_compile_features(off-option-tests
 	PUBLIC
-		cxx_std_20
+		cxx_std_11
 )
 
 target_compile_definitions(off-option-tests

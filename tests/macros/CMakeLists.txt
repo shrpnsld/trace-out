@@ -2,7 +2,7 @@ add_executable(macros-tests)
 
 target_compile_features(macros-tests
 	PUBLIC
-		cxx_std_20
+		cxx_std_11
 )
 
 target_compile_definitions(macros-tests

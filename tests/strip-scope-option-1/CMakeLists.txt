@@ -2,7 +2,7 @@ add_executable(strip-scope-option-tests-1)
 
 target_compile_features(strip-scope-option-tests-1
 	PUBLIC
-		cxx_std_20
+		cxx_std_11
 )
 
 target_compile_definitions(strip-scope-option-tests-1

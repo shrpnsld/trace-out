@@ -2,7 +2,7 @@ add_executable(indentation-option-tests)
 
 target_compile_features(indentation-option-tests
 	PUBLIC
-		cxx_std_20
+		cxx_std_11
 )
 
 target_compile_definitions(indentation-option-tests
