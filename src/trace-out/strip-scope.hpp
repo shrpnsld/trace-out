@@ -22,9 +22,9 @@
 namespace trace_out
 {
 
-static const std::string::value_type SCOPE_DELIMITER[] = "::";
-static const std::string::value_type *SCOPE_DELIMITER_END = SCOPE_DELIMITER + (sizeof(SCOPE_DELIMITER) / sizeof(SCOPE_DELIMITER[0]) - 1);
-static std::iterator_traits<std::string::const_iterator>::difference_type SCOPE_DELIMITER_LENGTH = sizeof(SCOPE_DELIMITER) / sizeof(std::string::value_type) - 1;
+static const std::string::value_type CPP_SCOPE_DELIMITER[] = "::";
+static const std::string::value_type *CPP_SCOPE_DELIMITER_END = CPP_SCOPE_DELIMITER + (sizeof(CPP_SCOPE_DELIMITER) / sizeof(CPP_SCOPE_DELIMITER[0]) - 1);
+static std::iterator_traits<std::string::const_iterator>::difference_type CPP_SCOPE_DELIMITER_LENGTH = sizeof(CPP_SCOPE_DELIMITER) / sizeof(std::string::value_type) - 1;
 
 inline std::string strip_scope(const std::string &line, standard::size_t parent_scope_count = 0);
 inline bool is_delimiter(std::string::value_type character);
@@ -86,10 +86,10 @@ Iterator skip_components(Iterator first, Iterator last, standard::size_t parent_
 {
 	for ( ; parent_component_count > 0; --parent_component_count)
 	{
-		first = std::search(first, last, SCOPE_DELIMITER, SCOPE_DELIMITER_END);
+		first = std::search(first, last, CPP_SCOPE_DELIMITER, CPP_SCOPE_DELIMITER_END);
 		if (first != last)
 		{
-			first += SCOPE_DELIMITER_LENGTH;
+			first += CPP_SCOPE_DELIMITER_LENGTH;
 		}
 	}
 
@@ -103,7 +103,7 @@ std::string::const_iterator find_identifier_start(std::string::const_iterator fi
 	std::string::const_reverse_iterator rlast(last - dist);
 
 	rfirst = skip_components(rfirst, rlast, parent_component_count);
-	std::string::const_reverse_iterator place = std::search(rfirst, rlast, SCOPE_DELIMITER, SCOPE_DELIMITER_END);
+	std::string::const_reverse_iterator place = std::search(rfirst, rlast, CPP_SCOPE_DELIMITER, CPP_SCOPE_DELIMITER_END);
 	if (place == rlast)
 	{
 		return first;

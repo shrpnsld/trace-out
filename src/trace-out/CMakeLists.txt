@@ -26,10 +26,12 @@ target_sources(trace-out
 		time.hpp
 		to-string.hpp
 		trace-out-to-file.hpp
+		trace-out-to-network.hpp
 		trace-out-to-stdout.hpp
 		trace-out-to-wdo.hpp
 		trace-out.hpp
 		try-memory.hpp
+		untyped.hpp
 		watch-printer.hpp
 )
 

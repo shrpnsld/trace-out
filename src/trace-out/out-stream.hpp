@@ -32,10 +32,10 @@
 	#include "trace-out/trace-out-to-file.hpp"
 #elif defined(TRACE_OUT_TO_WDO)
 	#include "trace-out/trace-out-to-wdo.hpp"
-#elif defined(TRACE_OUT_TO_STDOUT)
-	#include "trace-out/trace-out-to-stdout.hpp"
+#elif defined(TRACE_OUT_TO_NETWORK)
+	#include "trace-out/trace-out-to-network.hpp"
 #else
-	#error no output stream is specified
+	#include "trace-out/trace-out-to-stdout.hpp"
 #endif
 
 //
