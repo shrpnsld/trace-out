@@ -151,10 +151,10 @@ connection::~connection()
 
 }
 
+#if defined(TRACE_OUT_POSIX)
+
 //
 // POSIX Implementation
-
-#if defined(TRACE_OUT_POSIX)
 
 #include <cstring> // [amalgamate: leave]
 #include <netdb.h> // [amalgamate:leave]
@@ -240,6 +240,9 @@ void really_close(untyped<> descriptor)
 }
 
 #elif defined(TRACE_OUT_WINDOWS)
+
+//
+// WinAPI Implementation
 
 #pragma comment(lib, "Ws2_32.lib")
 

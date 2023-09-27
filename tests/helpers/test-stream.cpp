@@ -3,7 +3,7 @@
 namespace test
 {
 
-	std::stringstream stream;
+std::stringstream stream;
 
 }
 
