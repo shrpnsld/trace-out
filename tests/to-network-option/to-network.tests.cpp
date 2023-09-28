@@ -5,6 +5,6 @@
 
 TEST_CASE("'TRACE_OUT_TO_NETWORK' manual test helper", "[TRACE_OUT_TO_NETWORK]")
 {$f
-	$p("hellomoto!")
+	$t("hellomoto!");
 }
 

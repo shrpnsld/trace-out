@@ -1,37 +1,39 @@
 target_sources(trace-out
 	PUBLIC
+		autolock.hpp
 		console.hpp
-		filename-line.hpp
-		function-printer.hpp
+		current-thread-name.hpp
 		has-member.hpp
+		indentation.hpp
 		integer.hpp
 		macro-magic.hpp
-		memory-printer.hpp
 		mutex.hpp
 		nothing.hpp
-		out-stream.hpp
 		platform-detection.hpp
-		pretty.hpp
+		pretty-code-blocks.hpp
+		pretty-function.hpp
+		pretty-lines.hpp
+		pretty-memory.hpp
+		pretty-range.hpp
+		pretty-return.hpp
+		pretty-time.hpp
+		pretty-trace.hpp
+		pretty-values.hpp
 		printfamily.hpp
-		range-printer.hpp
 		resource.hpp
-		return-printer.hpp
-		statements-printer.hpp
 		statistics.hpp
 		strip-scope.hpp
 		template-magic.hpp
 		thread-local-storage.hpp
 		thread.hpp
-		time-printer.hpp
 		time.hpp
+		to-file.hpp
+		to-network.hpp
+		to-stdout.hpp
 		to-string.hpp
-		trace-out-to-file.hpp
-		trace-out-to-network.hpp
-		trace-out-to-stdout.hpp
-		trace-out-to-wdo.hpp
+		to-wdo.hpp
 		trace-out.hpp
 		try-memory.hpp
 		untyped.hpp
-		watch-printer.hpp
 )
 

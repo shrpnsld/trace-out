@@ -6,7 +6,7 @@
 
 TEST_CASE("'TRACE_OUT_STRIP_SCOPE=2' with nothing to strip", "[TRACE_OUT_STRIP_SCOPE][f]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	SECTION("global scope")
 	{
@@ -18,7 +18,7 @@ TEST_CASE("'TRACE_OUT_STRIP_SCOPE=2' with nothing to strip", "[TRACE_OUT_STRIP_S
 			"} // void func()\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
 	SECTION("framework::")
@@ -31,7 +31,7 @@ TEST_CASE("'TRACE_OUT_STRIP_SCOPE=2' with nothing to strip", "[TRACE_OUT_STRIP_S
 			"} // framework::type framework::func(framework::type)\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
 	SECTION("::type")
@@ -44,7 +44,7 @@ TEST_CASE("'TRACE_OUT_STRIP_SCOPE=2' with nothing to strip", "[TRACE_OUT_STRIP_S
 			"} // ::type func0(::type)\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
 	SECTION("framework::library::")
@@ -57,7 +57,7 @@ TEST_CASE("'TRACE_OUT_STRIP_SCOPE=2' with nothing to strip", "[TRACE_OUT_STRIP_S
 			"} // framework::library::type framework::library::func(framework::library::type)\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
 	SECTION("::framework::")
@@ -70,13 +70,13 @@ TEST_CASE("'TRACE_OUT_STRIP_SCOPE=2' with nothing to strip", "[TRACE_OUT_STRIP_S
 			"} // ::framework::type func1(::framework::type)\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 }
 
 TEST_CASE("'TRACE_OUT_STRIP_SCOPE=2' with something to strip", "[TRACE_OUT_STRIP_SCOPE][f]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	SECTION("framework::library::component::")
 	{
@@ -88,7 +88,7 @@ TEST_CASE("'TRACE_OUT_STRIP_SCOPE=2' with something to strip", "[TRACE_OUT_STRIP
 			"} // library::component::type library::component::func(library::component::type)\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
 	SECTION("::framework::library::")
@@ -101,7 +101,7 @@ TEST_CASE("'TRACE_OUT_STRIP_SCOPE=2' with something to strip", "[TRACE_OUT_STRIP
 			"} // framework::library::type func2(framework::library::type)\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 }
 

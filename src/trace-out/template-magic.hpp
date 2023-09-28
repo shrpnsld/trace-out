@@ -30,6 +30,24 @@ struct is_same
 };
 
 template <typename Type_t>
+struct is_pointer
+{
+	enum
+	{
+		value = 0
+	};
+};
+
+template <typename Type_t>
+struct is_pointer<Type_t *>
+{
+	enum
+	{
+		value = 1
+	};
+};
+
+template <typename Type_t>
 struct is_structural
 {
 	struct yes

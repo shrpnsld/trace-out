@@ -1,9 +1,13 @@
-#include <sstream>
+#pragma once
+
+#include <ostream>
 
 namespace test
 {
 
-extern std::stringstream stream;
+extern std::stringstream out_stream;
+
+extern std::ostream &stream();
 
 }
 

@@ -7,14 +7,9 @@ target_compile_features(marker-option-tests
 
 target_compile_definitions(marker-option-tests
 	PRIVATE
-		TRACE_OUT_STREAM="trace-out-to-test-stream.hpp"
+		TRACE_OUT_STREAM=test
 		TRACE_OUT_WIDTH=70
 		TRACE_OUT_MARKER="@@"
-)
-
-target_include_directories(marker-option-tests
-	PRIVATE
-		${CMAKE_CURRENT_SOURCE_DIR}/src/
 )
 
 target_link_libraries(marker-option-tests

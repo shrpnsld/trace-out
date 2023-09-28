@@ -3,7 +3,11 @@
 #include "test-stream.hpp"
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
+#include <cstdint>
+#include <iomanip>
 #include <sstream>
+
+using trace_out::RESET_FLAGS;
 
 const long int subject_func11_line {__LINE__ + 2};
 void subject_func11()
@@ -16,52 +20,38 @@ int subject_func12()
 	$return 789;
 }
 
-TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$w(...)'", "[TRACE_OUT_SHOW_FILE_LINE][w]")
+TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$t(...)'", "[TRACE_OUT_SHOW_FILE_LINE][t]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	const char *str {"hellomoto!"};
 
 	long int line {__LINE__ + 1};
-	$w(str)
+	$t(str);
 
 	std::stringstream expected;
 	expected << " show-file-line-opt~:" << line << "   | str = \"hellomoto!\"\n";
-	REQUIRE(test::stream.str() == expected.str());
-}
-
-TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$e(...)'", "[TRACE_OUT_SHOW_FILE_LINE][e]")
-{
-	test::stream.str(std::string {});
-
-	const char *str {"hellomoto!"};
-
-	long int line {__LINE__ + 1};
-	$e(str);
-
-	std::stringstream expected;
-	expected << " show-file-line-opt~:" << line << "   | str = \"hellomoto!\"\n";
-	REQUIRE(test::stream.str() == expected.str());
+	REQUIRE(test::out_stream.str() == expected.str());
 }
 
 TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$r(...)'", "[TRACE_OUT_SHOW_FILE_LINE][r]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	const char *str {"hellomoto!"};
-	std::size_t length {11};
+	std::size_t length {10};
 
 	long int line {__LINE__ + 1};
 	$r(str, str + length)
 
 	std::stringstream expected;
-	expected << " show-file-line-opt~:" << line << "   | [str, str + length) = ['h', 'e', 'l', 'l', 'o', 'm', 'o', 't', 'o', '!', '']\n";
-	REQUIRE(test::stream.str() == expected.str());
+	expected << " show-file-line-opt~:" << line << "   | [str, str + length) = ['h', 'e', 'l', 'l', 'o', 'm', 'o', 't', 'o', '!']\n";
+	REQUIRE(test::out_stream.str() == expected.str());
 }
 
 TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$m(...)'", "[TRACE_OUT_SHOW_FILE_LINE][m]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	const char *str {"hellomoto!"};
 	std::size_t length {11};
@@ -70,40 +60,30 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$m(...)'", "[TRACE_OUT_SHOW_FILE_LIN
 	$m(str, length)
 
 	std::stringstream expected;
+	std::uintptr_t address {reinterpret_cast<std::uintptr_t>(str)};
 	expected <<
 		" show-file-line-opt~:" << line << "   | str, 11 bytes of 1-byte hexadecimal\n"
-		"                          |     " << static_cast<const void *>(str) << ": 68 65 6c 6c 6f 6d 6f 74 6f 21 00\n"
-		"                          |     \n";
-	REQUIRE(test::stream.str() == expected.str());
+		"                          |     " << std::hex << address << RESET_FLAGS << ": 68 65 6c 6c 6f 6d 6f 74 6f 21 00\n"
+		"                          | \n";
+	REQUIRE(test::out_stream.str() == expected.str());
 }
 
-TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$p(...)'", "[TRACE_OUT_SHOW_FILE_LINE][p]")
+TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$s(...)'", "[TRACE_OUT_SHOW_FILE_LINE][s]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	long int line {__LINE__ + 1};
-	$p("wazzzup!")
+	$s(dummy();)
 
 	std::stringstream expected;
-	expected << " show-file-line-opt~:" << line << "   | // wazzzup!\n";
-	REQUIRE(test::stream.str() == expected.str());
-}
-
-TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$t(...)'", "[TRACE_OUT_SHOW_FILE_LINE][t]")
-{
-	test::stream.str(std::string {});
-
-	long int line {__LINE__ + 1};
-	$t(dummy();)
-
-	std::stringstream expected;
-	expected << " show-file-line-opt~:" << line << "   | dummy(); // trace-out: statement passed\n";
-	REQUIRE(test::stream.str() == expected.str());
+	expected << " show-file-line-opt~:" << line << "   | dummy(); // running...\n";
+	expected << " show-file-line-opt~:" << line << "   | dummy(); // done.\n";
+	REQUIRE(test::out_stream.str() == expected.str());
 }
 
 TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$f'", "[TRACE_OUT_SHOW_FILE_LINE][f]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	subject_func11();
 
@@ -113,23 +93,23 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$f'", "[TRACE_OUT_SHOW_FILE_LINE][f]
 		"                          | {\n"
 		" show-file-line-opt~:" << subject_func11_line << "   | } // void subject_func11()\n"
 		"                          | \n";
-	REQUIRE(test::stream.str() == expected.str());
+	REQUIRE(test::out_stream.str() == expected.str());
 }
 
 TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$return'", "[TRACE_OUT_SHOW_FILE_LINE][return]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	subject_func12();
 
 	std::stringstream expected;
 	expected << " show-file-line-opt~:" << subject_func12_line << "   | return 789\n";
-	REQUIRE(test::stream.str() == expected.str());
+	REQUIRE(test::out_stream.str() == expected.str());
 }
 
 TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$if(...)'", "[TRACE_OUT_SHOW_FILE_LINE][if]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	long int line {__LINE__ + 1};
 	$if (true)
@@ -141,12 +121,12 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$if(...)'", "[TRACE_OUT_SHOW_FILE_LI
 		"                          | {\n"
 		"                          | }\n"
 		"                          | \n";
-	REQUIRE(test::stream.str() == expected.str());
+	REQUIRE(test::out_stream.str() == expected.str());
 }
 
 TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$for(...)'", "[TRACE_OUT_SHOW_FILE_LINE][for]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	long int line {__LINE__ + 1};
 	$for ( ; true; )
@@ -158,15 +138,15 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$for(...)'", "[TRACE_OUT_SHOW_FILE_L
 	expected << " show-file-line-opt~:" << line << "  | for (; true;)\n"
 		"                          | {\n"
 		" show-file-line-opt~:" << line << "  |     // for: iteration #1\n"
-		"                          |     \n"
+		"                          | \n"
 		"                          | } // for (; true;)\n"
 		"                          | \n";
-	REQUIRE(test::stream.str() == expected.str());
+	REQUIRE(test::out_stream.str() == expected.str());
 }
 
 TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$while(...)'", "[TRACE_OUT_SHOW_FILE_LINE][while]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	long int line {__LINE__ + 1};
 	$while (true)
@@ -178,31 +158,33 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$while(...)'", "[TRACE_OUT_SHOW_FILE
 	expected << " show-file-line-opt~:" << line << "  | while (true)\n"
 		"                          | {\n"
 		" show-file-line-opt~:" << line << "  |     // while: iteration #1\n"
-		"                          |     \n"
+		"                          | \n"
 		"                          | } // while (true)\n"
 		"                          | \n";
-	REQUIRE(test::stream.str() == expected.str());
+	REQUIRE(test::out_stream.str() == expected.str());
 }
 
 TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$time(...)'", "[TRACE_OUT_SHOW_FILE_LINE][time]")
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	long int line {__LINE__ + 1};
 	$time("dummy", dummy();)
 
 	std::stringstream expected;
-	expected << " show-file-line-opt~:" << line << "  \\| // execution time for \"dummy\": [0-9]+ ms\n";
-	REQUIRE_THAT(test::stream.str(), Matches(expected.str()));
+	expected <<
+		" show-file-line-opt~:" << line << "  \\| timing \"dummy\"...\n"
+		" show-file-line-opt~:" << line << "  \\| \"dummy\" timed in [0-9]+ ms\n";
+	REQUIRE_THAT(test::out_stream.str(), Matches(expected.str()));
 }
 
 TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$time_stats(...)'", "[TRACE_OUT_SHOW_FILE_LINE][time_stats]")
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	long int line {__LINE__ + 3};
 	for (std::size_t passes {10}; passes > 0; --passes)
@@ -218,28 +200,30 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$time_stats(...)'", "[TRACE_OUT_SHOW
 		"                          \\| //     range: [0-9\\.]+ \\[[0-9\\.]+\\.\\.\\.[0-9\\.]+\\]\n"
 		"                          \\| \n";
 
-	REQUIRE_THAT(test::stream.str(), Matches(expected.str()));
+	REQUIRE_THAT(test::out_stream.str(), Matches(expected.str()));
 }
 
 TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$clocks(...)'", "[TRACE_OUT_SHOW_FILE_LINE][clocks]")
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	long int line {__LINE__ + 1};
 	$clocks("dummy", dummy();)
 
 	std::stringstream expected;
-	expected << " show-file-line-opt~:" << line << "  \\| // execution time for \"dummy\": [0-9]+ clocks \\([0-9\\.]+ ms\\)\n";
-	REQUIRE_THAT(test::stream.str(), Matches(expected.str()));
+	expected <<
+		" show-file-line-opt~:" << line << "  \\| clocking \"dummy\"...\n"
+		" show-file-line-opt~:" << line << "  \\| \"dummy\" clocked in [0-9]+ clocks \\([0-9\\.]+ ms\\)\n";
+	REQUIRE_THAT(test::out_stream.str(), Matches(expected.str()));
 }
 
 TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$clock_stats(...)'", "[TRACE_OUT_SHOW_FILE_LINE][clock_stats]")
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	long int line {__LINE__ + 3};
 	for (std::size_t passes {10}; passes > 0; --passes)
@@ -255,6 +239,6 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$clock_stats(...)'", "[TRACE_OUT_SHO
 		"                          \\| //     range: [0-9\\.]+ \\[[0-9\\.]+\\.\\.\\.[0-9\\.]+\\]\n"
 		"                          \\| \n";
 
-	REQUIRE_THAT(test::stream.str(), Matches(expected.str()));
+	REQUIRE_THAT(test::out_stream.str(), Matches(expected.str()));
 }
 

@@ -7,14 +7,9 @@ target_compile_features(sync-stream-option-tests
 
 target_compile_definitions(sync-stream-option-tests
 	PRIVATE
-		TRACE_OUT_STREAM="trace-out-to-test-stream.hpp"
+		TRACE_OUT_STREAM=test
 		TRACE_OUT_WIDTH=70
 		TRACE_OUT_SYNC_STREAM
-)
-
-target_include_directories(sync-stream-option-tests
-	PRIVATE
-		${CMAKE_CURRENT_SOURCE_DIR}/src/
 )
 
 target_link_libraries(sync-stream-option-tests
@@ -29,22 +24,12 @@ target_sources(sync-stream-option-tests
 		sync-stream-option.tests.cpp
 )
 
-add_test(NAME [[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$w(...)']]
+add_test(NAME [[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$t(...)']]
 	COMMAND
 		${CMAKE_CURRENT_BINARY_DIR}/sync-stream-option-tests
-		[["no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$w(...)'"]]
+		[["no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$t(...)'"]]
 )
-set_tests_properties([[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$w(...)']]
-	PROPERTIES
-		TIMEOUT 5
-)
-
-add_test(NAME [[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$e(...)']]
-	COMMAND
-		${CMAKE_CURRENT_BINARY_DIR}/sync-stream-option-tests
-		[["no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$e(...)'"]]
-)
-set_tests_properties([[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$e(...)']]
+set_tests_properties([[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$t(...)']]
 	PROPERTIES
 		TIMEOUT 5
 )
@@ -69,22 +54,12 @@ set_tests_properties([[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$m(...)']]
 		TIMEOUT 5
 )
 
-add_test(NAME [[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$p(...)']]
+add_test(NAME [[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$s(...)']]
 	COMMAND
 		${CMAKE_CURRENT_BINARY_DIR}/sync-stream-option-tests
-		[["no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$p(...)'"]]
+		[["no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$s(...)'"]]
 )
-set_tests_properties([[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$p(...)']]
-	PROPERTIES
-		TIMEOUT 5
-)
-
-add_test(NAME [[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$t(...)']]
-	COMMAND
-		${CMAKE_CURRENT_BINARY_DIR}/sync-stream-option-tests
-		[["no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$t(...)'"]]
-)
-set_tests_properties([[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$t(...)']]
+set_tests_properties([[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$s(...)']]
 	PROPERTIES
 		TIMEOUT 5
 )

@@ -10,10 +10,13 @@ TEST_CASE("$time(...)", "[time]")
 	using namespace std::chrono_literals;
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$time("dummy", dummy();)
 
-	REQUIRE_THAT(test::stream.str(), Matches(R"=(// execution time for "dummy()": [0-9]+ ms\n)="));
+	REQUIRE_THAT(test::out_stream.str(), Matches(
+		R"(timing "dummy"...\n)"
+		R"("dummy" timed in [0-9]+ ms\n)"
+	));
 }
 

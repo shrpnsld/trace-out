@@ -1,19 +1,23 @@
 #include "dummy.hpp"
-#include "trace-out/trace-out.hpp"
 #include "test-stream.hpp"
+#include "trace-out/trace-out.hpp"
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
+#include <cstdint>
+#include <iomanip>
 #include <vector>
+
+using trace_out::RESET_FLAGS;
 
 TEST_CASE("'TRACE_OUT_INDENTATION' inside '$if(...)'", "[indentation][TRACE_OUT_INDENTATION][if]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	int some {456};
 
 	$if (some == 456)
 	{
-		$w(some)
+		$t(some);
 	}
 
 	const char *expected {
@@ -23,16 +27,16 @@ TEST_CASE("'TRACE_OUT_INDENTATION' inside '$if(...)'", "[indentation][TRACE_OUT_
 		"}\n"
 		"\n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("'TRACE_OUT_INDENTATION' inside '$for(...)'", "[indentation][TRACE_OUT_INDENTATION][for]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$for (unsigned int i {0}; i < 5; ++i)
 	{
-		$w(i)
+		$t(i);
 	}
 
 	const char *expected {
@@ -40,34 +44,34 @@ TEST_CASE("'TRACE_OUT_INDENTATION' inside '$for(...)'", "[indentation][TRACE_OUT
 		"{\n"
 		"  // for: iteration #1\n"
 		"  i = 0\n"
-		"  \n"
+		"\n"
 		"  // for: iteration #2\n"
 		"  i = 1\n"
-		"  \n"
+		"\n"
 		"  // for: iteration #3\n"
 		"  i = 2\n"
-		"  \n"
+		"\n"
 		"  // for: iteration #4\n"
 		"  i = 3\n"
-		"  \n"
+		"\n"
 		"  // for: iteration #5\n"
 		"  i = 4\n"
-		"  \n"
+		"\n"
 		"} // for (unsigned int i {0}; i < 5; ++i)\n"
 		"\n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("'TRACE_OUT_INDENTATION' inside '$while(...)'", "[indentation][TRACE_OUT_INDENTATION][while]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	unsigned int i {0};
 
 	$while (i < 5)
 	{
-		$w(i)
+		$t(i);
 		++i;
 	}
 
@@ -76,31 +80,31 @@ TEST_CASE("'TRACE_OUT_INDENTATION' inside '$while(...)'", "[indentation][TRACE_O
 		"{\n"
 		"  // while: iteration #1\n"
 		"  i = 0\n"
-		"  \n"
+		"\n"
 		"  // while: iteration #2\n"
 		"  i = 1\n"
-		"  \n"
+		"\n"
 		"  // while: iteration #3\n"
 		"  i = 2\n"
-		"  \n"
+		"\n"
 		"  // while: iteration #4\n"
 		"  i = 3\n"
-		"  \n"
+		"\n"
 		"  // while: iteration #5\n"
 		"  i = 4\n"
-		"  \n"
+		"\n"
 		"} // while (i < 5)\n"
 		"\n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
-void subject_func9() {$f $p("hellomoto!") }
+void subject_func9() {$f $t("hellomoto!"); }
 int subject_func10() {$f $return 789; }
 
 TEST_CASE("'TRACE_OUT_INDENTATION' inside '$f'", "[indentation][TRACE_OUT_INDENTATION][f]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	subject_func9();
 
@@ -111,22 +115,22 @@ TEST_CASE("'TRACE_OUT_INDENTATION' inside '$f'", "[indentation][TRACE_OUT_INDENT
 		"} // void subject_func9()\n"
 		"\n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("'TRACE_OUT_INDENTATION' outside '$if(...)'", "[indentation][TRACE_OUT_INDENTATION][if]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	int first {456};
 	int second {789};
 
 	$if (first > 400)
 	{
-		$w(first)
+		$t(first);
 		$if (second > 700)
 		{
-			$w(second)
+			$t(second);
 		}
 	}
 
@@ -138,25 +142,25 @@ TEST_CASE("'TRACE_OUT_INDENTATION' outside '$if(...)'", "[indentation][TRACE_OUT
 		"  {\n"
 		"    second = 789\n"
 		"  }\n"
-		"  \n"
+		"\n"
 		"}\n"
 		"\n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("'TRACE_OUT_INDENTATION' outside '$for(...)'", "[indentation][TRACE_OUT_INDENTATION][for]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	int first {456};
 
 	$if (first > 400)
 	{
-		$w(first)
+		$t(first);
 		$for (unsigned int i {0}; i < 1; ++i)
 		{
-			$w(i)
+			$t(i);
 		}
 	}
 
@@ -168,28 +172,28 @@ TEST_CASE("'TRACE_OUT_INDENTATION' outside '$for(...)'", "[indentation][TRACE_OU
 		"  {\n"
 		"    // for: iteration #1\n"
 		"    i = 0\n"
-		"    \n"
+		"\n"
 		"  } // for (unsigned int i {0}; i < 1; ++i)\n"
-		"  \n"
+		"\n"
 		"}\n"
 		"\n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("'TRACE_OUT_INDENTATION' outside '$while(...)'", "[indentation][TRACE_OUT_INDENTATION][while]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	int first {456};
 
 	$if (first > 400)
 	{
-		$w(first)
+		$t(first);
 		unsigned int i {0};
 		$while (i < 1)
 		{
-			$w(i)
+			$t(i);
 			++i;
 		}
 	}
@@ -202,19 +206,19 @@ TEST_CASE("'TRACE_OUT_INDENTATION' outside '$while(...)'", "[indentation][TRACE_
 		"  {\n"
 		"    // while: iteration #1\n"
 		"    i = 0\n"
-		"    \n"
+		"\n"
 		"  } // while (i < 1)\n"
-		"  \n"
+		"\n"
 		"}\n"
 		"\n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 
 TEST_CASE("'TRACE_OUT_INDENTATION' outside '$f'", "[indentation][TRACE_OUT_INDENTATION][f]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	int first {456};
 
@@ -230,16 +234,16 @@ TEST_CASE("'TRACE_OUT_INDENTATION' outside '$f'", "[indentation][TRACE_OUT_INDEN
 		"  {\n"
 		"    // hellomoto!\n"
 		"  } // void subject_func9()\n"
-		"  \n"
+		"\n"
 		"}\n"
 		"\n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("'TRACE_OUT_INDENTATION' outside '$return'", "[indentation][TRACE_OUT_INDENTATION][return]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	subject_func10();
 
@@ -250,18 +254,18 @@ TEST_CASE("'TRACE_OUT_INDENTATION' outside '$return'", "[indentation][TRACE_OUT_
 		"} // int subject_func10()\n"
 		"\n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
-TEST_CASE("'TRACE_OUT_INDENTATION' outside '$w(...)'", "[indentation][TRACE_OUT_INDENTATION][w]")
+TEST_CASE("'TRACE_OUT_INDENTATION' outside '$t(...)'", "[indentation][TRACE_OUT_INDENTATION][t]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	int some {456};
 
 	$if (some == 456)
 	{
-		$w(some)
+		$t(some);
 	}
 
 	const char *expected {
@@ -271,33 +275,12 @@ TEST_CASE("'TRACE_OUT_INDENTATION' outside '$w(...)'", "[indentation][TRACE_OUT_
 		"}\n"
 		"\n"
 	};
-	REQUIRE(test::stream.str() == expected);
-}
-
-TEST_CASE("'TRACE_OUT_INDENTATION' outside '$e(...)'", "[indentation][TRACE_OUT_INDENTATION][e]")
-{
-	test::stream.str(std::string {});
-
-	int some {456};
-
-	$if (some == 456)
-	{
-		$e(some);
-	}
-
-	const char *expected {
-		"if (some == 456) => true\n"
-		"{\n"
-		"  some = 456\n"
-		"}\n"
-		"\n"
-	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("'TRACE_OUT_INDENTATION' outside '$r(...)'", "[indentation][TRACE_OUT_INDENTATION][r]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	int some {456};
 
@@ -314,12 +297,12 @@ TEST_CASE("'TRACE_OUT_INDENTATION' outside '$r(...)'", "[indentation][TRACE_OUT_
 		"}\n"
 		"\n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("'TRACE_OUT_INDENTATION' outside '$m(...)'", "[indentation][TRACE_OUT_INDENTATION][m]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	int some {456};
 	char str[11] {"hellomoto!"};
@@ -330,75 +313,57 @@ TEST_CASE("'TRACE_OUT_INDENTATION' outside '$m(...)'", "[indentation][TRACE_OUT_
 	}
 
 	std::stringstream expected;
+	std::uintptr_t address {reinterpret_cast<std::uintptr_t>(str)};
 	expected <<
 		"if (some == 456) => true\n"
 		"{\n"
 		"  str, 11 bytes of 1-byte hexadecimal\n"
-		"    " << static_cast<const void *>(str + 0) << ": 68 65 6c 6c 6f 6d 6f 74 6f 21 00\n"
-		"    \n"
+		"    " << std::hex << address << RESET_FLAGS << ": 68 65 6c 6c 6f 6d 6f 74 6f 21 00\n"
+		"\n"
 		"}\n"
 		"\n";
 
-	REQUIRE(test::stream.str() == expected.str());
+	REQUIRE(test::out_stream.str() == expected.str());
 }
 
-TEST_CASE("'TRACE_OUT_INDENTATION' outside '$t(...)'", "[indentation][TRACE_OUT_INDENTATION][t]")
+TEST_CASE("'TRACE_OUT_INDENTATION' outside '$s(...)'", "[indentation][TRACE_OUT_INDENTATION][s]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	int some {456};
 
 	$if (some == 456)
 	{
-		$t(some = 789;)
+		$s(some = 789;)
 	}
 
 	const char *expected {
 		"if (some == 456) => true\n"
 		"{\n"
-		"  some = 789; // trace-out: statement passed\n"
+		"  some = 789; // running...\n"
+		"  some = 789; // done.\n"
 		"}\n"
 		"\n"
 	};
-	REQUIRE(test::stream.str() == expected);
-}
-
-TEST_CASE("'TRACE_OUT_INDENTATION' outside '$p(...)'", "[indentation][TRACE_OUT_INDENTATION][p]")
-{
-	test::stream.str(std::string {});
-
-	int some {456};
-
-	$if (some == 456)
-	{
-		$p("%s", "hellomoto!")
-	}
-
-	const char *expected {
-		"if (some == 456) => true\n"
-		"{\n"
-		"  // hellomoto!\n"
-		"}\n"
-		"\n"
-	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("'TRACE_OUT_INDENTATION' outside '$time(...)'", "[indentation][TRACE_OUT_INDENTATION][time]")
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$if (true)
 	{
 		$time("dummy", dummy();)
 	}
 
-	REQUIRE_THAT(test::stream.str(), Matches(
+	REQUIRE_THAT(test::out_stream.str(), Matches(
 		R"(if \(true\) => true\n)"
 		R"(\{\n)"
-		R"(  // execution time for "dummy": [0-9]+ ms\n)"
+		R"(  timing "dummy"...\n)"
+		R"(  "dummy" timed in [0-9]+ ms\n)"
 		R"(\}\n)"
 		R"(\n)"
 	));
@@ -408,7 +373,7 @@ TEST_CASE("'TRACE_OUT_INDENTATION' outside '$time_stats(...)'", "[indentation][T
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$if (true)
 	{
@@ -418,14 +383,14 @@ TEST_CASE("'TRACE_OUT_INDENTATION' outside '$time_stats(...)'", "[indentation][T
 		}
 	}
 
-	REQUIRE_THAT(test::stream.str(), Matches(
+	REQUIRE_THAT(test::out_stream.str(), Matches(
 		R"(if \(true\) => true\n)"
 		R"(\{\n)"
 		R"(  // execution time statistics \(ms\) for "dummy":\n)"
 		R"(  //   avg/med: [0-9\.]+ / [0-9\.]+\n)"
 		R"(  //     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)"
 		R"(  //     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)"
-		R"(  \n)"
+		R"(\n)"
 		R"(\}\n)"
 		R"(\n)"
 	));
@@ -435,17 +400,18 @@ TEST_CASE("'TRACE_OUT_INDENTATION' outside '$clocks(...)'", "[indentation][TRACE
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$if (true)
 	{
 		$clocks("dummy", dummy();)
 	}
 
-	REQUIRE_THAT(test::stream.str(), Matches(
+	REQUIRE_THAT(test::out_stream.str(), Matches(
 		R"(if \(true\) => true\n)"
 		R"(\{\n)"
-		R"(  // execution time for "dummy": [0-9]+ clocks \([0-9\.]+ ms\)\n)"
+		R"(  clocking "dummy"...\n)"
+		R"(  "dummy" clocked in [0-9]+ clocks \([0-9\.]+ ms\)\n)"
 		R"(\}\n)"
 		R"(\n)"
 	));
@@ -455,7 +421,7 @@ TEST_CASE("'TRACE_OUT_INDENTATION' outside '$clock_stats(...)'", "[indentation][
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$if (true)
 	{
@@ -465,14 +431,14 @@ TEST_CASE("'TRACE_OUT_INDENTATION' outside '$clock_stats(...)'", "[indentation][
 		}
 	}
 
-	REQUIRE_THAT(test::stream.str(), Matches(
+	REQUIRE_THAT(test::out_stream.str(), Matches(
 		R"(if \(true\) => true\n)"
 		R"(\{\n)"
 		R"(  // execution time statistics \(clocks\) for "dummy":\n)"
 		R"(  //   avg/med: [0-9\.]+ / [0-9\.]+\n)"
 		R"(  //     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)"
 		R"(  //     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)"
-		R"(  \n)"
+		R"(\n)"
 		R"(\}\n)"
 		R"(\n)"
 	));

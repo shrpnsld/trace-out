@@ -1,10 +1,13 @@
 #pragma once
 
+#include "trace-out/indentation.hpp"
 #include "trace-out/integer.hpp"
+#include "trace-out/mutex.hpp"
 #include "trace-out/nothing.hpp"
-#include "trace-out/out-stream.hpp"
+#include "trace-out/pretty-lines.hpp"
 #include "trace-out/to-string.hpp"
 #include <iomanip>
+#include <ostream>
 #include <limits>
 #include <sstream>
 #include <string>
@@ -32,13 +35,13 @@ enum byte_order_t
 	LITTLE
 };
 
-inline void print_memory(const std::string &filename_line, const char *name, const standard::uint8_t *memory, standard::size_t size);
+inline void print_memory(std::ostream &stream, const file_line_t &file_line, const char *name, const standard::uint8_t *memory, standard::size_t size);
 
 template <typename Option1_t>
-void print_memory(const std::string &filename_line, const char *name, const standard::uint8_t *memory, standard::size_t size, const Option1_t &option1);
+void print_memory(std::ostream &stream, const file_line_t &file_line, const char *name, const standard::uint8_t *memory, standard::size_t size, const Option1_t &option1);
 
 template <typename Option1_t, typename Option2_t>
-void print_memory(const std::string &filename_line, const char *name, const standard::uint8_t *memory, standard::size_t size, const Option1_t &option1, const Option2_t &option2);
+void print_memory(std::ostream &stream, const file_line_t &file_line, const char *name, const standard::uint8_t *memory, standard::size_t size, const Option1_t &option1, const Option2_t &option2);
 
 }
 
@@ -128,22 +131,22 @@ struct printable_number_t<standard::uint8_t>
 inline byte_order_t current_byte_order();
 inline const char *base_name(base_t value);
 inline const char *byte_order_name(byte_order_t value);
-inline standard::size_t field_width_for_base_and_grouping(base_t base, standard::size_t grouping);
-inline standard::size_t power_of_2_under(standard::size_t number);
-inline standard::size_t calculate_column_count(standard::size_t requested_column_count, standard::size_t stream_width, standard::size_t indentation_width, standard::size_t pointer_width, standard::size_t delimiter_width, standard::size_t padding_width, standard::size_t field_width);
+inline standard::size_t printed_value_width_for_base_and_grouping(base_t base, standard::size_t grouping);
+inline standard::size_t calculate_optimal_column_count(standard::size_t max_column_count);
+inline standard::size_t calculate_column_count(standard::size_t preferred_column_count, standard::size_t stream_width, standard::size_t marker_width, standard::size_t file_line_width, standard::size_t indentation_width, standard::size_t pointer_width, standard::size_t delimiter_width, standard::size_t column_width);
 
-typedef void (*print_chunk_t)(out_stream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t field_width);
+typedef void (*print_chunk_t)(std::ostream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t column_width);
 inline print_chunk_t select_print_chunk_function(base_t base, standard::size_t chunk_size, byte_order_t byte_order);
-inline void print_binary_chunk(out_stream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t field_width);
-inline void print_hexadecimal_chunk(out_stream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t field_width);
+inline void print_binary_chunk(std::ostream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t column_width);
+inline void print_hexadecimal_chunk(std::ostream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t column_width);
 
 template <typename Type_t>
-void print_number_chunk(out_stream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t field_width);
+void print_number_chunk(std::ostream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t column_width);
 
 template <typename Type_t>
-void print_number_chunk_reverse(out_stream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t field_width);
+void print_number_chunk_reverse(std::ostream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t column_width);
 
-inline void print_memory_with_display_options(const std::string &filename_line, const char *name, const standard::uint8_t *memory, standard::size_t size, const memory_display_options_t &options);
+inline void print_memory_with_display_options(std::ostream &stream, const file_line_t &file_line, const char *name, const standard::uint8_t *memory, standard::size_t size, const memory_display_options_t &options);
 
 }
 
@@ -153,110 +156,96 @@ inline void print_memory_with_display_options(const std::string &filename_line, 
 namespace trace_out
 {
 
-void print_memory(const std::string &filename_line, const char *name, const standard::uint8_t *memory, standard::size_t size)
+void print_memory(std::ostream &stream, const file_line_t &file_line, const char *name, const standard::uint8_t *memory, standard::size_t size)
 {
-	print_memory_with_display_options(filename_line, name, memory, size, memory_display_options_t(HEX, 1, current_byte_order(), 0));
+	print_memory_with_display_options(stream, file_line, name, memory, size, memory_display_options_t(HEX, 1, current_byte_order(), 0));
 }
 
 template <typename Option1_t>
-void print_memory(const std::string &filename_line, const char *name, const standard::uint8_t *memory, standard::size_t size, const Option1_t &option1)
+void print_memory(std::ostream &stream, const file_line_t &file_line, const char *name, const standard::uint8_t *memory, standard::size_t size, const Option1_t &option1)
 {
 	memory_display_options_t options(HEX, 1, current_byte_order(), 0);
 	options.set_option(option1);
 
-	print_memory_with_display_options(filename_line, name, memory, size, options);
+	print_memory_with_display_options(stream, file_line, name, memory, size, options);
 }
 
 template <typename Option1_t, typename Option2_t>
-void print_memory(const std::string &filename_line, const char *name, const standard::uint8_t *memory, standard::size_t size, const Option1_t &option1, const Option2_t &option2)
+void print_memory(std::ostream &stream, const file_line_t &file_line, const char *name, const standard::uint8_t *memory, standard::size_t size, const Option1_t &option1, const Option2_t &option2)
 {
 	memory_display_options_t options(HEX, 1, current_byte_order(), 0);
 	options.set_option(option1);
 	options.set_option(option2);
 
-	print_memory_with_display_options(filename_line, name, memory, size, options);
+	print_memory_with_display_options(stream, file_line, name, memory, size, options);
 }
 
-void print_memory_with_display_options(const std::string &filename_line, const char *name, const standard::uint8_t *memory, standard::size_t size, const memory_display_options_t &options)
+void print_memory_with_display_options(std::ostream &stream, const file_line_t &file_line, const char *name, const standard::uint8_t *memory, standard::size_t size, const memory_display_options_t &options)
 {
-	standard::size_t field_width = field_width_for_base_and_grouping(options.base, options.grouping);
 	print_chunk_t print_chunk = select_print_chunk_function(options.base, options.grouping, options.byte_order);
 
-	out_stream stream(filename_line);
-	stream << name << ", " << to_string(size) << " bytes of " << to_string(options.grouping) + "-byte " << base_name(options.base);
-	if (options.grouping > 1 && options.base != BIN && options.base != HEX)
+	standard::size_t column_width = printed_value_width_for_base_and_grouping(options.base, options.grouping) + 1;
+	standard::size_t item_count = size / options.grouping;
+	standard::size_t column_count = calculate_column_count(options.column_count, TRACE_OUT_STREAM_WIDTH, 0, 0, indentation().size() + INDENTATION_UNIT_WIDTH, to_string(static_cast<const void *>(memory)).size(), 1, column_width);
+	standard::size_t line_count = item_count / column_count;
+	standard::size_t leftover_item_count = item_count - line_count * column_count;
+
+	standard::size_t memory_line_size = column_count * options.grouping;
+	standard::size_t leftover_memory_size = size - item_count * options.grouping;
+
 	{
-		stream << ", " << byte_order_name(options.byte_order);
-	}
+#if defined(TRACE_OUT_SYNC_STREAM)
+		autolock<system::mutex> lock(stream_mutex());
+#endif
 
-	indentation_add();
-
-	standard::size_t chunk_count = size / options.grouping;
-	const standard::uint8_t *chunks_end = memory + chunk_count * options.grouping;
-	standard::size_t column = 0;
-	standard::size_t column_count = calculate_column_count(options.column_count, stream.width(), indentation().size(), to_string(static_cast<const void *>(memory)).size(), 1, field_width, 1);
-
-	for (const standard::uint8_t *chunk = memory; chunk < chunks_end; chunk += options.grouping)
-	{
-		if (column % column_count == 0)
+		stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << name << ", " << size << " bytes of " << options.grouping << "-byte " << base_name(options.base);
+		if (options.grouping > 1 && options.base != BIN && options.base != HEX)
 		{
-			stream << NEWLINE << make_pretty(static_cast<const void *>(chunk)) << ":";
-			column = 0;
+			stream << ", " << byte_order_name(options.byte_order);
 		}
 
-		stream << " " << FLUSH;
-		print_chunk(stream, chunk, options.grouping, field_width);
-		++column;
-	}
+		indentation_add();
 
-	if (chunks_end < memory + size)
-	{
-		const standard::uint8_t *leftovers = chunks_end;
-		const standard::uint8_t *leftovers_end = memory + size;
-		stream << NEWLINE << NEWLINE << "leftovers:" << NEWLINE << make_pretty(static_cast<const void *>(leftovers)) << ":";
-		for ( ; leftovers < leftovers_end; ++leftovers)
+		for (standard::size_t line_number = 0; line_number < line_count; ++line_number)
 		{
-			stream << " " << FLUSH;
-			print_hexadecimal_chunk(stream, leftovers, 1, 2);
+			const standard::uint8_t *line = &memory[line_number * memory_line_size];
+
+			stream << '\n' << CONTINUE_PARAGRAPH;
+			stream << std::hex << reinterpret_cast<standard::uint64_t>(line) << RESET_FLAGS << ':';
+			for (standard::size_t current_column = 0; current_column < column_count; ++current_column)
+			{
+				print_chunk(stream, &line[current_column * options.grouping], options.grouping, column_width);
+			}
 		}
+
+		if (leftover_item_count > 0)
+		{
+			const standard::uint8_t *line = &memory[line_count * memory_line_size];
+
+			stream << '\n' << CONTINUE_PARAGRAPH;
+			stream << std::hex << reinterpret_cast<standard::uint64_t>(line) << RESET_FLAGS << ':';
+			for (standard::size_t current_column = 0; current_column < leftover_item_count; ++current_column)
+			{
+				print_chunk(stream, &line[current_column * options.grouping], options.grouping, column_width);
+			}
+		}
+
+		if (leftover_memory_size > 0)
+		{
+			const standard::uint8_t *line = &memory[size - leftover_memory_size];
+
+			stream << '\n' << SEPARATE_PARAGRAPH << '\n' << CONTINUE_PARAGRAPH << "leftovers:" << '\n' << CONTINUE_PARAGRAPH;
+			stream << std::hex << reinterpret_cast<standard::uint64_t>(line) << RESET_FLAGS << ':';
+			for (standard::size_t current_column = 0; current_column < leftover_memory_size; ++current_column)
+			{
+				print_hexadecimal_chunk(stream, &line[current_column], 1, 3);
+			}
+		}
+
+		indentation_remove();
+
+		stream << '\n' << SEPARATE_PARAGRAPH << '\n';
 	}
-
-	stream << NEWLINE;
-	indentation_remove();
-	stream << ENDLINE;
-}
-
-template <typename Type_t>
-void print_number_chunk(out_stream &stream, const standard::uint8_t *chunk, standard::size_t, standard::size_t field_width)
-{
-	Type_t number = *reinterpret_cast<const Type_t *>(chunk);
-	typename printable_number_t<Type_t>::type printable_number = number;
-	std::string printed_value = to_string(printable_number, std::setprecision(std::numeric_limits<Type_t>::digits10));
-
-	for (standard::size_t padding_width = field_width - printed_value.size(); padding_width > 0; --padding_width)
-	{
-		stream << ' ';
-	}
-
-	stream << printed_value;
-}
-
-template <typename Type_t>
-void print_number_chunk_reverse(out_stream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t field_width)
-{
-	standard::uint8_t reversed_chunk[16];
-	std::reverse_copy(chunk, chunk + size, reversed_chunk);
-
-	Type_t number = *reinterpret_cast<const Type_t *>(reversed_chunk);
-	typename printable_number_t<Type_t>::type printable_number = number;
-	std::string printed_value = (std::stringstream() << std::setprecision(std::numeric_limits<Type_t>::digits10) << printable_number).str();
-
-	for (standard::size_t padding_width = field_width - printed_value.size(); padding_width > 0; --padding_width)
-	{
-		stream << ' ';
-	}
-
-	stream << printed_value;
 }
 
 bin_or_hex_option::bin_or_hex_option(base_t base)
@@ -438,7 +427,7 @@ const char *byte_order_name(byte_order_t value)
 	}
 }
 
-standard::size_t field_width_for_base_and_grouping(base_t base, standard::size_t grouping)
+standard::size_t printed_value_width_for_base_and_grouping(base_t base, standard::size_t grouping)
 {
 	switch (base)
 	{
@@ -504,34 +493,32 @@ standard::size_t field_width_for_base_and_grouping(base_t base, standard::size_t
 	}
 }
 
-standard::size_t power_of_2_under(standard::size_t number)
+standard::size_t calculate_optimal_column_count(standard::size_t max_column_count)
 {
-	standard::size_t shift_count = 0;
-	while (number > 1)
+	standard::size_t power_of_2 = 1;
+	while (power_of_2 << 1 <= max_column_count)
 	{
-		number >>= 1;
-		++shift_count;
+		power_of_2 <<= 1;
 	}
 
-	return number << shift_count;
+	return power_of_2;
 }
 
-standard::size_t calculate_column_count(standard::size_t requested_column_count, standard::size_t stream_width, standard::size_t indentation_width, standard::size_t pointer_width, standard::size_t delimiter_width, standard::size_t padding_width, standard::size_t field_width)
+standard::size_t calculate_column_count(standard::size_t preferred_column_count, standard::size_t stream_width, standard::size_t marker_width, standard::size_t file_line_width, standard::size_t indentation_width, standard::size_t pointer_width, standard::size_t delimiter_width, standard::size_t column_width)
 {
-	standard::size_t content_width = stream_width - (indentation_width + pointer_width + delimiter_width);
-	standard::size_t column_count = content_width / (padding_width + field_width);
-	if (column_count == 0)
+	standard::size_t width_left = stream_width - (marker_width + file_line_width + indentation_width + pointer_width + delimiter_width);
+	standard::size_t max_column_count = width_left / column_width;
+	if (max_column_count == 0)
 	{
-		column_count = 1;
+		max_column_count = 1;
 	}
 
-	standard::size_t optimal_column_count = power_of_2_under(column_count);
-	if (requested_column_count > 0 && requested_column_count < optimal_column_count)
+	if (preferred_column_count == 0 || preferred_column_count > max_column_count)
 	{
-		return requested_column_count;
+		return calculate_optimal_column_count(max_column_count);
 	}
 
-	return optimal_column_count;
+	return preferred_column_count;
 }
 
 static const char *byte_to_binary(standard::uint8_t byte)
@@ -675,20 +662,40 @@ print_chunk_t select_print_chunk_function(base_t base, standard::size_t chunk_si
 	}
 }
 
-void print_binary_chunk(out_stream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t)
+void print_binary_chunk(std::ostream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t column_width)
 {
-	for (const standard::uint8_t *end = chunk + size; chunk < end; ++chunk)
+	stream << std::setw((column_width % 8) + 8) << std::setfill(' ') << byte_to_binary(*chunk) << RESET_FLAGS;
+	const standard::uint8_t *end = chunk + size;
+	for (++chunk; chunk < end; ++chunk)
 	{
 		stream << byte_to_binary(*chunk);
 	}
 }
 
-void print_hexadecimal_chunk(out_stream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t)
+void print_hexadecimal_chunk(std::ostream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t column_width)
 {
-	for (const standard::uint8_t *end = chunk + size; chunk < end; ++chunk)
+	stream << std::setw((column_width % 2) + 2) << std::setfill(' ') << byte_to_hexadecimal(*chunk) << RESET_FLAGS;
+	const standard::uint8_t *end = chunk + size;
+	for (++chunk; chunk < end; ++chunk)
 	{
 		stream << byte_to_hexadecimal(*chunk);
 	}
+}
+
+template <typename Type_t>
+void print_number_chunk(std::ostream &stream, const standard::uint8_t *chunk, standard::size_t, standard::size_t column_width)
+{
+	Type_t number = *reinterpret_cast<const Type_t *>(chunk);
+	typename printable_number_t<Type_t>::type printable_number = number;
+	stream << std::setw(column_width) << std::setfill(' ') << std::setprecision(std::numeric_limits<Type_t>::digits10) << printable_number << RESET_FLAGS;
+}
+
+template <typename Type_t>
+void print_number_chunk_reverse(std::ostream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t column_width)
+{
+	standard::uint8_t reversed_chunk[16];
+	std::reverse_copy(chunk, chunk + size, reversed_chunk);
+	print_number_chunk<Type_t>(stream, reversed_chunk, size, column_width);
 }
 
 }

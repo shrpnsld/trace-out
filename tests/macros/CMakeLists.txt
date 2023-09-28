@@ -6,14 +6,9 @@ target_compile_features(macros-tests
 )
 
 target_compile_definitions(macros-tests
-	PRIVATE
-		TRACE_OUT_STREAM="trace-out-to-test-stream.hpp"
-		TRACE_OUT_WIDTH=70
-)
-
-target_include_directories(macros-tests
-	PRIVATE
-		${CMAKE_CURRENT_SOURCE_DIR}/src/
+	PUBLIC
+		TRACE_OUT_STREAM=test
+		TRACE_OUT_STREAM_WIDTH=70
 )
 
 target_link_libraries(macros-tests
@@ -21,25 +16,24 @@ target_link_libraries(macros-tests
 		trace-out
 		Catch2::Catch2WithMain
 		helpers
+		helpers-c++11
 )
 
 target_sources(macros-tests
 	PRIVATE
 		clock-stats.tests.cpp
 		clocks.tests.cpp
-		e.tests.cpp
 		f.tests.cpp
 		for.tests.cpp
 		if.tests.cpp
 		indentation.tests.cpp
 		m.tests.cpp
-		p.tests.cpp
 		r.tests.cpp
 		return.tests.cpp
+		s.tests.cpp
 		t.tests.cpp
 		time-stats.tests.cpp
 		time.tests.cpp
-		w.tests.cpp
 		while.tests.cpp
 )
 

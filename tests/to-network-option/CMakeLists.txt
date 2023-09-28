@@ -11,11 +11,6 @@ target_compile_definitions(to-network-tests
 		TRACE_OUT_WIDTH=70
 )
 
-target_include_directories(to-network-tests
-	PRIVATE
-		${CMAKE_CURRENT_SOURCE_DIR}/src/
-)
-
 target_link_libraries(to-network-tests
 	PRIVATE
 		trace-out

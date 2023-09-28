@@ -4,7 +4,7 @@
 
 TEST_CASE("$if(...)", "[if]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	SECTION("true")
 	{
@@ -18,7 +18,7 @@ TEST_CASE("$if(...)", "[if]")
 			"}\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
 	SECTION("true")
@@ -33,7 +33,7 @@ TEST_CASE("$if(...)", "[if]")
 			"}\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 }
 

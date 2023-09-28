@@ -3,54 +3,45 @@
 #include "test-stream.hpp"
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
+#include <cstdint>
+#include <iomanip>
 #include <sstream>
+
+using trace_out::RESET_FLAGS;
 
 void subject_func11() {$f }
 int subject_func12() { $return 789; }
 
-TEST_CASE("'TRACE_OUT_MARKER' with '$w(...)'", "[TRACE_OUT_MARKER][w]")
+TEST_CASE("'TRACE_OUT_MARKER' with '$t(...)'", "[TRACE_OUT_MARKER][t]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	const char *str {"hellomoto!"};
 	dummy(str);
 
-	$w(str)
+	$t(str);
 
 	const char *expected {"@@ str = \"hellomoto!\"\n"};
-	REQUIRE(test::stream.str() == expected);
-}
-
-TEST_CASE("'TRACE_OUT_MARKER' with '$e(...)'", "[TRACE_OUT_MARKER][e]")
-{
-	test::stream.str(std::string {});
-
-	const char *str {"hellomoto!"};
-	dummy(str);
-
-	$e(str);
-
-	const char *expected {"@@ str = \"hellomoto!\"\n"};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("'TRACE_OUT_MARKER' with '$r(...)'", "[TRACE_OUT_MARKER][r]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	const char *str {"hellomoto!"};
-	std::size_t length {11};
+	std::size_t length {10};
 	dummy(str, length);
 
 	$r(str, str + length)
 
-	const char *expected {"@@ [str, str + length) = ['h', 'e', 'l', 'l', 'o', 'm', 'o', 't', 'o', '!', '']\n"};
-	REQUIRE(test::stream.str() == expected);
+	const char *expected {"@@ [str, str + length) = ['h', 'e', 'l', 'l', 'o', 'm', 'o', 't', 'o', '!']\n"};
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("'TRACE_OUT_MARKER' with '$m(...)'", "[TRACE_OUT_MARKER][m]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	const char *str {"hellomoto!"};
 	std::size_t length {11};
@@ -59,37 +50,31 @@ TEST_CASE("'TRACE_OUT_MARKER' with '$m(...)'", "[TRACE_OUT_MARKER][m]")
 	$m(str, length)
 
 	std::stringstream expected;
+	std::uintptr_t address {reinterpret_cast<std::uintptr_t>(str)};
 	expected <<
 		"@@ str, 11 bytes of 1-byte hexadecimal\n"
-		"@@     " << static_cast<const void *>(str) << ": 68 65 6c 6c 6f 6d 6f 74 6f 21 00\n"
-		"@@     \n";
+		"@@     " << std::hex << address << RESET_FLAGS << ": 68 65 6c 6c 6f 6d 6f 74 6f 21 00\n"
+		"@@ \n";
 
-	REQUIRE(test::stream.str() == expected.str());
+	REQUIRE(test::out_stream.str() == expected.str());
 }
 
-TEST_CASE("'TRACE_OUT_MARKER' with '$p(...)'", "[TRACE_OUT_MARKER][p]")
+TEST_CASE("'TRACE_OUT_MARKER' with '$s(...)'", "[TRACE_OUT_MARKER][s]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
-	$p("wazzzup!")
+	$s(dummy();)
 
-	const char *expected {"@@ // wazzzup!\n"};
-	REQUIRE(test::stream.str() == expected);
-}
-
-TEST_CASE("'TRACE_OUT_MARKER' with '$t(...)'", "[TRACE_OUT_MARKER][t]")
-{
-	test::stream.str(std::string {});
-
-	$t(dummy();)
-
-	const char *expected {"@@ dummy(); // trace-out: statement passed\n"};
-	REQUIRE(test::stream.str() == expected);
+	const char *expected {
+		"@@ dummy(); // running...\n"
+		"@@ dummy(); // done.\n"
+	};
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("'TRACE_OUT_MARKER' with '$f'", "[TRACE_OUT_MARKER][f]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	subject_func11();
 
@@ -99,24 +84,24 @@ TEST_CASE("'TRACE_OUT_MARKER' with '$f'", "[TRACE_OUT_MARKER][f]")
 		"@@ } // void subject_func11()\n"
 		"@@ \n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("'TRACE_OUT_MARKER' with '$return'", "[TRACE_OUT_MARKER][return]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	subject_func12();
 
 	const char *expected {
 		"@@ return 789\n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("'TRACE_OUT_MARKER' with '$if(...)'", "[TRACE_OUT_MARKER][if]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$if (true)
 	{
@@ -128,12 +113,12 @@ TEST_CASE("'TRACE_OUT_MARKER' with '$if(...)'", "[TRACE_OUT_MARKER][if]")
 		"@@ }\n"
 		"@@ \n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("'TRACE_OUT_MARKER' with '$for(...)'", "[TRACE_OUT_MARKER][for]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$for ( ; true; )
 	{
@@ -144,16 +129,16 @@ TEST_CASE("'TRACE_OUT_MARKER' with '$for(...)'", "[TRACE_OUT_MARKER][for]")
 		"@@ for (; true;)\n"
 		"@@ {\n"
 		"@@     // for: iteration #1\n"
-		"@@     \n"
+		"@@ \n"
 		"@@ } // for (; true;)\n"
 		"@@ \n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("'TRACE_OUT_MARKER' with '$while(...)'", "[TRACE_OUT_MARKER][while]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$while (true)
 	{
@@ -164,36 +149,39 @@ TEST_CASE("'TRACE_OUT_MARKER' with '$while(...)'", "[TRACE_OUT_MARKER][while]")
 		"@@ while (true)\n"
 		"@@ {\n"
 		"@@     // while: iteration #1\n"
-		"@@     \n"
+		"@@ \n"
 		"@@ } // while (true)\n"
 		"@@ \n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("'TRACE_OUT_MARKER' with '$time(...)'", "[TRACE_OUT_MARKER][time]")
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$time("dummy", dummy();)
 
-	REQUIRE_THAT(test::stream.str(), Matches(R"(@@ // execution time for "dummy": [0-9]+ ms\n)"));
+	REQUIRE_THAT(test::out_stream.str(), Matches(
+		R"(@@ timing "dummy"...\n)"
+		R"(@@ "dummy" timed in [0-9]+ ms\n)"
+	));
 }
 
 TEST_CASE("'TRACE_OUT_MARKER' with '$time_stats(...)'", "[TRACE_OUT_MARKER][time_stats]")
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	for (std::size_t passes {10}; passes > 0; --passes)
 	{
 		$time_stats("dummy", 10, dummy();)
 	}
 
-	REQUIRE_THAT(test::stream.str(), Matches(
+	REQUIRE_THAT(test::out_stream.str(), Matches(
 		R"(@@ // execution time statistics \(ms\) for "dummy":\n)"
 		R"(@@ //   avg/med: [0-9\.]+ / [0-9\.]+\n)"
 		R"(@@ //     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)"
@@ -206,25 +194,28 @@ TEST_CASE("'TRACE_OUT_MARKER' with '$clocks(...)'", "[TRACE_OUT_MARKER][clocks]"
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$clocks("dummy", dummy();)
 
-	REQUIRE_THAT(test::stream.str(), Matches(R"(@@ // execution time for "dummy": [0-9]+ clocks \([0-9\.]+ ms\)\n)"));
+	REQUIRE_THAT(test::out_stream.str(), Matches(
+		R"(@@ clocking "dummy"...\n)"
+		R"(@@ "dummy" clocked in [0-9]+ clocks \([0-9\.]+ ms\)\n)"
+	));
 }
 
 TEST_CASE("'TRACE_OUT_MARKER' with '$clock_stats(...)'", "[TRACE_OUT_MARKER][clock_stats]")
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	for (std::size_t passes {10}; passes > 0; --passes)
 	{
 		$clock_stats("dummy", 10, dummy();)
 	}
 
-	REQUIRE_THAT(test::stream.str(), Matches(
+	REQUIRE_THAT(test::out_stream.str(), Matches(
 		R"(@@ // execution time statistics \(clocks\) for "dummy":\n)"
 		R"(@@ //   avg/med: [0-9\.]+ / [0-9\.]+\n)"
 		R"(@@ //     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)"

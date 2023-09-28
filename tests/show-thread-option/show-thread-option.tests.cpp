@@ -7,55 +7,30 @@
 #include <sstream>
 #include <thread>
 
-void subject_func1(const char *what) {$f $w(what) }
+void subject_func1(const char *what) {$f $t(what); }
 const char *subject_func2(const char *what) { $return what; }
 
-TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$w(...)'", "[TRACE_OUT_SHOW_THREAD][w]")
+TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$t(...)'", "[TRACE_OUT_SHOW_THREAD][t]")
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$thread(one)
 
 	std::thread {[](const char *what)
 	{
 		$thread(two)
-		$w(what)
-	}, "wazzzup!"}.join();
+		$t(what);
+	}, "wazuuup!"}.join();
 
 	const char *what {"hellomoto!"};
-	$w(what)
+	$t(what);
 
-	REQUIRE_THAT(test::stream.str(), Matches(
-		R"(\[Thread\: 0x[0-9a-f]+ two\]~+\n)"
-		R"(what = "wazzzup!"\n)"
-		R"(\[Thread\: 0x[0-9a-f]+ one\]~+\n)"
-		R"(what = "hellomoto!"\n)"
-	));
-}
-
-TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$e(...)'", "[TRACE_OUT_SHOW_THREAD][e]")
-{
-	using Catch::Matchers::Matches;
-
-	test::stream.str(std::string {});
-
-	$thread(one)
-
-	std::thread {[](const char *what)
-	{
-		$thread(two)
-		$e(what);
-	}, "wazzzup!"}.join();
-
-	const char *what {"hellomoto!"};
-	$e(what);
-
-	REQUIRE_THAT(test::stream.str(), Matches(
-		R"(\[Thread\: 0x[0-9a-f]+ two\]~+\n)"
-		R"(what = "wazzzup!"\n)"
-		R"(\[Thread\: 0x[0-9a-f]+ one\]~+\n)"
+	REQUIRE_THAT(test::out_stream.str(), Matches(
+		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
+		R"(what = "wazuuup!"\n)"
+		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
 		R"(what = "hellomoto!"\n)"
 	));
 }
@@ -64,7 +39,7 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$r(...)'", "[TRACE_OUT_SHOW_THREAD][r]"
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$thread(one)
 
@@ -73,16 +48,16 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$r(...)'", "[TRACE_OUT_SHOW_THREAD][r]"
 		$thread(two)
 		const char *end {what + std::strlen(what)};
 		$r(what, end)
-	}, "wazzzup!"}.join();
+	}, "wazuuup!"}.join();
 
 	const char *what {"hellomoto!"};
 	const char *end {what + std::strlen(what)};
 	$r(what, end)
 
-	REQUIRE_THAT(test::stream.str(), Matches(
-		R"(\[Thread\: 0x[0-9a-f]+ two\]~+\n)"
-		R"(\[what, end\) = \['w', 'a', 'z', 'z', 'z', 'u', 'p', '!'\]\n)"
-		R"(\[Thread\: 0x[0-9a-f]+ one\]~+\n)"
+	REQUIRE_THAT(test::out_stream.str(), Matches(
+		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
+		R"(\[what, end\) = \['w', 'a', 'z', 'u', 'u', 'u', 'p', '!'\]\n)"
+		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
 		R"(\[what, end\) = \['h', 'e', 'l', 'l', 'o', 'm', 'o', 't', 'o', '!'\]\n)"
 	));
 }
@@ -91,7 +66,7 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$m(...)'", "[TRACE_OUT_SHOW_THREAD][m]"
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$thread(one)
 
@@ -101,70 +76,47 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$m(...)'", "[TRACE_OUT_SHOW_THREAD][m]"
 
 		$thread(two)
 		$m(what, size)
-	}, "wazzzup!"}.join();
+	}, "wazuuup!"}.join();
 
 	const char *what {"hellomoto!"};
 	std::size_t size {std::strlen(what)};
 	$m(what, size)
 
-	REQUIRE_THAT(test::stream.str(), Matches(
-		R"(\[Thread\: 0x[0-9a-f]+ two\]~+\n)"
+	REQUIRE_THAT(test::out_stream.str(), Matches(
+		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
 		R"(what, 8 bytes of 1-byte hexadecimal\n)"
-		R"(    0x[0-9a-f]+: 77 61 7a 7a 7a 75 70 21\n)"
-		R"(    \n)"
-		R"(\[Thread\: 0x[0-9a-f]+ one\]~+\n)"
+		R"(    [0-9a-f]+: 77 61 7a 75 75 75 70 21\n)"
+		R"(\n)"
+		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
 		R"(what, 10 bytes of 1-byte hexadecimal\n)"
-		R"(    0x[0-9a-f]+: 68 65 6c 6c 6f 6d 6f 74 6f 21\n)"
-		R"(    \n)"
+		R"(    [0-9a-f]+: 68 65 6c 6c 6f 6d 6f 74 6f 21\n)"
+		R"(\n)"
 	));
 }
 
-TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$p(...)'", "[TRACE_OUT_SHOW_THREAD][p]")
+TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$s(...)'", "[TRACE_OUT_SHOW_THREAD][s]")
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
-
-	$thread(one)
-
-	std::thread {[](const char *what)
-	{
-		$thread(two)
-		$p(what)
-	}, "wazzzup!"}.join();
-
-	const char *what {"hellomoto!"};
-	$p(what)
-
-	REQUIRE_THAT(test::stream.str(), Matches(
-		R"(\[Thread\: 0x[0-9a-f]+ two\]~+\n)"
-		R"(// wazzzup!\n)"
-		R"(\[Thread\: 0x[0-9a-f]+ one\]~+\n)"
-		R"(// hellomoto!\n)"
-	));
-}
-
-TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$t(...)'", "[TRACE_OUT_SHOW_THREAD][t]")
-{
-	using Catch::Matchers::Matches;
-
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$thread(one)
 
 	std::thread {[]()
 	{
 		$thread(two)
-		$t(dummy("wazzzup!");)
+		$s(dummy("wazuuup!");)
 	}}.join();
 
-	$t(dummy("hellomoto!");)
+	$s(dummy("hellomoto!");)
 
-	REQUIRE_THAT(test::stream.str(), Matches(
-		R"(\[Thread\: 0x[0-9a-f]+ two\]~+\n)"
-		R"(dummy\("wazzzup!"\); // trace-out: statement passed\n)"
-		R"(\[Thread\: 0x[0-9a-f]+ one\]~+\n)"
-		R"(dummy\("hellomoto!"\); // trace-out: statement passed\n)"
+	REQUIRE_THAT(test::out_stream.str(), Matches(
+		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
+		R"(dummy\("wazuuup!"\); // running...\n)"
+		R"(dummy\("wazuuup!"\); // done.\n)"
+		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
+		R"(dummy\("hellomoto!"\); // running...\n)"
+		R"(dummy\("hellomoto!"\); // done.\n)"
 	));
 }
 
@@ -172,7 +124,7 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$f'", "[TRACE_OUT_SHOW_THREAD][f]")
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$thread(one)
 
@@ -180,18 +132,18 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$f'", "[TRACE_OUT_SHOW_THREAD][f]")
 	{
 		$thread(two)
 		subject_func1(what);
-	}, "wazzzup!"}.join();
+	}, "wazuuup!"}.join();
 
 	subject_func1("hellomoto!");
 
-	REQUIRE_THAT(test::stream.str(), Matches(
-		R"(\[Thread\: 0x[0-9a-f]+ two\]~+\n)"
+	REQUIRE_THAT(test::out_stream.str(), Matches(
+		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
 		R"(void subject_func1\(const char \*\)\n)"
 		R"(\{\n)"
-		R"(    what = "wazzzup!"\n)"
+		R"(    what = "wazuuup!"\n)"
 		R"(\} // void subject_func1\(const char \*\)\n)"
 		R"(\n)"
-		R"(\[Thread\: 0x[0-9a-f]+ one\]~+\n)"
+		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
 		R"(void subject_func1\(const char \*\)\n)"
 		R"(\{\n)"
 		R"(    what = "hellomoto!"\n)"
@@ -204,7 +156,7 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$return'", "[TRACE_OUT_SHOW_THREAD][ret
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$thread(one)
 
@@ -212,14 +164,14 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$return'", "[TRACE_OUT_SHOW_THREAD][ret
 	{
 		$thread(two)
 		subject_func2(what);
-	}, "wazzzup!"}.join();
+	}, "wazuuup!"}.join();
 
 	subject_func2("hellomoto!");
 
-	REQUIRE_THAT(test::stream.str(), Matches(
-		R"(\[Thread\: 0x[0-9a-f]+ two\]~+\n)"
-		R"(return "wazzzup!"\n)"
-		R"(\[Thread\: 0x[0-9a-f]+ one\]~+\n)"
+	REQUIRE_THAT(test::out_stream.str(), Matches(
+		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
+		R"(return "wazuuup!"\n)"
+		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
 		R"(return "hellomoto!"\n)"
 	));
 }
@@ -228,7 +180,7 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$if(...)'", "[TRACE_OUT_SHOW_THREAD][if
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$thread(one)
 
@@ -238,20 +190,20 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$if(...)'", "[TRACE_OUT_SHOW_THREAD][if
 		$if (what)
 		{
 		}
-	}, "wazzzup!"}.join();
+	}, "wazuuup!"}.join();
 
 	const char *what {"hellomoto!"};
 	$if (what)
 	{
 	}
 
-	REQUIRE_THAT(test::stream.str(), Matches(
-		R"(\[Thread\: 0x[0-9a-f]+ two\]~+\n)"
-		R"(if \(what\) => true \("wazzzup!"\)\n)"
+	REQUIRE_THAT(test::out_stream.str(), Matches(
+		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
+		R"(if \(what\) => true \("wazuuup!"\)\n)"
 		R"(\{\n)"
 		R"(\}\n)"
 		R"(\n)"
-		R"(\[Thread\: 0x[0-9a-f]+ one\]~+\n)"
+		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
 		R"(if \(what\) => true \("hellomoto!"\)\n)"
 		R"(\{\n)"
 		R"(\}\n)"
@@ -263,7 +215,7 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$for(...)'", "[TRACE_OUT_SHOW_THREAD][f
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$thread(one)
 
@@ -281,19 +233,19 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$for(...)'", "[TRACE_OUT_SHOW_THREAD][f
 		break;
 	}
 
-	REQUIRE_THAT(test::stream.str(), Matches(
-		R"(\[Thread\: 0x[0-9a-f]+ two\]~+\n)"
+	REQUIRE_THAT(test::out_stream.str(), Matches(
+		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
 		R"(for \(;;\)\n)"
 		R"(\{\n)"
 		R"(    // for: iteration #1\n)"
-		R"(    \n)"
+		R"(\n)"
 		R"(\} // for \(;;\)\n)"
 		R"(\n)"
-		R"(\[Thread\: 0x[0-9a-f]+ one\]~+\n)"
+		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
 		R"(for \(;;\)\n)"
 		R"(\{\n)"
 		R"(    // for: iteration #1\n)"
-		R"(    \n)"
+		R"(\n)"
 		R"(\} // for \(;;\)\n)"
 		R"(\n)"
 	));
@@ -303,7 +255,7 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$while(...)'", "[TRACE_OUT_SHOW_THREAD]
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$thread(one)
 
@@ -321,19 +273,19 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$while(...)'", "[TRACE_OUT_SHOW_THREAD]
 		break;
 	}
 
-	REQUIRE_THAT(test::stream.str(), Matches(
-		R"(\[Thread\: 0x[0-9a-f]+ two\]~+\n)"
+	REQUIRE_THAT(test::out_stream.str(), Matches(
+		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
 		R"(while \(true\)\n)"
 		R"(\{\n)"
 		R"(    // while: iteration #1\n)"
-		R"(    \n)"
+		R"(\n)"
 		R"(\} // while \(true\)\n)"
 		R"(\n)"
-		R"(\[Thread\: 0x[0-9a-f]+ one\]~+\n)"
+		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
 		R"(while \(true\)\n)"
 		R"(\{\n)"
 		R"(    // while: iteration #1\n)"
-		R"(    \n)"
+		R"(\n)"
 		R"(\} // while \(true\)\n)"
 		R"(\n)"
 	));
@@ -343,7 +295,7 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$time(...)'", "[TRACE_OUT_SHOW_THREAD][
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$thread(one)
 
@@ -355,11 +307,13 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$time(...)'", "[TRACE_OUT_SHOW_THREAD][
 
 	$time("dummy", dummy();)
 
-	REQUIRE_THAT(test::stream.str(), Matches(
-		R"(\[Thread\: 0x[0-9a-f]+ two\]~+\n)"
-		R"(// execution time for "dummy": [0-9]+ ms\n)"
-		R"(\[Thread\: 0x[0-9a-f]+ one\]~+\n)"
-		R"(// execution time for "dummy": [0-9]+ ms\n)"
+	REQUIRE_THAT(test::out_stream.str(), Matches(
+		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
+		R"(timing "dummy"...\n)"
+		R"("dummy" timed in [0-9]+ ms\n)"
+		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
+		R"(timing "dummy"...\n)"
+		R"("dummy" timed in [0-9]+ ms\n)"
 	));
 }
 
@@ -367,7 +321,7 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$time_stats(...)'", "[TRACE_OUT_SHOW_TH
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$thread(one)
 
@@ -385,14 +339,14 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$time_stats(...)'", "[TRACE_OUT_SHOW_TH
 		$time_stats("dummy", 10, dummy();)
 	}
 
-	REQUIRE_THAT(test::stream.str(), Matches(
-		R"(\[Thread\: 0x[0-9a-f]+ two\]~+\n)"
+	REQUIRE_THAT(test::out_stream.str(), Matches(
+		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
 		R"(// execution time statistics \(ms\) for "dummy":\n)"
 		R"(//   avg/med: [0-9\.]+ / [0-9\.]+\n)"
 		R"(//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)"
 		R"(//     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)"
 		R"(\n)"
-		R"(\[Thread\: 0x[0-9a-f]+ one\]~+\n)"
+		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
 		R"(// execution time statistics \(ms\) for "dummy":\n)"
 		R"(//   avg/med: [0-9\.]+ / [0-9\.]+\n)"
 		R"(//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)"
@@ -405,7 +359,7 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$clocks(...)'", "[TRACE_OUT_SHOW_THREAD
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$thread(one)
 
@@ -417,11 +371,13 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$clocks(...)'", "[TRACE_OUT_SHOW_THREAD
 
 	$clocks("dummy", dummy();)
 
-	REQUIRE_THAT(test::stream.str(), Matches(
-		R"(\[Thread\: 0x[0-9a-f]+ two\]~+\n)"
-		R"(// execution time for "dummy": [0-9]+ clocks \([0-9\.]+ ms\)\n)"
-		R"(\[Thread\: 0x[0-9a-f]+ one\]~+\n)"
-		R"(// execution time for "dummy": [0-9]+ clocks \([0-9\.]+ ms\)\n)"
+	REQUIRE_THAT(test::out_stream.str(), Matches(
+		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
+		R"(clocking "dummy"...\n)"
+		R"("dummy" clocked in [0-9]+ clocks \([0-9\.]+ ms\)\n)"
+		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
+		R"(clocking "dummy"...\n)"
+		R"("dummy" clocked in [0-9]+ clocks \([0-9\.]+ ms\)\n)"
 	));
 }
 
@@ -429,7 +385,7 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$clock_stats(...)'", "[TRACE_OUT_SHOW_T
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$thread(one)
 
@@ -447,14 +403,14 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$clock_stats(...)'", "[TRACE_OUT_SHOW_T
 		$clock_stats("dummy", 10, dummy();)
 	}
 
-	REQUIRE_THAT(test::stream.str(), Matches(
-		R"(\[Thread\: 0x[0-9a-f]+ two\]~+\n)"
+	REQUIRE_THAT(test::out_stream.str(), Matches(
+		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
 		R"(// execution time statistics \(clocks\) for "dummy":\n)"
 		R"(//   avg/med: [0-9\.]+ / [0-9\.]+\n)"
 		R"(//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)"
 		R"(//     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)"
 		R"(\n)"
-		R"(\[Thread\: 0x[0-9a-f]+ one\]~+\n)"
+		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
 		R"(// execution time statistics \(clocks\) for "dummy":\n)"
 		R"(//   avg/med: [0-9\.]+ / [0-9\.]+\n)"
 		R"(//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)"

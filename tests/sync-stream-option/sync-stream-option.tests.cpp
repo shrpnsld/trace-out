@@ -3,45 +3,33 @@
 #include "test-stream.hpp"
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
+#include <cstdint>
+#include <iomanip>
 #include <sstream>
+
+using trace_out::RESET_FLAGS;
 
 void some_func() { $f $f }
 
-TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$w(...)'", "[TRACE_OUT_SYNC_STREAM][w]")
+TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$t(...)'", "[TRACE_OUT_SYNC_STREAM][t]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	int some {456};
 
-	$w(some)
-	$w(some)
+	$t(some);
+	$t(some);
 
 	const char *expected {
 		"some = 456\n"
 		"some = 456\n"
 	};
-	REQUIRE(test::stream.str() == expected);
-}
-
-TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$e(...)'", "[TRACE_OUT_SYNC_STREAM][e]")
-{
-	test::stream.str(std::string {});
-
-	int some {456};
-
-	$e(some);
-	$e(some);
-
-	const char *expected {
-		"some = 456\n"
-		"some = 456\n"
-	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$r(...)'", "[TRACE_OUT_SYNC_STREAM][r]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	std::vector<int> subject {1, 2, 3, 4, 5};
 
@@ -52,12 +40,12 @@ TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$r(...)'", "[TRACE_OUT_
 		"[subject.begin(), subject.end()) = [1, 2, 3, 4, 5]\n"
 		"[subject.begin(), subject.end()) = [1, 2, 3, 4, 5]\n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$m(...)'", "[TRACE_OUT_SYNC_STREAM][m]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	std::vector<std::uint8_t> subject {
 		0xdf, 0x64, 0x6c, 0xcf, 0xf9, 0xcb, 0xed, 0x11, 0x4a, 0x83, 0x78, 0x28, 0x3d, 0x48, 0xad, 0x40
@@ -67,50 +55,39 @@ TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$m(...)'", "[TRACE_OUT_
 	$m(subject.data(), subject.size())
 
 	std::stringstream expected;
+	std::uintptr_t address {reinterpret_cast<std::uintptr_t>(subject.data())};
 	expected <<
 		"subject.data(), 16 bytes of 1-byte hexadecimal\n"
-		"    " << static_cast<const void *>(subject.data()) << ":"
+		"    " << std::hex << address << RESET_FLAGS << ":"
 		" df 64 6c cf f9 cb ed 11 4a 83 78 28 3d 48 ad 40" "\n"
-		"    \n"
+		"\n"
 		"subject.data(), 16 bytes of 1-byte hexadecimal\n"
-		"    " << static_cast<const void *>(subject.data()) << ":"
+		"    " << std::hex << address << RESET_FLAGS << ":"
 		" df 64 6c cf f9 cb ed 11 4a 83 78 28 3d 48 ad 40" "\n"
-		"    \n";
+		"\n";
 
-	REQUIRE(test::stream.str() == expected.str());
+	REQUIRE(test::out_stream.str() == expected.str());
 }
 
-TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$p(...)'", "[TRACE_OUT_SYNC_STREAM][p]")
+TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$s(...)'", "[TRACE_OUT_SYNC_STREAM][s]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
-	$p("hellomoto!")
-	$p("wazzzup!")
+	$s(dummy("hellomoto!");)
+	$s(dummy("wazzzup!");)
 
 	const char *expected {
-		"// hellomoto!\n"
-		"// wazzzup!\n"
+		"dummy(\"hellomoto!\"); // running...\n"
+		"dummy(\"hellomoto!\"); // done.\n"
+		"dummy(\"wazzzup!\"); // running...\n"
+		"dummy(\"wazzzup!\"); // done.\n"
 	};
-	REQUIRE(test::stream.str() == expected);
-}
-
-TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$t(...)'", "[TRACE_OUT_SYNC_STREAM][t]")
-{
-	test::stream.str(std::string {});
-
-	$t(dummy("hellomoto!");)
-	$t(dummy("wazzzup!");)
-
-	const char *expected {
-		"dummy(\"hellomoto!\"); // trace-out: statement passed\n"
-		"dummy(\"wazzzup!\"); // trace-out: statement passed\n"
-	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$f(...)'", "[TRACE_OUT_SYNC_STREAM][f]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	some_func();
 
@@ -120,16 +97,16 @@ TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$f(...)'", "[TRACE_OUT_
 		"    void some_func()\n"
 		"    {\n"
 		"    } // void some_func()\n"
-		"    \n"
+		"\n"
 		"} // void some_func()\n"
 		"\n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$if(...)'", "[TRACE_OUT_SYNC_STREAM][if]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$if (true)
 	{
@@ -144,16 +121,16 @@ TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$if(...)'", "[TRACE_OUT
 		"    if (true) => true\n"
 		"    {\n"
 		"    }\n"
-		"    \n"
+		"\n"
 		"}\n"
 		"\n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$for(...)'", "[TRACE_OUT_SYNC_STREAM][for]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$for (; true;)
 	{
@@ -172,19 +149,19 @@ TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$for(...)'", "[TRACE_OU
 		"    for (; true;)\n"
 		"    {\n"
 		"        // for: iteration #1\n"
-		"        \n"
+		"\n"
 		"    } // for (; true;)\n"
-		"    \n"
-		"    \n"
+		"\n"
+		"\n"
 		"} // for (; true;)\n"
 		"\n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$while(...)'", "[TRACE_OUT_SYNC_STREAM][while]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$while (true)
 	{
@@ -203,30 +180,32 @@ TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$while(...)'", "[TRACE_
 		"    while (true)\n"
 		"    {\n"
 		"        // while: iteration #1\n"
-		"        \n"
+		"\n"
 		"    } // while (true)\n"
-		"    \n"
-		"    \n"
+		"\n"
+		"\n"
 		"} // while (true)\n"
 		"\n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$time(...)'", "[TRACE_OUT_SYNC_STREAM][time]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$time("dummy", dummy();)
 	$time("dummy", dummy();)
 
-	REQUIRE_THAT(test::stream.str(), Matches(
-		R"(// execution time for "dummy": [0-9]+ ms\n)"
-		R"(// execution time for "dummy": [0-9]+ ms\n)"
+	REQUIRE_THAT(test::out_stream.str(), Matches(
+		R"(timing "dummy"...\n)"
+		R"("dummy" timed in [0-9]+ ms\n)"
+		R"(timing "dummy"...\n)"
+		R"("dummy" timed in [0-9]+ ms\n)"
 	));
 }
 
@@ -234,7 +213,7 @@ TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$time_stats(...)'", "[T
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$thread(one)
 
@@ -249,7 +228,7 @@ TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$time_stats(...)'", "[T
 		$time_stats("dummy", 10, dummy();)
 	}
 
-	REQUIRE_THAT(test::stream.str(), Matches(
+	REQUIRE_THAT(test::out_stream.str(), Matches(
 		R"(// execution time statistics \(ms\) for "dummy":\n)"
 		R"(//   avg/med: [0-9\.]+ / [0-9\.]+\n)"
 		R"(//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)"
@@ -265,18 +244,20 @@ TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$time_stats(...)'", "[T
 
 TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$clocks(...)'", "[TRACE_OUT_SYNC_STREAM][clocks]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$clocks("dummy", dummy();)
 	$clocks("dummy", dummy();)
 
-	REQUIRE_THAT(test::stream.str(), Matches(
-		R"(// execution time for "dummy": [0-9]+ clocks \([0-9\.]+ ms\)\n)"
-		R"(// execution time for "dummy": [0-9]+ clocks \([0-9\.]+ ms\)\n)"
+	REQUIRE_THAT(test::out_stream.str(), Matches(
+		R"(clocking "dummy"...\n)"
+		R"("dummy" clocked in [0-9]+ clocks \([0-9\.]+ ms\)\n)"
+		R"(clocking "dummy"...\n)"
+		R"("dummy" clocked in [0-9]+ clocks \([0-9\.]+ ms\)\n)"
 	));
 }
 
@@ -284,7 +265,7 @@ TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$clock_stats(...)'", "[
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$thread(one)
 
@@ -299,7 +280,7 @@ TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$clock_stats(...)'", "[
 		$clock_stats("dummy", 10, dummy();)
 	}
 
-	REQUIRE_THAT(test::stream.str(), Matches(
+	REQUIRE_THAT(test::out_stream.str(), Matches(
 		R"(// execution time statistics \(clocks\) for "dummy":\n)"
 		R"(//   avg/med: [0-9\.]+ / [0-9\.]+\n)"
 		R"(//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)"

@@ -7,14 +7,9 @@ target_compile_features(strip-scope-option-tests-1
 
 target_compile_definitions(strip-scope-option-tests-1
 	PRIVATE
-		TRACE_OUT_STREAM="trace-out-to-test-stream.hpp"
+		TRACE_OUT_STREAM=test
 		TRACE_OUT_WIDTH=70
 		TRACE_OUT_STRIP_SCOPE=1
-)
-
-target_include_directories(strip-scope-option-tests-1
-	PRIVATE
-		${CMAKE_CURRENT_SOURCE_DIR}/src/
 )
 
 target_link_libraries(strip-scope-option-tests-1

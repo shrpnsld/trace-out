@@ -7,14 +7,9 @@ target_compile_features(off-option-tests
 
 target_compile_definitions(off-option-tests
 	PRIVATE
-		TRACE_OUT_STREAM="trace-out-to-test-stream.hpp"
+		TRACE_OUT_STREAM=test
 		TRACE_OUT_WIDTH=70
 		TRACE_OUT_OFF
-)
-
-target_include_directories(off-option-tests
-	PRIVATE
-		${CMAKE_CURRENT_SOURCE_DIR}/src/
 )
 
 target_link_libraries(off-option-tests

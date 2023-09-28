@@ -9,6 +9,12 @@
 namespace trace_out
 {
 
+template <typename Structure_t, typename Type_t>
+Type_t dereference_member(const Structure_t &instance, Type_t (Structure_t::*member_function)() const);
+
+template <typename Structure_t, typename Type_t>
+Type_t dereference_member(const Structure_t &instance, Type_t Structure_t::*data_member);
+
 #define trace_out_private__define_has_member(name) \
 	template <typename Struct_t> \
 	struct has_member_##name \
@@ -302,5 +308,24 @@ struct is_iterable
 	};
 };
 
+}
+
+//
+// Implementation
+
+namespace trace_out
+{
+
+template <typename Structure_t, typename Type_t>
+Type_t dereference_member(const Structure_t &instance, Type_t (Structure_t::*member_function)() const)
+{
+	return (instance.*member_function)();
+}
+
+template <typename Structure_t, typename Type_t>
+Type_t dereference_member(const Structure_t &instance, Type_t Structure_t::*data_member)
+{
+	return instance.*data_member;
+}
 }
 

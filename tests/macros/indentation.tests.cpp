@@ -8,13 +8,13 @@
 
 TEST_CASE("indentation inside '$if(...)'", "[indentation][if]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	int some {456};
 
 	$if (some == 456)
 	{
-		$w(some)
+		$t(some);
 	}
 
 	const char *expected {
@@ -24,16 +24,16 @@ TEST_CASE("indentation inside '$if(...)'", "[indentation][if]")
 		"}\n"
 		"\n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("indentation inside '$for(...)'", "[indentation][for]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$for (unsigned int i {0}; i < 5; ++i)
 	{
-		$w(i)
+		$t(i);
 	}
 
 	const char *expected {
@@ -41,34 +41,34 @@ TEST_CASE("indentation inside '$for(...)'", "[indentation][for]")
 		"{\n"
 		"    // for: iteration #1\n"
 		"    i = 0\n"
-		"    \n"
+		"\n"
 		"    // for: iteration #2\n"
 		"    i = 1\n"
-		"    \n"
+		"\n"
 		"    // for: iteration #3\n"
 		"    i = 2\n"
-		"    \n"
+		"\n"
 		"    // for: iteration #4\n"
 		"    i = 3\n"
-		"    \n"
+		"\n"
 		"    // for: iteration #5\n"
 		"    i = 4\n"
-		"    \n"
+		"\n"
 		"} // for (unsigned int i {0}; i < 5; ++i)\n"
 		"\n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("indentation inside '$while(...)'", "[indentation][while]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	unsigned int i {0};
 
 	$while (i < 5)
 	{
-		$w(i)
+		$t(i);
 		++i;
 	}
 
@@ -77,31 +77,31 @@ TEST_CASE("indentation inside '$while(...)'", "[indentation][while]")
 		"{\n"
 		"    // while: iteration #1\n"
 		"    i = 0\n"
-		"    \n"
+		"\n"
 		"    // while: iteration #2\n"
 		"    i = 1\n"
-		"    \n"
+		"\n"
 		"    // while: iteration #3\n"
 		"    i = 2\n"
-		"    \n"
+		"\n"
 		"    // while: iteration #4\n"
 		"    i = 3\n"
-		"    \n"
+		"\n"
 		"    // while: iteration #5\n"
 		"    i = 4\n"
-		"    \n"
+		"\n"
 		"} // while (i < 5)\n"
 		"\n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
-void subject_func9() {$f $p("hellomoto!") }
+void subject_func9() {$f $t("hellomoto!"); }
 int subject_func10() {$f $return 789; }
 
 TEST_CASE("indentation inside '$f'", "[indentation][f]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	subject_func9();
 
@@ -112,22 +112,22 @@ TEST_CASE("indentation inside '$f'", "[indentation][f]")
 		"} // void subject_func9()\n"
 		"\n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("indentation outside '$if(...)'", "[indentation][if]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	int first {456};
 	int second {789};
 
 	$if (first > 400)
 	{
-		$w(first)
+		$t(first);
 		$if (second > 700)
 		{
-			$w(second)
+			$t(second);
 		}
 	}
 
@@ -139,25 +139,25 @@ TEST_CASE("indentation outside '$if(...)'", "[indentation][if]")
 		"    {\n"
 		"        second = 789\n"
 		"    }\n"
-		"    \n"
+		"\n"
 		"}\n"
 		"\n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("indentation outside '$for(...)'", "[indentation][for]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	int first {456};
 
 	$if (first > 400)
 	{
-		$w(first)
+		$t(first);
 		$for (unsigned int i {0}; i < 1; ++i)
 		{
-			$w(i)
+			$t(i);
 		}
 	}
 
@@ -169,28 +169,28 @@ TEST_CASE("indentation outside '$for(...)'", "[indentation][for]")
 		"    {\n"
 		"        // for: iteration #1\n"
 		"        i = 0\n"
-		"        \n"
+		"\n"
 		"    } // for (unsigned int i {0}; i < 1; ++i)\n"
-		"    \n"
+		"\n"
 		"}\n"
 		"\n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("indentation outside '$while(...)'", "[indentation][while]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	int first {456};
 
 	$if (first > 400)
 	{
-		$w(first)
+		$t(first);
 		unsigned int i {0};
 		$while (i < 1)
 		{
-			$w(i)
+			$t(i);
 			++i;
 		}
 	}
@@ -203,19 +203,19 @@ TEST_CASE("indentation outside '$while(...)'", "[indentation][while]")
 		"    {\n"
 		"        // while: iteration #1\n"
 		"        i = 0\n"
-		"        \n"
+		"\n"
 		"    } // while (i < 1)\n"
-		"    \n"
+		"\n"
 		"}\n"
 		"\n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 
 TEST_CASE("indentation outside '$f'", "[indentation][f]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	int first {456};
 
@@ -231,16 +231,16 @@ TEST_CASE("indentation outside '$f'", "[indentation][f]")
 		"    {\n"
 		"        // hellomoto!\n"
 		"    } // void subject_func9()\n"
-		"    \n"
+		"\n"
 		"}\n"
 		"\n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("indentation outside '$return'", "[indentation][return]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	subject_func10();
 
@@ -251,18 +251,18 @@ TEST_CASE("indentation outside '$return'", "[indentation][return]")
 		"} // int subject_func10()\n"
 		"\n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
-TEST_CASE("indentation outside '$w(...)'", "[indentation][w]")
+TEST_CASE("indentation outside '$t(...)'", "[indentation][t]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	int some {456};
 
 	$if (some == 456)
 	{
-		$w(some)
+		$t(some);
 	}
 
 	const char *expected {
@@ -272,33 +272,12 @@ TEST_CASE("indentation outside '$w(...)'", "[indentation][w]")
 		"}\n"
 		"\n"
 	};
-	REQUIRE(test::stream.str() == expected);
-}
-
-TEST_CASE("indentation outside '$e(...)'", "[indentation][e]")
-{
-	test::stream.str(std::string {});
-
-	int some {456};
-
-	$if (some == 456)
-	{
-		$e(some);
-	}
-
-	const char *expected {
-		"if (some == 456) => true\n"
-		"{\n"
-		"    some = 456\n"
-		"}\n"
-		"\n"
-	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("indentation outside '$r(...)'", "[indentation][r]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	int some {456};
 
@@ -315,12 +294,12 @@ TEST_CASE("indentation outside '$r(...)'", "[indentation][r]")
 		"}\n"
 		"\n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("indentation outside '$m(...)'", "[indentation][m]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	int some {456};
 	char str[11] {"hellomoto!"};
@@ -331,76 +310,58 @@ TEST_CASE("indentation outside '$m(...)'", "[indentation][m]")
 	}
 
 	std::stringstream expected;
+	std::uintptr_t address {reinterpret_cast<std::uintptr_t>(str)};
 	expected <<
 		"if (some == 456) => true\n"
 		"{\n"
 		"    str, 11 bytes of 1-byte hexadecimal\n"
-		"        " << static_cast<const void *>(str + 0) << ": 68 65 6c 6c 6f 6d 6f 74\n"
-		"        " << static_cast<const void *>(str + 8) << ": 6f 21 00\n"
-		"        \n"
+		"        " << std::hex << address + 0 << std::resetiosflags(std::ios::basefield) << ": 68 65 6c 6c 6f 6d 6f 74\n"
+		"        " << std::hex << address + 8 << std::resetiosflags(std::ios::basefield) << ": 6f 21 00\n"
+		"\n"
 		"}\n"
 		"\n";
 
-	REQUIRE(test::stream.str() == expected.str());
+	REQUIRE(test::out_stream.str() == expected.str());
 }
 
-TEST_CASE("indentation outside '$t(...)'", "[indentation][t]")
+TEST_CASE("indentation outside '$s(...)'", "[indentation][s]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	int some {456};
 
 	$if (some == 456)
 	{
-		$t(some = 789;)
+		$s(some = 789;)
 	}
 
 	const char *expected {
 		"if (some == 456) => true\n"
 		"{\n"
-		"    some = 789; // trace-out: statement passed\n"
+		"    some = 789; // running...\n"
+		"    some = 789; // done.\n"
 		"}\n"
 		"\n"
 	};
-	REQUIRE(test::stream.str() == expected);
-}
-
-TEST_CASE("indentation outside '$p(...)'", "[indentation][p]")
-{
-	test::stream.str(std::string {});
-
-	int some {456};
-
-	$if (some == 456)
-	{
-		$p("%s", "hellomoto!")
-	}
-
-	const char *expected {
-		"if (some == 456) => true\n"
-		"{\n"
-		"    // hellomoto!\n"
-		"}\n"
-		"\n"
-	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("indentation outside '$time(...)'", "[indentation][time]")
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$if (true)
 	{
 		$time("dummy", dummy();)
 	}
 
-	REQUIRE_THAT(test::stream.str(), Matches(
+	REQUIRE_THAT(test::out_stream.str(), Matches(
 		R"(if \(true\) => true\n)"
 		R"(\{\n)"
-		R"(    // execution time for "dummy": [0-9]+ ms\n)"
+		R"(    timing "dummy"...\n)"
+		R"(    "dummy" timed in [0-9]+ ms\n)"
 		R"(\}\n)"
 		R"(\n)"
 	));
@@ -410,7 +371,7 @@ TEST_CASE("indentation outside '$time_stats(...)'", "[indentation][time_stats]")
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$if (true)
 	{
@@ -420,14 +381,14 @@ TEST_CASE("indentation outside '$time_stats(...)'", "[indentation][time_stats]")
 		}
 	}
 
-	REQUIRE_THAT(test::stream.str(), Matches(
+	REQUIRE_THAT(test::out_stream.str(), Matches(
 		R"(if \(true\) => true\n)"
 		R"(\{\n)"
 		R"(    // execution time statistics \(ms\) for "dummy":\n)"
 		R"(    //   avg/med: [0-9\.]+ / [0-9\.]+\n)"
 		R"(    //     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)"
 		R"(    //     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)"
-		R"(    \n)"
+		R"(\n)"
 		R"(\}\n)"
 		R"(\n)"
 	));
@@ -437,17 +398,18 @@ TEST_CASE("indentation outside '$clocks(...)'", "[indentation][clocks]")
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$if (true)
 	{
 		$clocks("dummy", dummy();)
 	}
 
-	REQUIRE_THAT(test::stream.str(), Matches(
+	REQUIRE_THAT(test::out_stream.str(), Matches(
 		R"(if \(true\) => true\n)"
 		R"(\{\n)"
-		R"(    // execution time for "dummy": [0-9]+ clocks \([0-9\.]+ ms\)\n)"
+		R"(    clocking "dummy"...\n)"
+		R"(    "dummy" clocked in [0-9]+ clocks \([0-9\.]+ ms\)\n)"
 		R"(\}\n)"
 		R"(\n)"
 	));
@@ -457,7 +419,7 @@ TEST_CASE("indentation outside '$clock_stats(...)'", "[indentation][clock_stats]
 {
 	using Catch::Matchers::Matches;
 
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	$if (true)
 	{
@@ -467,14 +429,14 @@ TEST_CASE("indentation outside '$clock_stats(...)'", "[indentation][clock_stats]
 		}
 	}
 
-	REQUIRE_THAT(test::stream.str(), Matches(
+	REQUIRE_THAT(test::out_stream.str(), Matches(
 		R"(if \(true\) => true\n)"
 		R"(\{\n)"
 		R"(    // execution time statistics \(clocks\) for "dummy":\n)"
 		R"(    //   avg/med: [0-9\.]+ / [0-9\.]+\n)"
 		R"(    //     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)"
 		R"(    //     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)"
-		R"(    \n)"
+		R"(\n)"
 		R"(\}\n)"
 		R"(\n)"
 	));

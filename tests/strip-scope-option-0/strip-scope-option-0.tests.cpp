@@ -6,7 +6,7 @@
 
 TEST_CASE("'TRACE_OUT_STRIP_SCOPE=0' with nothing to strip", "[TRACE_OUT_STRIP_SCOPE][f]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	func();
 
@@ -16,12 +16,12 @@ TEST_CASE("'TRACE_OUT_STRIP_SCOPE=0' with nothing to strip", "[TRACE_OUT_STRIP_S
 		"} // void func()\n"
 		"\n"
 	};
-	REQUIRE(test::stream.str() == expected);
+	REQUIRE(test::out_stream.str() == expected);
 }
 
 TEST_CASE("'TRACE_OUT_STRIP_SCOPE=0' with something to strip", "[TRACE_OUT_STRIP_SCOPE][f]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	SECTION("framework::")
 	{
@@ -33,7 +33,7 @@ TEST_CASE("'TRACE_OUT_STRIP_SCOPE=0' with something to strip", "[TRACE_OUT_STRIP
 			"} // type func(type)\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
 	SECTION("::type")
@@ -46,7 +46,7 @@ TEST_CASE("'TRACE_OUT_STRIP_SCOPE=0' with something to strip", "[TRACE_OUT_STRIP
 			"} // type func0(type)\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
 	SECTION("framework::library::")
@@ -59,7 +59,7 @@ TEST_CASE("'TRACE_OUT_STRIP_SCOPE=0' with something to strip", "[TRACE_OUT_STRIP
 			"} // type func(type)\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
 	SECTION("::framework::")
@@ -72,7 +72,7 @@ TEST_CASE("'TRACE_OUT_STRIP_SCOPE=0' with something to strip", "[TRACE_OUT_STRIP
 			"} // type func1(type)\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
 	SECTION("framework::library::component::")
@@ -85,7 +85,7 @@ TEST_CASE("'TRACE_OUT_STRIP_SCOPE=0' with something to strip", "[TRACE_OUT_STRIP
 			"} // type func(type)\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
 	SECTION("::framework::library::")
@@ -98,7 +98,7 @@ TEST_CASE("'TRACE_OUT_STRIP_SCOPE=0' with something to strip", "[TRACE_OUT_STRIP
 			"} // type func2(type)\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 }
 

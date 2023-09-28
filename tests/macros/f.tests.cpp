@@ -29,7 +29,7 @@ public:
 
 TEST_CASE("$f", "[f]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	SECTION("void subject_func1()")
 	{
@@ -41,7 +41,7 @@ TEST_CASE("$f", "[f]")
 			"} // void subject_func1()\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
 	SECTION("int subject_func2()")
@@ -54,7 +54,7 @@ TEST_CASE("$f", "[f]")
 			"} // int subject_func2()\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
 	SECTION("int subject_func3()")
@@ -67,7 +67,7 @@ TEST_CASE("$f", "[f]")
 			"} // void subject_func3(int)\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
 	SECTION("void subject_func4(double, char)")
@@ -80,7 +80,7 @@ TEST_CASE("$f", "[f]")
 			"} // void subject_func4(double, char)\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
 	SECTION("void subject_func5(float, float, unsigned long *)")
@@ -93,7 +93,7 @@ TEST_CASE("$f", "[f]")
 			"} // void subject_func5(float, float, unsigned long *)\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
 	SECTION("std::unique_ptr<std::string> subject_func6(const std::string &)")
@@ -106,7 +106,7 @@ TEST_CASE("$f", "[f]")
 			"} // std::unique_ptr<std::string> subject_func6(const std::string &)\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
 	SECTION("bool subject_func7(const char *, const char *)")
@@ -119,7 +119,7 @@ TEST_CASE("$f", "[f]")
 			"} // bool subject_func7(const char *, const char *)\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
 	SECTION("std::string subject_func8(const std::string &, std::size_t, char)")
@@ -132,7 +132,7 @@ TEST_CASE("$f", "[f]")
 			"} // std::string subject_func8(const std::string &, std::size_t, char)\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
 	SECTION("void subject_class::func1()")
@@ -146,7 +146,7 @@ TEST_CASE("$f", "[f]")
 			"} // void subject_class::func1()\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
 	SECTION("int subject_class::func2()")
@@ -160,7 +160,7 @@ TEST_CASE("$f", "[f]")
 			"} // int subject_class::func2()\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
 	SECTION("void subject_class::func3(int)")
@@ -174,7 +174,7 @@ TEST_CASE("$f", "[f]")
 			"} // void subject_class::func3(int)\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
 	SECTION("void subject_class::func4(double, char)")
@@ -188,7 +188,7 @@ TEST_CASE("$f", "[f]")
 			"} // void subject_class::func4(double, char)\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
 	SECTION("void subject_class::func5(float, float, unsigned long *)")
@@ -202,7 +202,7 @@ TEST_CASE("$f", "[f]")
 			"} // void subject_class::func5(float, float, unsigned long *)\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
 	SECTION("std::unique_ptr<std::string> subject_class::func6(const std::string &)")
@@ -216,7 +216,7 @@ TEST_CASE("$f", "[f]")
 			"} // std::unique_ptr<std::string> subject_class::func6(const std::string &)\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
 	SECTION("bool subject_class::func7(const char *, const char *)")
@@ -230,7 +230,7 @@ TEST_CASE("$f", "[f]")
 			"} // bool subject_class::func7(const char *, const char *)\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
 	SECTION("std::string subject_class::func8(const std::string &, std::size_t, char)")
@@ -244,7 +244,7 @@ TEST_CASE("$f", "[f]")
 			"} // std::string subject_class::func8(const std::string &, std::size_t, char)\n"
 			"\n"
 		};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 }
 

@@ -9,7 +9,7 @@
 
 TEST_CASE("$r(begin, end)", "[r]")
 {
-	test::stream.str(std::string {});
+	test::out_stream.str(std::string {});
 
 	SECTION("std::vector empty")
 	{
@@ -18,7 +18,7 @@ TEST_CASE("$r(begin, end)", "[r]")
 		$r(subject.begin(), subject.end())
 
 		const char *expected {"[subject.begin(), subject.end()) = []\n"};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
 	SECTION("std::vector non-empty")
@@ -28,7 +28,7 @@ TEST_CASE("$r(begin, end)", "[r]")
 		$r(subject.begin(), subject.end())
 
 		const char *expected {"[subject.begin(), subject.end()) = [1, 2, 3, 4, 5]\n"};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
 	SECTION("std::list empty")
@@ -38,7 +38,7 @@ TEST_CASE("$r(begin, end)", "[r]")
 		$r(subject.begin(), subject.end())
 
 		const char *expected {"[subject.begin(), subject.end()) = []\n"};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
 	SECTION("std::list non-empty")
@@ -48,7 +48,7 @@ TEST_CASE("$r(begin, end)", "[r]")
 		$r(subject.begin(), subject.end())
 
 		const char *expected {"[subject.begin(), subject.end()) = [1, 2, 3, 4, 5]\n"};
-		REQUIRE(test::stream.str() == expected);
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
 	SECTION("std::map non-empty")
@@ -66,7 +66,7 @@ TEST_CASE("$r(begin, end)", "[r]")
 			expected << ", {\"" << itr->first << "\", " << itr->second << '}';
 		}
 		expected << "]\n";
-		REQUIRE(test::stream.str() == expected.str());
+		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
 	SECTION("std::unordered_map non-empty")
@@ -84,7 +84,7 @@ TEST_CASE("$r(begin, end)", "[r]")
 			expected << ", {\"" << itr->first << "\", " << itr->second << '}';
 		}
 		expected << "]\n";
-		REQUIRE(test::stream.str() == expected.str());
+		REQUIRE(test::out_stream.str() == expected.str());
 	}
 }
 
