@@ -19,7 +19,6 @@ target_sources(trace-out
 		pretty-time.hpp
 		pretty-trace.hpp
 		pretty-values.hpp
-		printfamily.hpp
 		resource.hpp
 		statistics.hpp
 		stream-to-endpoint.hpp
