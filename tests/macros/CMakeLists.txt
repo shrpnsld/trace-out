@@ -7,7 +7,7 @@ target_compile_features(macros-tests
 
 target_compile_definitions(macros-tests
 	PUBLIC
-		TRACE_OUT_STREAM=test
+		TRACE_OUT_STREAM_TO=trace_out_to_test_stream
 		TRACE_OUT_STREAM_WIDTH=70
 )
 

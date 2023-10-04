@@ -22,16 +22,16 @@ target_sources(trace-out
 		printfamily.hpp
 		resource.hpp
 		statistics.hpp
+		stream-to-endpoint.hpp
+		stream-to-file.hpp
+		stream-to-stdout.hpp
+		stream-to-wdo.hpp
 		strip-scope.hpp
 		template-magic.hpp
 		thread-local-storage.hpp
 		thread.hpp
 		time.hpp
-		to-file.hpp
-		to-network.hpp
-		to-stdout.hpp
 		to-string.hpp
-		to-wdo.hpp
 		trace-out.hpp
 		try-memory.hpp
 		untyped.hpp

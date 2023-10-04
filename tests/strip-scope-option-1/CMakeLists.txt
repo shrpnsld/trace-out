@@ -7,7 +7,7 @@ target_compile_features(strip-scope-option-tests-1
 
 target_compile_definitions(strip-scope-option-tests-1
 	PRIVATE
-		TRACE_OUT_STREAM=test
+		TRACE_OUT_STREAM_TO=trace_out_to_test_stream
 		TRACE_OUT_WIDTH=70
 		TRACE_OUT_STRIP_SCOPE=1
 )

@@ -7,7 +7,7 @@ target_compile_features(sync-stream-option-tests
 
 target_compile_definitions(sync-stream-option-tests
 	PRIVATE
-		TRACE_OUT_STREAM=test
+		TRACE_OUT_STREAM_TO=trace_out_to_test_stream
 		TRACE_OUT_WIDTH=70
 		TRACE_OUT_SYNC_STREAM
 )
