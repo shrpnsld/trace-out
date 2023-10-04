@@ -86,11 +86,6 @@ socket_stream_buf &socket_stream_buf_instance()
 	return _buffer;
 }
 
-socket_stream_buf::~socket_stream_buf()
-{
-	socket_close(_descriptor);
-}
-
 std::streamsize socket_stream_buf::xsputn(const char_type *what, std::streamsize how_much)
 {
 	socket_send(_descriptor, what, how_much);
@@ -210,6 +205,11 @@ socket_stream_buf::socket_stream_buf(const char *endpoint)
 	_descriptor = descriptor;
 }
 
+socket_stream_buf::~socket_stream_buf()
+{
+	socket_close(_descriptor);
+}
+
 void really_send(untyped<> descriptor, const void *what, standard::size_t how_much)
 {
 	if (how_much == 0)
@@ -293,6 +293,14 @@ socket_stream_buf::socket_stream_buf(const char *endpoint)
 	:
 	_descriptor(-1)
 {
+	WSADATA wsa_data;
+	int retval {WSAStartup(MAKEWORD(2, 0), &wsa_data)};
+	if (retval != 0)
+	{
+		trace_out_to_network_error() << "failed to initialize Windows Sockets libray (" << error_to_string(WSAGetLastError()) << ')' << std::endl;
+		return;
+	}
+
 	SOCKET descriptor = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (descriptor == INVALID_SOCKET)
 	{
@@ -329,6 +337,12 @@ socket_stream_buf::socket_stream_buf(const char *endpoint)
 	socket_send = really_send;
 	socket_close = really_close;
 	_descriptor = descriptor;
+}
+
+socket_stream_buf::~socket_stream_buf()
+{
+	socket_close(_descriptor);
+	WSACleanup();
 }
 
 void really_send(untyped<> descriptor, const void *what, standard::size_t how_much)
