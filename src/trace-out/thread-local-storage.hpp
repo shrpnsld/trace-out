@@ -9,7 +9,7 @@
 namespace trace_out { namespace system
 {
 
-typedef struct _tlskey *tlskey_t;
+typedef struct _tlskey_t *tlskey_t;
 
 inline tlskey_t tls_new_key();
 inline void tls_delete_key(tlskey_t key);
@@ -102,14 +102,14 @@ const Type_t &tls<Type_t>::get() const
 namespace trace_out { namespace system
 {
 
-struct _tlskey
+struct _tlskey_t
 {
 	pthread_key_t value;
 };
 
 tlskey_t tls_new_key()
 {
-	tlskey_t key = new _tlskey;
+	tlskey_t key = new _tlskey_t;
 	int retval = pthread_key_create(&key->value, NULL);
 	assert(retval == 0);
 
@@ -149,14 +149,14 @@ void tls_set(tlskey_t key, void *data)
 namespace trace_out { namespace system
 {
 
-struct _tlskey
+struct _tlskey_t
 {
 	DWORD value;
 };
 
 tlskey_t tls_new_key()
 {
-	tlskey_t key = new _tlskey;
+	tlskey_t key = new _tlskey_t;
 	DWORD retval = TlsAlloc();
 	assert(retval != TLS_OUT_OF_INDEXES);
 

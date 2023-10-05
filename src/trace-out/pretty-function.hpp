@@ -2,7 +2,6 @@
 
 #include "trace-out/mutex.hpp"
 #include "trace-out/pretty-lines.hpp"
-#include "trace-out/strip-scope.hpp"
 #include <string>
 
 //

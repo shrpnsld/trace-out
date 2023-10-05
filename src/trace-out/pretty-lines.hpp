@@ -14,10 +14,6 @@
 //
 // Public
 
-#if !defined(TRACE_OUT_STREAM_WIDTH)
-	#define TRACE_OUT_STREAM_WIDTH 80
-#endif
-
 #define TRACE_OUT_FILE_LINE \
 			(trace_out::file_line_t(__FILE__, static_cast<unsigned long>(__LINE__)))
 

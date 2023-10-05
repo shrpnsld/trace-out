@@ -9,7 +9,7 @@
 namespace trace_out { namespace system
 {
 
-typedef struct _mutex *mutex_t;
+typedef struct _mutex_t *mutex_t;
 
 inline mutex_t mutex_new();
 inline void mutex_delete(mutex_t mutex);
@@ -78,14 +78,14 @@ void mutex::unlock()
 namespace trace_out { namespace system
 {
 
-struct _mutex
+struct _mutex_t
 {
 	pthread_mutex_t value;
 };
 
 mutex_t mutex_new()
 {
-	mutex_t mutex = new _mutex;
+	mutex_t mutex = new _mutex_t;
 	int retval = pthread_mutex_init(&mutex->value, NULL);
 	assert(retval == 0);
 
@@ -125,14 +125,14 @@ void mutex_unlock(mutex_t mutex)
 namespace trace_out { namespace system
 {
 
-struct _mutex
+struct _mutex_t
 {
 	CRITICAL_SECTION value;
 };
 
 mutex_t mutex_new()
 {
-	mutex_t mutex = new _mutex;
+	mutex_t mutex = new _mutex_t;
 	InitializeCriticalSection(&mutex->value);
 
 	return mutex;

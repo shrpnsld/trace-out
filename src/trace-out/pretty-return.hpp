@@ -2,9 +2,8 @@
 
 #include "trace-out/mutex.hpp"
 #include "trace-out/pretty-lines.hpp"
-#include "trace-out/pretty-values.hpp"
+#include "trace-out/pretty-print.hpp"
 #include <ostream>
-#include <string>
 
 //
 // Public

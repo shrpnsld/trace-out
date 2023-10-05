@@ -13,7 +13,20 @@ inline int console_width();
 }
 }
 
-#if defined(TRACE_OUT_POSIX)
+#if defined(TRACE_OUT_STREAM_WIDTH)
+
+namespace trace_out { namespace system
+{
+
+int console_width()
+{
+	return TRACE_OUT_STREAM_WIDTH;
+}
+
+}
+}
+
+#elif defined(TRACE_OUT_POSIX)
 
 //
 // POSIX implementation

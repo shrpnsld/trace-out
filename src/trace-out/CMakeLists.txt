@@ -14,11 +14,11 @@ target_sources(trace-out
 		pretty-function.hpp
 		pretty-lines.hpp
 		pretty-memory.hpp
+		pretty-print.hpp
 		pretty-range.hpp
 		pretty-return.hpp
 		pretty-time.hpp
 		pretty-trace.hpp
-		pretty-values.hpp
 		resource.hpp
 		statistics.hpp
 		stream-to-endpoint.hpp

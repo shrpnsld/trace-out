@@ -160,6 +160,7 @@
 #include "trace-out/pretty-memory.hpp"
 #include "trace-out/pretty-range.hpp"
 #include "trace-out/pretty-return.hpp"
+#include "trace-out/strip-scope.hpp"
 #include "trace-out/pretty-time.hpp"
 #include "trace-out/pretty-trace.hpp"
 #include "trace-out/stream-to-endpoint.hpp"

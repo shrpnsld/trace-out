@@ -86,7 +86,7 @@ Type_t median_value(Iterator_t begin, Iterator_t end)
 	typename Iterator_t::difference_type size = std::distance(begin, end);
 	assert(size > 0);
 
-	std::size_t half_size = static_cast<std::size_t>(size / 2);
+	standard::size_t half_size = static_cast<standard::size_t>(size / 2);
 	if (size % 2 == 0)
 	{
 		Iterator_t next = begin;

@@ -2,6 +2,7 @@
 
 #include "trace-out/indentation.hpp"
 #include "trace-out/integer.hpp"
+#include "trace-out/console.hpp"
 #include "trace-out/mutex.hpp"
 #include "trace-out/nothing.hpp"
 #include "trace-out/pretty-lines.hpp"
@@ -9,8 +10,6 @@
 #include <iomanip>
 #include <ostream>
 #include <limits>
-#include <sstream>
-#include <string>
 
 //
 // Public
@@ -186,7 +185,7 @@ void print_memory_with_display_options(std::ostream &stream, const file_line_t &
 
 	standard::size_t column_width = printed_value_width_for_base_and_grouping(options.base, options.grouping) + 1;
 	standard::size_t item_count = size / options.grouping;
-	standard::size_t column_count = calculate_column_count(options.column_count, TRACE_OUT_STREAM_WIDTH, 0, 0, indentation().size() + INDENTATION_UNIT_WIDTH, to_string(static_cast<const void *>(memory)).size(), 1, column_width);
+	standard::size_t column_count = calculate_column_count(options.column_count, system::console_width(), 0, 0, indentation().size() + INDENTATION_UNIT_WIDTH, to_string(static_cast<const void *>(memory)).size(), 1, column_width);
 	standard::size_t line_count = item_count / column_count;
 	standard::size_t leftover_item_count = item_count - line_count * column_count;
 

@@ -1,8 +1,7 @@
 #pragma once
 
 #include "trace-out/pretty-lines.hpp"
-#include "trace-out/pretty-values.hpp"
-#include <string>
+#include "trace-out/pretty-print.hpp"
 
 //
 // Public
