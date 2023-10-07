@@ -15,7 +15,6 @@ target_sources(trace-out
 		pretty-lines.hpp
 		pretty-memory.hpp
 		pretty-print.hpp
-		pretty-range.hpp
 		pretty-return.hpp
 		pretty-time.hpp
 		pretty-trace.hpp

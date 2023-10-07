@@ -35,7 +35,7 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$t(...)'", "[TRACE_OUT_SHOW_THREAD][t]"
 	));
 }
 
-TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$r(...)'", "[TRACE_OUT_SHOW_THREAD][r]")
+TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$tr(...)'", "[TRACE_OUT_SHOW_THREAD][tr]")
 {
 	using Catch::Matchers::Matches;
 
@@ -47,12 +47,12 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$r(...)'", "[TRACE_OUT_SHOW_THREAD][r]"
 	{
 		$thread(two)
 		const char *end {what + std::strlen(what)};
-		$r(what, end)
+		$tr(what, end)
 	}, "wazuuup!"}.join();
 
 	const char *what {"hellomoto!"};
 	const char *end {what + std::strlen(what)};
-	$r(what, end)
+	$tr(what, end)
 
 	REQUIRE_THAT(test::out_stream.str(), Matches(
 		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"

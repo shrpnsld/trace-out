@@ -278,7 +278,7 @@ TEST_CASE("'TRACE_OUT_INDENTATION' outside '$t(...)'", "[indentation][TRACE_OUT_
 	REQUIRE(test::out_stream.str() == expected);
 }
 
-TEST_CASE("'TRACE_OUT_INDENTATION' outside '$r(...)'", "[indentation][TRACE_OUT_INDENTATION][r]")
+TEST_CASE("'TRACE_OUT_INDENTATION' outside '$tr(...)'", "[indentation][TRACE_OUT_INDENTATION][tr]")
 {
 	test::out_stream.str(std::string {});
 
@@ -287,7 +287,7 @@ TEST_CASE("'TRACE_OUT_INDENTATION' outside '$r(...)'", "[indentation][TRACE_OUT_
 	$if (some == 456)
 	{
 		std::vector<int> arr {1, 2, 3, 4, 5};
-		$r(arr.begin(), arr.end());
+		$tr(arr.begin(), arr.end());
 	}
 
 	const char *expected {

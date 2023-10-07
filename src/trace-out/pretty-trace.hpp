@@ -29,6 +29,12 @@ inline Type_t &trace(std::ostream &stream, const file_line_t &file_line, const c
 template <standard::size_t Size>
 inline void trace(std::ostream &stream, const file_line_t &file_line, const char *should_comment, const char (&comment)[Size]);
 
+template <typename Begin_t, typename End_t>
+inline void trace_range(std::ostream &stream, const file_line_t &file_line, const char *begin_name, const char *end_name, Begin_t begin, End_t end);
+
+template <typename Begin_t>
+inline void trace_range(std::ostream &stream, const file_line_t &file_line, const char *begin_name, const char *how_much_name, Begin_t begin, standard::size_t how_much);
+
 }
 
 namespace trace_out
@@ -131,6 +137,30 @@ void trace(std::ostream &stream, const file_line_t &file_line, const char *shoul
 #endif
 
 	stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << (should_comment != NULL ? "// " : "") << comment << std::endl;
+}
+
+template <typename Begin_t, typename End_t>
+void trace_range(std::ostream &stream, const file_line_t &file_line, const char *begin_name, const char *end_name, Begin_t begin, End_t end)
+{
+#if defined(TRACE_OUT_SYNC_STREAM)
+	autolock<system::mutex> lock(stream_mutex());
+#endif
+
+	stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << '[' << begin_name << ", " << end_name << ") = ";
+	pretty_print_begin_end(stream, begin, end);
+	stream << std::endl;
+}
+
+template <typename Begin_t>
+void trace_range(std::ostream &stream, const file_line_t &file_line, const char *begin_name, const char *how_much_name, Begin_t begin, standard::size_t how_much)
+{
+#if defined(TRACE_OUT_SYNC_STREAM)
+	autolock<system::mutex> lock(stream_mutex());
+#endif
+
+	stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << '[' << begin_name << ": " << how_much_name << "] = ";
+	pretty_print_begin_how_much(stream, begin, how_much);
+	stream << std::endl;
 }
 
 template <typename Type_t>

@@ -275,7 +275,7 @@ TEST_CASE("indentation outside '$t(...)'", "[indentation][t]")
 	REQUIRE(test::out_stream.str() == expected);
 }
 
-TEST_CASE("indentation outside '$r(...)'", "[indentation][r]")
+TEST_CASE("indentation outside '$tr(...)'", "[indentation][tr]")
 {
 	test::out_stream.str(std::string {});
 
@@ -284,7 +284,7 @@ TEST_CASE("indentation outside '$r(...)'", "[indentation][r]")
 	$if (some == 456)
 	{
 		std::vector<int> arr {1, 2, 3, 4, 5};
-		$r(arr.begin(), arr.end());
+		$tr(arr.begin(), arr.end());
 	}
 
 	const char *expected {

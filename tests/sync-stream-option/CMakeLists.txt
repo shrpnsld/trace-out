@@ -34,12 +34,12 @@ set_tests_properties([[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$t(...)']]
 		TIMEOUT 5
 )
 
-add_test(NAME [[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$r(...)']]
+add_test(NAME [[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$tr(...)']]
 	COMMAND
 		${CMAKE_CURRENT_BINARY_DIR}/sync-stream-option-tests
-		[["no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$r(...)'"]]
+		[["no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$tr(...)'"]]
 )
-set_tests_properties([[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$r(...)']]
+set_tests_properties([[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$tr(...)']]
 	PROPERTIES
 		TIMEOUT 5
 )

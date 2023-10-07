@@ -8,8 +8,8 @@
 #define $t(...) \
 			trace_out::trace(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, #__VA_ARGS__, ##__VA_ARGS__)
 
-#define $r(begin, end_OR_how_much) \
-			trace_out::range(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, #begin, #end_OR_how_much, (begin), (end_OR_how_much));
+#define $tr(first, second) \
+			trace_out::trace_range(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, #first, #second, first, second);
 
 #define $bin trace_out::base_option(trace_out::BIN)
 #define $hex trace_out::base_option(trace_out::HEX)
@@ -117,7 +117,7 @@
 #define $t(...) \
 			__VA_ARGS__
 
-#define $r(...)
+#define $tr(...)
 
 #define $m(pointer, ...)
 
@@ -159,7 +159,6 @@
 #include "trace-out/pretty-code-blocks.hpp"
 #include "trace-out/pretty-function.hpp"
 #include "trace-out/pretty-memory.hpp"
-#include "trace-out/pretty-range.hpp"
 #include "trace-out/pretty-return.hpp"
 #include "trace-out/strip-scope.hpp"
 #include "trace-out/pretty-time.hpp"

@@ -34,7 +34,7 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$t(...)'", "[TRACE_OUT_SHOW_FILE_LIN
 	REQUIRE(test::out_stream.str() == expected.str());
 }
 
-TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$r(...)'", "[TRACE_OUT_SHOW_FILE_LINE][r]")
+TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$tr(...)'", "[TRACE_OUT_SHOW_FILE_LINE][tr]")
 {
 	test::out_stream.str(std::string {});
 
@@ -42,7 +42,7 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$r(...)'", "[TRACE_OUT_SHOW_FILE_LIN
 	std::size_t length {10};
 
 	long int line {__LINE__ + 1};
-	$r(str, str + length)
+	$tr(str, str + length)
 
 	std::stringstream expected;
 	expected << " show-file-line-opt~:" << line << "   | [str, str + length) = ['h', 'e', 'l', 'l', 'o', 'm', 'o', 't', 'o', '!']\n";

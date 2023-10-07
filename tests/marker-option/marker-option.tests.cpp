@@ -25,7 +25,7 @@ TEST_CASE("'TRACE_OUT_MARKER' with '$t(...)'", "[TRACE_OUT_MARKER][t]")
 	REQUIRE(test::out_stream.str() == expected);
 }
 
-TEST_CASE("'TRACE_OUT_MARKER' with '$r(...)'", "[TRACE_OUT_MARKER][r]")
+TEST_CASE("'TRACE_OUT_MARKER' with '$tr(...)'", "[TRACE_OUT_MARKER][tr]")
 {
 	test::out_stream.str(std::string {});
 
@@ -33,7 +33,7 @@ TEST_CASE("'TRACE_OUT_MARKER' with '$r(...)'", "[TRACE_OUT_MARKER][r]")
 	std::size_t length {10};
 	dummy(str, length);
 
-	$r(str, str + length)
+	$tr(str, str + length)
 
 	const char *expected {"@@ [str, str + length) = ['h', 'e', 'l', 'l', 'o', 'm', 'o', 't', 'o', '!']\n"};
 	REQUIRE(test::out_stream.str() == expected);

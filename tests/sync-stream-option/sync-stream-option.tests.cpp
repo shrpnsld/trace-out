@@ -27,14 +27,14 @@ TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$t(...)'", "[TRACE_OUT_
 	REQUIRE(test::out_stream.str() == expected);
 }
 
-TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$r(...)'", "[TRACE_OUT_SYNC_STREAM][r]")
+TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$tr(...)'", "[TRACE_OUT_SYNC_STREAM][tr]")
 {
 	test::out_stream.str(std::string {});
 
 	std::vector<int> subject {1, 2, 3, 4, 5};
 
-	$r(subject.begin(), subject.end())
-	$r(subject.begin(), subject.end())
+	$tr(subject.begin(), subject.end())
+	$tr(subject.begin(), subject.end())
 
 	const char *expected {
 		"[subject.begin(), subject.end()) = [1, 2, 3, 4, 5]\n"

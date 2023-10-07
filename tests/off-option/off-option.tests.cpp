@@ -17,7 +17,7 @@ TEST_CASE("'TRACE_OUT_OFF' with '$t(...)'", "[TRACE_OUT_OFF][t]")
 	REQUIRE(test::out_stream.str() == "");
 }
 
-TEST_CASE("'TRACE_OUT_OFF' with '$r(...)'", "[TRACE_OUT_OFF][r]")
+TEST_CASE("'TRACE_OUT_OFF' with '$tr(...)'", "[TRACE_OUT_OFF][tr]")
 {
 	test::out_stream.str(std::string {});
 
@@ -25,7 +25,7 @@ TEST_CASE("'TRACE_OUT_OFF' with '$r(...)'", "[TRACE_OUT_OFF][r]")
 	std::size_t length {11};
 	dummy(str, length);
 
-	$r(str, str + length)
+	$tr(str, str + length)
 
 	REQUIRE(test::out_stream.str() == "");
 }

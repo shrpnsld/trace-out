@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include <vector>
 
-TEST_CASE("$r(begin, end)", "[r]")
+TEST_CASE("$tr(begin, end)", "[tr]")
 {
 	test::out_stream.str(std::string {});
 
@@ -15,7 +15,7 @@ TEST_CASE("$r(begin, end)", "[r]")
 	{
 		std::vector<int> subject;
 
-		$r(subject.begin(), subject.end())
+		$tr(subject.begin(), subject.end())
 
 		const char *expected {"[subject.begin(), subject.end()) = []\n"};
 		REQUIRE(test::out_stream.str() == expected);
@@ -25,7 +25,7 @@ TEST_CASE("$r(begin, end)", "[r]")
 	{
 		std::vector<int> subject {1, 2, 3, 4, 5};
 
-		$r(subject.begin(), subject.end())
+		$tr(subject.begin(), subject.end())
 
 		const char *expected {"[subject.begin(), subject.end()) = [1, 2, 3, 4, 5]\n"};
 		REQUIRE(test::out_stream.str() == expected);
@@ -35,7 +35,7 @@ TEST_CASE("$r(begin, end)", "[r]")
 	{
 		std::list<int> subject;
 
-		$r(subject.begin(), subject.end())
+		$tr(subject.begin(), subject.end())
 
 		const char *expected {"[subject.begin(), subject.end()) = []\n"};
 		REQUIRE(test::out_stream.str() == expected);
@@ -45,7 +45,7 @@ TEST_CASE("$r(begin, end)", "[r]")
 	{
 		std::list<int> subject {1, 2, 3, 4, 5};
 
-		$r(subject.begin(), subject.end())
+		$tr(subject.begin(), subject.end())
 
 		const char *expected {"[subject.begin(), subject.end()) = [1, 2, 3, 4, 5]\n"};
 		REQUIRE(test::out_stream.str() == expected);
@@ -55,7 +55,7 @@ TEST_CASE("$r(begin, end)", "[r]")
 	{
 		std::map<std::string, int> subject {{"one", 1}, {"two", 2}, {"three", 3}, {"four", 4}, {"five", 5}};
 
-		$r(subject.begin(), subject.end())
+		$tr(subject.begin(), subject.end())
 
 		std::stringstream expected;
 		expected << "[subject.begin(), subject.end()) = [";
@@ -73,7 +73,7 @@ TEST_CASE("$r(begin, end)", "[r]")
 	{
 		std::unordered_map<std::string, int> subject {{"one", 1}, {"two", 2}, {"three", 3}, {"four", 4}, {"five", 5}};
 
-		$r(subject.begin(), subject.end())
+		$tr(subject.begin(), subject.end())
 
 		std::stringstream expected;
 		expected << "[subject.begin(), subject.end()) = [";
