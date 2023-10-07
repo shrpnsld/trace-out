@@ -42,6 +42,12 @@ void print_memory(std::ostream &stream, const file_line_t &file_line, const char
 template <typename Option1_t, typename Option2_t>
 void print_memory(std::ostream &stream, const file_line_t &file_line, const char *name, const standard::uint8_t *memory, standard::size_t size, const Option1_t &option1, const Option2_t &option2);
 
+template <typename Option1_t, typename Option2_t, typename Option3_t>
+void print_memory(std::ostream &stream, const file_line_t &file_line, const char *name, const standard::uint8_t *memory, standard::size_t size, const Option1_t &option1, const Option2_t &option2, const Option3_t &option3);
+
+template <typename Option1_t, typename Option2_t, typename Option3_t, typename Option4_t>
+void print_memory(std::ostream &stream, const file_line_t &file_line, const char *name, const standard::uint8_t *memory, standard::size_t size, const Option1_t &option1, const Option2_t &option2, const Option3_t &option3, const Option4_t &option4);
+
 }
 
 //
@@ -50,45 +56,30 @@ void print_memory(std::ostream &stream, const file_line_t &file_line, const char
 namespace trace_out
 {
 
-struct bin_or_hex_option
+struct base_option
 {
-	inline bin_or_hex_option(base_t base);
+	inline explicit base_option(base_t value);
 
-	inline const bin_or_hex_option &operator ()(standard::size_t new_grouping);
-
-	base_t base;
-	standard::size_t grouping;
+	base_t value;
 };
 
-struct decimal_option
+struct grouping_option
 {
-	inline decimal_option(base_t base);
+	inline explicit grouping_option(standard::size_t value);
 
-	inline const decimal_option &operator ()(standard::size_t new_grouping);
-	inline const decimal_option &operator ()(byte_order_t byte_order);
-	inline const decimal_option &operator ()(byte_order_t byte_order, standard::size_t new_grouping);
-	inline const decimal_option &operator ()(standard::size_t new_grouping, byte_order_t byte_order);
-
-	base_t base;
-	standard::size_t grouping;
-	byte_order_t byte_order;
+	standard::size_t value;
 };
 
-struct floating_point_option
+struct byte_order_option
 {
-	inline floating_point_option(base_t base);
+	inline explicit byte_order_option(byte_order_t value);
 
-	inline const floating_point_option &operator ()(byte_order_t new_byte_order);
-	inline static standard::size_t grouping_from_base(base_t base);
-
-	base_t base;
-	standard::size_t grouping;
-	byte_order_t byte_order;
+	byte_order_t value;
 };
 
 struct column_count_option
 {
-	inline column_count_option(standard::size_t value);
+	inline explicit column_count_option(standard::size_t value);
 
 	standard::size_t value;
 };
@@ -97,9 +88,9 @@ struct memory_display_options_t
 {
 	inline memory_display_options_t(base_t base, standard::size_t grouping, byte_order_t byte_order, standard::size_t column_count);
 
-	inline void set_option(const bin_or_hex_option &option);
-	inline void set_option(const decimal_option &option);
-	inline void set_option(const floating_point_option &option);
+	inline void set_option(const base_option &option);
+	inline void set_option(const grouping_option &option);
+	inline void set_option(const byte_order_option &option);
 	inline void set_option(const column_count_option &option);
 	inline void set_option(nothing);
 
@@ -137,7 +128,9 @@ inline standard::size_t calculate_column_count(standard::size_t preferred_column
 typedef void (*print_chunk_t)(std::ostream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t column_width);
 inline print_chunk_t select_print_chunk_function(base_t base, standard::size_t chunk_size, byte_order_t byte_order);
 inline void print_binary_chunk(std::ostream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t column_width);
+inline void print_binary_chunk_reverse(std::ostream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t column_width);
 inline void print_hexadecimal_chunk(std::ostream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t column_width);
+inline void print_hexadecimal_chunk_reverse(std::ostream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t column_width);
 
 template <typename Type_t>
 void print_number_chunk(std::ostream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t column_width);
@@ -179,6 +172,29 @@ void print_memory(std::ostream &stream, const file_line_t &file_line, const char
 	print_memory_with_display_options(stream, file_line, name, memory, size, options);
 }
 
+template <typename Option1_t, typename Option2_t, typename Option3_t>
+void print_memory(std::ostream &stream, const file_line_t &file_line, const char *name, const standard::uint8_t *memory, standard::size_t size, const Option1_t &option1, const Option2_t &option2, const Option3_t &option3)
+{
+	memory_display_options_t options(HEX, 1, current_byte_order(), 0);
+	options.set_option(option1);
+	options.set_option(option2);
+	options.set_option(option3);
+
+	print_memory_with_display_options(stream, file_line, name, memory, size, options);
+}
+
+template <typename Option1_t, typename Option2_t, typename Option3_t, typename Option4_t>
+void print_memory(std::ostream &stream, const file_line_t &file_line, const char *name, const standard::uint8_t *memory, standard::size_t size, const Option1_t &option1, const Option2_t &option2, const Option3_t &option3, const Option4_t &option4)
+{
+	memory_display_options_t options(HEX, 1, current_byte_order(), 0);
+	options.set_option(option1);
+	options.set_option(option2);
+	options.set_option(option3);
+	options.set_option(option4);
+
+	print_memory_with_display_options(stream, file_line, name, memory, size, options);
+}
+
 void print_memory_with_display_options(std::ostream &stream, const file_line_t &file_line, const char *name, const standard::uint8_t *memory, standard::size_t size, const memory_display_options_t &options)
 {
 	print_chunk_t print_chunk = select_print_chunk_function(options.base, options.grouping, options.byte_order);
@@ -198,7 +214,7 @@ void print_memory_with_display_options(std::ostream &stream, const file_line_t &
 #endif
 
 		stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << name << ", " << size << " bytes of " << options.grouping << "-byte " << base_name(options.base);
-		if (options.grouping > 1 && options.base != BIN && options.base != HEX)
+		if (options.grouping > 1)
 		{
 			stream << ", " << byte_order_name(options.byte_order);
 		}
@@ -247,90 +263,27 @@ void print_memory_with_display_options(std::ostream &stream, const file_line_t &
 	}
 }
 
-bin_or_hex_option::bin_or_hex_option(base_t base)
+base_option::base_option(base_t value)
 	:
-	base(base),
-	grouping(1)
+	value(value)
 {
 }
 
-const bin_or_hex_option &bin_or_hex_option::operator ()(standard::size_t new_grouping)
-{
-	grouping = new_grouping;
-
-	return *this;
-}
-
-decimal_option::decimal_option(base_t base)
+grouping_option::grouping_option(standard::size_t value)
 	:
-	base(base),
-	grouping(1),
-	byte_order(current_byte_order())
+	value(value)
 {
 }
 
-const decimal_option &decimal_option::operator ()(standard::size_t new_grouping)
-{
-	grouping = new_grouping;
-
-	return *this;
-}
-
-const decimal_option &decimal_option::operator ()(byte_order_t new_byte_order)
-{
-	byte_order = new_byte_order;
-
-	return *this;
-}
-
-const decimal_option &decimal_option::operator ()(byte_order_t new_byte_order, standard::size_t new_grouping)
-{
-	grouping = new_grouping;
-	byte_order = new_byte_order;
-	return *this;
-}
-
-const decimal_option &decimal_option::operator ()(standard::size_t new_grouping, byte_order_t new_byte_order)
-{
-	grouping = new_grouping;
-	byte_order = new_byte_order;
-	return *this;
-}
-
-floating_point_option::floating_point_option(base_t base)
+byte_order_option::byte_order_option(byte_order_t value)
 	:
-	base(base),
-	grouping(grouping_from_base(base))
+	value(value)
 {
-}
-
-const floating_point_option &floating_point_option::operator ()(byte_order_t new_byte_order)
-{
-	byte_order = new_byte_order;
-	return *this;
-}
-
-standard::size_t floating_point_option::grouping_from_base(base_t base)
-{
-	switch (base)
-	{
-		case FLT:
-			return sizeof(float);
-
-		case DBL:
-			return sizeof(double);
-
-		case LDBL:
-			return sizeof(long double);
-
-		default:
-			return 0;
-	}
 }
 
 column_count_option::column_count_option(standard::size_t value)
 	:
-	 value(value)
+	value(value)
 {
 }
 
@@ -343,24 +296,37 @@ memory_display_options_t::memory_display_options_t(base_t base, standard::size_t
 {
 }
 
-void memory_display_options_t::set_option(const bin_or_hex_option &option)
+void memory_display_options_t::set_option(const base_option &option)
 {
-	base = option.base;
-	grouping = option.grouping;
+	base = option.value;
+
+	switch (base)
+	{
+		case FLT:
+			grouping = sizeof(float);
+			break;
+
+		case DBL:
+			grouping = sizeof(double);
+			break;
+
+		case LDBL:
+			grouping = sizeof(long double);
+			break;
+
+		default:
+			break;
+	};
 }
 
-void memory_display_options_t::set_option(const decimal_option &option)
+void memory_display_options_t::set_option(const grouping_option &option)
 {
-	base = option.base;
-	grouping = option.grouping;
-	byte_order = option.byte_order;
+	grouping = option.value;
 }
 
-void memory_display_options_t::set_option(const floating_point_option &option)
+void memory_display_options_t::set_option(const byte_order_option &option)
 {
-	base = option.base;
-	grouping = option.grouping;
-	byte_order = option.byte_order;
+	byte_order = option.value;
 }
 
 void memory_display_options_t::set_option(const column_count_option &option)
@@ -605,10 +571,10 @@ print_chunk_t select_print_chunk_function(base_t base, standard::size_t chunk_si
 	switch (base)
 	{
 		case BIN:
-			return print_binary_chunk;
+			return byte_order == current_byte_order() ? print_binary_chunk : print_binary_chunk_reverse;
 
 		case HEX:
-			return print_hexadecimal_chunk;
+			return byte_order == current_byte_order() ? print_hexadecimal_chunk : print_hexadecimal_chunk_reverse;
 
 		case SDEC:
 		{
@@ -671,6 +637,13 @@ void print_binary_chunk(std::ostream &stream, const standard::uint8_t *chunk, st
 	}
 }
 
+void print_binary_chunk_reverse(std::ostream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t column_width)
+{
+	standard::uint8_t reversed_chunk[16];
+	std::reverse_copy(chunk, chunk + size, reversed_chunk);
+	print_binary_chunk(stream, reversed_chunk, size, column_width);
+}
+
 void print_hexadecimal_chunk(std::ostream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t column_width)
 {
 	stream << std::setw((column_width % 2) + 2) << std::setfill(' ') << byte_to_hexadecimal(*chunk) << RESET_FLAGS;
@@ -679,6 +652,13 @@ void print_hexadecimal_chunk(std::ostream &stream, const standard::uint8_t *chun
 	{
 		stream << byte_to_hexadecimal(*chunk);
 	}
+}
+
+void print_hexadecimal_chunk_reverse(std::ostream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t column_width)
+{
+	standard::uint8_t reversed_chunk[16];
+	std::reverse_copy(chunk, chunk + size, reversed_chunk);
+	print_hexadecimal_chunk(stream, reversed_chunk, size, column_width);
 }
 
 template <typename Type_t>

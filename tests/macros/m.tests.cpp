@@ -44,7 +44,7 @@ TEST_CASE("$m(<pointer>, <size>)", "[m]")
 	}
 }
 
-TEST_CASE("$m(<pointer>, <size>, $bin(<grouping>))", "[m]")
+TEST_CASE("$m(<pointer>, <size>, $bin, $grp(...), $le|$be)", "[m]")
 {
 	test::out_stream.str(std::string {});
 
@@ -74,9 +74,9 @@ TEST_CASE("$m(<pointer>, <size>, $bin(<grouping>))", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$bin(1)")
+	SECTION("$bin, $grp(1), $be")
 	{
-		$m(subject.data(), subject.size(), $bin(1))
+		$m(subject.data(), subject.size(), $bin, $grp(1), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -94,13 +94,33 @@ TEST_CASE("$m(<pointer>, <size>, $bin(<grouping>))", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$bin(2)")
+	SECTION("$bin, $grp(2), $le")
 	{
-		$m(subject.data(), subject.size(), $bin(2))
+		$m(subject.data(), subject.size(), $bin, $grp(2), $le)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
-		expected << "subject.data(), 32 bytes of 2-byte binary\n";
+		expected << "subject.data(), 32 bytes of 2-byte binary, little-endian\n";
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 0110010011011111 1100111101101100" "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 1100101111111001 0001000111101101" "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 1000001101001010 0010100001111000" "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 0100100000111101 0100000010101101" "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 0011100100000001 1001111001001101" "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 1011010011111101 1010000101000101" "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 0110100001110100 1101100111111100" "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 1100110000011000 0011001000111011" "\n";
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
+	SECTION("$bin, $grp(2), $be")
+	{
+		$m(subject.data(), subject.size(), $bin, $grp(2), $be)
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		expected << "subject.data(), 32 bytes of 2-byte binary, big-endian\n";
 		expected << "    " << std::hex << address << RESET_FLAGS << ": 1101111101100100 0110110011001111" "\n"; address += 4;
 		expected << "    " << std::hex << address << RESET_FLAGS << ": 1111100111001011 1110110100010001" "\n"; address += 4;
 		expected << "    " << std::hex << address << RESET_FLAGS << ": 0100101010000011 0111100000101000" "\n"; address += 4;
@@ -114,13 +134,33 @@ TEST_CASE("$m(<pointer>, <size>, $bin(<grouping>))", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$bin(4)")
+	SECTION("$bin, $grp(4), $le")
 	{
-		$m(subject.data(), subject.size(), $bin(4))
+		$m(subject.data(), subject.size(), $bin, $grp(4), $le)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
-		expected << "subject.data(), 32 bytes of 4-byte binary\n";
+		expected << "subject.data(), 32 bytes of 4-byte binary, little-endian\n";
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 11001111011011000110010011011111" "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 00010001111011011100101111111001" "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 00101000011110001000001101001010" "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 01000000101011010100100000111101" "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 10011110010011010011100100000001" "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 10100001010001011011010011111101" "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 11011001111111000110100001110100" "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 00110010001110111100110000011000" "\n";
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
+	SECTION("$bin, $grp(4), $be")
+	{
+		$m(subject.data(), subject.size(), $bin, $grp(4), $be)
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		expected << "subject.data(), 32 bytes of 4-byte binary, big-endian\n";
 		expected << "    " << std::hex << address << RESET_FLAGS << ": 11011111011001000110110011001111" "\n"; address += 4;
 		expected << "    " << std::hex << address << RESET_FLAGS << ": 11111001110010111110110100010001" "\n"; address += 4;
 		expected << "    " << std::hex << address << RESET_FLAGS << ": 01001010100000110111100000101000" "\n"; address += 4;
@@ -134,13 +174,29 @@ TEST_CASE("$m(<pointer>, <size>, $bin(<grouping>))", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$bin(8)")
+	SECTION("$bin, $grp(8), $le")
 	{
-		$m(subject.data(), subject.size(), $bin(8))
+		$m(subject.data(), subject.size(), $bin, $grp(8), $le)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
-		expected << "subject.data(), 32 bytes of 8-byte binary\n";
+		expected << "subject.data(), 32 bytes of 8-byte binary, little-endian\n";
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 0001000111101101110010111111100111001111011011000110010011011111" "\n"; address += 8;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 0100000010101101010010000011110100101000011110001000001101001010" "\n"; address += 8;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 1010000101000101101101001111110110011110010011010011100100000001" "\n"; address += 8;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 0011001000111011110011000001100011011001111111000110100001110100" "\n";
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
+	SECTION("$bin, $grp(8), $be")
+	{
+		$m(subject.data(), subject.size(), $bin, $grp(8), $be)
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		expected << "subject.data(), 32 bytes of 8-byte binary, big-endian\n";
 		expected << "    " << std::hex << address << RESET_FLAGS << ": 1101111101100100011011001100111111111001110010111110110100010001" "\n"; address += 8;
 		expected << "    " << std::hex << address << RESET_FLAGS << ": 0100101010000011011110000010100000111101010010001010110101000000" "\n"; address += 8;
 		expected << "    " << std::hex << address << RESET_FLAGS << ": 0000000100111001010011011001111011111101101101000100010110100001" "\n"; address += 8;
@@ -151,7 +207,7 @@ TEST_CASE("$m(<pointer>, <size>, $bin(<grouping>))", "[m]")
 	}
 }
 
-TEST_CASE("$m(<pointer>, <size>, $hex(<grouping>))", "[m]")
+TEST_CASE("$m(<pointer>, <size>, $hex, $grp(...), $le|$be)", "[m]")
 {
 	test::out_stream.str(std::string {});
 
@@ -175,9 +231,9 @@ TEST_CASE("$m(<pointer>, <size>, $hex(<grouping>))", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$hex(1)")
+	SECTION("$hex, $grp(1)")
 	{
-		$m(subject.data(), subject.size(), $hex(1))
+		$m(subject.data(), subject.size(), $hex, $grp(1))
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -189,13 +245,27 @@ TEST_CASE("$m(<pointer>, <size>, $hex(<grouping>))", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$hex(2)")
+	SECTION("$hex, $grp(2), $le")
 	{
-		$m(subject.data(), subject.size(), $hex(2))
+		$m(subject.data(), subject.size(), $hex, $grp(2), $le)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
-		expected << "subject.data(), 32 bytes of 2-byte hexadecimal\n";
+		expected << "subject.data(), 32 bytes of 2-byte hexadecimal, little-endian\n";
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 64df cf6c cbf9 11ed 834a 2878 483d 40ad" "\n"; address += 16;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 3901 9e4d b4fd a145 6874 d9fc cc18 323b" "\n";
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
+	SECTION("$hex, $grp(2), $be")
+	{
+		$m(subject.data(), subject.size(), $hex, $grp(2), $be)
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		expected << "subject.data(), 32 bytes of 2-byte hexadecimal, big-endian\n";
 		expected << "    " << std::hex << address << RESET_FLAGS << ": df64 6ccf f9cb ed11 4a83 7828 3d48 ad40" "\n"; address += 16;
 		expected << "    " << std::hex << address << RESET_FLAGS << ": 0139 4d9e fdb4 45a1 7468 fcd9 18cc 3b32" "\n";
 		expected << "\n";
@@ -203,13 +273,27 @@ TEST_CASE("$m(<pointer>, <size>, $hex(<grouping>))", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$hex(4)")
+	SECTION("$hex, $grp(4), $le")
 	{
-		$m(subject.data(), subject.size(), $hex(4))
+		$m(subject.data(), subject.size(), $hex, $grp(4), $le)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
-		expected << "subject.data(), 32 bytes of 4-byte hexadecimal\n";
+		expected << "subject.data(), 32 bytes of 4-byte hexadecimal, little-endian\n";
+		expected << "    " << std::hex << address << RESET_FLAGS << ": cf6c64df 11edcbf9 2878834a 40ad483d" "\n"; address += 16;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 9e4d3901 a145b4fd d9fc6874 323bcc18" "\n";
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
+	SECTION("$hex, $grp(4), $be")
+	{
+		$m(subject.data(), subject.size(), $hex, $grp(4), $be)
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		expected << "subject.data(), 32 bytes of 4-byte hexadecimal, big-endian\n";
 		expected << "    " << std::hex << address << RESET_FLAGS << ": df646ccf f9cbed11 4a837828 3d48ad40" "\n"; address += 16;
 		expected << "    " << std::hex << address << RESET_FLAGS << ": 01394d9e fdb445a1 7468fcd9 18cc3b32" "\n";
 		expected << "\n";
@@ -217,13 +301,27 @@ TEST_CASE("$m(<pointer>, <size>, $hex(<grouping>))", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$hex(8)")
+	SECTION("$hex, $grp(8), $le")
 	{
-		$m(subject.data(), subject.size(), $hex(8))
+		$m(subject.data(), subject.size(), $hex, $grp(8), $le)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
-		expected << "subject.data(), 32 bytes of 8-byte hexadecimal\n";
+		expected << "subject.data(), 32 bytes of 8-byte hexadecimal, little-endian\n";
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 11edcbf9cf6c64df 40ad483d2878834a" "\n"; address += 16;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": a145b4fd9e4d3901 323bcc18d9fc6874" "\n";
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
+	SECTION("$hex, $grp(8), $be")
+	{
+		$m(subject.data(), subject.size(), $hex, $grp(8), $be)
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		expected << "subject.data(), 32 bytes of 8-byte hexadecimal, big-endian\n";
 		expected << "    " << std::hex << address << RESET_FLAGS << ": df646ccff9cbed11 4a8378283d48ad40" "\n"; address += 16;
 		expected << "    " << std::hex << address << RESET_FLAGS << ": 01394d9efdb445a1 7468fcd918cc3b32" "\n";
 		expected << "\n";
@@ -232,7 +330,7 @@ TEST_CASE("$m(<pointer>, <size>, $hex(<grouping>))", "[m]")
 	}
 }
 
-TEST_CASE("$m(<pointer>, <size>, $sdec(<grouping>, <byte-order>))", "[m]")
+TEST_CASE("$m(<pointer>, <size>, $sdec, $grp(...), $le|$be)", "[m]")
 {
 	test::out_stream.str(std::string {});
 
@@ -242,9 +340,9 @@ TEST_CASE("$m(<pointer>, <size>, $sdec(<grouping>, <byte-order>))", "[m]")
 	};
 	std::uintptr_t address {reinterpret_cast<std::uintptr_t>(subject.data())};
 
-	SECTION("$sdec($le)")
+	SECTION("$sdec, $le")
 	{
-		$m(subject.data(), subject.size(), $sdec($le))
+		$m(subject.data(), subject.size(), $sdec, $le)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -258,9 +356,9 @@ TEST_CASE("$m(<pointer>, <size>, $sdec(<grouping>, <byte-order>))", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$sdec($be)")
+	SECTION("$sdec, $be")
 	{
-		$m(subject.data(), subject.size(), $sdec($be))
+		$m(subject.data(), subject.size(), $sdec, $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -274,9 +372,9 @@ TEST_CASE("$m(<pointer>, <size>, $sdec(<grouping>, <byte-order>))", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$sdec(1, $le)")
+	SECTION("$sdec, $grp(1), $le")
 	{
-		$m(subject.data(), subject.size(), $sdec(1, $le))
+		$m(subject.data(), subject.size(), $sdec, $grp(1), $le)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -290,9 +388,9 @@ TEST_CASE("$m(<pointer>, <size>, $sdec(<grouping>, <byte-order>))", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$sdec(1, $be)")
+	SECTION("$sdec, $grp(1), $be")
 	{
-		$m(subject.data(), subject.size(), $sdec(1, $be))
+		$m(subject.data(), subject.size(), $sdec, $grp(1), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -306,9 +404,9 @@ TEST_CASE("$m(<pointer>, <size>, $sdec(<grouping>, <byte-order>))", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$sdec(2, $le)")
+	SECTION("$sdec, $grp(2), $le")
 	{
-		$m(subject.data(), subject.size(), $sdec(2, $le))
+		$m(subject.data(), subject.size(), $sdec, $grp(2), $le)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -322,9 +420,9 @@ TEST_CASE("$m(<pointer>, <size>, $sdec(<grouping>, <byte-order>))", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$sdec(2, $be)")
+	SECTION("$sdec, $grp(2), $be")
 	{
-		$m(subject.data(), subject.size(), $sdec(2, $be))
+		$m(subject.data(), subject.size(), $sdec, $grp(2), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -338,9 +436,9 @@ TEST_CASE("$m(<pointer>, <size>, $sdec(<grouping>, <byte-order>))", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$sdec(4, $le)")
+	SECTION("$sdec, $grp(4), $le")
 	{
-		$m(subject.data(), subject.size(), $sdec(4, $le))
+		$m(subject.data(), subject.size(), $sdec, $grp(4), $le)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -352,9 +450,9 @@ TEST_CASE("$m(<pointer>, <size>, $sdec(<grouping>, <byte-order>))", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$sdec(4, $be)")
+	SECTION("$sdec, $grp(4), $be")
 	{
-		$m(subject.data(), subject.size(), $sdec(4, $be))
+		$m(subject.data(), subject.size(), $sdec, $grp(4), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -366,9 +464,9 @@ TEST_CASE("$m(<pointer>, <size>, $sdec(<grouping>, <byte-order>))", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$sdec(8, $le)")
+	SECTION("$sdec, $grp(8), $le")
 	{
-		$m(subject.data(), subject.size(), $sdec(8, $le))
+		$m(subject.data(), subject.size(), $sdec, $grp(8), $le)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -380,9 +478,9 @@ TEST_CASE("$m(<pointer>, <size>, $sdec(<grouping>, <byte-order>))", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$sdec(8, $be)")
+	SECTION("$sdec, $grp(8), $be")
 	{
-		$m(subject.data(), subject.size(), $sdec(8, $be))
+		$m(subject.data(), subject.size(), $sdec, $grp(8), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -395,7 +493,7 @@ TEST_CASE("$m(<pointer>, <size>, $sdec(<grouping>, <byte-order>))", "[m]")
 	}
 }
 
-TEST_CASE("$m(<pointer>, <size>, $udec(<grouping>, <byte-order>))", "[m]")
+TEST_CASE("$m(<pointer>, <size>, $udec, $grp(...), $le|$be)", "[m]")
 {
 	test::out_stream.str(std::string {});
 
@@ -405,9 +503,9 @@ TEST_CASE("$m(<pointer>, <size>, $udec(<grouping>, <byte-order>))", "[m]")
 	};
 	std::uintptr_t address {reinterpret_cast<std::uintptr_t>(subject.data())};
 
-	SECTION("$udec($le)")
+	SECTION("$udec, $le")
 	{
-		$m(subject.data(), subject.size(), $udec($le))
+		$m(subject.data(), subject.size(), $udec, $le)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -421,9 +519,9 @@ TEST_CASE("$m(<pointer>, <size>, $udec(<grouping>, <byte-order>))", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$udec($be)")
+	SECTION("$udec, $be")
 	{
-		$m(subject.data(), subject.size(), $udec($be))
+		$m(subject.data(), subject.size(), $udec, $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -437,9 +535,9 @@ TEST_CASE("$m(<pointer>, <size>, $udec(<grouping>, <byte-order>))", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$udec(1, $le)")
+	SECTION("$udec, $grp(1), $le")
 	{
-		$m(subject.data(), subject.size(), $udec(1, $le))
+		$m(subject.data(), subject.size(), $udec, $grp(1), $le)
 
 		std::stringstream expected;
 		expected << "subject.data(), 32 bytes of 1-byte unsigned decimal\n";
@@ -453,9 +551,9 @@ TEST_CASE("$m(<pointer>, <size>, $udec(<grouping>, <byte-order>))", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$udec(1, $be)")
+	SECTION("$udec, $grp(1), $be")
 	{
-		$m(subject.data(), subject.size(), $udec(1, $be))
+		$m(subject.data(), subject.size(), $udec, $grp(1), $be)
 
 		std::stringstream expected;
 		expected << "subject.data(), 32 bytes of 1-byte unsigned decimal\n";
@@ -469,9 +567,9 @@ TEST_CASE("$m(<pointer>, <size>, $udec(<grouping>, <byte-order>))", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$udec(2, $le)")
+	SECTION("$udec, $grp(2), $le")
 	{
-		$m(subject.data(), subject.size(), $udec(2, $le))
+		$m(subject.data(), subject.size(), $udec, $grp(2), $le)
 
 		std::stringstream expected;
 		expected << "subject.data(), 32 bytes of 2-byte unsigned decimal, little-endian\n";
@@ -483,9 +581,9 @@ TEST_CASE("$m(<pointer>, <size>, $udec(<grouping>, <byte-order>))", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$udec(2, $be)")
+	SECTION("$udec, $grp(2), $be")
 	{
-		$m(subject.data(), subject.size(), $udec(2, $be))
+		$m(subject.data(), subject.size(), $udec, $grp(2), $be)
 
 		std::stringstream expected;
 		expected << "subject.data(), 32 bytes of 2-byte unsigned decimal, big-endian\n";
@@ -497,9 +595,9 @@ TEST_CASE("$m(<pointer>, <size>, $udec(<grouping>, <byte-order>))", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$udec(4, $le)")
+	SECTION("$udec, $grp(4), $le")
 	{
-		$m(subject.data(), subject.size(), $udec(4, $le))
+		$m(subject.data(), subject.size(), $udec, $grp(4), $le)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -511,9 +609,9 @@ TEST_CASE("$m(<pointer>, <size>, $udec(<grouping>, <byte-order>))", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$udec(4, $be)")
+	SECTION("$udec, $grp(4), $be")
 	{
-		$m(subject.data(), subject.size(), $udec(4, $be))
+		$m(subject.data(), subject.size(), $udec, $grp(4), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -525,9 +623,9 @@ TEST_CASE("$m(<pointer>, <size>, $udec(<grouping>, <byte-order>))", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$udec(8, $le)")
+	SECTION("$udec, $grp(8), $le")
 	{
-		$m(subject.data(), subject.size(), $udec(8, $le))
+		$m(subject.data(), subject.size(), $udec, $grp(8), $le)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -539,9 +637,9 @@ TEST_CASE("$m(<pointer>, <size>, $udec(<grouping>, <byte-order>))", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$udec(8, $be)")
+	SECTION("$udec, $grp(8), $be")
 	{
-		$m(subject.data(), subject.size(), $udec(8, $be))
+		$m(subject.data(), subject.size(), $udec, $grp(8), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -554,7 +652,7 @@ TEST_CASE("$m(<pointer>, <size>, $udec(<grouping>, <byte-order>))", "[m]")
 	}
 }
 
-TEST_CASE("$m(<pointer>, <size>, $flt(<byte-order>))", "[m]")
+TEST_CASE("$m(<pointer>, <size>, $flt, $le|$be)", "[m]")
 {
 	test::out_stream.str(std::string {});
 
@@ -564,9 +662,9 @@ TEST_CASE("$m(<pointer>, <size>, $flt(<byte-order>))", "[m]")
 	};
 	std::uintptr_t address {reinterpret_cast<std::uintptr_t>(subject.data())};
 
-	SECTION("$flt($le)")
+	SECTION("$flt, $le")
 	{
-		$m(subject.data(), subject.size(), $flt($le))
+		$m(subject.data(), subject.size(), $flt, $le)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -580,9 +678,9 @@ TEST_CASE("$m(<pointer>, <size>, $flt(<byte-order>))", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$flt($be)")
+	SECTION("$flt, $be")
 	{
-		$m(subject.data(), subject.size(), $flt($be))
+		$m(subject.data(), subject.size(), $flt, $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -597,7 +695,7 @@ TEST_CASE("$m(<pointer>, <size>, $flt(<byte-order>))", "[m]")
 	}
 }
 
-TEST_CASE("$m(<pointer>, <size>, $dbl(<byte-order>))", "[m]")
+TEST_CASE("$m(<pointer>, <size>, $dbl, $le|$be)", "[m]")
 {
 	test::out_stream.str(std::string {});
 
@@ -607,9 +705,9 @@ TEST_CASE("$m(<pointer>, <size>, $dbl(<byte-order>))", "[m]")
 	};
 	std::uintptr_t address {reinterpret_cast<std::uintptr_t>(subject.data())};
 
-	SECTION("$dbl($le)")
+	SECTION("$dbl, $le")
 	{
-		$m(subject.data(), subject.size(), $dbl($le))
+		$m(subject.data(), subject.size(), $dbl, $le)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -621,9 +719,9 @@ TEST_CASE("$m(<pointer>, <size>, $dbl(<byte-order>))", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$dbl($be)")
+	SECTION("$dbl, $be")
 	{
-		$m(subject.data(), subject.size(), $dbl($be))
+		$m(subject.data(), subject.size(), $dbl, $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -636,7 +734,7 @@ TEST_CASE("$m(<pointer>, <size>, $dbl(<byte-order>))", "[m]")
 	}
 }
 
-TEST_CASE("$m(<pointer>, <size>, $ldbl(<byte-order>))", "[m]")
+TEST_CASE("$m(<pointer>, <size>, $ldbl, $le|$be)", "[m]")
 {
 	test::out_stream.str(std::string {});
 
@@ -646,9 +744,9 @@ TEST_CASE("$m(<pointer>, <size>, $ldbl(<byte-order>))", "[m]")
 	};
 	std::uintptr_t address {reinterpret_cast<std::uintptr_t>(subject.data())};
 
-	SECTION("$ldbl($le)")
+	SECTION("$ldbl, $le")
 	{
-		$m(subject.data(), subject.size(), $ldbl($le))
+		$m(subject.data(), subject.size(), $ldbl, $le)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -660,9 +758,9 @@ TEST_CASE("$m(<pointer>, <size>, $ldbl(<byte-order>))", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$ldbl($be)")
+	SECTION("$ldbl, $be")
 	{
-		$m(subject.data(), subject.size(), $ldbl($be))
+		$m(subject.data(), subject.size(), $ldbl, $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -863,11 +961,11 @@ TEST_CASE("$m(<pointer>, <size>, $bin/$hex(<grouping>), $col(<columns>))", "[m]"
 
 	SECTION("oversizing column count relative to stream width #2")
 	{
-		$m(subject.data(), subject.size(), $hex(4), $col(32))
+		$m(subject.data(), subject.size(), $hex, $grp(4), $be, $col(32))
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
-		expected << "subject.data(), 256 bytes of 4-byte hexadecimal\n";
+		expected << "subject.data(), 256 bytes of 4-byte hexadecimal, big-endian\n";
 		expected << "    " << std::hex << address << RESET_FLAGS << ": df646ccf f9cbed11 4a837828 3d48ad40" "\n"; address += 16;
 		expected << "    " << std::hex << address << RESET_FLAGS << ": 01394d9e fdb445a1 7468fcd9 18cc3b32" "\n"; address += 16;
 		expected << "    " << std::hex << address << RESET_FLAGS << ": 03b174b0 d14640c5 102bb180 37491463" "\n"; address += 16;
@@ -891,11 +989,11 @@ TEST_CASE("$m(<pointer>, <size>, $bin/$hex(<grouping>), $col(<columns>))", "[m]"
 
 	SECTION("oversizing column count relative to stream width #3")
 	{
-		$m(subject.data(), subject.size(), $hex(8), $col(32))
+		$m(subject.data(), subject.size(), $hex, $grp(8), $be, $col(32))
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
-		expected << "subject.data(), 256 bytes of 8-byte hexadecimal\n";
+		expected << "subject.data(), 256 bytes of 8-byte hexadecimal, big-endian\n";
 		expected << "    " << std::hex << address << RESET_FLAGS << ": df646ccff9cbed11 4a8378283d48ad40" "\n"; address += 16;
 		expected << "    " << std::hex << address << RESET_FLAGS << ": 01394d9efdb445a1 7468fcd918cc3b32" "\n"; address += 16;
 		expected << "    " << std::hex << address << RESET_FLAGS << ": 03b174b0d14640c5 102bb18037491463" "\n"; address += 16;
@@ -919,11 +1017,11 @@ TEST_CASE("$m(<pointer>, <size>, $bin/$hex(<grouping>), $col(<columns>))", "[m]"
 
 	SECTION("oversizing column count relative to stream width #4")
 	{
-		$m(subject.data(), subject.size(), $bin(8), $col(32))
+		$m(subject.data(), subject.size(), $bin, $grp(8), $be, $col(32))
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
-		expected << "subject.data(), 256 bytes of 8-byte binary\n";
+		expected << "subject.data(), 256 bytes of 8-byte binary, big-endian\n";
 		expected << "    " << std::hex << address << RESET_FLAGS << ": 1101111101100100011011001100111111111001110010111110110100010001" "\n"; address += 8;
 		expected << "    " << std::hex << address << RESET_FLAGS << ": 0100101010000011011110000010100000111101010010001010110101000000" "\n"; address += 8;
 		expected << "    " << std::hex << address << RESET_FLAGS << ": 0000000100111001010011011001111011111101101101000100010110100001" "\n"; address += 8;
@@ -1030,11 +1128,11 @@ TEST_CASE("$m(...) printing leftovers", "[m]")
 	};
 	std::uintptr_t address {reinterpret_cast<std::uintptr_t>(subject.data())};
 
-	SECTION("1 leftover with $udec(2, $be)")
+	SECTION("1 leftover with $udec, $grp(2), $be")
 	{
 		std::size_t type_size {2};
 
-		$m(subject.data(), type_size * 64 + 1, $udec(type_size, $be))
+		$m(subject.data(), type_size * 64 + 1, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1055,10 +1153,10 @@ TEST_CASE("$m(...) printing leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("2 leftovers with $udec(4, $be)")
+	SECTION("2 leftovers with $udec, $grp(4), $be")
 	{
 		std::size_t type_size {4};
-		$m(subject.data(), type_size * 32 + 2, $udec(type_size, $be))
+		$m(subject.data(), type_size * 32 + 2, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1079,11 +1177,11 @@ TEST_CASE("$m(...) printing leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("6 leftovers with $udec(8, $be)")
+	SECTION("6 leftovers with $udec, $grp(8), $be")
 	{
 		std::size_t type_size {8};
 
-		$m(subject.data(), type_size * 16 + 6, $udec(type_size, $be))
+		$m(subject.data(), type_size * 16 + 6, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1108,7 +1206,7 @@ TEST_CASE("$m(...) printing leftovers", "[m]")
 	{
 		std::size_t type_size {8};
 
-		$m(subject.data(), type_size * 16 + 7, $udec(type_size, $be))
+		$m(subject.data(), type_size * 16 + 7, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1140,11 +1238,11 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 	};
 	std::uintptr_t address {reinterpret_cast<std::uintptr_t>(subject.data())};
 
-	SECTION("1 line, 0 items, 1 leftover, $udec(2, $be)")
+	SECTION("1 line, 0 items, 1 leftover, $udec, $grp(2), $be")
 	{
 		std::size_t type_size {2};
 
-		$m(subject.data(), type_size * 0 + 1, $udec(type_size, $be))
+		$m(subject.data(), type_size * 0 + 1, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1157,11 +1255,11 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("1 line, 1 item, 1 leftover, $udec(2, $be)")
+	SECTION("1 line, 1 item, 1 leftover, $udec, $grp(2), $be")
 	{
 		std::size_t type_size {2};
 
-		$m(subject.data(), type_size * 1 + 1, $udec(type_size, $be))
+		$m(subject.data(), type_size * 1 + 1, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1175,11 +1273,11 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("1 line, incomplete by 1 item, 1 leftover, $udec(2, $be)")
+	SECTION("1 line, incomplete by 1 item, 1 leftover, $udec, $grp(2), $be")
 	{
 		std::size_t type_size {2};
 
-		$m(subject.data(), type_size * 7 + 1, $udec(type_size, $be))
+		$m(subject.data(), type_size * 7 + 1, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1193,11 +1291,11 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("2 lines, 0 items on the last line, 1 leftover, $udec(2, $be)")
+	SECTION("2 lines, 0 items on the last line, 1 leftover, $udec, $grp(2), $be")
 	{
 		std::size_t type_size {2};
 
-		$m(subject.data(), type_size * 8 + 1, $udec(type_size, $be))
+		$m(subject.data(), type_size * 8 + 1, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1211,11 +1309,11 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("2 lines, 1 item on the last line, 1 leftover, $udec(2, $be)")
+	SECTION("2 lines, 1 item on the last line, 1 leftover, $udec, $grp(2), $be")
 	{
 		std::size_t type_size {2};
 
-		$m(subject.data(), type_size * 9 + 1, $udec(type_size, $be))
+		$m(subject.data(), type_size * 9 + 1, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1230,11 +1328,11 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("2 lines, last line is incomplete by 1 item, 1 leftover, $udec(2, $be)")
+	SECTION("2 lines, last line is incomplete by 1 item, 1 leftover, $udec, $grp(2), $be")
 	{
 		std::size_t type_size {2};
 
-		$m(subject.data(), type_size * 15 + 1, $udec(type_size, $be))
+		$m(subject.data(), type_size * 15 + 1, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1249,10 +1347,10 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("1 line, 0 items, 1 leftover, $udec(4, $be)")
+	SECTION("1 line, 0 items, 1 leftover, $udec, $grp(4), $be")
 	{
 		std::size_t type_size {4};
-		$m(subject.data(), type_size * 0 + 1, $udec(type_size, $be))
+		$m(subject.data(), type_size * 0 + 1, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1265,10 +1363,10 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("1 line, 0 items, 2 leftovers, $udec(4, $be)")
+	SECTION("1 line, 0 items, 2 leftovers, $udec, $grp(4), $be")
 	{
 		std::size_t type_size {4};
-		$m(subject.data(), type_size * 0 + 2, $udec(type_size, $be))
+		$m(subject.data(), type_size * 0 + 2, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1281,10 +1379,10 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("1 line, 0 items, 3 leftovers, $udec(4, $be)")
+	SECTION("1 line, 0 items, 3 leftovers, $udec, $grp(4), $be")
 	{
 		std::size_t type_size {4};
-		$m(subject.data(), type_size * 0 + 3, $udec(type_size, $be))
+		$m(subject.data(), type_size * 0 + 3, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1297,10 +1395,10 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("1 line, 1 item, 1 leftover, $udec(4, $be)")
+	SECTION("1 line, 1 item, 1 leftover, $udec, $grp(4), $be")
 	{
 		std::size_t type_size {4};
-		$m(subject.data(), type_size * 1 + 1, $udec(type_size, $be))
+		$m(subject.data(), type_size * 1 + 1, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1314,10 +1412,10 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("1 line, 1 item, 2 leftovers, $udec(4, $be)")
+	SECTION("1 line, 1 item, 2 leftovers, $udec, $grp(4), $be")
 	{
 		std::size_t type_size {4};
-		$m(subject.data(), type_size * 1 + 2, $udec(type_size, $be))
+		$m(subject.data(), type_size * 1 + 2, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1331,10 +1429,10 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("1 line, 1 item, 3 leftovers, $udec(4, $be)")
+	SECTION("1 line, 1 item, 3 leftovers, $udec, $grp(4), $be")
 	{
 		std::size_t type_size {4};
-		$m(subject.data(), type_size * 1 + 3, $udec(type_size, $be))
+		$m(subject.data(), type_size * 1 + 3, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1348,10 +1446,10 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("1 line, incomplete by 1 item, 1 leftover $udec(4, $be)")
+	SECTION("1 line, incomplete by 1 item, 1 leftover $udec, $grp(4), $be")
 	{
 		std::size_t type_size {4};
-		$m(subject.data(), type_size * 3 + 1, $udec(type_size, $be))
+		$m(subject.data(), type_size * 3 + 1, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1365,10 +1463,10 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("1 line, incomplete by 1 item, 2 leftovers $udec(4, $be)")
+	SECTION("1 line, incomplete by 1 item, 2 leftovers $udec, $grp(4), $be")
 	{
 		std::size_t type_size {4};
-		$m(subject.data(), type_size * 3 + 2, $udec(type_size, $be))
+		$m(subject.data(), type_size * 3 + 2, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1382,10 +1480,10 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("1 line, incomplete by 1 item, 3 leftovers $udec(4, $be)")
+	SECTION("1 line, incomplete by 1 item, 3 leftovers $udec, $grp(4), $be")
 	{
 		std::size_t type_size {4};
-		$m(subject.data(), type_size * 3 + 3, $udec(type_size, $be))
+		$m(subject.data(), type_size * 3 + 3, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1399,10 +1497,10 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("2 lines, 0 items on the last line, 1 leftover $udec(4, $be)")
+	SECTION("2 lines, 0 items on the last line, 1 leftover $udec, $grp(4), $be")
 	{
 		std::size_t type_size {4};
-		$m(subject.data(), type_size * 4 + 1, $udec(type_size, $be))
+		$m(subject.data(), type_size * 4 + 1, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1416,10 +1514,10 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("2 lines, 0 items on the last line, 2 leftovers $udec(4, $be)")
+	SECTION("2 lines, 0 items on the last line, 2 leftovers $udec, $grp(4), $be")
 	{
 		std::size_t type_size {4};
-		$m(subject.data(), type_size * 4 + 2, $udec(type_size, $be))
+		$m(subject.data(), type_size * 4 + 2, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1433,10 +1531,10 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("2 lines, 0 items on the last line, 3 leftovers $udec(4, $be)")
+	SECTION("2 lines, 0 items on the last line, 3 leftovers $udec, $grp(4), $be")
 	{
 		std::size_t type_size {4};
-		$m(subject.data(), type_size * 4 + 3, $udec(type_size, $be))
+		$m(subject.data(), type_size * 4 + 3, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1450,10 +1548,10 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("2 lines, 1 item on the last line, 1 leftover $udec(4, $be)")
+	SECTION("2 lines, 1 item on the last line, 1 leftover $udec, $grp(4), $be")
 	{
 		std::size_t type_size {4};
-		$m(subject.data(), type_size * 5 + 1, $udec(type_size, $be))
+		$m(subject.data(), type_size * 5 + 1, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1468,10 +1566,10 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("2 lines, 1 item on the last line, 2 leftovers $udec(4, $be)")
+	SECTION("2 lines, 1 item on the last line, 2 leftovers $udec, $grp(4), $be")
 	{
 		std::size_t type_size {4};
-		$m(subject.data(), type_size * 5 + 2, $udec(type_size, $be))
+		$m(subject.data(), type_size * 5 + 2, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1486,10 +1584,10 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("2 lines, 1 item on the last line, 3 leftovers $udec(4, $be)")
+	SECTION("2 lines, 1 item on the last line, 3 leftovers $udec, $grp(4), $be")
 	{
 		std::size_t type_size {4};
-		$m(subject.data(), type_size * 5 + 3, $udec(type_size, $be))
+		$m(subject.data(), type_size * 5 + 3, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1504,10 +1602,10 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("2 lines, last line is incomplete by 1 item, 1 leftover $udec(4, $be)")
+	SECTION("2 lines, last line is incomplete by 1 item, 1 leftover $udec, $grp(4), $be")
 	{
 		std::size_t type_size {4};
-		$m(subject.data(), type_size * 7 + 1, $udec(type_size, $be))
+		$m(subject.data(), type_size * 7 + 1, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1522,10 +1620,10 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("2 lines, last line is incomplete by 1 item, 2 leftovers $udec(4, $be)")
+	SECTION("2 lines, last line is incomplete by 1 item, 2 leftovers $udec, $grp(4), $be")
 	{
 		std::size_t type_size {4};
-		$m(subject.data(), type_size * 7 + 2, $udec(type_size, $be))
+		$m(subject.data(), type_size * 7 + 2, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1540,10 +1638,10 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("2 lines, last line is incomplete by 1 item, 3 leftovers $udec(4, $be)")
+	SECTION("2 lines, last line is incomplete by 1 item, 3 leftovers $udec, $grp(4), $be")
 	{
 		std::size_t type_size {4};
-		$m(subject.data(), type_size * 7 + 3, $udec(type_size, $be))
+		$m(subject.data(), type_size * 7 + 3, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1558,11 +1656,11 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("1 line, 0 items, 1 leftover, $udec(8, $be)")
+	SECTION("1 line, 0 items, 1 leftover, $udec, $grp(8), $be")
 	{
 		std::size_t type_size {8};
 
-		$m(subject.data(), type_size * 0 + 1, $udec(type_size, $be))
+		$m(subject.data(), type_size * 0 + 1, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1575,11 +1673,11 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("1 line, 0 items, 2 leftovers, $udec(8, $be)")
+	SECTION("1 line, 0 items, 2 leftovers, $udec, $grp(8), $be")
 	{
 		std::size_t type_size {8};
 
-		$m(subject.data(), type_size * 0 + 2, $udec(type_size, $be))
+		$m(subject.data(), type_size * 0 + 2, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1592,11 +1690,11 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("1 line, 0 items, 6 leftovers, $udec(8, $be)")
+	SECTION("1 line, 0 items, 6 leftovers, $udec, $grp(8), $be")
 	{
 		std::size_t type_size {8};
 
-		$m(subject.data(), type_size * 0 + 6, $udec(type_size, $be))
+		$m(subject.data(), type_size * 0 + 6, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1609,11 +1707,11 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("1 line, 0 items, 7 leftovers, $udec(8, $be)")
+	SECTION("1 line, 0 items, 7 leftovers, $udec, $grp(8), $be")
 	{
 		std::size_t type_size {8};
 
-		$m(subject.data(), type_size * 0 + 7, $udec(type_size, $be))
+		$m(subject.data(), type_size * 0 + 7, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1626,11 +1724,11 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("1 line, 1 item / incomplete by 1 item, 1 leftover, $udec(8, $be)")
+	SECTION("1 line, 1 item / incomplete by 1 item, 1 leftover, $udec, $grp(8), $be")
 	{
 		std::size_t type_size {8};
 
-		$m(subject.data(), type_size * 1 + 1, $udec(type_size, $be))
+		$m(subject.data(), type_size * 1 + 1, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1644,11 +1742,11 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("1 line, 1 item / incomplete by 1 item, 2 leftovers, $udec(8, $be)")
+	SECTION("1 line, 1 item / incomplete by 1 item, 2 leftovers, $udec, $grp(8), $be")
 	{
 		std::size_t type_size {8};
 
-		$m(subject.data(), type_size * 1 + 2, $udec(type_size, $be))
+		$m(subject.data(), type_size * 1 + 2, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1662,11 +1760,11 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("1 line, 1 item / incomplete by 1 item, 6 leftovers, $udec(8, $be)")
+	SECTION("1 line, 1 item / incomplete by 1 item, 6 leftovers, $udec, $grp(8), $be")
 	{
 		std::size_t type_size {8};
 
-		$m(subject.data(), type_size * 1 + 6, $udec(type_size, $be))
+		$m(subject.data(), type_size * 1 + 6, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1680,11 +1778,11 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("1 line, 1 item / incomplete by 1 item, 7 leftovers, $udec(8, $be)")
+	SECTION("1 line, 1 item / incomplete by 1 item, 7 leftovers, $udec, $grp(8), $be")
 	{
 		std::size_t type_size {8};
 
-		$m(subject.data(), type_size * 1 + 7, $udec(type_size, $be))
+		$m(subject.data(), type_size * 1 + 7, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1698,10 +1796,10 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("2 lines, 0 items on the last line, 1 leftover, $udec(8, $be)")
+	SECTION("2 lines, 0 items on the last line, 1 leftover, $udec, $grp(8), $be")
 	{
 		std::size_t type_size {8};
-		$m(subject.data(), type_size * 2 + 1, $udec(type_size, $be))
+		$m(subject.data(), type_size * 2 + 1, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1715,10 +1813,10 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("2 lines, 0 items on the last line, 2 leftovers, $udec(8, $be)")
+	SECTION("2 lines, 0 items on the last line, 2 leftovers, $udec, $grp(8), $be")
 	{
 		std::size_t type_size {8};
-		$m(subject.data(), type_size * 2 + 2, $udec(type_size, $be))
+		$m(subject.data(), type_size * 2 + 2, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1732,10 +1830,10 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("2 lines, 0 items on the last line, 6 leftovers, $udec(8, $be)")
+	SECTION("2 lines, 0 items on the last line, 6 leftovers, $udec, $grp(8), $be")
 	{
 		std::size_t type_size {8};
-		$m(subject.data(), type_size * 2 + 6, $udec(type_size, $be))
+		$m(subject.data(), type_size * 2 + 6, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1749,10 +1847,10 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("2 lines, 0 items on the last line, 7 leftovers, $udec(8, $be)")
+	SECTION("2 lines, 0 items on the last line, 7 leftovers, $udec, $grp(8), $be")
 	{
 		std::size_t type_size {8};
-		$m(subject.data(), type_size * 2 + 7, $udec(type_size, $be))
+		$m(subject.data(), type_size * 2 + 7, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1766,10 +1864,10 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("2 lines, 1 item on the last line / incomplete by 1 item, 1 leftover, $udec(8, $be)")
+	SECTION("2 lines, 1 item on the last line / incomplete by 1 item, 1 leftover, $udec, $grp(8), $be")
 	{
 		std::size_t type_size {8};
-		$m(subject.data(), type_size * 3 + 1, $udec(type_size, $be))
+		$m(subject.data(), type_size * 3 + 1, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1784,10 +1882,10 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("2 lines, 1 item on the last line / incomplete by 1 item, 2 leftovers, $udec(8, $be)")
+	SECTION("2 lines, 1 item on the last line / incomplete by 1 item, 2 leftovers, $udec, $grp(8), $be")
 	{
 		std::size_t type_size {8};
-		$m(subject.data(), type_size * 3 + 2, $udec(type_size, $be))
+		$m(subject.data(), type_size * 3 + 2, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1802,10 +1900,10 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("2 lines, 1 item on the last line / incomplete by 1 item, 6 leftovers, $udec(8, $be)")
+	SECTION("2 lines, 1 item on the last line / incomplete by 1 item, 6 leftovers, $udec, $grp(8), $be")
 	{
 		std::size_t type_size {8};
-		$m(subject.data(), type_size * 3 + 6, $udec(type_size, $be))
+		$m(subject.data(), type_size * 3 + 6, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);
@@ -1820,10 +1918,10 @@ TEST_CASE("$m(...) incomplete lines and leftovers", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("2 lines, 1 item on the last line / incomplete by 1 item, 7 leftovers, $udec(8, $be)")
+	SECTION("2 lines, 1 item on the last line / incomplete by 1 item, 7 leftovers, $udec, $grp(8), $be")
 	{
 		std::size_t type_size {8};
-		$m(subject.data(), type_size * 3 + 7, $udec(type_size, $be))
+		$m(subject.data(), type_size * 3 + 7, $udec, $grp(type_size), $be)
 
 		std::stringstream expected;
 		expected.unsetf(std::ios::basefield);

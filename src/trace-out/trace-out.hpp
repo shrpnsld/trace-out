@@ -11,15 +11,16 @@
 #define $r(begin, end_OR_how_much) \
 			trace_out::range(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, #begin, #end_OR_how_much, (begin), (end_OR_how_much));
 
-#define $bin trace_out::bin_or_hex_option(trace_out::BIN)
-#define $hex trace_out::bin_or_hex_option(trace_out::HEX)
-#define $sdec trace_out::decimal_option(trace_out::SDEC)
-#define $udec trace_out::decimal_option(trace_out::UDEC)
-#define $flt trace_out::floating_point_option(trace_out::FLT)
-#define $dbl trace_out::floating_point_option(trace_out::DBL)
-#define $ldbl trace_out::floating_point_option(trace_out::LDBL)
-#define $be trace_out::BIG
-#define $le trace_out::LITTLE
+#define $bin trace_out::base_option(trace_out::BIN)
+#define $hex trace_out::base_option(trace_out::HEX)
+#define $sdec trace_out::base_option(trace_out::SDEC)
+#define $udec trace_out::base_option(trace_out::UDEC)
+#define $flt trace_out::base_option(trace_out::FLT)
+#define $dbl trace_out::base_option(trace_out::DBL)
+#define $ldbl trace_out::base_option(trace_out::LDBL)
+#define $grp(value) trace_out::grouping_option(value)
+#define $be trace_out::byte_order_option(trace_out::BIG)
+#define $le trace_out::byte_order_option(trace_out::LITTLE)
 #define $col(value) trace_out::column_count_option(value)
 
 #define $m(pointer, ...) \
