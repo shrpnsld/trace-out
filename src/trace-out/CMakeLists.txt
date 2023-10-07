@@ -32,7 +32,6 @@ target_sources(trace-out
 		time.hpp
 		to-string.hpp
 		trace-out.hpp
-		try-memory.hpp
 		untyped.hpp
 )
 
