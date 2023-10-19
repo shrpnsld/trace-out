@@ -1,6 +1,12 @@
 find_package(Catch2 3 REQUIRED)
 include(Catch)
 
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang|GNU")
+	add_compile_options(-Wall -Wextra)
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+	add_compile_options(/W4)
+endif()
+
 add_subdirectory(compatibility-with-c++98)
 add_subdirectory(helpers)
 add_subdirectory(helpers-c++11)
