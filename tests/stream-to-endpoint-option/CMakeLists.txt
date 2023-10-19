@@ -26,3 +26,5 @@ target_sources(stream-to-endpoint-option-tests
 		stream-to-endpoint-option.tests.cpp
 )
 
+set_target_properties(stream-to-endpoint-option-tests PROPERTIES FOLDER tests)
+

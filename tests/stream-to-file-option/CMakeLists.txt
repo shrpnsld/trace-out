@@ -26,3 +26,5 @@ target_sources(stream-to-file-option-tests
 
 catch_discover_tests(stream-to-file-option-tests)
 
+set_target_properties(stream-to-file-option-tests PROPERTIES FOLDER tests)
+

@@ -1,5 +1,5 @@
 target_sources(trace-out
-	PUBLIC
+	PRIVATE
 		autolock.hpp
 		console.hpp
 		current-thread-name.hpp

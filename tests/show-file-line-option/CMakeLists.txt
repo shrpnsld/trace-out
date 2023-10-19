@@ -1,7 +1,7 @@
 add_executable(show-file-line-option-test)
 
 target_compile_features(show-file-line-option-test
-	PUBLIC
+	PRIVATE
 		cxx_std_11
 )
 
@@ -25,4 +25,6 @@ target_sources(show-file-line-option-test
 )
 
 catch_discover_tests(show-file-line-option-test)
+
+set_target_properties(show-file-line-option-test PROPERTIES FOLDER tests)
 

@@ -10,13 +10,7 @@ project(
 
 enable_testing()
 
-add_library(trace-out INTERFACE)
-add_library(trace-out::lib ALIAS trace-out)
-
-
-target_include_directories(trace-out
-	INTERFACE src
-)
+set_property(GLOBAL PROPERTY USE_FOLDERS YES)
 
 add_subdirectory(src)
 add_subdirectory(tests)

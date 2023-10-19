@@ -1,7 +1,7 @@
 add_executable(indentation-option-tests)
 
 target_compile_features(indentation-option-tests
-	PUBLIC
+	PRIVATE
 		cxx_std_11
 )
 
@@ -25,4 +25,6 @@ target_sources(indentation-option-tests
 )
 
 catch_discover_tests(indentation-option-tests)
+
+set_target_properties(indentation-option-tests PROPERTIES FOLDER tests)
 

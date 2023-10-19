@@ -6,17 +6,15 @@ target_include_directories(helpers
 )
 
 target_sources(helpers
-	INTERFACE
+	PRIVATE
+		dummy.cpp
 		dummy.hpp
 		fit.hpp
 		framework-library-component.hpp
-		trace-out-to-test-stream.hpp
-
-	PUBLIC
-		test-stream.hpp
-
-	PRIVATE
-		dummy.cpp
 		test-stream.cpp
+		test-stream.hpp
+		trace-out-to-test-stream.hpp
 )
+
+set_target_properties(helpers PROPERTIES FOLDER tests)
 

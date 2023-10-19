@@ -1,7 +1,7 @@
 add_executable(strip-scope-option-tests-0)
 
 target_compile_features(strip-scope-option-tests-0
-	PUBLIC
+	PRIVATE
 		cxx_std_11
 )
 
@@ -25,4 +25,6 @@ target_sources(strip-scope-option-tests-0
 )
 
 catch_discover_tests(strip-scope-option-tests-0)
+
+set_target_properties(strip-scope-option-tests-0 PROPERTIES FOLDER tests)
 

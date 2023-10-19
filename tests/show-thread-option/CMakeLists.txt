@@ -1,7 +1,7 @@
 add_executable(show-thread-option-tests)
 
 target_compile_features(show-thread-option-tests
-	PUBLIC
+	PRIVATE
 		cxx_std_11
 )
 
@@ -25,4 +25,6 @@ target_sources(show-thread-option-tests
 )
 
 catch_discover_tests(show-thread-option-tests)
+
+set_target_properties(show-thread-option-tests PROPERTIES FOLDER tests)
 

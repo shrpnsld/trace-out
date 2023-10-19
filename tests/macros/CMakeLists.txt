@@ -1,12 +1,12 @@
 add_executable(macros-tests)
 
 target_compile_features(macros-tests
-	PUBLIC
+	PRIVATE
 		cxx_std_11
 )
 
 target_compile_definitions(macros-tests
-	PUBLIC
+	PRIVATE
 		TRACE_OUT_STREAM_TO=trace_out_to_test_stream
 		TRACE_OUT_STREAM_WIDTH=70
 )
@@ -38,3 +38,6 @@ target_sources(macros-tests
 )
 
 catch_discover_tests(macros-tests)
+
+set_target_properties(macros-tests PROPERTIES FOLDER tests)
+

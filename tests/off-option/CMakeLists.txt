@@ -1,7 +1,7 @@
 add_executable(off-option-tests)
 
 target_compile_features(off-option-tests
-	PUBLIC
+	PRIVATE
 		cxx_std_11
 )
 
@@ -25,4 +25,6 @@ target_sources(off-option-tests
 )
 
 catch_discover_tests(off-option-tests)
+
+set_target_properties(off-option-tests PROPERTIES FOLDER tests)
 

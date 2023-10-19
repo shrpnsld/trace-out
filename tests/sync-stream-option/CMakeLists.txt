@@ -1,7 +1,7 @@
 add_executable(sync-stream-option-tests)
 
 target_compile_features(sync-stream-option-tests
-	PUBLIC
+	PRIVATE
 		cxx_std_11
 )
 
@@ -143,4 +143,6 @@ set_tests_properties([[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$clock_stat
 	PROPERTIES
 		TIMEOUT 5
 )
+
+set_target_properties(sync-stream-option-tests PROPERTIES FOLDER tests)
 

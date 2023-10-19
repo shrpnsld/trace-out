@@ -1,7 +1,7 @@
 add_executable(marker-option-tests)
 
 target_compile_features(marker-option-tests
-	PUBLIC
+	PRIVATE
 		cxx_std_11
 )
 
@@ -25,4 +25,6 @@ target_sources(marker-option-tests
 )
 
 catch_discover_tests(marker-option-tests)
+
+set_target_properties(marker-option-tests PROPERTIES FOLDER tests)
 

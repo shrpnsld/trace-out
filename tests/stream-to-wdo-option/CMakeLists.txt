@@ -30,3 +30,5 @@ target_sources(stream-to-wdo-option-tests
 		stream-to-wdo-option.tests.cpp
 )
 
+set_target_properties(stream-to-wdo-option-tests PROPERTIES FOLDER tests)
+
