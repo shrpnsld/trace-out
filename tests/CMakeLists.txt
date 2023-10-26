@@ -7,6 +7,7 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 	add_compile_options(/W4)
 endif()
 
+add_subdirectory(amalgamated-header-verification)
 add_subdirectory(compatibility-with-c++98)
 add_subdirectory(helpers)
 add_subdirectory(helpers-c++11)
