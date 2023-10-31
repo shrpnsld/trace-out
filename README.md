@@ -2,18 +2,29 @@
 
 Printf debugging done the right way
 
+## Features
+
+* Header-only.
+* No additional dependencies.
+* Output can be redirected.
+* Crossplatform.
+* Free for all ([MIT license](LICENSE.txt)).
+
+### Quick example
+
 Code:
 
 ```c++
 #include "trace-out.hpp"
 
-int main()
+int main(int argc, const char *argv[])
 {
     $f // pretty-print when function is called and returned
+    $t("ah sh1t, here we go again.");
 
     int answer {42};
     std::string moto {"hellomoto!"};
-    $w(answer, moto) // print "answer" and "moto" values
+    $t(answer, moto); // print "answer" and "moto" values
 
     $if (answer == 42) // print condition value
         $return answer; // print return value
@@ -24,89 +35,96 @@ int main()
 
 Output:
 
-```
-int main()
+```c++
+int main(int argc, const char *argv[])
 {
+    // ah sh1t, here we go again.
     answer = 42
     moto = "hellomoto!"
     if (answer == 42) => true
+    {
         return 42
+    }
         
-}    // int main()
+} // int main(int argc, const char *argv[])
 ```
-
-
-## Features
-
-* Easy to use.
-* No additional dependencies.
-* Output can be redirected.
-* Crossplatform. Tested with:
-  * Apple LLVM version 12.0.5
-  * Microsoft Visual Studio 2019
-* Free for all ([MIT license](LICENSE.txt)).
-
-
 
 # Usage
 
-Add trace-out files to your project and you're ready to go.
+## Get it
 
+You can get it any way you want, as long as it's one of these
 
-## Interface
+### Download release
 
-trace-out's interface is based on macros that pretty-print information about their arguments.
+[Here](https://github.com/shrpnsld/trace-out/releases/tag/v1.0)
 
-### Value printing
+### Install system-wide
 
-`$w(<variable>)` *[C++03]* – print value of a variable.
+```bash
+$ git clone https://github.com/shrpnsld/trace-out  # 1. Download
+$ cd trace-out; mkdir build; cd build; cmake ..    # 2. Generate build files
+$ cmake --install .                                # 3. Install
+```
 
-`$w(<variable1>, <variable2>, ...)` *[C++11 and later]* – print values of listed variables.
+### Generate single header manually
 
-`$e(<expression>)` – print value of passed in expression and return that value (can be used inside other expressions).
+```bash
+$ git clone https://github.com/shrpnsld/trace-out  # 1. Download
+$ cd trace-out; mkdir build; cd build; cmake ..    # 2. Generate build files
+$ cmake --build . --target trace-out.hpp           # 3. Generate single header
+```
 
-`$r(<begin>, <end>)`, `$r(<begin>, <how-much>)` – print values from range defined by iterators.
+Then, you can find single header at `trace-out-amalgamated/trace-out.hpp` inside the build directory.
 
-`$m(<pointer>, <size>, <base> | <byte-order>)` – print memory under `<pointer>`.
+## Pretty-printing
 
-`<pointer>` – address of the memory to be printed. Type of the pointer defines byte grouping and default `<base>`. For example, memory under `unsigned char *` pointer will be grouped by 1 byte and hexadecimal numbers will be used; memory under `int *` will be grouped by 4 (or 8) bytes and signed decimal numbers will be used. For unknown types default grouping is by 1 byte and numerical base is hexadecimal.
+trace-out has several macros defined that pretty-print information about code.
 
-`<size>` – size of memory in bytes.
+### Values
 
-`<base> | <byte-order>` (both optional) – numerical base for value representation and order of the bytes to use when converting bytes to the numeric values.
+`$t(<variable>)` *[C++98]* – print value of a variable (can be used inside expressions).
 
-Numerical base flags (default value is determined as described above):
+`$t(<variable>...)` *[C++11 and later]* – print values of listed variables (can be used inside expresssions if one argument was passed).
 
-* `trace_out::BIN` – binary
-* `trace_out::SDEC` – signed decimal
-* `trace_out::UDEC` – unsigned decimal
-* `trace_out::HEX` – hexadecimal (default)
-* `trace_out::FLT` – single precision floating point number
-* `trace_out::DBL` – double precision floating point number
-* `trace_out::LDBL` – floating point number with precision equal to `long double` for current platform
+`$t("<C-string-literal>")` – print some string.
 
-Byte order flags (default value is determined automatically):
+`$tr(<begin>, <end>|<how_much>)` – print values from a range defined by a pair of iterators or iterator and item count.
 
-* `trace_out::LITTLE` – big-endian
-* `trace_out::BIG` – little-endian
+### Memory
 
-### Statement printing
+`$m(<pointer>, <size>, [$<base>], [$grp(<count>)], [$be|$le], [$col(<count>)])` – print memory under `<pointer>`.
 
-`$if (<condition>)` – print condition value of the `if` statement.
+* `<pointer>` – address of the memory to be printed
+* `<size>` – size of the memory in bytes
+* `$<base>` – numerical base; can be one of the following values: `$bin`, `$hex`, `$sdec`, `$udec`, `$flt`, `$dbl`, `$ldbl`
+* `$grp(<count>)` – how much bytes should be grouped together in a single column (`1`, `2`, `4` or `8`); this affects only `$bin`, `$hex`, `$sdec`, `$udec` bases
+*  `$be` and `$le` are big-endian and little-endian byte orders
+* `$col(<count>)` – print memory in specified column count; if printing exceeds output stream width, then more optimal value will be calculated
 
-`$for (<statements>)` – print number for each iteration of the `for` loop.
+`$<base>`, `$grp`, `$be`, `$le` and `$col` are all optional and non-positional, but should be listed after `<pointer>` and `<size>`.
 
-`$while (<condition>)` – print condition value for each iteration of the `while` loop.
+The default memory representation is single-byte hexadecimals, with column count set to the maximum power of 2 that fits console width.
+
+### Statements
+
+`$if(<condition>)` – pretty-print `if` statement.
+
+`$for(<statements>)` – pretty-print`for` loop.
+
+`$while(<condition>)` – pretty-print `while` loop.
+
+`$f` – print function call start and call end labels. Must be used inside a function.
 
 `$return <expression>` – print expression value passed to the `return` statement.
 
+`$s(...)` – trace statement execution.
+
+Macros `$f`, `$if`, `$for` and `$while` shift output indentation inside their scope, and each thread has its own indentation.
+
 ### Other
 
-`$f` – print function call and return labels. Must be used inside a function.
-
 `$thread(<name>)` – set thread name that will be printed in the thread header.
-
-`$p(<format>, ...)` – `printf`-like function.
 
 `$time(<name>, <any-code>)` – measure code execution time in milliseconds.
 
@@ -116,107 +134,54 @@ Byte order flags (default value is determined automatically):
 
 `$clock_stats(<name>, <passes>, <any-code>)` – gather code execution time measurements in clocks and print statistics (average, median, mode, range) each time number of passes has reached `<passes>` value.
 
----
+### Supported types
 
-Macros `$w`, `$e`, `$return`, `$if` and `$while` support following types:
-
-* all fundamental types, raw pointers, standard smart pointers, `std::string`, `std::pair`, `std::tuple`, `std::bitset`
+* all fundamental types, raw pointers, most of standard library types
 * types that define member functions `.begin()` and `.end()` which return iterators
-* sturctures and classes with data members or member functions `x`, `y`, `z`, `w`, `width`, `height`, `origin`, `size`, `left`, `top`, `right`, `bottom`, `real`, `imag` in both lowcase and Capital
-* Unreal Engine 4 data types and containers (currently except `TMap`)
+* sturctures and classes with data members or member functions `x`, `y`, `z`, `w`, `width`, `height`, `origin`, `size`, `left`, `top`, `right`, `bottom`, `real`, `imag` in both *lowcase* and *Capital*
 
----
+## Options
 
-Macros `$f`, `$if`, `$for` and `$while` automatically shift indentation of the output inside their blocks.
+You can customize trace-out's behavior by defining the following macros.
 
----
+### Output
 
-Output is flushed before reading variables and dereferencing pointers that are passed from the outer context, thus it is more clear where things went wrong when memory was corrupted.
+`TRACE_OUT_MARKER` `<string>` – add text marker before every trace-out line.
 
-Code:
+`TRACE_OUT_SHOW_FILE_LINE` – print file and line.
 
-```c++
-int bueno {456};
-int &no_bueno {*(int *)nullptr};
-$w(bueno, no_bueno) // using GCC will show "Segmentation fault" when try to read "no_bueno" value
-```
+`TRACE_OUT_STRIP_SCOPE ` `<how-much>` – show only `<how-much>` scope components when using `$f` macro.
 
-Output:
-
-```
-int main()
-{
-    bueno = 456
-    no_bueno = Segmentation fault: 11
-```
-
-
-## Output Redirection
-
-To make custom redirection implement following functions within some namespace in `.cpp` file (no header required):
-
-* `void print(const char *string)` – print `string`
-* `void flush()` – flush output
-* `size_t width()` – get width of the output in characters
-
-To use custom redirection you should:
-
-* Add `<redireciton>.cpp` file to a project.
-* Define macro `TRACE_OUT_REDIRECTION` with a name of the namespace where redirection functions are defined.
-
----
-
-There are built-in implementations for redirecting output to Windows debug output and to a file: `trace_out_to_wdo` and `trace_out_to_file` respectively. By defulat `trace_out_to_file` saves output to `trace-out.txt`. To change this define `TRACE_OUT_TO_FILE` with desired file name. No `<redirection>.cpp` files required when using these built-in redirections.
-
-
-## Notes
-
-trace-out is turned on if `NDEBUG` is not defined or `TRACE_OUT_ON` is defined; turned off if `NDEBUG` or `TRACE_OUT_OFF` is defined.
-
-There is an output synchronization that prevents outputs from different threads to mix up. By default it is turned off. To enable syncronization define macro `TRACE_OUT_OUTPUT_SYNC_ON`.
-
-
-
-# Option `#define`s
-
-`TRACE_OUT_ON` – turn trace-out on.
-
-`TRACE_OUT_OFF` – turn trace-out off.
-
-`TRACE_OUT_MARKER` `<string>` – add text marker before every trace-out line (useful when trace-out prints to some shared output).
-
-`TRACE_OUT_SHOW_FILE_LINE` – print file and line information for every trace-out macro.
-
-`TRACE_OUT_INDENTATION` `<string>` – string that is used as an indentation for the actual output. Default value is 4 spaces.
-
-`TRACE_OUT_STRIP_NAMESPACES` `<how-much>` – leave only last `<how-much>` namespace names in identifiers. Default value is `1`.
-
-`TRACE_OUT_REDIRECTION` `<name>` – use redirection from namespace `<name>`.
-
-`TRACE_OUT_OUTPUT_SYNC_ON` – enable output syncronization.
+`TRACE_OUT_INDENTATION` `<string>` – string that is used as an indentation. Default value is 4 spaces.
 
 `TRACE_OUT_SHOW_THREAD` – show thread information.
 
-`TRACE_OUT_WIDTH` `<how-much>` – width to which output is wrapped (actually only the thread header and memory output are wrapped). This macro overrides value returned by `<redirection-namespace>::width()` function. Default value for standard output is `79`.
+### Behavior
 
-`TRACE_OUT_CPP_VERSION` `<number>` – specify C++ standard version using same format as `__cplusplus` macro. Why? Visual Studio defines `__cplusplus` macro with the wrong value, but has option to fix this – `/Zc:__cplusplus`, which still can break some old code. So, to preserve project integrity, this macro can be used and it will affect only trace-out.
+`TRACE_OUT_OFF` – turn trace-out off.
 
+`TRACE_OUT_SYNC_STREAM` – enable output syncronization.
 
+`TRACE_OUT_STREAM_WIDTH` `<how-much>` – width to which output is wrapped (actually, only memory output is wrapped).
 
-# Troubleshooting
+### Redirection
 
-* Passing variable or expression of unknown type to `$w`, `$e`, `$return`, `$if` or `$while` may cause (but usually should not) multiple compiler errors.
+`TRACE_OUT_STREAM_TO_ENDPOINT` `"<host>:<port>"` – stream to a specified `<host>` and `<port>`.
 
-	*Fix:* try to cast to one of the supported types or try to pass single fields to these macros if type is struct/class/union.
+`TRACE_OUT_STREAM_TO_FILE` `"<file-path>"` – stream to a specified file.
 
-* Using precompiled headers with Visual Studio will cause compiler error.
+`TRACE_OUT_STREAM_TO_WDO` – stream to Windows debug output.
 
-	*Fix #1:* exclude `trace-out.cpp` from precompilation process.
+#### Custom redirection
 
-	*Fix #2:* the precompiled header should be manually included in the `trace-out.cpp` file.
+If predefined redirections aren't enough, you can make your own (though with some involvement). To do this:
 
-* Visual Studio errors on using `std::auto_ptr`.
+1. Create a derived implementation of `std::basic_streambuf<char>` that outputs wherever you want.
+2. Create function `std::ostream &stream()` within some namespace. This function should return `std::ostream` instance, which uses your implementation of `std::basic_streambuf<char>`.
+3. Define macro `TRACE_OUT_STREAM_TO` with the namespace where you've created `std::ostream &stream()`.
 
-	*Fix #1:* define macro `TRACE_OUT_CPP_VERSION` with value `199711L`, `201103L` or `201402L`.
+As an example, look at `trace-out-to-endpoint.hpp` or `trace-out-to-wdo.hpp` in `src/trace-out/` directory.
 
-	*Fix #2:* use compiler option `/Zc:__cplusplus`.
+### Compatibility
+
+`TRACE_OUT_CPP_VERSION` `<number>` – specify C++ standard version using same format as `__cplusplus` macro. Why? Visual Studio defines `__cplusplus` macro with the wrong value, and while it offers a fix with `/Zc:__cplusplus`, it can still cause issues in your project's code. So, to keep your project intact, you can use this macro, and it will only affect trace-out.
