@@ -10,9 +10,15 @@ project(
 
 enable_testing()
 
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+
 set_property(GLOBAL PROPERTY USE_FOLDERS YES)
 
 add_subdirectory(src)
-add_subdirectory(cmake)
+
+include(amalgamate)
+include(install)
+include(package)
+
 add_subdirectory(tests)
 
