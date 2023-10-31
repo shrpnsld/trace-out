@@ -57,7 +57,7 @@ You can get it any way you want, as long as it's one of these
 
 ### Download release
 
-[Here](https://github.com/shrpnsld/trace-out/releases/tag/v1.0)
+[Here](https://github.com/shrpnsld/trace-out/releases/latest)
 
 ### Install system-wide
 
