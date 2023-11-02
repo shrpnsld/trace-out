@@ -1,3 +1,5 @@
+set(TRACE_OUT_TEST_AMALGAMATED YES CACHE BOOL "Turn on test for amalgamated header")
+
 add_executable(amalgamated-header-verification EXCLUDE_FROM_ALL)
 
 target_compile_features(amalgamated-header-verification
@@ -26,6 +28,15 @@ target_sources(amalgamated-header-verification
 	PRIVATE
 		amalgamated-header-verification.tests.cpp
 )
+
+if (TRACE_OUT_TEST_AMALGAMATED)
+	add_test("amalgamated header verification"
+		COMMAND
+			${CMAKE_COMMAND}
+			--build "${PROJECT_BINARY_DIR}"
+			--target "amalgamated-header-verification"
+	)
+endif()
 
 set_target_properties(amalgamated-header-verification PROPERTIES FOLDER tests)
 
