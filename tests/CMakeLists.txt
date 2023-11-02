@@ -1,13 +1,10 @@
 find_package(Catch2 3 REQUIRED)
 include(Catch)
 
+include(compiler-agnostic)
 include(build-optimizations)
 
-if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang|GNU")
-	add_compile_options(-Wall -Wextra)
-elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-	add_compile_options(/W4)
-endif()
+add_compile_options_if_supported("-Wall" "-Wextra" "/W4")
 
 add_subdirectory(amalgamated-header-verification)
 add_subdirectory(compatibility-with-c++98)
