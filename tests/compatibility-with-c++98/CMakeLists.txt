@@ -1,4 +1,4 @@
-add_executable(compatibility-with-c++98)
+add_executable(compatibility-with-c++98 EXCLUDE_FROM_ALL)
 
 target_compile_features(compatibility-with-c++98
 	PRIVATE
@@ -27,7 +27,12 @@ target_sources(compatibility-with-c++98
 		compatibility-with-c++98.cpp
 )
 
-add_test("compatibility with C++98" COMMAND ${CMAKE_CURRENT_BINARY_DIR}/compatibility-with-c++98)
+add_test("compatibility with C++98"
+	COMMAND
+		${CMAKE_COMMAND}
+		--build "${PROJECT_BINARY_DIR}"
+		--target "compatibility-with-c++98"
+)
 
 set_target_properties(compatibility-with-c++98 PROPERTIES FOLDER tests)
 
