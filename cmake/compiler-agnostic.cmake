@@ -1,0 +1,58 @@
+include(CheckCXXCompilerFlag)
+
+function(add_compile_options_if_supported)
+	get_directory_property(directory_compile_options COMPILE_OPTIONS)
+
+	set(options "${ARGN}")
+	list(REMOVE_DUPLICATES options)
+
+	foreach (option IN LISTS options)
+		list(FIND directory_compile_options "${option}" index)
+		if (NOT index EQUAL -1)
+			continue()
+		endif()
+
+		check_cxx_compiler_flag(${option} option_supported)
+		if (option_supported)
+			add_compile_options("${option}")
+		endif()
+		unset(option_supported CACHE)
+	endforeach()
+endfunction()
+
+function(target_compile_options_if_supported target scope)
+	if (NOT TARGET "${target}")
+		message(FATAL_ERROR "target_compile_options_if_supported: uknown target '${target}'")
+		return()
+	endif()
+
+	if (scope STREQUAL "INTERFACE")
+		get_target_property(target_compile_options "${target}" INTERFACE_COMPILE_OPTIONS)
+	elseif(scope STREQUAL "PRIVATE")
+		get_target_property(target_compile_options "${target}" COMPILE_OPTIONS)
+	elseif(scope STREQUAL "PUBLIC")
+		get_target_property(target_compile_options "${target}" COMPILE_OPTIONS)
+		get_target_property(target_interface_compile_options "${target}" INTERFACE_COMPILE_OPTIONS)
+		list(APPEND target_compile_options ${target_interface_compile_options})
+	else()
+		message(FATAL_ERROR "target_compile_options_if_supported: unkown scope name '${scope}'")
+		return()
+	endif()
+
+	set(options "${ARGN}")
+	list(REMOVE_DUPLICATES options)
+
+	foreach (option IN LISTS options)
+		list(FIND target_compile_options "${option}" index)
+		if (NOT index EQUAL -1)
+			continue()
+		endif()
+
+		check_cxx_compiler_flag(${option} option_supported)
+		if (option_supported)
+			target_compile_options(${target} ${scope} ${option})
+		endif()
+		unset(option_supported CACHE)
+	endforeach()
+endfunction()
+
