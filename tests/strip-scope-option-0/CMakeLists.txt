@@ -28,3 +28,11 @@ catch_discover_tests(strip-scope-option-tests-0)
 
 set_target_properties(strip-scope-option-tests-0 PROPERTIES FOLDER tests)
 
+if (TRACE_OUT_USE_PCH)
+	target_link_libraries(strip-scope-option-tests-0
+		PRIVATE
+			pch-helpers
+			pch-standard
+	)
+endif()
+

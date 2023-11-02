@@ -28,3 +28,11 @@ catch_discover_tests(marker-option-tests)
 
 set_target_properties(marker-option-tests PROPERTIES FOLDER tests)
 
+if (TRACE_OUT_USE_PCH)
+	target_link_libraries(marker-option-tests
+		PRIVATE
+			pch-helpers
+			pch-standard
+	)
+endif()
+

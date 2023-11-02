@@ -1,6 +1,8 @@
 find_package(Catch2 3 REQUIRED)
 include(Catch)
 
+include(build-optimizations)
+
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang|GNU")
 	add_compile_options(-Wall -Wextra)
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")

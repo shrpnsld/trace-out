@@ -146,3 +146,11 @@ set_tests_properties([[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$clock_stat
 
 set_target_properties(sync-stream-option-tests PROPERTIES FOLDER tests)
 
+if (TRACE_OUT_USE_PCH)
+	target_link_libraries(sync-stream-option-tests
+		PRIVATE
+			pch-helpers
+			pch-standard
+	)
+endif()
+

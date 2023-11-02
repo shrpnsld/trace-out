@@ -18,3 +18,20 @@ target_sources(helpers
 
 set_target_properties(helpers PROPERTIES FOLDER tests)
 
+if (${TRACE_OUT_USE_UNITY_BUILDS})
+	set_target_properties(helpers
+		PROPERTIES
+			UNITY_BUILD YES
+			UNITY_BUILD_BATCH_SIZE ${TRACE_OUT_USE_UNITY_BUILDS}
+	)
+endif()
+
+if (${TRACE_OUT_USE_PCH})
+	add_library(pch-helpers INTERFACE)
+	target_precompile_headers(pch-helpers
+		INTERFACE
+			"dummy.hpp"
+			"test-stream.hpp"
+	)
+endif()
+

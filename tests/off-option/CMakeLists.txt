@@ -28,3 +28,11 @@ catch_discover_tests(off-option-tests)
 
 set_target_properties(off-option-tests PROPERTIES FOLDER tests)
 
+if (TRACE_OUT_USE_PCH)
+	target_link_libraries(off-option-tests
+		PRIVATE
+			pch-helpers
+			pch-standard
+	)
+endif()
+

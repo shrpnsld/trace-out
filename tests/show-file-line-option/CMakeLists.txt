@@ -28,3 +28,11 @@ catch_discover_tests(show-file-line-option-test)
 
 set_target_properties(show-file-line-option-test PROPERTIES FOLDER tests)
 
+if (TRACE_OUT_USE_PCH)
+	target_link_libraries(show-file-line-option-test
+		PRIVATE
+			pch-helpers
+			pch-standard
+	)
+endif()
+

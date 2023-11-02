@@ -32,3 +32,11 @@ target_sources(stream-to-wdo-option-tests
 
 set_target_properties(stream-to-wdo-option-tests PROPERTIES FOLDER tests)
 
+if (TRACE_OUT_USE_PCH)
+	target_link_libraries(stream-to-wdo-option-tests
+		PRIVATE
+			pch-helpers
+			pch-standard
+	)
+endif()
+

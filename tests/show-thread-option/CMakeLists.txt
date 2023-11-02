@@ -28,3 +28,11 @@ catch_discover_tests(show-thread-option-tests)
 
 set_target_properties(show-thread-option-tests PROPERTIES FOLDER tests)
 
+if (TRACE_OUT_USE_PCH)
+	target_link_libraries(show-thread-option-tests
+		PRIVATE
+			pch-helpers
+			pch-standard
+	)
+endif()
+

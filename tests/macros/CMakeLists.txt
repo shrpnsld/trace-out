@@ -41,3 +41,19 @@ catch_discover_tests(macros-tests)
 
 set_target_properties(macros-tests PROPERTIES FOLDER tests)
 
+if (TRACE_OUT_USE_UNITY_BUILDS)
+	set_target_properties(macros-tests
+		PROPERTIES
+			UNITY_BUILD YES
+			UNITY_BUILD_BATCH_SIZE ${TRACE_OUT_USE_UNITY_BUILDS}
+	)
+endif()
+
+if (TRACE_OUT_USE_PCH)
+	target_link_libraries(macros-tests
+		PRIVATE
+			pch-helpers
+			pch-standard
+	)
+endif()
+
