@@ -8,6 +8,7 @@ add_compile_options_if_supported("-Wall" "-Wextra" "/W4")
 
 add_subdirectory(amalgamated-header-verification)
 add_subdirectory(compatibility-with-c++98)
+add_subdirectory(debug)
 add_subdirectory(helpers)
 add_subdirectory(helpers-c++11)
 add_subdirectory(indentation-option)
