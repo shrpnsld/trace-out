@@ -8,7 +8,7 @@ target_compile_features(marker-option-tests
 target_compile_definitions(marker-option-tests
 	PRIVATE
 		TRACE_OUT_STREAM_TO=trace_out_to_test_stream
-		TRACE_OUT_WIDTH=70
+		TRACE_OUT_STREAM_WIDTH=70
 		TRACE_OUT_MARKER="@@"
 )
 

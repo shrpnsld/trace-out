@@ -72,24 +72,26 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$m(...)'", "[TRACE_OUT_SHOW_THREAD][m]"
 
 	std::thread {[](const char *what)
 	{
-		std::size_t size {std::strlen(what)};
+		std::size_t size {std::strlen(what) + 1};
 
 		$thread(two)
 		$m(what, size)
 	}, "wazuuup!"}.join();
 
 	const char *what {"hellomoto!"};
-	std::size_t size {std::strlen(what)};
+	std::size_t size {std::strlen(what) + 1};
 	$m(what, size)
 
 	REQUIRE_THAT(test::out_stream.str(), Matches(
 		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
-		R"(what, 8 bytes of 1-byte hexadecimal\n)"
-		R"(    [0-9a-f]+: 77 61 7a 75 75 75 70 21\n)"
+		R"(what, 9 bytes of 1-byte hexadecimal\n)"
+		R"(    [0-9a-f]+: 77 61 7a 75 75 75 70 21  wazuuup!\n)"
+		R"(    [0-9a-f]+: 00                       \.\n)"
 		R"(\n)"
 		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
-		R"(what, 10 bytes of 1-byte hexadecimal\n)"
-		R"(    [0-9a-f]+: 68 65 6c 6c 6f 6d 6f 74 6f 21\n)"
+		R"(what, 11 bytes of 1-byte hexadecimal\n)"
+		R"(    [0-9a-f]+: 68 65 6c 6c 6f 6d 6f 74  hellomot\n)"
+		R"(    [0-9a-f]+: 6f 21 00                 o!\.\n)"
 		R"(\n)"
 	));
 }

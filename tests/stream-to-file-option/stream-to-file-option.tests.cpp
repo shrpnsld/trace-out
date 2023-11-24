@@ -27,9 +27,9 @@ TEST_CASE("'TRACE_OUT_STREAM_TO_FILE' option", "[TRACE_OUT_STREAM_TO_FILE]")
 		<< R"(@@  stream-to-file-opt~:90   \|   subject2 = 789.123)" << std::endl
 		<< R"(@@  stream-to-file-opt~:91   \|   subject3 = "hellomoto!")" << std::endl
 		<< R"(@@  stream-to-file-opt~:92   \|   \[subject3\.begin\(\), subject3\.end\(\)\) = \['h', 'e', 'l', 'l', 'o', 'm', 'o', 't', 'o', '!'\])" << std::endl
-		<< R"(@@  stream-to-file-opt~:93   \|   subject3.c_str\(\), 10 bytes of 1-byte hexadecimal)" << std::endl
-		<< R"(@@                           \|     [0-9a-f]+: 68 65 6c 6c 6f 6d 6f 74)" << std::endl
-		<< R"(@@                           \|     [0-9a-f]+: 6f 21)" << std::endl
+		<< R"(@@  stream-to-file-opt~:93   \|   subject3.c_str\(\), 11 bytes of 1-byte hexadecimal)" << std::endl
+		<< R"(@@                           \|     [0-9a-f]+: 68 65 6c 6c 6f 6d 6f 74  hellomot)" << std::endl
+		<< R"(@@                           \|     [0-9a-f]+: 6f 21 00                 o!\.)" << std::endl
 		<< R"(@@                           \| )" << std::endl
 		<< R"(@@  stream-to-file-opt~:94   \|   subject3 = "wazuuup!"; // running\.\.\.)" << std::endl
 		<< R"(@@  stream-to-file-opt~:94   \|   subject3 = "wazuuup!"; // done\.)" << std::endl
@@ -90,7 +90,7 @@ int subject_func()
 	$t(subject2);
 	$t(subject3);
 	$tr(subject3.begin(), subject3.end())
-	$m(subject3.c_str(), subject3.size(), $hex, $grp(1), $col(8))
+	$m(subject3.c_str(), subject3.size() + 1, $hex, $grp(1), $col(8))
 	$s(subject3 = "wazuuup!";)
 
 	$if (true)

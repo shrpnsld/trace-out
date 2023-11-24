@@ -8,6 +8,7 @@
 #include "trace-out/pretty-lines.hpp"
 #include "trace-out/to-string.hpp"
 #include <algorithm>
+#include <cctype>
 #include <iomanip>
 #include <ostream>
 #include <limits>
@@ -56,6 +57,11 @@ void print_memory(std::ostream &stream, const file_line_t &file_line, const char
 
 namespace trace_out
 {
+
+static const standard::size_t MEMORY_MAX_DEFAULT_STREAM_WIDTH = 80;
+static const standard::size_t MEMORY_MAX_DEFAULT_COLUMN_COUNT = 16;
+static const char MEMORY_VALUE_AND_TEXT_DELIMITER[] = "  ";
+static const standard::size_t MEMORY_VALUE_AND_TEXT_DELIMITER_WIDTH = (sizeof(MEMORY_VALUE_AND_TEXT_DELIMITER) - 1) / sizeof(MEMORY_VALUE_AND_TEXT_DELIMITER[0]);
 
 struct base_option
 {
@@ -123,8 +129,9 @@ inline byte_order_t current_byte_order();
 inline const char *base_name(base_t value);
 inline const char *byte_order_name(byte_order_t value);
 inline standard::size_t printed_value_width_for_base_and_grouping(base_t base, standard::size_t grouping);
-inline standard::size_t calculate_optimal_column_count(standard::size_t max_column_count);
-inline standard::size_t calculate_column_count(standard::size_t preferred_column_count, standard::size_t stream_width, standard::size_t marker_width, standard::size_t file_line_width, standard::size_t indentation_width, standard::size_t pointer_width, standard::size_t delimiter_width, standard::size_t column_width);
+inline standard::size_t closest_power_of_2(standard::size_t max_column_count);
+inline standard::size_t calculate_column_count_that_fits(standard::size_t stream_width, standard::size_t marker_width, standard::size_t file_line_width, standard::size_t indentation_width, standard::size_t pointer_width, standard::size_t delimiter_width, standard::size_t grouping, standard::size_t column_width, standard::size_t memory_text_delimiter_width);
+inline standard::size_t calculate_optimal_column_count(standard::size_t preferred_column_count, standard::size_t stream_width, standard::size_t marker_width, standard::size_t file_line_width, standard::size_t indentation_width, standard::size_t pointer_width, standard::size_t delimiter_width, standard::size_t grouping, standard::size_t column_width);
 
 typedef void (*print_chunk_t)(std::ostream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t column_width);
 inline print_chunk_t select_print_chunk_function(base_t base, standard::size_t chunk_size, byte_order_t byte_order);
@@ -140,6 +147,9 @@ template <typename Type_t>
 void print_number_chunk_reverse(std::ostream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t column_width);
 
 inline void print_memory_with_display_options(std::ostream &stream, const file_line_t &file_line, const char *name, const standard::uint8_t *memory, standard::size_t size, const memory_display_options_t &options);
+
+inline void print_memory_values(std::ostream &stream, print_chunk_t print_chunk, const standard::uint8_t *line, standard::size_t column_count, standard::size_t grouping, standard::size_t column_width);
+inline void print_text_representation(std::ostream &stream, const standard::uint8_t *line, standard::size_t char_count);
 
 }
 
@@ -200,9 +210,10 @@ void print_memory_with_display_options(std::ostream &stream, const file_line_t &
 {
 	print_chunk_t print_chunk = select_print_chunk_function(options.base, options.grouping, options.byte_order);
 
+	standard::size_t pointer_width = to_string(reinterpret_cast<standard::uint64_t>(memory), std::hex).size();
 	standard::size_t column_width = printed_value_width_for_base_and_grouping(options.base, options.grouping) + 1;
 	standard::size_t item_count = size / options.grouping;
-	standard::size_t column_count = calculate_column_count(options.column_count, system::console_width(), 0, 0, indentation().size() + INDENTATION_UNIT_WIDTH, to_string(static_cast<const void *>(memory)).size(), 1, column_width);
+	standard::size_t column_count = calculate_optimal_column_count(options.column_count, system::console_width(), 0, 0, indentation().size() + INDENTATION_UNIT_WIDTH, pointer_width, 1, options.grouping, column_width);
 	standard::size_t line_count = item_count / column_count;
 	standard::size_t leftover_item_count = item_count - line_count * column_count;
 
@@ -228,34 +239,33 @@ void print_memory_with_display_options(std::ostream &stream, const file_line_t &
 
 			stream << '\n' << CONTINUE_PARAGRAPH;
 			stream << std::hex << reinterpret_cast<standard::uint64_t>(line) << RESET_FLAGS << ':';
-			for (standard::size_t current_column = 0; current_column < column_count; ++current_column)
-			{
-				print_chunk(stream, &line[current_column * options.grouping], options.grouping, column_width);
-			}
+			print_memory_values(stream, print_chunk, line, column_count, options.grouping, column_width);
+			stream << MEMORY_VALUE_AND_TEXT_DELIMITER;
+			print_text_representation(stream, line, column_count * options.grouping);
 		}
 
 		if (leftover_item_count > 0)
 		{
 			const standard::uint8_t *line = &memory[line_count * memory_line_size];
+			int padding_width = static_cast<int>((column_count - leftover_item_count) * column_width);
 
 			stream << '\n' << CONTINUE_PARAGRAPH;
 			stream << std::hex << reinterpret_cast<standard::uint64_t>(line) << RESET_FLAGS << ':';
-			for (standard::size_t current_column = 0; current_column < leftover_item_count; ++current_column)
-			{
-				print_chunk(stream, &line[current_column * options.grouping], options.grouping, column_width);
-			}
+			print_memory_values(stream, print_chunk, line, leftover_item_count, options.grouping, column_width);
+			stream << std::setw(padding_width) << "" << MEMORY_VALUE_AND_TEXT_DELIMITER;
+			print_text_representation(stream, line, leftover_item_count * options.grouping);
 		}
 
 		if (leftover_memory_size > 0)
 		{
 			const standard::uint8_t *line = &memory[size - leftover_memory_size];
+			int padding_width = static_cast<int>((column_count * column_width) - (leftover_memory_size * 3));
 
 			stream << '\n' << SEPARATE_PARAGRAPH << '\n' << CONTINUE_PARAGRAPH << "leftovers:" << '\n' << CONTINUE_PARAGRAPH;
 			stream << std::hex << reinterpret_cast<standard::uint64_t>(line) << RESET_FLAGS << ':';
-			for (standard::size_t current_column = 0; current_column < leftover_memory_size; ++current_column)
-			{
-				print_hexadecimal_chunk(stream, &line[current_column], 1, 3);
-			}
+			print_memory_values(stream, print_hexadecimal_chunk, line, leftover_memory_size, 1, 3);
+			stream << std::setw(padding_width) << "" << MEMORY_VALUE_AND_TEXT_DELIMITER;
+			print_text_representation(stream, line, leftover_memory_size);
 		}
 
 		indentation_remove();
@@ -459,7 +469,7 @@ standard::size_t printed_value_width_for_base_and_grouping(base_t base, standard
 	}
 }
 
-standard::size_t calculate_optimal_column_count(standard::size_t max_column_count)
+standard::size_t closest_power_of_2(standard::size_t max_column_count)
 {
 	standard::size_t power_of_2 = 1;
 	while (power_of_2 << 1 <= max_column_count)
@@ -470,21 +480,37 @@ standard::size_t calculate_optimal_column_count(standard::size_t max_column_coun
 	return power_of_2;
 }
 
-standard::size_t calculate_column_count(standard::size_t preferred_column_count, standard::size_t stream_width, standard::size_t marker_width, standard::size_t file_line_width, standard::size_t indentation_width, standard::size_t pointer_width, standard::size_t delimiter_width, standard::size_t column_width)
+standard::size_t calculate_column_count_that_fits(standard::size_t stream_width, standard::size_t marker_width, standard::size_t file_line_width, standard::size_t indentation_width, standard::size_t pointer_width, standard::size_t delimiter_width, standard::size_t grouping, standard::size_t column_width, standard::size_t memory_text_delimiter_width)
 {
-	standard::size_t width_left = stream_width - (marker_width + file_line_width + indentation_width + pointer_width + delimiter_width);
-	standard::size_t max_column_count = width_left / column_width;
-	if (max_column_count == 0)
+	standard::size_t width_left = stream_width - (marker_width + file_line_width + indentation_width + pointer_width + delimiter_width + memory_text_delimiter_width);
+	standard::size_t column_count = width_left / (column_width + grouping);
+	if (column_count == 0)
 	{
-		max_column_count = 1;
+		return 1;
 	}
 
-	if (preferred_column_count == 0 || preferred_column_count > max_column_count)
+	return column_count;
+}
+
+standard::size_t calculate_optimal_column_count(standard::size_t preferred_column_count, standard::size_t stream_width, standard::size_t marker_width, standard::size_t file_line_width, standard::size_t indentation_width, standard::size_t pointer_width, standard::size_t delimiter_width, standard::size_t grouping, standard::size_t column_width)
+{
+	if (preferred_column_count > 0)
 	{
-		return calculate_optimal_column_count(max_column_count);
+		return preferred_column_count;
 	}
 
-	return preferred_column_count;
+	if (stream_width > MEMORY_MAX_DEFAULT_STREAM_WIDTH)
+	{
+		stream_width = MEMORY_MAX_DEFAULT_STREAM_WIDTH;
+	}
+
+	standard::size_t column_count = calculate_column_count_that_fits(stream_width, marker_width, file_line_width, indentation_width, pointer_width, delimiter_width, grouping, column_width, MEMORY_VALUE_AND_TEXT_DELIMITER_WIDTH);
+	if (column_count > MEMORY_MAX_DEFAULT_COLUMN_COUNT)
+	{
+		return MEMORY_MAX_DEFAULT_COLUMN_COUNT;
+	}
+
+	return closest_power_of_2(column_count);
 }
 
 static const char *byte_to_binary(standard::uint8_t byte)
@@ -628,11 +654,11 @@ print_chunk_t select_print_chunk_function(base_t base, standard::size_t chunk_si
 	}
 }
 
-void print_binary_chunk(std::ostream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t column_width)
+void print_binary_chunk(std::ostream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t /*column_width*/)
 {
-	stream << std::setw((column_width % 8) + 8) << std::setfill(' ') << byte_to_binary(*chunk) << RESET_FLAGS;
+	stream << ' ';
 	const standard::uint8_t *end = chunk + size;
-	for (++chunk; chunk < end; ++chunk)
+	for ( ; chunk < end; ++chunk)
 	{
 		stream << byte_to_binary(*chunk);
 	}
@@ -645,11 +671,11 @@ void print_binary_chunk_reverse(std::ostream &stream, const standard::uint8_t *c
 	print_binary_chunk(stream, reversed_chunk, size, column_width);
 }
 
-void print_hexadecimal_chunk(std::ostream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t column_width)
+void print_hexadecimal_chunk(std::ostream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t /*column_width*/)
 {
-	stream << std::setw((column_width % 2) + 2) << std::setfill(' ') << byte_to_hexadecimal(*chunk) << RESET_FLAGS;
+	stream << ' ';
 	const standard::uint8_t *end = chunk + size;
-	for (++chunk; chunk < end; ++chunk)
+	for ( ; chunk < end; ++chunk)
 	{
 		stream << byte_to_hexadecimal(*chunk);
 	}
@@ -667,7 +693,7 @@ void print_number_chunk(std::ostream &stream, const standard::uint8_t *chunk, st
 {
 	Type_t number = *reinterpret_cast<const Type_t *>(chunk);
 	typename printable_number_t<Type_t>::type printable_number = number;
-	stream << std::setw(column_width) << std::setfill(' ') << std::setprecision(std::numeric_limits<Type_t>::digits10) << printable_number << RESET_FLAGS;
+	stream << std::setw(static_cast<int>(column_width)) << std::setfill(' ') << std::setprecision(std::numeric_limits<Type_t>::digits10) << printable_number << RESET_FLAGS;
 }
 
 template <typename Type_t>
@@ -676,6 +702,23 @@ void print_number_chunk_reverse(std::ostream &stream, const standard::uint8_t *c
 	standard::uint8_t reversed_chunk[16];
 	std::reverse_copy(chunk, chunk + size, reversed_chunk);
 	print_number_chunk<Type_t>(stream, reversed_chunk, size, column_width);
+}
+
+void print_memory_values(std::ostream &stream, print_chunk_t print_chunk, const standard::uint8_t *line, standard::size_t column_count, standard::size_t grouping, standard::size_t column_width)
+{
+	for (standard::size_t column = 0; column < column_count; ++column)
+	{
+		print_chunk(stream, &line[column * grouping], grouping, column_width);
+	}
+}
+
+void print_text_representation(std::ostream &stream, const standard::uint8_t *line, standard::size_t char_count)
+{
+	for (standard::size_t index = 0; index < char_count; ++index)
+	{
+		char character = line[index];
+		stream << (std::isprint(character) ? character : '.');
+	}
 }
 
 }

@@ -8,7 +8,7 @@ target_compile_features(show-file-line-option-test
 target_compile_definitions(show-file-line-option-test
 	PRIVATE
 		TRACE_OUT_STREAM_TO=trace_out_to_test_stream
-		TRACE_OUT_WIDTH=70
+		TRACE_OUT_STREAM_WIDTH=70
 		TRACE_OUT_SHOW_FILE_LINE
 )
 

@@ -8,7 +8,7 @@ target_compile_features(off-option-tests
 target_compile_definitions(off-option-tests
 	PRIVATE
 		TRACE_OUT_STREAM_TO=trace_out_to_test_stream
-		TRACE_OUT_WIDTH=70
+		TRACE_OUT_STREAM_WIDTH=70
 		TRACE_OUT_OFF
 )
 

@@ -311,15 +311,14 @@ TEST_CASE("indentation outside '$m(...)'", "[indentation][m]")
 
 	std::stringstream expected;
 	std::uintptr_t address {reinterpret_cast<std::uintptr_t>(str)};
-	expected <<
-		"if (some == 456) => true\n"
-		"{\n"
-		"    str, 11 bytes of 1-byte hexadecimal\n"
-		"        " << std::hex << address + 0 << std::resetiosflags(std::ios::basefield) << ": 68 65 6c 6c 6f 6d 6f 74\n"
-		"        " << std::hex << address + 8 << std::resetiosflags(std::ios::basefield) << ": 6f 21 00\n"
-		"\n"
-		"}\n"
-		"\n";
+	expected << "if (some == 456) => true\n";
+	expected << "{\n";
+	expected << "    str, 11 bytes of 1-byte hexadecimal\n";
+	expected << "        " << std::hex << address << std::resetiosflags(std::ios::basefield) << ": 68 65 6c 6c 6f 6d 6f 74" "  hellomot" "\n"; address += 8;
+	expected << "        " << std::hex << address << std::resetiosflags(std::ios::basefield) << ": 6f 21 00               " "  o!."      "\n";
+	expected << "\n";
+	expected << "}\n";
+	expected << "\n";
 
 	REQUIRE(test::out_stream.str() == expected.str());
 }

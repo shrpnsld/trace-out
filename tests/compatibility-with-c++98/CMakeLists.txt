@@ -13,7 +13,7 @@ target_compile_definitions(compatibility-with-c++98
 		TRACE_OUT_STRIP_SCOPE=1
 		TRACE_OUT_SYNC_STREAM
 		TRACE_OUT_SHOW_THREAD
-		TRACE_OUT_WIDTH=70
+		TRACE_OUT_STREAM_WIDTH=70
 )
 
 target_link_libraries(compatibility-with-c++98

@@ -56,15 +56,16 @@ TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$m(...)'", "[TRACE_OUT_
 
 	std::stringstream expected;
 	std::uintptr_t address {reinterpret_cast<std::uintptr_t>(subject.data())};
-	expected <<
-		"subject.data(), 16 bytes of 1-byte hexadecimal\n"
-		"    " << std::hex << address << RESET_FLAGS << ":"
-		" df 64 6c cf f9 cb ed 11 4a 83 78 28 3d 48 ad 40" "\n"
-		"\n"
-		"subject.data(), 16 bytes of 1-byte hexadecimal\n"
-		"    " << std::hex << address << RESET_FLAGS << ":"
-		" df 64 6c cf f9 cb ed 11 4a 83 78 28 3d 48 ad 40" "\n"
-		"\n";
+	expected << "subject.data(), 16 bytes of 1-byte hexadecimal\n";
+	expected << "    " << std::hex << address << RESET_FLAGS << ": df 64 6c cf f9 cb ed 11" "  .dl....." "\n"; address += 8;
+	expected << "    " << std::hex << address << RESET_FLAGS << ": 4a 83 78 28 3d 48 ad 40" "  J.x(=H.@" "\n";
+	expected << "\n";
+
+	address = reinterpret_cast<std::uintptr_t>(subject.data());
+	expected << "subject.data(), 16 bytes of 1-byte hexadecimal\n";
+	expected << "    " << std::hex << address << RESET_FLAGS << ": df 64 6c cf f9 cb ed 11" "  .dl....." "\n"; address += 8;
+	expected << "    " << std::hex << address << RESET_FLAGS << ": 4a 83 78 28 3d 48 ad 40" "  J.x(=H.@" "\n";
+	expected << "\n";
 
 	REQUIRE(test::out_stream.str() == expected.str());
 }
