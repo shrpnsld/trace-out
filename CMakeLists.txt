@@ -4,7 +4,7 @@ project(
 	trace-out
 	VERSION 1.0.0
 	DESCRIPTION "Printf-debugging library"
-	HOMEPAGE_URL https://github.com/shrpnsld/trace-out
+	HOMEPAGE_URL "https://github.com/shrpnsld/trace-out"
 	LANGUAGES CXX
 )
 

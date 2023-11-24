@@ -7,6 +7,7 @@
 #include "trace-out/nothing.hpp"
 #include "trace-out/pretty-lines.hpp"
 #include "trace-out/to-string.hpp"
+#include <algorithm>
 #include <iomanip>
 #include <ostream>
 #include <limits>

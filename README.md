@@ -49,8 +49,6 @@ int main(int argc, const char *argv[])
 } // int main(int argc, const char *argv[])
 ```
 
-# Usage
-
 ## Get it
 
 You can get it any way you want, as long as it's one of these

@@ -3,18 +3,15 @@
 
 std::unordered_map<const lifecycle_tracker *, typename lifecycle_tracker::statistics> lifecycle_tracker::_all_statistics;
 
-
 lifecycle_tracker::lifecycle_tracker()
 {
 	++_all_statistics[this].default_constructed;
 }
- 
 
 lifecycle_tracker::lifecycle_tracker(const lifecycle_tracker &)
 {
 	++_all_statistics[this].copy_constructed;
 }
-    
 
 lifecycle_tracker::lifecycle_tracker(lifecycle_tracker &&)
 {
@@ -26,21 +23,18 @@ lifecycle_tracker::~lifecycle_tracker()
 {
 	++_all_statistics[this].destructed;
 }
- 
- 
+
 lifecycle_tracker &lifecycle_tracker::operator =(const lifecycle_tracker &)
 {
 	++_all_statistics[this].copy_assigned;
 	return *this;
 }
 
-
 lifecycle_tracker &lifecycle_tracker::operator =(lifecycle_tracker &&)
 {
 	++_all_statistics[this].move_assigned;
 	return *this;
 }
- 
 
 const lifecycle_tracker::statistics &lifecycle_tracker::statistics_for(const lifecycle_tracker *object)
 {
@@ -55,7 +49,6 @@ const lifecycle_tracker::statistics &lifecycle_tracker::statistics_for(const lif
 	return place->second;
 }
 
- 
 lifecycle_tracker::statistics::statistics()
 	:
 	default_constructed {0},
