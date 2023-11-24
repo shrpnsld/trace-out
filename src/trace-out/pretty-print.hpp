@@ -11,6 +11,15 @@
 	#include <tuple> // [amalgamate:leave]
 #endif
 
+#if TRACE_OUT_CPP_VERSION >= 201703L
+	#include <optional>
+	#include <variant>
+#endif // TRACE_OUT_CPP_VERSION >= 201703L
+
+#if TRACE_OUT_CPP_VERSION >= 202302L
+	#include <expected>
+#endif // TRACE_OUT_CPP_VERSION >= 202302L
+
 //
 // Public
 
@@ -71,6 +80,23 @@ void pretty_print(std::ostream &stream, const std::tuple<Types_t ...> &tuple);
 
 template <std::size_t Size>
 void pretty_print(std::ostream &stream, const std::bitset<Size> &bits);
+
+#if TRACE_OUT_CPP_VERSION >= 201703L
+
+template <typename Type_t>
+void pretty_print(std::ostream &stream, const std::optional<Type_t> &optional);
+
+template <typename ...Types_t>
+void pretty_print(std::ostream &stream, const std::variant<Types_t...> &variant);
+
+#endif // TRACE_OUT_CPP_VERSION >= 201703L
+
+#if TRACE_OUT_CPP_VERSION >= 202302L
+
+template <typename Type_t, typename Error_t>
+void pretty_print(std::ostream &stream, const std::expected<Type_t, Error_t> &expected);
+
+#endif // TRACE_OUT_CPP_VERSION >= 202302L
 
 //
 // .begin(), .end()
@@ -426,6 +452,50 @@ void pretty_print(std::ostream &stream, const std::bitset<Size> &bits)
 {
 	stream << bits.to_string();
 }
+
+#if TRACE_OUT_CPP_VERSION >= 201703L
+
+template <typename Type_t>
+void pretty_print(std::ostream &stream, const std::optional<Type_t> &optional)
+{
+	if (!optional.has_value())
+	{
+		stream << "<empty>";
+		return;
+	}
+
+	pretty_print(stream, optional.value());
+}
+
+template <typename ...Types_t>
+void pretty_print(std::ostream &stream, const std::variant<Types_t...> &variant)
+{
+	std::visit(
+		[&stream](const auto &value)
+		{
+			pretty_print(stream, value);
+		},
+		variant);
+}
+
+#endif // TRACE_OUT_CPP_VERSION >= 201703L
+
+#if TRACE_OUT_CPP_VERSION >= 202302L
+
+template <typename Type_t, typename Error_t>
+void pretty_print(std::ostream &stream, const std::expected<Type_t, Error_t> &expected)
+{
+	if (!expected.has_value())
+	{
+		pretty_print(stream, expected.error());
+		stream << " // error";
+		return;
+	}
+
+	pretty_print(stream, expected.value());
+}
+
+#endif // TRACE_OUT_CPP_VERSION >= 202302L
 
 //
 // .begin(), .end()
