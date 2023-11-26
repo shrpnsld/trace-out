@@ -3,6 +3,7 @@
 #include "trace-out/integer.hpp"
 #include "trace-out/has-member.hpp"
 #include "trace-out/template-magic.hpp"
+#include <cctype>
 #include <iomanip>
 #include <string>
 
@@ -12,12 +13,12 @@
 #endif
 
 #if TRACE_OUT_CPP_VERSION >= 201703L
-	#include <optional>
-	#include <variant>
+	#include <optional> // [amalgamate:leave]
+	#include <variant> // [amalgamate:leave]
 #endif // TRACE_OUT_CPP_VERSION >= 201703L
 
 #if TRACE_OUT_CPP_VERSION >= 202302L
-	#include <expected>
+	#include <expected> // [amalgamate:leave]
 #endif // TRACE_OUT_CPP_VERSION >= 202302L
 
 //
@@ -62,6 +63,9 @@ typename enable_if<is_pointer<Type_t>::value, void>::type pretty_print(std::ostr
 template <typename First_t, typename Second_t>
 void pretty_print(std::ostream &stream, const std::pair<First_t, Second_t> &pair);
 
+template <std::size_t Size>
+void pretty_print(std::ostream &stream, const std::bitset<Size> &bits);
+
 #if TRACE_OUT_CPP_VERSION >= 201103L
 
 template <typename Type_t>
@@ -77,9 +81,6 @@ template <typename ...Types_t>
 void pretty_print(std::ostream &stream, const std::tuple<Types_t ...> &tuple);
 
 #endif // TRACE_OUT_CPP_VERSION >= 201103L
-
-template <std::size_t Size>
-void pretty_print(std::ostream &stream, const std::bitset<Size> &bits);
 
 #if TRACE_OUT_CPP_VERSION >= 201703L
 
@@ -248,7 +249,7 @@ void pretty_print(std::ostream &stream, bool value)
 
 void pretty_print(std::ostream &stream, char character)
 {
-	if (character < 32 || character > 126)
+	if (!std::isprint(character))
 	{
 		stream << "'\\x" << std::setw(2) << std::setfill('0') << std::hex << std::uppercase << (character & 0xff) << '\'';
 		stream.flags(0);
@@ -388,6 +389,12 @@ void pretty_print(std::ostream &stream, const std::pair<First_t, Second_t> &pair
 	stream << '}';
 }
 
+template <std::size_t Size>
+void pretty_print(std::ostream &stream, const std::bitset<Size> &bits)
+{
+	stream << bits.to_string();
+}
+
 #if TRACE_OUT_CPP_VERSION >= 201103L
 
 template <typename Type_t>
@@ -446,12 +453,6 @@ void pretty_print(std::ostream &stream, const std::tuple<Types_t ...> &tuple)
 }
 
 #endif // TRACE_OUT_CPP_VERSION >= 201103L
-
-template <std::size_t Size>
-void pretty_print(std::ostream &stream, const std::bitset<Size> &bits)
-{
-	stream << bits.to_string();
-}
 
 #if TRACE_OUT_CPP_VERSION >= 201703L
 
