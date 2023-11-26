@@ -387,6 +387,70 @@ TEST_CASE("$t(value)", "[t]")
 		REQUIRE(test::out_stream.str() == expected);
 	}
 
+	SECTION("enum")
+	{
+		SECTION(": int")
+		{
+			enum numbers_t : int
+			{
+				minus_one = -1,
+				zero,
+				one,
+				two,
+				three
+			};
+
+			numbers_t subject1 {numbers_t::minus_one};
+			numbers_t subject2 {numbers_t::two};
+
+			dummy($t(subject1));
+			dummy($t(subject2));
+
+			const char *expected {
+				"subject1 = -1\n"
+				"subject2 = 2\n"
+			};
+			REQUIRE(test::out_stream.str() == expected);
+		}
+
+		SECTION(": unsigned int")
+		{
+			enum numbers_t : unsigned int
+			{
+				zero,
+				one,
+				two,
+				three
+			};
+
+			numbers_t subject {numbers_t::one};
+
+			dummy($t(subject));
+
+			const char *expected {"subject = 1\n"};
+			REQUIRE(test::out_stream.str() == expected);
+		}
+
+		SECTION(": unsigned long long int")
+		{
+			enum numbers_t : unsigned long long int
+			{
+				zero,
+				one,
+				two,
+				the_biggest = std::numeric_limits<typename std::underlying_type<numbers_t>::type>::max()
+			};
+
+			numbers_t subject {numbers_t::the_biggest};
+
+			dummy($t(subject));
+
+			std::stringstream expected;
+			expected << "subject = " << numbers_t::the_biggest << '\n';
+			REQUIRE(test::out_stream.str() == expected.str());
+		}
+	}
+
 	SECTION("std::unique_ptr")
 	{
 		std::unique_ptr<int> subject;

@@ -10,6 +10,7 @@
 #if TRACE_OUT_CPP_VERSION >= 201103L
 	#include <memory> // [amalgamate:leave]
 	#include <tuple> // [amalgamate:leave]
+	#include <type_traits> // [amalgamate:leave]
 #endif
 
 #if TRACE_OUT_CPP_VERSION >= 201703L
@@ -39,8 +40,13 @@ inline void pretty_print(std::ostream &stream, signed long number);
 inline void pretty_print(std::ostream &stream, unsigned long number);
 
 #if TRACE_OUT_CPP_VERSION >= 201103L
+
 inline void pretty_print(std::ostream &stream, signed long long number);
 inline void pretty_print(std::ostream &stream, unsigned long long number);
+
+template <typename Type_t>
+typename enable_if<std::is_enum<Type_t>::value, void>::type pretty_print(std::ostream &stream, Type_t value);
+
 #endif
 
 inline void pretty_print(std::ostream &stream, float number);
@@ -203,6 +209,9 @@ typename enable_if<has_members_GetCharArray<Type_t>::value, void>::type pretty_p
 
 template <typename Type_t>
 typename enable_if<
+#if TRACE_OUT_CPP_VERSION >= 201103L
+	!std::is_enum<Type_t>::value &&
+#endif
 	!has_supported_members<Type_t>::value &&
 	!is_pointer<Type_t>::value &&
 	!is_iterable<Type_t>::value,
@@ -311,6 +320,12 @@ void pretty_print(std::ostream &stream, signed long long number)
 void pretty_print(std::ostream &stream, unsigned long long number)
 {
 	stream << number;
+}
+
+template <typename Type_t>
+typename enable_if<std::is_enum<Type_t>::value, void>::type pretty_print(std::ostream &stream, Type_t value)
+{
+	stream << static_cast<typename std::underlying_type<Type_t>::type>(value);
 }
 
 #endif
@@ -935,6 +950,9 @@ typename enable_if<has_members_GetCharArray<Type_t>::value, void>::type pretty_p
 
 template <typename Type_t>
 typename enable_if<
+#if TRACE_OUT_CPP_VERSION >= 201103L
+	!std::is_enum<Type_t>::value &&
+#endif
 	!has_supported_members<Type_t>::value &&
 	!is_pointer<Type_t>::value &&
 	!is_iterable<Type_t>::value,
