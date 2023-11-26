@@ -1,6 +1,9 @@
 # automated tests are a bit tricky for this one,
 # so making this as utility for manual testing
 
+#
+# stream-to-endpoint-option-tests
+
 add_executable(stream-to-endpoint-option-tests)
 
 target_compile_definitions(stream-to-endpoint-option-tests
@@ -25,6 +28,9 @@ target_sources(stream-to-endpoint-option-tests
 	PRIVATE
 		stream-to-endpoint-option.tests.cpp
 )
+
+#
+# IDE
 
 set_target_properties(stream-to-endpoint-option-tests PROPERTIES FOLDER tests)
 

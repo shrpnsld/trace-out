@@ -1,3 +1,6 @@
+#
+# macros-tests
+
 add_executable(macros-tests)
 
 target_compile_features(macros-tests
@@ -39,7 +42,76 @@ target_sources(macros-tests
 
 catch_discover_tests(macros-tests)
 
+#
+# macros-tests-c++17
+
+add_executable(macros-tests-c++17)
+
+target_compile_features(macros-tests-c++17
+	PRIVATE
+		cxx_std_17
+)
+
+target_compile_definitions(macros-tests-c++17
+	PRIVATE
+		TRACE_OUT_STREAM_TO=trace_out_to_test_stream
+		TRACE_OUT_STREAM_WIDTH=70
+)
+
+target_link_libraries(macros-tests-c++17
+	PRIVATE
+		trace-out
+		Catch2::Catch2WithMain
+		helpers
+)
+
+target_sources(macros-tests-c++17
+	PRIVATE
+		t-c++17.tests.cpp
+)
+
+catch_discover_tests(macros-tests-c++17)
+
+#
+# macros-tests-c++23
+
+add_executable(macros-tests-c++23)
+
+target_compile_features(macros-tests-c++23
+	PRIVATE
+		cxx_std_23
+)
+
+target_compile_definitions(macros-tests-c++23
+	PRIVATE
+		TRACE_OUT_STREAM_TO=trace_out_to_test_stream
+		TRACE_OUT_STREAM_WIDTH=70
+		TRACE_OUT_CPP_VERSION=202302L
+)
+
+target_link_libraries(macros-tests-c++23
+	PRIVATE
+		trace-out
+		Catch2::Catch2WithMain
+		helpers
+)
+
+target_sources(macros-tests-c++23
+	PRIVATE
+		t-c++23.tests.cpp
+)
+
+catch_discover_tests(macros-tests-c++23)
+
+#
+# IDE
+
 set_target_properties(macros-tests PROPERTIES FOLDER tests)
+set_target_properties(macros-tests-c++17 PROPERTIES FOLDER tests)
+set_target_properties(macros-tests-c++23 PROPERTIES FOLDER tests)
+
+#
+# Build optimizations
 
 if (TRACE_OUT_USE_UNITY_BUILDS)
 	set_target_properties(macros-tests
@@ -51,6 +123,26 @@ endif()
 
 if (TRACE_OUT_USE_PCH)
 	target_link_libraries(macros-tests
+		PRIVATE
+			pch-helpers
+			pch-standard
+	)
+endif()
+
+set_target_properties(macros-tests-c++17 PROPERTIES FOLDER tests)
+
+if (TRACE_OUT_USE_PCH)
+	target_link_libraries(macros-tests-c++17
+		PRIVATE
+			pch-helpers
+			pch-standard
+	)
+endif()
+
+set_target_properties(macros-tests-c++23 PROPERTIES FOLDER tests)
+
+if (TRACE_OUT_USE_PCH)
+	target_link_libraries(macros-tests-c++23
 		PRIVATE
 			pch-helpers
 			pch-standard

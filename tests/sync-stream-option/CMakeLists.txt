@@ -1,3 +1,6 @@
+#
+# sync-stream-option-tests
+
 add_executable(sync-stream-option-tests)
 
 target_compile_features(sync-stream-option-tests
@@ -144,7 +147,13 @@ set_tests_properties([[no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$clock_stat
 		TIMEOUT 5
 )
 
+#
+# IDE
+
 set_target_properties(sync-stream-option-tests PROPERTIES FOLDER tests)
+
+#
+# Build optimizations
 
 if (TRACE_OUT_USE_PCH)
 	target_link_libraries(sync-stream-option-tests

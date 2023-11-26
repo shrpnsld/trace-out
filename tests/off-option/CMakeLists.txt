@@ -1,3 +1,6 @@
+#
+# off-option-tests
+
 add_executable(off-option-tests)
 
 target_compile_features(off-option-tests
@@ -26,7 +29,13 @@ target_sources(off-option-tests
 
 catch_discover_tests(off-option-tests)
 
+#
+# IDE
+
 set_target_properties(off-option-tests PROPERTIES FOLDER tests)
+
+#
+# Build optimizations
 
 if (TRACE_OUT_USE_PCH)
 	target_link_libraries(off-option-tests

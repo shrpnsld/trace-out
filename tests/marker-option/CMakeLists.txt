@@ -1,3 +1,6 @@
+#
+# marker-option-tests
+
 add_executable(marker-option-tests)
 
 target_compile_features(marker-option-tests
@@ -26,7 +29,13 @@ target_sources(marker-option-tests
 
 catch_discover_tests(marker-option-tests)
 
+#
+# IDE
+
 set_target_properties(marker-option-tests PROPERTIES FOLDER tests)
+
+#
+# Build optimizations
 
 if (TRACE_OUT_USE_PCH)
 	target_link_libraries(marker-option-tests

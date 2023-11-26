@@ -1,3 +1,6 @@
+#
+# show-thread-option-tests
+
 add_executable(show-thread-option-tests)
 
 target_compile_features(show-thread-option-tests
@@ -26,7 +29,13 @@ target_sources(show-thread-option-tests
 
 catch_discover_tests(show-thread-option-tests)
 
+#
+# IDE
+
 set_target_properties(show-thread-option-tests PROPERTIES FOLDER tests)
+
+#
+# Build optimizations
 
 if (TRACE_OUT_USE_PCH)
 	target_link_libraries(show-thread-option-tests

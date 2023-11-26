@@ -5,6 +5,9 @@ if (NOT WIN32)
 	return()
 endif()
 
+#
+# stream-to-wdo-option-tests
+
 add_executable(stream-to-wdo-option-tests)
 
 target_compile_definitions(stream-to-wdo-option-tests
@@ -30,7 +33,13 @@ target_sources(stream-to-wdo-option-tests
 		stream-to-wdo-option.tests.cpp
 )
 
+#
+# IDE
+
 set_target_properties(stream-to-wdo-option-tests PROPERTIES FOLDER tests)
+
+#
+# Build optimizations
 
 if (TRACE_OUT_USE_PCH)
 	target_link_libraries(stream-to-wdo-option-tests

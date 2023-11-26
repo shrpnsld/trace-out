@@ -1,3 +1,6 @@
+#
+# indentation-option-tests
+
 add_executable(indentation-option-tests)
 
 target_compile_features(indentation-option-tests
@@ -26,7 +29,13 @@ target_sources(indentation-option-tests
 
 catch_discover_tests(indentation-option-tests)
 
+#
+# IDE
+
 set_target_properties(indentation-option-tests PROPERTIES FOLDER tests)
+
+#
+# Build optimizations
 
 if (TRACE_OUT_USE_PCH)
 	target_link_libraries(indentation-option-tests
