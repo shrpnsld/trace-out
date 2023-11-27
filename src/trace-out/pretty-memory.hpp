@@ -141,7 +141,6 @@ inline const char *base_name(base_t value);
 inline const char *byte_order_name(byte_order_t value);
 inline standard::size_t printed_value_width_for_base_and_grouping(base_t base, standard::size_t grouping);
 inline standard::size_t closest_power_of_2(standard::size_t max_column_count);
-inline standard::size_t calculate_column_count_that_fits(standard::size_t stream_width, standard::size_t marker_width, standard::size_t file_line_width, standard::size_t indentation_width, standard::size_t pointer_width, standard::size_t delimiter_width, standard::size_t grouping, standard::size_t column_width, standard::size_t memory_text_delimiter_width);
 inline standard::size_t calculate_optimal_column_count(standard::size_t preferred_column_count, standard::size_t stream_width, standard::size_t marker_width, standard::size_t file_line_width, standard::size_t indentation_width, standard::size_t pointer_width, standard::size_t delimiter_width, standard::size_t grouping, standard::size_t column_width);
 
 typedef void (*print_chunk_t)(std::ostream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t column_width);
@@ -220,7 +219,6 @@ void print_memory(std::ostream &stream, const file_line_t &file_line, const char
 void print_memory_with_display_options(std::ostream &stream, const file_line_t &file_line, const char *name, const standard::uint8_t *memory, standard::size_t size, const memory_display_options_t &options)
 {
 	print_chunk_t print_chunk = select_print_chunk_function(options.base, options.grouping, options.byte_order);
-
 	standard::size_t pointer_width = to_string(reinterpret_cast<standard::uint64_t>(memory), std::hex).size();
 	standard::size_t column_width = printed_value_width_for_base_and_grouping(options.base, options.grouping) + 1;
 	standard::size_t item_count = size / options.grouping;
@@ -476,18 +474,6 @@ standard::size_t closest_power_of_2(standard::size_t max_column_count)
 	return power_of_2;
 }
 
-standard::size_t calculate_column_count_that_fits(standard::size_t stream_width, standard::size_t marker_width, standard::size_t file_line_width, standard::size_t indentation_width, standard::size_t pointer_width, standard::size_t delimiter_width, standard::size_t grouping, standard::size_t column_width, standard::size_t memory_text_delimiter_width)
-{
-	standard::size_t width_left = stream_width - (marker_width + file_line_width + indentation_width + pointer_width + delimiter_width + memory_text_delimiter_width);
-	standard::size_t column_count = width_left / (column_width + grouping);
-	if (column_count == 0)
-	{
-		return 1;
-	}
-
-	return column_count;
-}
-
 standard::size_t calculate_optimal_column_count(standard::size_t preferred_column_count, standard::size_t stream_width, standard::size_t marker_width, standard::size_t file_line_width, standard::size_t indentation_width, standard::size_t pointer_width, standard::size_t delimiter_width, standard::size_t grouping, standard::size_t column_width)
 {
 	if (preferred_column_count > 0)
@@ -500,7 +486,13 @@ standard::size_t calculate_optimal_column_count(standard::size_t preferred_colum
 		stream_width = MEMORY_MAX_DEFAULT_STREAM_WIDTH;
 	}
 
-	standard::size_t column_count = calculate_column_count_that_fits(stream_width, marker_width, file_line_width, indentation_width, pointer_width, delimiter_width, grouping, column_width, MEMORY_VALUE_AND_TEXT_DELIMITER_WIDTH);
+	standard::size_t width_left = stream_width - (marker_width + file_line_width + indentation_width + pointer_width + delimiter_width + MEMORY_VALUE_AND_TEXT_DELIMITER_WIDTH);
+	standard::size_t column_count = width_left / (column_width + grouping);
+	if (column_count == 0)
+	{
+		return 1;
+	}
+
 	if (column_count > MEMORY_MAX_DEFAULT_COLUMN_COUNT)
 	{
 		return MEMORY_MAX_DEFAULT_COLUMN_COUNT;
