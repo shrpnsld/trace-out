@@ -1,6 +1,7 @@
 target_sources(trace-out
 	PRIVATE
 		autolock.hpp
+		base-conversions.hpp
 		console.hpp
 		current-thread-name.hpp
 		has-member.hpp
