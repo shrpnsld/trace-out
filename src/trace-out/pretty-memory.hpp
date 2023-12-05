@@ -1,6 +1,7 @@
 #pragma once
 
 #include "trace-out/base-conversions.hpp"
+#include "trace-out/byte-order.hpp"
 #include "trace-out/indentation.hpp"
 #include "trace-out/integer.hpp"
 #include "trace-out/console.hpp"
@@ -13,16 +14,6 @@
 #include <iomanip>
 #include <ostream>
 #include <limits>
-
-//
-// Private
-
-namespace trace_out
-{
-
-const standard::uint16_t BYTE_ORDER_TEST_VALUE = static_cast<standard::uint16_t>(0x0001);
-
-}
 
 //
 // Public
@@ -40,14 +31,6 @@ enum base_t
 	LDBL,
 	HEX
 };
-
-enum byte_order_t
-{
-	LITTLE = 0,
-	BIG = 1
-};
-
-static const byte_order_t CURRENT_BYTE_ORDER = static_cast<byte_order_t>(*reinterpret_cast<const standard::uint8_t *>(&BYTE_ORDER_TEST_VALUE) == static_cast<standard::uint8_t>(0x01));
 
 inline void print_memory(std::ostream &stream, const file_line_t &file_line, const char *name, const standard::uint8_t *memory, standard::size_t size);
 
