@@ -7,7 +7,7 @@ add_executable(amalgamated-header-verification-c++98 EXCLUDE_FROM_ALL)
 
 target_compile_features(amalgamated-header-verification-c++98
 	PRIVATE
-		cxx_std_11
+		cxx_std_98
 )
 
 target_compile_definitions(amalgamated-header-verification-c++98
