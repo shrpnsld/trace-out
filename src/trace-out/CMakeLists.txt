@@ -35,6 +35,7 @@ target_sources(trace-out
 		time.hpp
 		to-string.hpp
 		trace-out.hpp
+		type-traits.hpp
 		untyped.hpp
 )
 
