@@ -51,7 +51,9 @@
 			trace_out_private__loop(trace_out_private__unify(trace_out_for_block), while, ##__VA_ARGS__)
 
 #define $s(...) \
-			trace_out_private__statement(trace_out_private__unify(trace_out_tracing_stream), ##__VA_ARGS__)
+			trace_out::trace(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, NULL, #__VA_ARGS__ " // running..."); \
+			__VA_ARGS__ \
+			trace_out::trace(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, NULL, #__VA_ARGS__ " // done.");
 
 #define $thread(name) \
 			trace_out::set_current_thread_name(#name);
@@ -75,11 +77,6 @@
 			if (trace_out::loop_block block_variable_name = trace_out::loop_block(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, #loop" ("#__VA_ARGS__")")) {} else \
 				loop (__VA_ARGS__) \
 					if (trace_out::iteration_block trace_out_private__unify(trace_out_iteration_block) = trace_out::iteration_block(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, #loop, block_variable_name.iteration())) {} else
-
-#define trace_out_private__statement(stream_variable_name, ...) \
-			trace_out::trace(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, NULL, #__VA_ARGS__ " // running..."); \
-			__VA_ARGS__ \
-			trace_out::trace(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, NULL, #__VA_ARGS__ " // done.");
 
 #define trace_out_private__time(start_time, execution_time, label, ...) \
 			trace_out::standard::uint64_t start_time = trace_out::system::time_in_milliseconds(); \

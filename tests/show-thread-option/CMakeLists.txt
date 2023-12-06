@@ -1,5 +1,5 @@
 #
-# show-thread-option-tests
+# 'show-thread-option-tests'
 
 add_executable(show-thread-option-tests)
 

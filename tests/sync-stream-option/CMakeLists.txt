@@ -1,5 +1,5 @@
 #
-# sync-stream-option-tests
+# 'sync-stream-option-tests'
 
 add_executable(sync-stream-option-tests)
 

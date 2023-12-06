@@ -2,7 +2,7 @@
 # so making this as utility for manual testing
 
 #
-# stream-to-endpoint-option-tests
+# 'stream-to-endpoint-option-tests'
 
 add_executable(stream-to-endpoint-option-tests)
 

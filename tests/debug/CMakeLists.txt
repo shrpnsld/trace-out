@@ -1,3 +1,6 @@
+#
+# 'debug'
+
 include(compile-options-if-supported)
 
 add_executable(debug EXCLUDE_FROM_ALL)
@@ -18,6 +21,9 @@ target_sources(debug
 	PRIVATE
 		main.cpp
 )
+
+#
+# IDE
 
 set_target_properties(debug PROPERTIES FOLDER tests)
 

@@ -1,5 +1,5 @@
 #
-# stream-to-file-option-tests
+# 'stream-to-file-option-tests'
 
 add_executable(stream-to-file-option-tests)
 

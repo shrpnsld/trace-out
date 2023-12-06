@@ -1,5 +1,5 @@
 #
-# marker-option-tests
+# 'marker-option-tests'
 
 add_executable(marker-option-tests)
 

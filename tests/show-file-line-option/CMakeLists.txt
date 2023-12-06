@@ -1,5 +1,5 @@
 #
-# show-file-line-option-test
+# 'show-file-line-option-test'
 
 add_executable(show-file-line-option-test)
 

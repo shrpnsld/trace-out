@@ -1,5 +1,5 @@
 #
-# off-option-tests
+# 'off-option-tests'
 
 add_executable(off-option-tests)
 

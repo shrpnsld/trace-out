@@ -1,5 +1,5 @@
 #
-# macros-tests
+# 'macros-tests'
 
 add_executable(macros-tests)
 
@@ -44,7 +44,7 @@ target_sources(macros-tests
 catch_discover_tests(macros-tests)
 
 #
-# macros-tests-c++17
+# 'macros-tests-c++17'
 
 add_executable(macros-tests-c++17)
 
@@ -74,7 +74,7 @@ target_sources(macros-tests-c++17
 catch_discover_tests(macros-tests-c++17)
 
 #
-# macros-tests-c++23
+# 'macros-tests-c++23'
 
 add_executable(macros-tests-c++23)
 
@@ -130,8 +130,6 @@ if (TRACE_OUT_USE_PCH)
 	)
 endif()
 
-set_target_properties(macros-tests-c++17 PROPERTIES FOLDER tests)
-
 if (TRACE_OUT_USE_PCH)
 	target_link_libraries(macros-tests-c++17
 		PRIVATE
@@ -139,8 +137,6 @@ if (TRACE_OUT_USE_PCH)
 			pch-standard
 	)
 endif()
-
-set_target_properties(macros-tests-c++23 PROPERTIES FOLDER tests)
 
 if (TRACE_OUT_USE_PCH)
 	target_link_libraries(macros-tests-c++23

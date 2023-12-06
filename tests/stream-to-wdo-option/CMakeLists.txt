@@ -6,7 +6,7 @@ if (NOT WIN32)
 endif()
 
 #
-# stream-to-wdo-option-tests
+# 'stream-to-wdo-option-tests'
 
 add_executable(stream-to-wdo-option-tests)
 

@@ -1,5 +1,5 @@
 #
-# helpers
+# 'helpers'
 
 add_library(helpers)
 
@@ -20,7 +20,7 @@ target_sources(helpers
 )
 
 #
-# helpers-c++11
+# 'helpers-c++11'
 
 add_library(helpers-c++11)
 

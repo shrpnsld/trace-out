@@ -1,5 +1,5 @@
 #
-# strip-scope-option-tests-0
+# 'strip-scope-option-tests-0'
 
 add_executable(strip-scope-option-tests-0)
 
@@ -30,7 +30,7 @@ target_sources(strip-scope-option-tests-0
 catch_discover_tests(strip-scope-option-tests-0)
 
 #
-# strip-scope-option-tests-1
+# 'strip-scope-option-tests-1'
 
 add_executable(strip-scope-option-tests-1)
 
@@ -61,7 +61,7 @@ target_sources(strip-scope-option-tests-1
 catch_discover_tests(strip-scope-option-tests-1)
 
 #
-# strip-scope-option-tests-2
+# 'strip-scope-option-tests-2'
 
 add_executable(strip-scope-option-tests-2)
 

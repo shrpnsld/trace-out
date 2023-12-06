@@ -1,3 +1,6 @@
+#
+# 'compatibility-with-c++98'
+
 add_executable(compatibility-with-c++98 EXCLUDE_FROM_ALL)
 
 target_compile_features(compatibility-with-c++98
@@ -33,6 +36,9 @@ add_test("compatibility with C++98"
 		--build "${PROJECT_BINARY_DIR}"
 		--target "compatibility-with-c++98"
 )
+
+#
+# IDE
 
 set_target_properties(compatibility-with-c++98 PROPERTIES FOLDER tests)
 

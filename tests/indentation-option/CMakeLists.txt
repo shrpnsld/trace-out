@@ -1,5 +1,5 @@
 #
-# indentation-option-tests
+# 'indentation-option-tests'
 
 add_executable(indentation-option-tests)
 

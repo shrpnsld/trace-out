@@ -21,7 +21,7 @@ TEST_CASE("$if(...)", "[if]")
 		REQUIRE(test::out_stream.str() == expected);
 	}
 
-	SECTION("true")
+	SECTION("false")
 	{
 		int value {789};
 

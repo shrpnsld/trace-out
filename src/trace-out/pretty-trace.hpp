@@ -37,7 +37,7 @@ inline void trace_hexadecimal(std::ostream &stream, const file_line_t &file_line
 template <typename Type_t>
 inline Type_t &trace(std::ostream &stream, const file_line_t &file_line, const char *name, Type_t &value);
 
-#endif
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 template <standard::size_t Size>
 inline void trace(std::ostream &stream, const file_line_t &file_line, const char *should_comment, const char (&comment)[Size]);
@@ -59,19 +59,14 @@ inline void trace_range(std::ostream &stream, const file_line_t &file_line, cons
 
 }
 
-namespace trace_out
-{
-
-template <typename Type_t>
-inline void print_name_value(std::ostream &stream, const file_line_t &file_line, const char *name, const Type_t &value);
-
-}
-
 //
 // Private
 
 namespace trace_out
 {
+
+template <typename Type_t>
+inline void print_name_value(std::ostream &stream, const file_line_t &file_line, const char *name, const Type_t &value);
 
 inline std::string first_token(const std::string &tokens);
 inline std::string rest_tokens(const std::string &tokens);
@@ -110,7 +105,7 @@ inline void print_next_hexadecimal_value(std::ostream &stream, const std::string
 template <typename First_t, typename ...Rest_t>
 inline void print_first_hexadecimal_value(std::ostream &stream, const file_line_t &file_line, const std::string &names, const First_t &first, const Rest_t &...rest);
 
-#endif
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 }
 
@@ -266,7 +261,7 @@ void print_first_hexadecimal_value(std::ostream &stream, const file_line_t &file
 	print_next_hexadecimal_value(stream, rest_tokens(names), rest...);
 }
 
-#else
+#else // TRACE_OUT_CPP_VERSION >= 201103L
 
 template <typename Type_t>
 Type_t &trace(std::ostream &stream, const file_line_t &file_line, const char *name, Type_t &value)

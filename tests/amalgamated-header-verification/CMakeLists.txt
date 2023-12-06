@@ -1,7 +1,7 @@
 set(TRACE_OUT_TEST_AMALGAMATED YES CACHE BOOL "Turn on test for amalgamated header")
 
 #
-# amalgamated-header-verification-c++98
+# 'amalgamated-header-verification-c++98'
 
 add_executable(amalgamated-header-verification-c++98 EXCLUDE_FROM_ALL)
 
@@ -42,7 +42,7 @@ if (TRACE_OUT_TEST_AMALGAMATED)
 endif()
 
 #
-# amalgamated-header-verification-c++11
+# 'amalgamated-header-verification-c++11'
 
 add_executable(amalgamated-header-verification-c++11 EXCLUDE_FROM_ALL)
 
@@ -83,7 +83,7 @@ if (TRACE_OUT_TEST_AMALGAMATED)
 endif()
 
 #
-# amalgamated-header-verification-c++17
+# 'amalgamated-header-verification-c++17'
 
 add_executable(amalgamated-header-verification-c++17 EXCLUDE_FROM_ALL)
 
@@ -124,7 +124,7 @@ if (TRACE_OUT_TEST_AMALGAMATED)
 endif()
 
 #
-# amalgamated-header-verification-c++23
+# 'amalgamated-header-verification-c++23'
 
 add_executable(amalgamated-header-verification-c++23 EXCLUDE_FROM_ALL)
 
