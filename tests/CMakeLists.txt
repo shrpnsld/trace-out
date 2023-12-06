@@ -1,7 +1,7 @@
 find_package(Catch2 3 REQUIRED)
 include(Catch)
 
-include(compiler-agnostic)
+include(compile-options-if-supported)
 include(build-optimizations)
 
 add_compile_options_if_supported("-Wall" "-Wextra" "/W4")
