@@ -11,6 +11,7 @@ target_sources(trace-out
 		macro-magic.hpp
 		mutex.hpp
 		nothing.hpp
+		number-format.hpp
 		platform-detection.hpp
 		pretty-code-blocks.hpp
 		pretty-function.hpp
