@@ -5,6 +5,10 @@
 #include "trace-out/pretty-print.hpp"
 #include <string>
 
+#if TRACE_OUT_CPP_VERSION >= 201103L
+	#include <utility> // [amalgamate:leave]
+#endif
+
 //
 // Public
 
@@ -123,7 +127,7 @@ Type_t &&trace(std::ostream &stream, const file_line_t &file_line, const char *n
 {
 	print_name_value(stream, file_line, name, value);
 
-	return value;
+	return std::forward<Type_t>(value);
 }
 
 template <typename ...Types_t>
