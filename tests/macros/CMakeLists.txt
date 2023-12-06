@@ -105,11 +105,40 @@ target_sources(macros-tests-c++23
 catch_discover_tests(macros-tests-c++23)
 
 #
+# 'unique-variable-names'
+
+add_executable(unique-variable-names EXCLUDE_FROM_ALL)
+
+target_compile_features(unique-variable-names
+	PRIVATE
+		cxx_std_11
+)
+
+target_link_libraries(unique-variable-names
+	PRIVATE
+		helpers
+		trace-out
+)
+
+target_sources(unique-variable-names
+	PRIVATE
+		unique-variable-names.tests.cpp
+)
+
+add_test("unique variable names"
+	COMMAND
+		${CMAKE_COMMAND}
+		--build "${PROJECT_BINARY_DIR}"
+		--target "unique-variable-names"
+)
+
+#
 # IDE
 
 set_target_properties(macros-tests PROPERTIES FOLDER tests)
 set_target_properties(macros-tests-c++17 PROPERTIES FOLDER tests)
 set_target_properties(macros-tests-c++23 PROPERTIES FOLDER tests)
+set_target_properties(unique-variable-names PROPERTIES FOLDER tests)
 
 #
 # Build optimizations
