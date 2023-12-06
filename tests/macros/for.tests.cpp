@@ -46,3 +46,31 @@ TEST_CASE("$for(...) - 0 iterations", "[for]")
 	REQUIRE(test::out_stream.str() == expected);
 }
 
+TEST_CASE("$for(...) nested", "[for]")
+{
+	test::out_stream.str(std::string {});
+
+	$for (unsigned int i {0}; i < 1; ++i)
+	{
+		$for (unsigned int j {0}; j < 1; ++j)
+		{
+		}
+	}
+
+	const char *expected {
+		"for (unsigned int i {0}; i < 1; ++i)\n"
+		"{\n"
+		"    // for: iteration #1\n"
+		"    for (unsigned int j {0}; j < 1; ++j)\n"
+		"    {\n"
+		"        // for: iteration #1\n"
+		"\n"
+		"    } // for (unsigned int j {0}; j < 1; ++j)\n"
+		"\n"
+		"\n"
+		"} // for (unsigned int i {0}; i < 1; ++i)\n"
+		"\n"
+	};
+	REQUIRE(test::out_stream.str() == expected);
+}
+

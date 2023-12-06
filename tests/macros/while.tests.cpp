@@ -52,3 +52,38 @@ TEST_CASE("$while(...) - 0 iterations", "[while]")
 	REQUIRE(test::out_stream.str() == expected);
 }
 
+TEST_CASE("$while(...) nested", "[while]")
+{
+	test::out_stream.str(std::string {});
+
+	unsigned int i {0};
+
+	$while (i < 1)
+	{
+		unsigned int j {0};
+
+		$while (j < 1)
+		{
+			++j;
+		}
+
+		++i;
+	}
+
+	const char *expected {
+		"while (i < 1)\n"
+		"{\n"
+		"    // while: iteration #1\n"
+		"    while (j < 1)\n"
+		"    {\n"
+		"        // while: iteration #1\n"
+		"\n"
+		"    } // while (j < 1)\n"
+		"\n"
+		"\n"
+		"} // while (i < 1)\n"
+		"\n"
+	};
+	REQUIRE(test::out_stream.str() == expected);
+}
+

@@ -37,3 +37,102 @@ TEST_CASE("$if(...)", "[if]")
 	}
 }
 
+TEST_CASE("$if(...) nested", "[if]")
+{
+	test::out_stream.str(std::string {});
+
+	SECTION("true, true")
+	{
+		$if (true)
+		{
+			$if (true)
+			{
+			}
+		}
+
+		const char *expected {
+			"if (true) => true\n"
+			"{\n"
+			"    if (true) => true\n"
+			"    {\n"
+			"    }\n"
+			"\n"
+			"}\n"
+			"\n"
+		};
+		REQUIRE(test::out_stream.str() == expected);
+	}
+
+	SECTION("true, false")
+	{
+		$if (true)
+		{
+			$if (false)
+			{
+			}
+		}
+
+		const char *expected {
+			"if (true) => true\n"
+			"{\n"
+			"    if (false) => false\n"
+			"    {\n"
+			"    }\n"
+			"\n"
+			"}\n"
+			"\n"
+		};
+		REQUIRE(test::out_stream.str() == expected);
+	}
+
+	SECTION("false, true")
+	{
+		$if (false)
+		{
+		}
+		else
+		{
+			$if (true)
+			{
+			}
+		}
+
+		const char *expected {
+			"if (false) => false\n"
+			"{\n"
+			"    if (true) => true\n"
+			"    {\n"
+			"    }\n"
+			"\n"
+			"}\n"
+			"\n"
+		};
+		REQUIRE(test::out_stream.str() == expected);
+	}
+
+	SECTION("false, false")
+	{
+		$if (false)
+		{
+		}
+		else
+		{
+			$if (false)
+			{
+			}
+		}
+
+		const char *expected {
+			"if (false) => false\n"
+			"{\n"
+			"    if (false) => false\n"
+			"    {\n"
+			"    }\n"
+			"\n"
+			"}\n"
+			"\n"
+		};
+		REQUIRE(test::out_stream.str() == expected);
+	}
+}
+
