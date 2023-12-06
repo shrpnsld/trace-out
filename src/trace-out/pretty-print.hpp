@@ -7,6 +7,7 @@
 #include "trace-out/number-format.hpp"
 #include "trace-out/template-magic.hpp"
 #include "trace-out/type-traits.hpp"
+#include <bitset>
 #include <cctype>
 #include <iomanip>
 #include <string>
