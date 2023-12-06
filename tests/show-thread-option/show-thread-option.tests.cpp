@@ -35,6 +35,81 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$t(...)'", "[TRACE_OUT_SHOW_THREAD][t]"
 	));
 }
 
+TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$tbin(...)'", "[TRACE_OUT_SHOW_THREAD][tbin]")
+{
+	using Catch::Matchers::Matches;
+
+	test::out_stream.str(std::string {});
+
+	$thread(one)
+
+	std::thread {[](int what)
+	{
+		$thread(two)
+		$tbin(what);
+	}, 456}.join();
+
+	int what {456};
+	$tbin(what);
+
+	REQUIRE_THAT(test::out_stream.str(), Matches(
+		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
+		R"(what = bin: 00000000 00000000 00000001 11001000\n)"
+		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
+		R"(what = bin: 00000000 00000000 00000001 11001000\n)"
+	));
+}
+
+TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$toct(...)'", "[TRACE_OUT_SHOW_THREAD][toct]")
+{
+	using Catch::Matchers::Matches;
+
+	test::out_stream.str(std::string {});
+
+	$thread(one)
+
+	std::thread {[](int what)
+	{
+		$thread(two)
+		$toct(what);
+	}, 456}.join();
+
+	int what {456};
+	$toct(what);
+
+	REQUIRE_THAT(test::out_stream.str(), Matches(
+		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
+		R"(what = oct: 000000 001310\n)"
+		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
+		R"(what = oct: 000000 001310\n)"
+	));
+}
+
+TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$thex(...)'", "[TRACE_OUT_SHOW_THREAD][thex]")
+{
+	using Catch::Matchers::Matches;
+
+	test::out_stream.str(std::string {});
+
+	$thread(one)
+
+	std::thread {[](int what)
+	{
+		$thread(two)
+		$thex(what);
+	}, 456}.join();
+
+	int what {456};
+	$thex(what);
+
+	REQUIRE_THAT(test::out_stream.str(), Matches(
+		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
+		R"(what = hex: 000001c8\n)"
+		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
+		R"(what = hex: 000001c8\n)"
+	));
+}
+
 TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$tr(...)'", "[TRACE_OUT_SHOW_THREAD][tr]")
 {
 	using Catch::Matchers::Matches;

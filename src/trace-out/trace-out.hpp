@@ -8,6 +8,15 @@
 #define $t(...) \
 			trace_out::trace(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, #__VA_ARGS__, ##__VA_ARGS__)
 
+#define $tbin(...) \
+			trace_out::trace_binary(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, #__VA_ARGS__, ##__VA_ARGS__)
+
+#define $toct(...) \
+			trace_out::trace_octal(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, #__VA_ARGS__, ##__VA_ARGS__)
+
+#define $thex(...) \
+			trace_out::trace_hexadecimal(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, #__VA_ARGS__, ##__VA_ARGS__)
+
 #define $tr(first, second) \
 			trace_out::trace_range(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, #first, #second, first, second);
 
@@ -115,6 +124,15 @@
 #else
 
 #define $t(...) \
+			__VA_ARGS__
+
+#define $tbin(...) \
+			__VA_ARGS__
+
+#define $toct(...) \
+			__VA_ARGS__
+
+#define $thex(...) \
 			__VA_ARGS__
 
 #define $tr(...)

@@ -1,8 +1,12 @@
 #pragma once
 
+#include "trace-out/base-conversions.hpp"
 #include "trace-out/integer.hpp"
 #include "trace-out/has-member.hpp"
+#include "trace-out/number-bits-iterator.hpp"
+#include "trace-out/number-format.hpp"
 #include "trace-out/template-magic.hpp"
+#include "trace-out/type-traits.hpp"
 #include <cctype>
 #include <iomanip>
 #include <string>
@@ -62,6 +66,18 @@ void pretty_print(std::ostream &stream, const Type_t (&array)[Size]);
 
 template <typename Type_t>
 typename enable_if<is_pointer<Type_t>::value, void>::type pretty_print(std::ostream &stream, Type_t pointer);
+
+template <typename Type_t>
+typename enable_if<!is_floating_point<Type_t>::value, void>::type pretty_print_binary(std::ostream &stream, Type_t value);
+
+template <typename Type_t>
+typename enable_if<is_floating_point<Type_t>::value, void>::type pretty_print_binary(std::ostream &stream, Type_t value);
+
+template <typename Type_t>
+void pretty_print_octal(std::ostream &stream, Type_t value);
+
+template <typename Type_t>
+void pretty_print_hexadecimal(std::ostream &stream, Type_t value);
 
 //
 // STL types
@@ -243,6 +259,14 @@ void pretty_print_begin_how_much(std::ostream &stream, Iterator_t iterator, stan
 
 template <typename Iterator_t>
 void print_string(std::ostream &stream, Iterator_t begin, Iterator_t end);
+
+inline number_bits_iterator print_bits(std::ostream &stream, number_bits_iterator iterator, standard::size_t how_much);
+
+template <typename Floating_t>
+void pretty_print_floating_in_binary(std::ostream &stream, Floating_t value);
+
+inline const standard::uint8_t *print_bytes_of_number(std::ostream &stream, const standard::uint8_t *iterator, standard::size_t how_much, const char *(*represent)(standard::uint8_t));
+
 }
 
 //
@@ -389,6 +413,98 @@ typename enable_if<is_pointer<Type_t>::value, void>::type pretty_print(std::ostr
 
 	stream << " -> ";
 	pretty_print(stream, *pointer);
+}
+
+template <typename Type_t>
+typename enable_if<!is_floating_point<Type_t>::value, void>::type pretty_print_binary(std::ostream &stream, Type_t value)
+{
+	stream << "bin: ";
+
+	const standard::uint8_t *iterator = first_byte_in_number(value);
+	const standard::uint8_t *last = last_byte_in_number(value);
+	for ( ; iterator != last; iterator = next_byte_in_number(iterator))
+	{
+		stream << byte_to_binary(*iterator) << ' ';
+	}
+
+	stream << byte_to_binary(*iterator);
+}
+
+template <typename Type_t>
+typename enable_if<is_floating_point<Type_t>::value, void>::type pretty_print_binary(std::ostream &stream, Type_t value)
+{
+	pretty_print_floating_in_binary(stream, value);
+}
+
+template <typename Type_t>
+void pretty_print_octal(std::ostream &stream, Type_t value)
+{
+	static const standard::size_t GROUPING = 2;
+
+	stream << "oct: ";
+
+	standard::size_t type_size = number_format<Type_t>::size();
+	if (type_size == 1)
+	{
+		stream << byte_to_octal(value);
+	}
+	else
+	{
+		standard::size_t left = type_size;
+		const standard::uint8_t *iterator = first_byte_in_number(value);
+		iterator = print_bytes_of_number(stream, iterator, GROUPING, byte_to_octal);
+		left -= GROUPING;
+		while (left > 0)
+		{
+			stream << ' ';
+			iterator = print_bytes_of_number(stream, iterator, GROUPING, byte_to_octal);
+			left -= GROUPING;
+		}
+	}
+}
+
+template <typename Type_t>
+void pretty_print_hexadecimal(std::ostream &stream, Type_t value)
+{
+	static const standard::size_t GROUPING = 4;
+
+	stream << "hex: ";
+
+	standard::size_t type_size = number_format<Type_t>::size();
+	if (type_size == 1)
+	{
+		stream << byte_to_hexadecimal(value);
+	}
+	else if (type_size == 2)
+	{
+		const standard::uint8_t *iterator = first_byte_in_number(value);
+		stream << byte_to_hexadecimal(*iterator);
+		iterator = next_byte_in_number(iterator);
+		stream << byte_to_hexadecimal(*iterator);
+	}
+	else
+	{
+		standard::size_t left = type_size;
+		const standard::uint8_t *iterator = first_byte_in_number(value);
+		if (type_size == 10)
+		{
+			stream << byte_to_hexadecimal(*iterator);
+			iterator = next_byte_in_number(iterator);
+			stream << byte_to_hexadecimal(*iterator);
+			iterator = next_byte_in_number(iterator);
+			stream << ' ';
+			left -= 2;
+		}
+
+		iterator = print_bytes_of_number(stream, iterator, GROUPING, byte_to_hexadecimal);
+		left -= GROUPING;
+		while (left > 0)
+		{
+			stream << ' ';
+			iterator = print_bytes_of_number(stream, iterator, GROUPING, byte_to_hexadecimal);
+			left -= GROUPING;
+		}
+	}
 }
 
 //
@@ -959,6 +1075,74 @@ typename enable_if<
 void>::type pretty_print(std::ostream &stream, const Type_t &)
 {
 	stream << "<unknown-type>";
+}
+
+//
+// Private
+
+number_bits_iterator print_bits(std::ostream &stream, number_bits_iterator iterator, standard::size_t how_much)
+{
+	for (; how_much > 0; --how_much)
+	{
+		stream << *iterator;
+		++iterator;
+	}
+
+	return iterator;
+}
+
+template <typename Floating_t>
+void pretty_print_floating_in_binary(std::ostream &stream, Floating_t value)
+{
+	union
+	{
+		Floating_t floating_point_value;
+		standard::uint8_t bits[sizeof(value)];
+	};
+
+	floating_point_value = value;
+
+	number_bits_iterator iterator(bits, number_format<Floating_t>::length() / 8);
+
+	stream << "bin: " << *iterator << ' ';
+	++iterator;
+
+	if (number_format<Floating_t>::exponent_first_byte_length() > 0)
+	{
+		stream << ' ';
+		iterator = print_bits(stream, iterator, number_format<Floating_t>::exponent_first_byte_length());
+	}
+
+	for (standard::size_t left = number_format<Floating_t>::exponent_rest_bytes_count(); left > 0; --left)
+	{
+		stream << ' ';
+		iterator = print_bits(stream, iterator, 8);
+	}
+
+	stream << ' ';
+
+	if (number_format<Floating_t>::mantissa_first_byte_length() > 0)
+	{
+		stream << ' ';
+		iterator = print_bits(stream, iterator, number_format<Floating_t>::mantissa_first_byte_length());
+	}
+
+	for (standard::size_t left = number_format<Floating_t>::mantissa_rest_bytes_count(); left > 0; --left)
+	{
+		stream << ' ';
+		iterator = print_bits(stream, iterator, 8);
+	}
+}
+
+const standard::uint8_t *print_bytes_of_number(std::ostream &stream, const standard::uint8_t *iterator, standard::size_t how_much, const char *(*represent)(standard::uint8_t))
+{
+	for ( ; how_much > 0; --how_much)
+	{
+		stream << represent(*iterator);
+		iterator = next_byte_in_number(iterator);
+	}
+
+	return iterator;
 }
 
 }

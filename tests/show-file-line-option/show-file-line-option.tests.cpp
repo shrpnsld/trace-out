@@ -34,6 +34,24 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$t(...)'", "[TRACE_OUT_SHOW_FILE_LIN
 	REQUIRE(test::out_stream.str() == expected.str());
 }
 
+TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$t<base>(...)'", "[TRACE_OUT_SHOW_FILE_LINE][tbase]")
+{
+	test::out_stream.str(std::string {});
+
+	int some {456};
+
+	long int line {__LINE__ + 1};
+	$tbin(some);
+	$toct(some);
+	$thex(some);
+
+	std::stringstream expected;
+	expected << " show-file-line-opt~:" << line     << "   | some = bin: 00000000 00000000 00000001 11001000\n";
+	expected << " show-file-line-opt~:" << line + 1 << "   | some = oct: 000000 001310\n";
+	expected << " show-file-line-opt~:" << line + 2 << "   | some = hex: 000001c8\n";
+	REQUIRE(test::out_stream.str() == expected.str());
+}
+
 TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$tr(...)'", "[TRACE_OUT_SHOW_FILE_LINE][tr]")
 {
 	test::out_stream.str(std::string {});

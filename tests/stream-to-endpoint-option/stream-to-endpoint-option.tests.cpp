@@ -14,6 +14,12 @@ int main()
 	$t(subject1);
 	$t(subject2);
 	$t(subject3);
+	$tbin(subject1);
+	$toct(subject1);
+	$thex(subject1);
+	$tbin(subject2);
+	$toct(subject2);
+	$thex(subject2);
 	$tr(subject3.begin(), subject3.end())
 	$m(subject3.c_str(), subject3.size(), $hex, $grp(1), $col(8))
 	$s(subject3 = "wazuuup!";)

@@ -275,6 +275,31 @@ TEST_CASE("indentation outside '$t(...)'", "[indentation][t]")
 	REQUIRE(test::out_stream.str() == expected);
 }
 
+TEST_CASE("indentation outside $t<base>(...)", "[indentation][tbase]")
+{
+	test::out_stream.str(std::string {});
+
+	int some {456};
+
+	$if (some == 456)
+	{
+		$tbin(some);
+		$toct(some);
+		$thex(some);
+	}
+
+	const char *expected {
+		"if (some == 456) => true\n"
+		"{\n"
+		"    some = bin: 00000000 00000000 00000001 11001000\n"
+		"    some = oct: 000000 001310\n"
+		"    some = hex: 000001c8\n"
+		"}\n"
+		"\n"
+	};
+	REQUIRE(test::out_stream.str() == expected);
+}
+
 TEST_CASE("indentation outside '$tr(...)'", "[indentation][tr]")
 {
 	test::out_stream.str(std::string {});

@@ -34,6 +34,7 @@ target_sources(macros-tests
 		r.tests.cpp
 		return.tests.cpp
 		s.tests.cpp
+		t-base.tests.cpp
 		t.tests.cpp
 		time-stats.tests.cpp
 		time.tests.cpp

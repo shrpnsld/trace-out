@@ -278,6 +278,31 @@ TEST_CASE("'TRACE_OUT_INDENTATION' outside '$t(...)'", "[indentation][TRACE_OUT_
 	REQUIRE(test::out_stream.str() == expected);
 }
 
+TEST_CASE("'TRACE_OUT_INDENTATION' outside '$t<base>(...)'", "[indentation][TRACE_OUT_INDENTATION][tbase]")
+{
+	test::out_stream.str(std::string {});
+
+	int some {456};
+
+	$if (some == 456)
+	{
+		$tbin(some);
+		$toct(some);
+		$thex(some);
+	}
+
+	const char *expected {
+		"if (some == 456) => true\n"
+		"{\n"
+		"  some = bin: 00000000 00000000 00000001 11001000\n"
+		"  some = oct: 000000 001310\n"
+		"  some = hex: 000001c8\n"
+		"}\n"
+		"\n"
+	};
+	REQUIRE(test::out_stream.str() == expected);
+}
+
 TEST_CASE("'TRACE_OUT_INDENTATION' outside '$tr(...)'", "[indentation][TRACE_OUT_INDENTATION][tr]")
 {
 	test::out_stream.str(std::string {});

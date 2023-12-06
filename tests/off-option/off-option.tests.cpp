@@ -17,6 +17,18 @@ TEST_CASE("'TRACE_OUT_OFF' with '$t(...)'", "[TRACE_OUT_OFF][t]")
 	REQUIRE(test::out_stream.str() == "");
 }
 
+TEST_CASE("'TRACE_OUT_OFF' with '$t<base>(...)'", "[TRACE_OUT_OFF][tbase]")
+{
+	test::out_stream.str(std::string {});
+
+	int some {456};
+	dummy($tbin(some));
+	dummy($toct(some));
+	dummy($thex(some));
+
+	REQUIRE(test::out_stream.str() == "");
+}
+
 TEST_CASE("'TRACE_OUT_OFF' with '$tr(...)'", "[TRACE_OUT_OFF][tr]")
 {
 	test::out_stream.str(std::string {});

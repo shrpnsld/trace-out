@@ -27,6 +27,54 @@ TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$t(...)'", "[TRACE_OUT_
 	REQUIRE(test::out_stream.str() == expected);
 }
 
+TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$tbin(...)'", "[TRACE_OUT_SYNC_STREAM][tbin]")
+{
+	test::out_stream.str(std::string {});
+
+	int some {456};
+
+	$tbin(some);
+	$tbin(some);
+
+	const char *expected {
+		"some = bin: 00000000 00000000 00000001 11001000\n"
+		"some = bin: 00000000 00000000 00000001 11001000\n"
+	};
+	REQUIRE(test::out_stream.str() == expected);
+}
+
+TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$toct(...)'", "[TRACE_OUT_SYNC_STREAM][toct]")
+{
+	test::out_stream.str(std::string {});
+
+	int some {456};
+
+	$toct(some);
+	$toct(some);
+
+	const char *expected {
+		"some = oct: 000000 001310\n"
+		"some = oct: 000000 001310\n"
+	};
+	REQUIRE(test::out_stream.str() == expected);
+}
+
+TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$thex(...)'", "[TRACE_OUT_SYNC_STREAM][thex]")
+{
+	test::out_stream.str(std::string {});
+
+	int some {456};
+
+	$thex(some);
+	$thex(some);
+
+	const char *expected {
+		"some = hex: 000001c8\n"
+		"some = hex: 000001c8\n"
+	};
+	REQUIRE(test::out_stream.str() == expected);
+}
+
 TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$tr(...)'", "[TRACE_OUT_SYNC_STREAM][tr]")
 {
 	test::out_stream.str(std::string {});
