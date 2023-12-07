@@ -77,9 +77,6 @@ inline void trace_range(std::ostream &stream, const file_line_t &file_line, cons
 namespace trace_out
 {
 
-template <typename Type_t>
-inline void print_name_value(std::ostream &stream, const file_line_t &file_line, const char *name, const Type_t &value);
-
 inline std::string first_token(const std::string &tokens);
 inline std::string rest_tokens(const std::string &tokens);
 
@@ -132,7 +129,15 @@ namespace trace_out
 template <typename Type_t>
 Type_t &&trace(std::ostream &stream, const file_line_t &file_line, const char *name, Type_t &&value)
 {
-	print_name_value(stream, file_line, name, value);
+	{
+#if defined(TRACE_OUT_SYNC_STREAM)
+		autolock<system::mutex> lock(stream_mutex());
+#endif
+
+		stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << name << " = ";
+		pretty_print(stream, value);
+		stream << std::endl;
+	}
 
 	return std::forward<Type_t>(value);
 }
@@ -284,7 +289,16 @@ const Type_t &trace(std::ostream &stream, const file_line_t &file_line, const ch
 template <typename Type_t>
 Type_t &trace(std::ostream &stream, const file_line_t &file_line, const char *name, Type_t &value)
 {
-	print_name_value(stream, file_line, name, value);
+	{
+#if defined(TRACE_OUT_SYNC_STREAM)
+		autolock<system::mutex> lock(stream_mutex());
+#endif
+
+		stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << name << " = ";
+		pretty_print(stream, value);
+		stream << std::endl;
+	}
+
 	return value;
 }
 
@@ -387,18 +401,6 @@ void trace_range(std::ostream &stream, const file_line_t &file_line, const char 
 
 	stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << '[' << begin_name << ": " << how_much_name << "] = ";
 	pretty_print_begin_how_much(stream, begin, how_much);
-	stream << std::endl;
-}
-
-template <typename Type_t>
-void print_name_value(std::ostream &stream, const file_line_t &file_line, const char *name, const Type_t &value)
-{
-#if defined(TRACE_OUT_SYNC_STREAM)
-	autolock<system::mutex> lock(stream_mutex());
-#endif
-
-	stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << name << " = ";
-	pretty_print(stream, value);
 	stream << std::endl;
 }
 
