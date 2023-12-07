@@ -28,10 +28,10 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$t(...)'", "[TRACE_OUT_SHOW_THREAD][t]"
 	$t(what);
 
 	REQUIRE_THAT(test::out_stream.str(), Matches(
-		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
-		R"(what = "wazuuup!"\n)"
-		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
-		R"(what = "hellomoto!"\n)"
+		R"=(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)="
+		R"=(what = "wazuuup!"\n)="
+		R"=(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)="
+		R"=(what = "hellomoto!"\n)="
 	));
 }
 
@@ -53,10 +53,10 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$tbin(...)'", "[TRACE_OUT_SHOW_THREAD][
 	$tbin(what);
 
 	REQUIRE_THAT(test::out_stream.str(), Matches(
-		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
-		R"(what = bin: 00000000 00000000 00000001 11001000\n)"
-		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
-		R"(what = bin: 00000000 00000000 00000001 11001000\n)"
+		R"=(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)="
+		R"=(what = bin: 00000000 00000000 00000001 11001000\n)="
+		R"=(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)="
+		R"=(what = bin: 00000000 00000000 00000001 11001000\n)="
 	));
 }
 
@@ -78,10 +78,10 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$toct(...)'", "[TRACE_OUT_SHOW_THREAD][
 	$toct(what);
 
 	REQUIRE_THAT(test::out_stream.str(), Matches(
-		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
-		R"(what = oct: 000000 001310\n)"
-		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
-		R"(what = oct: 000000 001310\n)"
+		R"=(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)="
+		R"=(what = oct: 000000 001310\n)="
+		R"=(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)="
+		R"=(what = oct: 000000 001310\n)="
 	));
 }
 
@@ -103,10 +103,10 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$thex(...)'", "[TRACE_OUT_SHOW_THREAD][
 	$thex(what);
 
 	REQUIRE_THAT(test::out_stream.str(), Matches(
-		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
-		R"(what = hex: 000001c8\n)"
-		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
-		R"(what = hex: 000001c8\n)"
+		R"=(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)="
+		R"=(what = hex: 000001c8\n)="
+		R"=(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)="
+		R"=(what = hex: 000001c8\n)="
 	));
 }
 
@@ -130,10 +130,10 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$tr(...)'", "[TRACE_OUT_SHOW_THREAD][tr
 	$tr(what, end)
 
 	REQUIRE_THAT(test::out_stream.str(), Matches(
-		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
-		R"(\[what, end\) = \['w', 'a', 'z', 'u', 'u', 'u', 'p', '!'\]\n)"
-		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
-		R"(\[what, end\) = \['h', 'e', 'l', 'l', 'o', 'm', 'o', 't', 'o', '!'\]\n)"
+		R"=(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)="
+		R"=(\[what, end\) = \['w', 'a', 'z', 'u', 'u', 'u', 'p', '!'\]\n)="
+		R"=(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)="
+		R"=(\[what, end\) = \['h', 'e', 'l', 'l', 'o', 'm', 'o', 't', 'o', '!'\]\n)="
 	));
 }
 
@@ -158,16 +158,16 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$m(...)'", "[TRACE_OUT_SHOW_THREAD][m]"
 	$m(what, size)
 
 	REQUIRE_THAT(test::out_stream.str(), Matches(
-		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
-		R"(what, 9 bytes of 1-byte hexadecimal\n)"
-		R"(    [0-9a-f]+: 77 61 7a 75 75 75 70 21  wazuuup!\n)"
-		R"(    [0-9a-f]+: 00                       \.\n)"
-		R"(\n)"
-		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
-		R"(what, 11 bytes of 1-byte hexadecimal\n)"
-		R"(    [0-9a-f]+: 68 65 6c 6c 6f 6d 6f 74  hellomot\n)"
-		R"(    [0-9a-f]+: 6f 21 00                 o!\.\n)"
-		R"(\n)"
+		R"=(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)="
+		R"=(what, 9 bytes of 1-byte hexadecimal\n)="
+		R"=(    [0-9a-f]+: 77 61 7a 75 75 75 70 21  wazuuup!\n)="
+		R"=(    [0-9a-f]+: 00                       \.\n)="
+		R"=(\n)="
+		R"=(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)="
+		R"=(what, 11 bytes of 1-byte hexadecimal\n)="
+		R"=(    [0-9a-f]+: 68 65 6c 6c 6f 6d 6f 74  hellomot\n)="
+		R"=(    [0-9a-f]+: 6f 21 00                 o!\.\n)="
+		R"=(\n)="
 	));
 }
 
@@ -188,12 +188,12 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$s(...)'", "[TRACE_OUT_SHOW_THREAD][s]"
 	$s(dummy("hellomoto!");)
 
 	REQUIRE_THAT(test::out_stream.str(), Matches(
-		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
-		R"(dummy\("wazuuup!"\); // running...\n)"
-		R"(dummy\("wazuuup!"\); // done.\n)"
-		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
-		R"(dummy\("hellomoto!"\); // running...\n)"
-		R"(dummy\("hellomoto!"\); // done.\n)"
+		R"=(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)="
+		R"=(dummy\("wazuuup!"\); // running...\n)="
+		R"=(dummy\("wazuuup!"\); // done.\n)="
+		R"=(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)="
+		R"=(dummy\("hellomoto!"\); // running...\n)="
+		R"=(dummy\("hellomoto!"\); // done.\n)="
 	));
 }
 
@@ -214,18 +214,18 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$f'", "[TRACE_OUT_SHOW_THREAD][f]")
 	subject_func1("hellomoto!");
 
 	REQUIRE_THAT(test::out_stream.str(), Matches(
-		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
-		R"(void subject_func1\(const char \*\)\n)"
-		R"(\{\n)"
-		R"(    what = "wazuuup!"\n)"
-		R"(\} // void subject_func1\(const char \*\)\n)"
-		R"(\n)"
-		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
-		R"(void subject_func1\(const char \*\)\n)"
-		R"(\{\n)"
-		R"(    what = "hellomoto!"\n)"
-		R"(\} // void subject_func1\(const char \*\)\n)"
-		R"(\n)"
+		R"=(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)="
+		R"=(void subject_func1\(const char \*\)\n)="
+		R"=(\{\n)="
+		R"=(    what = "wazuuup!"\n)="
+		R"=(\} // void subject_func1\(const char \*\)\n)="
+		R"=(\n)="
+		R"=(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)="
+		R"=(void subject_func1\(const char \*\)\n)="
+		R"=(\{\n)="
+		R"=(    what = "hellomoto!"\n)="
+		R"=(\} // void subject_func1\(const char \*\)\n)="
+		R"=(\n)="
 	));
 }
 
@@ -246,10 +246,10 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$return'", "[TRACE_OUT_SHOW_THREAD][ret
 	subject_func2("hellomoto!");
 
 	REQUIRE_THAT(test::out_stream.str(), Matches(
-		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
-		R"(return "wazuuup!"\n)"
-		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
-		R"(return "hellomoto!"\n)"
+		R"=(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)="
+		R"=(return "wazuuup!"\n)="
+		R"=(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)="
+		R"=(return "hellomoto!"\n)="
 	));
 }
 
@@ -275,16 +275,16 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$if(...)'", "[TRACE_OUT_SHOW_THREAD][if
 	}
 
 	REQUIRE_THAT(test::out_stream.str(), Matches(
-		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
-		R"(if \(what\) => true \("wazuuup!"\)\n)"
-		R"(\{\n)"
-		R"(\}\n)"
-		R"(\n)"
-		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
-		R"(if \(what\) => true \("hellomoto!"\)\n)"
-		R"(\{\n)"
-		R"(\}\n)"
-		R"(\n)"
+		R"=(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)="
+		R"=(if \(what\) => true \("wazuuup!"\)\n)="
+		R"=(\{\n)="
+		R"=(\}\n)="
+		R"=(\n)="
+		R"=(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)="
+		R"=(if \(what\) => true \("hellomoto!"\)\n)="
+		R"=(\{\n)="
+		R"=(\}\n)="
+		R"=(\n)="
 	));
 }
 
@@ -311,20 +311,20 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$for(...)'", "[TRACE_OUT_SHOW_THREAD][f
 	}
 
 	REQUIRE_THAT(test::out_stream.str(), Matches(
-		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
-		R"(for \(;;\)\n)"
-		R"(\{\n)"
-		R"(    // for: iteration #1\n)"
-		R"(\n)"
-		R"(\} // for \(;;\)\n)"
-		R"(\n)"
-		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
-		R"(for \(;;\)\n)"
-		R"(\{\n)"
-		R"(    // for: iteration #1\n)"
-		R"(\n)"
-		R"(\} // for \(;;\)\n)"
-		R"(\n)"
+		R"=(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)="
+		R"=(for \(;;\)\n)="
+		R"=(\{\n)="
+		R"=(    // for: iteration #1\n)="
+		R"=(\n)="
+		R"=(\} // for \(;;\)\n)="
+		R"=(\n)="
+		R"=(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)="
+		R"=(for \(;;\)\n)="
+		R"=(\{\n)="
+		R"=(    // for: iteration #1\n)="
+		R"=(\n)="
+		R"=(\} // for \(;;\)\n)="
+		R"=(\n)="
 	));
 }
 
@@ -351,20 +351,20 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$while(...)'", "[TRACE_OUT_SHOW_THREAD]
 	}
 
 	REQUIRE_THAT(test::out_stream.str(), Matches(
-		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
-		R"(while \(true\)\n)"
-		R"(\{\n)"
-		R"(    // while: iteration #1\n)"
-		R"(\n)"
-		R"(\} // while \(true\)\n)"
-		R"(\n)"
-		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
-		R"(while \(true\)\n)"
-		R"(\{\n)"
-		R"(    // while: iteration #1\n)"
-		R"(\n)"
-		R"(\} // while \(true\)\n)"
-		R"(\n)"
+		R"=(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)="
+		R"=(while \(true\)\n)="
+		R"=(\{\n)="
+		R"=(    // while: iteration #1\n)="
+		R"=(\n)="
+		R"=(\} // while \(true\)\n)="
+		R"=(\n)="
+		R"=(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)="
+		R"=(while \(true\)\n)="
+		R"=(\{\n)="
+		R"=(    // while: iteration #1\n)="
+		R"=(\n)="
+		R"=(\} // while \(true\)\n)="
+		R"=(\n)="
 	));
 }
 
@@ -385,12 +385,12 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$time(...)'", "[TRACE_OUT_SHOW_THREAD][
 	$time("dummy", dummy();)
 
 	REQUIRE_THAT(test::out_stream.str(), Matches(
-		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
-		R"(timing "dummy"...\n)"
-		R"("dummy" timed in [0-9]+ ms\n)"
-		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
-		R"(timing "dummy"...\n)"
-		R"("dummy" timed in [0-9]+ ms\n)"
+		R"=(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)="
+		R"=(timing "dummy"...\n)="
+		R"=("dummy" timed in [0-9]+ ms\n)="
+		R"=(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)="
+		R"=(timing "dummy"...\n)="
+		R"=("dummy" timed in [0-9]+ ms\n)="
 	));
 }
 
@@ -417,18 +417,18 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$time_stats(...)'", "[TRACE_OUT_SHOW_TH
 	}
 
 	REQUIRE_THAT(test::out_stream.str(), Matches(
-		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
-		R"(// execution time statistics \(ms\) for "dummy":\n)"
-		R"(//   avg/med: [0-9\.]+ / [0-9\.]+\n)"
-		R"(//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)"
-		R"(//     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)"
-		R"(\n)"
-		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
-		R"(// execution time statistics \(ms\) for "dummy":\n)"
-		R"(//   avg/med: [0-9\.]+ / [0-9\.]+\n)"
-		R"(//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)"
-		R"(//     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)"
-		R"(\n)"
+		R"=(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)="
+		R"=(// execution time statistics \(ms\) for "dummy":\n)="
+		R"=(//   avg/med: [0-9\.]+ / [0-9\.]+\n)="
+		R"=(//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)="
+		R"=(//     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)="
+		R"=(\n)="
+		R"=(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)="
+		R"=(// execution time statistics \(ms\) for "dummy":\n)="
+		R"=(//   avg/med: [0-9\.]+ / [0-9\.]+\n)="
+		R"=(//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)="
+		R"=(//     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)="
+		R"=(\n)="
 	));
 }
 
@@ -449,12 +449,12 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$clocks(...)'", "[TRACE_OUT_SHOW_THREAD
 	$clocks("dummy", dummy();)
 
 	REQUIRE_THAT(test::out_stream.str(), Matches(
-		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
-		R"(clocking "dummy"...\n)"
-		R"("dummy" clocked in [0-9]+ clocks \([0-9\.]+ ms\)\n)"
-		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
-		R"(clocking "dummy"...\n)"
-		R"("dummy" clocked in [0-9]+ clocks \([0-9\.]+ ms\)\n)"
+		R"=(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)="
+		R"=(clocking "dummy"...\n)="
+		R"=("dummy" clocked in [0-9]+ clocks \([0-9\.]+ ms\)\n)="
+		R"=(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)="
+		R"=(clocking "dummy"...\n)="
+		R"=("dummy" clocked in [0-9]+ clocks \([0-9\.]+ ms\)\n)="
 	));
 }
 
@@ -481,18 +481,18 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$clock_stats(...)'", "[TRACE_OUT_SHOW_T
 	}
 
 	REQUIRE_THAT(test::out_stream.str(), Matches(
-		R"(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)"
-		R"(// execution time statistics \(clocks\) for "dummy":\n)"
-		R"(//   avg/med: [0-9\.]+ / [0-9\.]+\n)"
-		R"(//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)"
-		R"(//     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)"
-		R"(\n)"
-		R"(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)"
-		R"(// execution time statistics \(clocks\) for "dummy":\n)"
-		R"(//   avg/med: [0-9\.]+ / [0-9\.]+\n)"
-		R"(//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)"
-		R"(//     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)"
-		R"(\n)"
+		R"=(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)="
+		R"=(// execution time statistics \(clocks\) for "dummy":\n)="
+		R"=(//   avg/med: [0-9\.]+ / [0-9\.]+\n)="
+		R"=(//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)="
+		R"=(//     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)="
+		R"=(\n)="
+		R"=(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)="
+		R"=(// execution time statistics \(clocks\) for "dummy":\n)="
+		R"=(//   avg/med: [0-9\.]+ / [0-9\.]+\n)="
+		R"=(//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)="
+		R"=(//     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)="
+		R"=(\n)="
 	));
 }
 

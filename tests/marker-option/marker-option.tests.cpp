@@ -165,8 +165,8 @@ TEST_CASE("'TRACE_OUT_MARKER' with '$time(...)'", "[TRACE_OUT_MARKER][time]")
 	$time("dummy", dummy();)
 
 	REQUIRE_THAT(test::out_stream.str(), Matches(
-		R"(@@ timing "dummy"...\n)"
-		R"(@@ "dummy" timed in [0-9]+ ms\n)"
+		R"=(@@ timing "dummy"...\n)="
+		R"=(@@ "dummy" timed in [0-9]+ ms\n)="
 	));
 }
 
@@ -182,11 +182,11 @@ TEST_CASE("'TRACE_OUT_MARKER' with '$time_stats(...)'", "[TRACE_OUT_MARKER][time
 	}
 
 	REQUIRE_THAT(test::out_stream.str(), Matches(
-		R"(@@ // execution time statistics \(ms\) for "dummy":\n)"
-		R"(@@ //   avg/med: [0-9\.]+ / [0-9\.]+\n)"
-		R"(@@ //     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)"
-		R"(@@ //     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)"
-		R"(@@ \n)"
+		R"=(@@ // execution time statistics \(ms\) for "dummy":\n)="
+		R"=(@@ //   avg/med: [0-9\.]+ / [0-9\.]+\n)="
+		R"=(@@ //     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)="
+		R"=(@@ //     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)="
+		R"=(@@ \n)="
 	));
 }
 
@@ -199,8 +199,8 @@ TEST_CASE("'TRACE_OUT_MARKER' with '$clocks(...)'", "[TRACE_OUT_MARKER][clocks]"
 	$clocks("dummy", dummy();)
 
 	REQUIRE_THAT(test::out_stream.str(), Matches(
-		R"(@@ clocking "dummy"...\n)"
-		R"(@@ "dummy" clocked in [0-9]+ clocks \([0-9\.]+ ms\)\n)"
+		R"=(@@ clocking "dummy"...\n)="
+		R"=(@@ "dummy" clocked in [0-9]+ clocks \([0-9\.]+ ms\)\n)="
 	));
 }
 
@@ -216,11 +216,11 @@ TEST_CASE("'TRACE_OUT_MARKER' with '$clock_stats(...)'", "[TRACE_OUT_MARKER][clo
 	}
 
 	REQUIRE_THAT(test::out_stream.str(), Matches(
-		R"(@@ // execution time statistics \(clocks\) for "dummy":\n)"
-		R"(@@ //   avg/med: [0-9\.]+ / [0-9\.]+\n)"
-		R"(@@ //     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)"
-		R"(@@ //     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)"
-		R"(@@ \n)"
+		R"=(@@ // execution time statistics \(clocks\) for "dummy":\n)="
+		R"=(@@ //   avg/med: [0-9\.]+ / [0-9\.]+\n)="
+		R"=(@@ //     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)="
+		R"=(@@ //     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)="
+		R"=(@@ \n)="
 	));
 }
 

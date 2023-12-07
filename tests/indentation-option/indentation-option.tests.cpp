@@ -385,12 +385,12 @@ TEST_CASE("'TRACE_OUT_INDENTATION' outside '$time(...)'", "[indentation][TRACE_O
 	}
 
 	REQUIRE_THAT(test::out_stream.str(), Matches(
-		R"(if \(true\) => true\n)"
-		R"(\{\n)"
-		R"(  timing "dummy"...\n)"
-		R"(  "dummy" timed in [0-9]+ ms\n)"
-		R"(\}\n)"
-		R"(\n)"
+		R"=(if \(true\) => true\n)="
+		R"=(\{\n)="
+		R"=(  timing "dummy"...\n)="
+		R"=(  "dummy" timed in [0-9]+ ms\n)="
+		R"=(\}\n)="
+		R"=(\n)="
 	));
 }
 
@@ -409,15 +409,15 @@ TEST_CASE("'TRACE_OUT_INDENTATION' outside '$time_stats(...)'", "[indentation][T
 	}
 
 	REQUIRE_THAT(test::out_stream.str(), Matches(
-		R"(if \(true\) => true\n)"
-		R"(\{\n)"
-		R"(  // execution time statistics \(ms\) for "dummy":\n)"
-		R"(  //   avg/med: [0-9\.]+ / [0-9\.]+\n)"
-		R"(  //     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)"
-		R"(  //     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)"
-		R"(\n)"
-		R"(\}\n)"
-		R"(\n)"
+		R"=(if \(true\) => true\n)="
+		R"=(\{\n)="
+		R"=(  // execution time statistics \(ms\) for "dummy":\n)="
+		R"=(  //   avg/med: [0-9\.]+ / [0-9\.]+\n)="
+		R"=(  //     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)="
+		R"=(  //     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)="
+		R"=(\n)="
+		R"=(\}\n)="
+		R"=(\n)="
 	));
 }
 
@@ -433,12 +433,12 @@ TEST_CASE("'TRACE_OUT_INDENTATION' outside '$clocks(...)'", "[indentation][TRACE
 	}
 
 	REQUIRE_THAT(test::out_stream.str(), Matches(
-		R"(if \(true\) => true\n)"
-		R"(\{\n)"
-		R"(  clocking "dummy"...\n)"
-		R"(  "dummy" clocked in [0-9]+ clocks \([0-9\.]+ ms\)\n)"
-		R"(\}\n)"
-		R"(\n)"
+		R"=(if \(true\) => true\n)="
+		R"=(\{\n)="
+		R"=(  clocking "dummy"...\n)="
+		R"=(  "dummy" clocked in [0-9]+ clocks \([0-9\.]+ ms\)\n)="
+		R"=(\}\n)="
+		R"=(\n)="
 	));
 }
 
@@ -457,15 +457,15 @@ TEST_CASE("'TRACE_OUT_INDENTATION' outside '$clock_stats(...)'", "[indentation][
 	}
 
 	REQUIRE_THAT(test::out_stream.str(), Matches(
-		R"(if \(true\) => true\n)"
-		R"(\{\n)"
-		R"(  // execution time statistics \(clocks\) for "dummy":\n)"
-		R"(  //   avg/med: [0-9\.]+ / [0-9\.]+\n)"
-		R"(  //     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)"
-		R"(  //     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)"
-		R"(\n)"
-		R"(\}\n)"
-		R"(\n)"
+		R"=(if \(true\) => true\n)="
+		R"=(\{\n)="
+		R"=(  // execution time statistics \(clocks\) for "dummy":\n)="
+		R"=(  //   avg/med: [0-9\.]+ / [0-9\.]+\n)="
+		R"=(  //     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)="
+		R"=(  //     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)="
+		R"=(\n)="
+		R"=(\}\n)="
+		R"=(\n)="
 	));
 }
 
