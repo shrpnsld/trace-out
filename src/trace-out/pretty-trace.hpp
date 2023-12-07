@@ -35,6 +35,9 @@ inline void trace_hexadecimal(std::ostream &stream, const file_line_t &file_line
 #else
 
 template <typename Type_t>
+inline const Type_t &trace(std::ostream &stream, const file_line_t &file_line, const char *name, const Type_t &value);
+
+template <typename Type_t>
 inline Type_t &trace(std::ostream &stream, const file_line_t &file_line, const char *name, Type_t &value);
 
 #endif // TRACE_OUT_CPP_VERSION >= 201103L
@@ -43,13 +46,22 @@ template <standard::size_t Size>
 inline void trace(std::ostream &stream, const file_line_t &file_line, const char *should_comment, const char (&comment)[Size]);
 
 template <typename Type_t>
-inline Type_t trace_binary(std::ostream &stream, const file_line_t &file_line, const char *name, Type_t value);
+inline const Type_t &trace_binary(std::ostream &stream, const file_line_t &file_line, const char *name, const Type_t &value);
 
 template <typename Type_t>
-inline Type_t trace_octal(std::ostream &stream, const file_line_t &file_line, const char *name, Type_t value);
+inline Type_t &trace_binary(std::ostream &stream, const file_line_t &file_line, const char *name, Type_t &value);
 
 template <typename Type_t>
-inline Type_t trace_hexadecimal(std::ostream &stream, const file_line_t &file_line, const char *name, Type_t value);
+inline const Type_t &trace_octal(std::ostream &stream, const file_line_t &file_line, const char *name, const Type_t &value);
+
+template <typename Type_t>
+inline Type_t &trace_octal(std::ostream &stream, const file_line_t &file_line, const char *name, Type_t &value);
+
+template <typename Type_t>
+inline const Type_t &trace_hexadecimal(std::ostream &stream, const file_line_t &file_line, const char *name, const Type_t &value);
+
+template <typename Type_t>
+inline Type_t &trace_hexadecimal(std::ostream &stream, const file_line_t &file_line, const char *name, Type_t &value);
 
 template <typename Begin_t, typename End_t>
 inline void trace_range(std::ostream &stream, const file_line_t &file_line, const char *begin_name, const char *end_name, Begin_t begin, End_t end);
@@ -264,6 +276,12 @@ void print_first_hexadecimal_value(std::ostream &stream, const file_line_t &file
 #else // TRACE_OUT_CPP_VERSION >= 201103L
 
 template <typename Type_t>
+const Type_t &trace(std::ostream &stream, const file_line_t &file_line, const char *name, const Type_t &value)
+{
+	return trace(stream, file_line, name, const_cast<Type_t &>(value));
+}
+
+template <typename Type_t>
 Type_t &trace(std::ostream &stream, const file_line_t &file_line, const char *name, Type_t &value)
 {
 	print_name_value(stream, file_line, name, value);
@@ -283,43 +301,67 @@ void trace(std::ostream &stream, const file_line_t &file_line, const char *shoul
 }
 
 template <typename Type_t>
-Type_t trace_binary(std::ostream &stream, const file_line_t &file_line, const char *name, Type_t value)
+const Type_t &trace_binary(std::ostream &stream, const file_line_t &file_line, const char *name, const Type_t &value)
 {
+	return trace_binary(stream, file_line, name, const_cast<Type_t &>(value));
+}
+
+template <typename Type_t>
+Type_t &trace_binary(std::ostream &stream, const file_line_t &file_line, const char *name, Type_t &value)
+{
+	{
 #if defined(TRACE_OUT_SYNC_STREAM)
-	autolock<system::mutex> lock(stream_mutex());
+		autolock<system::mutex> lock(stream_mutex());
 #endif
 
-	stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << name << " = ";
-	pretty_print_binary(stream, value);
-	stream << std::endl;
+		stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << name << " = ";
+		pretty_print_binary(stream, value);
+		stream << std::endl;
+	}
 
 	return value;
 }
 
 template <typename Type_t>
-Type_t trace_octal(std::ostream &stream, const file_line_t &file_line, const char *name, Type_t value)
+const Type_t &trace_octal(std::ostream &stream, const file_line_t &file_line, const char *name, const Type_t &value)
 {
+	return trace_octal(stream, file_line, name, const_cast<Type_t &>(value));
+}
+
+template <typename Type_t>
+Type_t &trace_octal(std::ostream &stream, const file_line_t &file_line, const char *name, Type_t &value)
+{
+	{
 #if defined(TRACE_OUT_SYNC_STREAM)
-	autolock<system::mutex> lock(stream_mutex());
+		autolock<system::mutex> lock(stream_mutex());
 #endif
 
-	stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << name << " = ";
-	pretty_print_octal(stream, value);
-	stream << std::endl;
+		stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << name << " = ";
+		pretty_print_octal(stream, value);
+		stream << std::endl;
+	}
 
 	return value;
 }
 
 template <typename Type_t>
-Type_t trace_hexadecimal(std::ostream &stream, const file_line_t &file_line, const char *name, Type_t value)
+const Type_t &trace_hexadecimal(std::ostream &stream, const file_line_t &file_line, const char *name, const Type_t &value)
 {
+	return trace_hexadecimal(stream, file_line, name, const_cast<Type_t &>(value));
+}
+
+template <typename Type_t>
+Type_t &trace_hexadecimal(std::ostream &stream, const file_line_t &file_line, const char *name, Type_t &value)
+{
+	{
 #if defined(TRACE_OUT_SYNC_STREAM)
-	autolock<system::mutex> lock(stream_mutex());
+		autolock<system::mutex> lock(stream_mutex());
 #endif
 
-	stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << name << " = ";
-	pretty_print_hexadecimal(stream, value);
-	stream << std::endl;
+		stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << name << " = ";
+		pretty_print_hexadecimal(stream, value);
+		stream << std::endl;
+	}
 
 	return value;
 }
