@@ -18,56 +18,56 @@ namespace trace_out
 #if TRACE_OUT_CPP_VERSION >= 201103L
 
 template <typename Type_t>
-inline Type_t &&trace(std::ostream &stream, const file_line_t &file_line, const char *name, Type_t &&value);
+Type_t &&trace(std::ostream &stream, const file_line_t &file_line, const char *name, Type_t &&value);
 
 template <typename ...Types_t>
-inline void trace(std::ostream &stream, const file_line_t &file_line, const char *names, const Types_t &...values);
+void trace(std::ostream &stream, const file_line_t &file_line, const char *names, const Types_t &...values);
 
 template <typename ...Types_t>
-inline void trace_binary(std::ostream &stream, const file_line_t &file_line, const char *names, Types_t ...values);
+void trace_binary(std::ostream &stream, const file_line_t &file_line, const char *names, Types_t ...values);
 
 template <typename ...Types_t>
-inline void trace_octal(std::ostream &stream, const file_line_t &file_line, const char *names, Types_t ...values);
+void trace_octal(std::ostream &stream, const file_line_t &file_line, const char *names, Types_t ...values);
 
 template <typename ...Types_t>
-inline void trace_hexadecimal(std::ostream &stream, const file_line_t &file_line, const char *names, Types_t ...values);
+void trace_hexadecimal(std::ostream &stream, const file_line_t &file_line, const char *names, Types_t ...values);
 
 #else
 
 template <typename Type_t>
-inline const Type_t &trace(std::ostream &stream, const file_line_t &file_line, const char *name, const Type_t &value);
+const Type_t &trace(std::ostream &stream, const file_line_t &file_line, const char *name, const Type_t &value);
 
 template <typename Type_t>
-inline Type_t &trace(std::ostream &stream, const file_line_t &file_line, const char *name, Type_t &value);
+Type_t &trace(std::ostream &stream, const file_line_t &file_line, const char *name, Type_t &value);
 
 #endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 template <standard::size_t Size>
-inline void trace(std::ostream &stream, const file_line_t &file_line, const char *should_comment, const char (&comment)[Size]);
+void trace(std::ostream &stream, const file_line_t &file_line, const char *should_comment, const char (&comment)[Size]);
 
 template <typename Type_t>
-inline const Type_t &trace_binary(std::ostream &stream, const file_line_t &file_line, const char *name, const Type_t &value);
+const Type_t &trace_binary(std::ostream &stream, const file_line_t &file_line, const char *name, const Type_t &value);
 
 template <typename Type_t>
-inline Type_t &trace_binary(std::ostream &stream, const file_line_t &file_line, const char *name, Type_t &value);
+Type_t &trace_binary(std::ostream &stream, const file_line_t &file_line, const char *name, Type_t &value);
 
 template <typename Type_t>
-inline const Type_t &trace_octal(std::ostream &stream, const file_line_t &file_line, const char *name, const Type_t &value);
+const Type_t &trace_octal(std::ostream &stream, const file_line_t &file_line, const char *name, const Type_t &value);
 
 template <typename Type_t>
-inline Type_t &trace_octal(std::ostream &stream, const file_line_t &file_line, const char *name, Type_t &value);
+Type_t &trace_octal(std::ostream &stream, const file_line_t &file_line, const char *name, Type_t &value);
 
 template <typename Type_t>
-inline const Type_t &trace_hexadecimal(std::ostream &stream, const file_line_t &file_line, const char *name, const Type_t &value);
+const Type_t &trace_hexadecimal(std::ostream &stream, const file_line_t &file_line, const char *name, const Type_t &value);
 
 template <typename Type_t>
-inline Type_t &trace_hexadecimal(std::ostream &stream, const file_line_t &file_line, const char *name, Type_t &value);
+Type_t &trace_hexadecimal(std::ostream &stream, const file_line_t &file_line, const char *name, Type_t &value);
 
 template <typename Begin_t, typename End_t>
-inline void trace_range(std::ostream &stream, const file_line_t &file_line, const char *begin_name, const char *end_name, Begin_t begin, End_t end);
+void trace_range(std::ostream &stream, const file_line_t &file_line, const char *begin_name, const char *end_name, Begin_t begin, End_t end);
 
 template <typename Begin_t>
-inline void trace_range(std::ostream &stream, const file_line_t &file_line, const char *begin_name, const char *how_much_name, Begin_t begin, standard::size_t how_much);
+void trace_range(std::ostream &stream, const file_line_t &file_line, const char *begin_name, const char *how_much_name, Begin_t begin, standard::size_t how_much);
 
 }
 
@@ -85,34 +85,34 @@ inline std::string rest_tokens(const std::string &tokens);
 inline void print_next_value(std::ostream &stream, const std::string &);
 
 template <typename First_t, typename ...Rest_t>
-inline void print_next_value(std::ostream &stream, const std::string &names, const First_t &first, const Rest_t &...rest);
+void print_next_value(std::ostream &stream, const std::string &names, const First_t &first, const Rest_t &...rest);
 
 template <typename First_t, typename ...Rest_t>
-inline void print_first_value(std::ostream &stream, const file_line_t &file_line, const std::string &names, const First_t &first, const Rest_t &...rest);
+void print_first_value(std::ostream &stream, const file_line_t &file_line, const std::string &names, const First_t &first, const Rest_t &...rest);
 
 inline void print_next_binary_value(std::ostream &stream, const std::string &);
 
 template <typename First_t, typename ...Rest_t>
-inline void print_next_binary_value(std::ostream &stream, const std::string &names, const First_t &first, const Rest_t &...rest);
+void print_next_binary_value(std::ostream &stream, const std::string &names, const First_t &first, const Rest_t &...rest);
 
 template <typename First_t, typename ...Rest_t>
-inline void print_first_binary_value(std::ostream &stream, const file_line_t &file_line, const std::string &names, const First_t &first, const Rest_t &...rest);
+void print_first_binary_value(std::ostream &stream, const file_line_t &file_line, const std::string &names, const First_t &first, const Rest_t &...rest);
 
 inline void print_next_octal_value(std::ostream &stream, const std::string &);
 
 template <typename First_t, typename ...Rest_t>
-inline void print_next_octal_value(std::ostream &stream, const std::string &names, const First_t &first, const Rest_t &...rest);
+void print_next_octal_value(std::ostream &stream, const std::string &names, const First_t &first, const Rest_t &...rest);
 
 template <typename First_t, typename ...Rest_t>
-inline void print_first_octal_value(std::ostream &stream, const file_line_t &file_line, const std::string &names, const First_t &first, const Rest_t &...rest);
+void print_first_octal_value(std::ostream &stream, const file_line_t &file_line, const std::string &names, const First_t &first, const Rest_t &...rest);
 
 inline void print_next_hexadecimal_value(std::ostream &stream, const std::string &);
 
 template <typename First_t, typename ...Rest_t>
-inline void print_next_hexadecimal_value(std::ostream &stream, const std::string &names, const First_t &first, const Rest_t &...rest);
+void print_next_hexadecimal_value(std::ostream &stream, const std::string &names, const First_t &first, const Rest_t &...rest);
 
 template <typename First_t, typename ...Rest_t>
-inline void print_first_hexadecimal_value(std::ostream &stream, const file_line_t &file_line, const std::string &names, const First_t &first, const Rest_t &...rest);
+void print_first_hexadecimal_value(std::ostream &stream, const file_line_t &file_line, const std::string &names, const First_t &first, const Rest_t &...rest);
 
 #endif // TRACE_OUT_CPP_VERSION >= 201103L
 
@@ -302,7 +302,7 @@ Type_t &trace(std::ostream &stream, const file_line_t &file_line, const char *na
 	return value;
 }
 
-#endif
+#endif // TRACE_OUT_CPP_VERSION >= 201103L
 
 template <standard::size_t Size>
 void trace(std::ostream &stream, const file_line_t &file_line, const char *should_comment, const char (&comment)[Size])

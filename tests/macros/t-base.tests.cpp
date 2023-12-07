@@ -1,4 +1,3 @@
-#include "dummy.hpp"
 #include "test-stream.hpp"
 #include "trace-out/trace-out.hpp"
 #include <catch2/catch_test_macros.hpp>

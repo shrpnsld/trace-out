@@ -20,20 +20,20 @@ template <typename Type_t>
 class tls
 {
 public:
-	inline tls();
-	inline ~tls();
+	tls();
+	~tls();
 
-	inline void set(const Type_t &value);
-	inline const Type_t &get() const;
+	void set(const Type_t &value);
+	const Type_t &get() const;
 
 private:
-	inline tls(const tls &another);
-	inline tls &operator =(const tls &another);
+	tls(const tls &another);
+	tls &operator =(const tls &another);
 
 #if TRACE_OUT_CPP_VERSION >= 201103L
 
-	inline tls(tls &&another);
-	inline tls &operator =(tls &&another);
+	tls(tls &&another);
+	tls &operator =(tls &&another);
 
 #endif // TRACE_OUT_CPP_VERSION >= 201103L
 

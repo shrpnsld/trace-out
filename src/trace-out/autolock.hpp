@@ -10,8 +10,8 @@ template <typename Lockable_t>
 class autolock
 {
 public:
-	inline autolock(Lockable_t &lockable);
-	inline ~autolock();
+	autolock(Lockable_t &lockable);
+	~autolock();
 
 private:
 	Lockable_t &_lockable;

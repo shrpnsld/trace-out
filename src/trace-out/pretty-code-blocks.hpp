@@ -31,7 +31,7 @@ class if_block
 {
 public:
 	template <typename Type_t>
-	inline if_block(std::ostream &stream, const file_line_t &file_line, const char *condition, const Type_t &value);
+	if_block(std::ostream &stream, const file_line_t &file_line, const char *condition, const Type_t &value);
 
 	inline if_block(std::ostream &stream, const file_line_t &file_line, const char *condition, bool value);
 	inline ~if_block();
