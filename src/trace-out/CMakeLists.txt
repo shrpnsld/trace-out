@@ -1,4 +1,4 @@
-target_sources(trace-out
+target_sources(trace-out-dev
 	PRIVATE
 		autolock.hpp
 		base-conversions.hpp

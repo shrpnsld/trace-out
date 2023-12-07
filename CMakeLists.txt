@@ -16,7 +16,6 @@ set_property(GLOBAL PROPERTY USE_FOLDERS YES)
 
 add_subdirectory(src)
 
-include(amalgamate)
 include(install)
 include(package)
 
