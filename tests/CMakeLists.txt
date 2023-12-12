@@ -1,6 +1,4 @@
-find_package(Catch2 3 REQUIRED)
 include(Catch)
-
 include(compile-options-if-supported)
 include(build-optimizations)
 

@@ -1,0 +1,6 @@
+[submodule "external/amalgamate"]
+	path = external/amalgamate
+	url = https://github.com/shrpnsld/amalgamate
+[submodule "external/catch2"]
+	path = external/catch2
+	url = https://github.com/catchorg/Catch2.git
