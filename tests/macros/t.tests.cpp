@@ -1,4 +1,3 @@
-#include "dummy.hpp"
 #include "test-stream.hpp"
 #include "trace-out/trace-out.hpp"
 #include <catch2/catch_test_macros.hpp>
@@ -24,7 +23,7 @@ TEST_CASE("$t(value)", "[t]")
 		auto value = GENERATE(false, true);
 		bool subject {value};
 
-		dummy($t(subject));
+		$t(subject);
 
 		std::stringstream expected;
 		expected << "subject = " << std::boolalpha << subject << '\n';
@@ -43,7 +42,7 @@ TEST_CASE("$t(value)", "[t]")
 			}));
 		char subject {std::get<0>(values)};
 
-		dummy($t(subject));
+		$t(subject);
 
 		std::stringstream expected;
 		expected << "subject = " << std::get<1>(values) << '\n';
@@ -55,7 +54,7 @@ TEST_CASE("$t(value)", "[t]")
 		auto value = GENERATE("", "hellomoto!", "wazuuup!", "hello\nmoto!");
 		const char *subject {value};
 
-		dummy($t(subject));
+		$t(subject);
 
 		std::stringstream expected;
 		expected << "subject = \"" << subject << "\"\n";
@@ -67,7 +66,7 @@ TEST_CASE("$t(value)", "[t]")
 		auto value = GENERATE("", "hellomoto!", "wazuuup!", "hello\nmoto!");
 		std::string subject {value};
 
-		dummy($t(subject));
+		$t(subject);
 
 		std::stringstream expected;
 		expected << "subject = \"" << subject << "\"\n";
@@ -81,7 +80,7 @@ TEST_CASE("$t(value)", "[t]")
 		auto value = GENERATE(123, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::min());
 		type_t subject {static_cast<type_t>(value)};
 
-		dummy($t(subject));
+		$t(subject);
 
 		std::stringstream expected;
 		expected << "subject = " << static_cast<signed int>(subject) << '\n';
@@ -95,7 +94,7 @@ TEST_CASE("$t(value)", "[t]")
 		auto value = GENERATE(123, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::min());
 		type_t subject {static_cast<type_t>(value)};
 
-		dummy($t(subject));
+		$t(subject);
 
 		std::stringstream expected;
 		expected << "subject = " << static_cast<unsigned int>(subject) << '\n';
@@ -109,7 +108,7 @@ TEST_CASE("$t(value)", "[t]")
 		auto value = GENERATE(0, 456, -789, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::min());
 		type_t subject {static_cast<short>(value)};
 
-		dummy($t(subject));
+		$t(subject);
 
 		std::stringstream expected;
 		expected << "subject = " << subject << '\n';
@@ -123,7 +122,7 @@ TEST_CASE("$t(value)", "[t]")
 		auto value = GENERATE(456, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::min());
 		type_t subject {static_cast<type_t>(value)};
 
-		dummy($t(subject));
+		$t(subject);
 
 		std::stringstream expected;
 		expected << "subject = " << subject << '\n';
@@ -137,7 +136,7 @@ TEST_CASE("$t(value)", "[t]")
 		auto value = GENERATE(0, 456, -789, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::min());
 		type_t subject {value};
 
-		dummy($t(subject));
+		$t(subject);
 
 		std::stringstream expected;
 		expected << "subject = " << subject << '\n';
@@ -151,7 +150,7 @@ TEST_CASE("$t(value)", "[t]")
 		auto value = GENERATE(456u, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::min());
 		type_t subject {value};
 
-		dummy($t(subject));
+		$t(subject);
 
 		std::stringstream expected;
 		expected << "subject = " << subject << '\n';
@@ -165,7 +164,7 @@ TEST_CASE("$t(value)", "[t]")
 		auto value = GENERATE(0l, 456l, -789l, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::min());
 		type_t subject {value};
 
-		dummy($t(subject));
+		$t(subject);
 
 		std::stringstream expected;
 		expected << "subject = " << subject << '\n';
@@ -179,7 +178,7 @@ TEST_CASE("$t(value)", "[t]")
 		auto value = GENERATE(456ul, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::min());
 		type_t subject {value};
 
-		dummy($t(subject));
+		$t(subject);
 
 		std::stringstream expected;
 		expected << "subject = " << subject << '\n';
@@ -193,7 +192,7 @@ TEST_CASE("$t(value)", "[t]")
 		auto value = GENERATE(456ll, -789ll, 0ll, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::min());
 		type_t subject {value};
 
-		dummy($t(subject));
+		$t(subject);
 
 		std::stringstream expected;
 		expected << "subject = " << subject << '\n';
@@ -207,7 +206,7 @@ TEST_CASE("$t(value)", "[t]")
 		auto value = GENERATE(456ull, -789ull, 0ull, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::min());
 		type_t subject {value};
 
-		dummy($t(subject));
+		$t(subject);
 
 		std::stringstream expected;
 		expected << "subject = " << subject << '\n';
@@ -221,7 +220,7 @@ TEST_CASE("$t(value)", "[t]")
 		auto value = GENERATE(456.789f, -789.123f, 0.0f, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::max());
 		type_t subject {value};
 
-		dummy($t(subject));
+		$t(subject);
 
 		std::stringstream expected;
 		expected << "subject = " << subject << '\n';
@@ -235,7 +234,7 @@ TEST_CASE("$t(value)", "[t]")
 		auto value = GENERATE(456.789, -789.123, 0.0, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::max());
 		type_t subject {value};
 
-		dummy($t(subject));
+		$t(subject);
 
 		std::stringstream expected;
 		expected << "subject = " << subject << '\n';
@@ -249,7 +248,7 @@ TEST_CASE("$t(value)", "[t]")
 		auto value = GENERATE(456.789L, -789.123L, 0.0L, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::max());
 		type_t subject {value};
 
-		dummy($t(subject));
+		$t(subject);
 
 		std::stringstream expected;
 		expected << "subject = " << subject << '\n';
@@ -265,7 +264,7 @@ TEST_CASE("$t(value)", "[t]")
 		{
 			subject = nullptr;
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = <null>\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -276,7 +275,7 @@ TEST_CASE("$t(value)", "[t]")
 			auto ptr = GENERATE(0xABADBABE, 0x0B00B135, 0xDEADBEEF, 0xFFFFFFFF);
 			subject = reinterpret_cast<type_t>(ptr);
 
-			dummy($t(subject));
+			$t(subject);
 
 			std::stringstream expected;
 			expected << "subject = " << subject << '\n';
@@ -293,7 +292,7 @@ TEST_CASE("$t(value)", "[t]")
 		{
 			subject = nullptr;
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = <null>\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -304,7 +303,7 @@ TEST_CASE("$t(value)", "[t]")
 			auto ptr = GENERATE(0xABADBABE, 0x0B00B135, 0xDEADBEEF, 0xFFFFFFFF);
 			subject = reinterpret_cast<type_t>(ptr);
 
-			dummy($t(subject));
+			$t(subject);
 
 			std::stringstream expected;
 			expected << "subject = " << subject << '\n';
@@ -320,7 +319,7 @@ TEST_CASE("$t(value)", "[t]")
 		{
 			subject = nullptr;
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = <null>\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -331,7 +330,7 @@ TEST_CASE("$t(value)", "[t]")
 			int value {456};
 			subject = &value;
 
-			dummy($t(subject));
+			$t(subject);
 
 			std::stringstream expected;
 			expected << "subject = " << &value << " -> 456\n";
@@ -347,7 +346,7 @@ TEST_CASE("$t(value)", "[t]")
 		{
 			subject = nullptr;
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = <null>\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -358,7 +357,7 @@ TEST_CASE("$t(value)", "[t]")
 			int value {456};
 			subject = &value;
 
-			dummy($t(subject));
+			$t(subject);
 
 			std::stringstream expected;
 			expected << "subject = " << &value << " -> 456\n";
@@ -370,7 +369,7 @@ TEST_CASE("$t(value)", "[t]")
 	{
 		const int subject[] = {456, 789, 123, 0, 1};
 
-		dummy($t(subject));
+		$t(subject);
 
 		const char *expected {"subject = [456, 789, 123, 0, 1]\n"};
 		REQUIRE(test::out_stream.str() == expected);
@@ -380,7 +379,7 @@ TEST_CASE("$t(value)", "[t]")
 	{
 		const int subject[] = {456, 789, 123, 0, 1};
 
-		dummy($t(subject));
+		$t(subject);
 
 		const char *expected {"subject = [456, 789, 123, 0, 1]\n"};
 		REQUIRE(test::out_stream.str() == expected);
@@ -402,8 +401,8 @@ TEST_CASE("$t(value)", "[t]")
 			numbers_t subject1 {numbers_t::minus_one};
 			numbers_t subject2 {numbers_t::two};
 
-			dummy($t(subject1));
-			dummy($t(subject2));
+			$t(subject1);
+			$t(subject2);
 
 			const char *expected {
 				"subject1 = -1\n"
@@ -424,7 +423,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			numbers_t subject {numbers_t::one};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = 1\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -442,7 +441,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			numbers_t subject {numbers_t::the_biggest};
 
-			dummy($t(subject));
+			$t(subject);
 
 			std::stringstream expected;
 			expected << "subject = " << numbers_t::the_biggest << '\n';
@@ -458,7 +457,7 @@ TEST_CASE("$t(value)", "[t]")
 		{
 			subject.reset(nullptr);
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = <null>\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -469,7 +468,7 @@ TEST_CASE("$t(value)", "[t]")
 			int value {456};
 			subject.reset(new int {value});
 
-			dummy($t(subject));
+			$t(subject);
 
 			std::stringstream expected;
 			expected << "subject = " << subject.get() << " -> 456\n";
@@ -485,7 +484,7 @@ TEST_CASE("$t(value)", "[t]")
 		{
 			subject.reset();
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = <null>\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -496,7 +495,7 @@ TEST_CASE("$t(value)", "[t]")
 			int value {456};
 			subject.reset(new int {value});
 
-			dummy($t(subject));
+			$t(subject);
 
 			std::stringstream expected;
 			expected << "subject = " << subject.get() << " (use_count: 1) -> 456\n";
@@ -504,7 +503,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			decltype(subject) another {subject};
 
-			dummy($t(subject));
+			$t(subject);
 
 			expected << "subject = " << subject.get() << " (use_count: 2) -> 456\n";
 			REQUIRE(test::out_stream.str() == expected.str());
@@ -520,7 +519,7 @@ TEST_CASE("$t(value)", "[t]")
 			ptr.reset();
 			std::weak_ptr<int> subject {ptr};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = (use_count: 0)\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -532,14 +531,14 @@ TEST_CASE("$t(value)", "[t]")
 			ptr.reset(new int {value});
 			std::weak_ptr<int> subject {ptr};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = (use_count: 1)\n"};
 			REQUIRE(test::out_stream.str() == expected);
 
 			decltype(ptr) another {ptr};
 
-			dummy($t(subject));
+			$t(subject);
 
 			expected =
 				"subject = (use_count: 1)\n"
@@ -552,7 +551,7 @@ TEST_CASE("$t(value)", "[t]")
 	{
 		std::pair<char, int> subject {'f', 456};
 
-		dummy($t(subject));
+		$t(subject);
 
 		const char *expected {"subject = {'f', 456}\n"};
 		REQUIRE(test::out_stream.str() == expected);
@@ -564,7 +563,7 @@ TEST_CASE("$t(value)", "[t]")
 		{
 			std::tuple<char> subject {'f'};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = {'f'}\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -574,7 +573,7 @@ TEST_CASE("$t(value)", "[t]")
 		{
 			std::tuple<int, float, std::string> subject {456, -789.123, "hellomoto!"};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = {456, -789.123, \"hellomoto!\"}\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -585,7 +584,7 @@ TEST_CASE("$t(value)", "[t]")
 	{
 		std::bitset<17> subject {0b01011001110001111};
 
-		dummy($t(subject));
+		$t(subject);
 
 		const char *expected {"subject = 01011001110001111\n"};
 		REQUIRE(test::out_stream.str() == expected);
@@ -597,7 +596,7 @@ TEST_CASE("$t(value)", "[t]")
 		{
 			std::vector<int> subject;
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = []\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -607,7 +606,7 @@ TEST_CASE("$t(value)", "[t]")
 		{
 			std::vector<int> subject {1, 2, 3, 4, 5};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = [1, 2, 3, 4, 5]\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -617,7 +616,7 @@ TEST_CASE("$t(value)", "[t]")
 		{
 			std::list<int> subject;
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = []\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -627,7 +626,7 @@ TEST_CASE("$t(value)", "[t]")
 		{
 			std::list<int> subject {1, 2, 3, 4, 5};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = [1, 2, 3, 4, 5]\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -637,7 +636,7 @@ TEST_CASE("$t(value)", "[t]")
 		{
 			std::map<std::string, int> subject {{"one", 1}, {"two", 2}, {"three", 3}, {"four", 4}, {"five", 5}};
 
-			dummy($t(subject));
+			$t(subject);
 
 			std::stringstream expected;
 			expected << "subject = [";
@@ -656,7 +655,7 @@ TEST_CASE("$t(value)", "[t]")
 		{
 			std::unordered_map<std::string, int> subject {{"one", 1}, {"two", 2}, {"three", 3}, {"four", 4}, {"five", 5}};
 
-			dummy($t(subject));
+			$t(subject);
 
 			std::stringstream expected;
 			expected << "subject = [";
@@ -683,7 +682,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			subject_t subject {456, 789};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = {456, 789}\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -698,7 +697,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			subject_t subject {456, 789};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = {456, 789}\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -719,7 +718,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			subject_t subject {456, 789};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = {456, 789}\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -740,7 +739,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			subject_t subject {456, 789};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = {456, 789}\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -758,7 +757,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			subject_t subject {123, 456, 789};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = {123, 456, 789}\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -773,7 +772,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			subject_t subject {123, 456, 789};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = {123, 456, 789}\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -795,7 +794,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			subject_t subject {123, 456, 789};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = {123, 456, 789}\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -817,7 +816,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			subject_t subject {123, 456, 789};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = {123, 456, 789}\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -835,7 +834,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			subject_t subject {123, 456, 789, 987};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = {123, 456, 789, 987}\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -850,7 +849,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			subject_t subject {123, 456, 789, 987};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = {123, 456, 789, 987}\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -873,7 +872,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			subject_t subject {123, 456, 789, 987};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = {123, 456, 789, 987}\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -896,7 +895,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			subject_t subject {123, 456, 789, 987};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = {123, 456, 789, 987}\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -914,7 +913,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			subject_t subject {456, 789};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = {456 x 789}\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -929,7 +928,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			subject_t subject {456, 789};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = {456 x 789}\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -950,7 +949,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			subject_t subject {456, 789};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = {456 x 789}\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -971,7 +970,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			subject_t subject {456, 789};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = {456 x 789}\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -989,7 +988,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			subject_t subject {12, 34, 56, 78};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = {12, 34} {56 x 78}\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -1004,7 +1003,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			subject_t subject {12, 34, 56, 78};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = {12, 34} {56 x 78}\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -1019,7 +1018,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			subject_t subject {12, 34, 56, 78};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = {12, 34} {56 x 78}\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -1042,7 +1041,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			subject_t subject {12, 34, 56, 78};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = {12, 34} {56 x 78}\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -1065,7 +1064,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			subject_t subject {12, 34, 56, 78};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = {12, 34} {56 x 78}\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -1088,7 +1087,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			subject_t subject {12, 34, 56, 78};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = {12, 34} {56 x 78}\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -1117,7 +1116,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			subject_t subject {{12, 34}, {56, 78}};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = {12, 34} {56 x 78}\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -1143,7 +1142,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			subject_t subject {{12, 34}, {56, 78}};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = {12, 34} {56 x 78}\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -1169,7 +1168,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			subject_t subject {{12, 34}, {56, 78}};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = {12, 34} {56 x 78}\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -1207,7 +1206,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			subject_t subject {{12, 34}, {56, 78}};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = {12, 34} {56 x 78}\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -1245,7 +1244,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			subject_t subject {{12, 34}, {56, 78}};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = {12, 34} {56 x 78}\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -1283,7 +1282,7 @@ TEST_CASE("$t(value)", "[t]")
 
 			subject_t subject {{12, 34}, {56, 78}};
 
-			dummy($t(subject));
+			$t(subject);
 
 			const char *expected {"subject = {12, 34} {56 x 78}\n"};
 			REQUIRE(test::out_stream.str() == expected);
@@ -1299,7 +1298,7 @@ TEST_CASE("$t(value)", "[t]")
 
 		subject_t subject {456, -789};
 
-		dummy($t(subject));
+		$t(subject);
 
 		const char *expected {"subject = {456, -789}\n"};
 		REQUIRE(test::out_stream.str() == expected);
@@ -1314,7 +1313,7 @@ TEST_CASE("$t(value)", "[t]")
 
 		subject_t subject {456, -789};
 
-		dummy($t(subject));
+		$t(subject);
 
 		const char *expected {"subject = {456 x -789}\n"};
 		REQUIRE(test::out_stream.str() == expected);
@@ -1329,7 +1328,7 @@ TEST_CASE("$t(value)", "[t]")
 
 		subject_t subject {12, 34, 56, 78};
 
-		dummy($t(subject));
+		$t(subject);
 
 		const char *expected {"subject = {12, 34} {56 x 78}\n"};
 		REQUIRE(test::out_stream.str() == expected);

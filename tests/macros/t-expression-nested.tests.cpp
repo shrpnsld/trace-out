@@ -1,4 +1,3 @@
-#include "dummy.hpp"
 #include "lifecycle-tracker.hpp"
 #include "test-stream.hpp"
 #include "trace-out/trace-out.hpp"
