@@ -2,14 +2,6 @@ include(Catch)
 include(compile-options-if-supported)
 include(build-optimizations)
 
-set(TRACE_OUT_TEST_AMALGAMATED YES CACHE BOOL "Test amalgamated 'trace-out.hpp'")
-
-if(TRACE_OUT_TEST_AMALGAMATED)
-	add_library(trace-out ALIAS trace-out-amalgamated)
-else()
-	add_library(trace-out ALIAS trace-out-dev)
-endif()
-
 add_compile_options_if_supported("-Wall" "-Wextra" "/W4")
 
 add_subdirectory(compatibility-with-c++98)
