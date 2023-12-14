@@ -41,6 +41,23 @@ target_sources(helpers-c++11
 )
 
 #
+# 'dollar-store-catch2' (C++98 compatible Catch2)
+
+add_library(dollar-store-catch2)
+
+target_compile_definitions(dollar-store-catch2
+	PUBLIC
+		DOLLAR_STORE_CATCH2__PROJECT_ROOT_DIR="${PROJECT_SOURCE_DIR}"
+)
+
+target_sources(dollar-store-catch2
+	PRIVATE
+		dollar-store-catch2-main.cpp
+		dollar-store-catch2.cpp
+		dollar-store-catch2.hpp
+)
+
+#
 # IDE
 
 set_target_properties(helpers PROPERTIES FOLDER tests)
