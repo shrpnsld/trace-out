@@ -75,9 +75,9 @@ struct grouping_option
 
 struct byte_order_option
 {
-	inline explicit byte_order_option(byte_order_t value);
+	inline explicit byte_order_option(byte_order_t::enumeration value);
 
-	byte_order_t value;
+	byte_order_t::enumeration value;
 };
 
 struct column_count_option
@@ -89,7 +89,7 @@ struct column_count_option
 
 struct memory_display_options_t
 {
-	inline memory_display_options_t(base_t base, standard::size_t grouping, byte_order_t byte_order, standard::size_t column_count);
+	inline memory_display_options_t(base_t base, standard::size_t grouping, byte_order_t::enumeration byte_order, standard::size_t column_count);
 
 	inline void set_option(const base_option &option);
 	inline void set_option(const grouping_option &option);
@@ -99,7 +99,7 @@ struct memory_display_options_t
 
 	base_t base;
 	standard::size_t grouping;
-	byte_order_t byte_order;
+	byte_order_t::enumeration byte_order;
 	standard::size_t column_count;
 };
 
@@ -122,13 +122,13 @@ struct printable_number_t<standard::uint8_t>
 };
 
 inline const char *base_name(base_t value);
-inline const char *byte_order_name(byte_order_t value);
+inline const char *byte_order_name(byte_order_t::enumeration value);
 inline standard::size_t printed_value_width_for_base_and_grouping(base_t base, standard::size_t grouping);
 inline standard::size_t closest_power_of_2(standard::size_t max_column_count);
 inline standard::size_t calculate_optimal_column_count(standard::size_t preferred_column_count, standard::size_t stream_width, standard::size_t marker_width, standard::size_t file_line_width, standard::size_t indentation_width, standard::size_t pointer_width, standard::size_t delimiter_width, standard::size_t grouping, standard::size_t column_width);
 
 typedef void (*print_chunk_t)(std::ostream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t column_width);
-inline print_chunk_t select_print_chunk_function(base_t base, standard::size_t chunk_size, byte_order_t byte_order);
+inline print_chunk_t select_print_chunk_function(base_t base, standard::size_t chunk_size, byte_order_t::enumeration byte_order);
 inline void print_binary_chunk(std::ostream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t column_width);
 inline void print_binary_chunk_reverse(std::ostream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t column_width);
 inline void print_hexadecimal_chunk(std::ostream &stream, const standard::uint8_t *chunk, standard::size_t size, standard::size_t column_width);
@@ -155,13 +155,13 @@ namespace trace_out
 
 void print_memory(std::ostream &stream, const file_line_t &file_line, const char *name, const standard::uint8_t *memory, standard::size_t size)
 {
-	print_memory_with_display_options(stream, file_line, name, memory, size, memory_display_options_t(HEX, 1, CURRENT_BYTE_ORDER, 0));
+	print_memory_with_display_options(stream, file_line, name, memory, size, memory_display_options_t(HEX, 1, byte_order_t::current(), 0));
 }
 
 template <typename Option1_t>
 void print_memory(std::ostream &stream, const file_line_t &file_line, const char *name, const standard::uint8_t *memory, standard::size_t size, const Option1_t &option1)
 {
-	memory_display_options_t options(HEX, 1, CURRENT_BYTE_ORDER, 0);
+	memory_display_options_t options(HEX, 1, byte_order_t::current(), 0);
 	options.set_option(option1);
 
 	print_memory_with_display_options(stream, file_line, name, memory, size, options);
@@ -170,7 +170,7 @@ void print_memory(std::ostream &stream, const file_line_t &file_line, const char
 template <typename Option1_t, typename Option2_t>
 void print_memory(std::ostream &stream, const file_line_t &file_line, const char *name, const standard::uint8_t *memory, standard::size_t size, const Option1_t &option1, const Option2_t &option2)
 {
-	memory_display_options_t options(HEX, 1, CURRENT_BYTE_ORDER, 0);
+	memory_display_options_t options(HEX, 1, byte_order_t::current(), 0);
 	options.set_option(option1);
 	options.set_option(option2);
 
@@ -180,7 +180,7 @@ void print_memory(std::ostream &stream, const file_line_t &file_line, const char
 template <typename Option1_t, typename Option2_t, typename Option3_t>
 void print_memory(std::ostream &stream, const file_line_t &file_line, const char *name, const standard::uint8_t *memory, standard::size_t size, const Option1_t &option1, const Option2_t &option2, const Option3_t &option3)
 {
-	memory_display_options_t options(HEX, 1, CURRENT_BYTE_ORDER, 0);
+	memory_display_options_t options(HEX, 1, byte_order_t::current(), 0);
 	options.set_option(option1);
 	options.set_option(option2);
 	options.set_option(option3);
@@ -191,7 +191,7 @@ void print_memory(std::ostream &stream, const file_line_t &file_line, const char
 template <typename Option1_t, typename Option2_t, typename Option3_t, typename Option4_t>
 void print_memory(std::ostream &stream, const file_line_t &file_line, const char *name, const standard::uint8_t *memory, standard::size_t size, const Option1_t &option1, const Option2_t &option2, const Option3_t &option3, const Option4_t &option4)
 {
-	memory_display_options_t options(HEX, 1, CURRENT_BYTE_ORDER, 0);
+	memory_display_options_t options(HEX, 1, byte_order_t::current(), 0);
 	options.set_option(option1);
 	options.set_option(option2);
 	options.set_option(option3);
@@ -279,7 +279,7 @@ grouping_option::grouping_option(standard::size_t value)
 {
 }
 
-byte_order_option::byte_order_option(byte_order_t value)
+byte_order_option::byte_order_option(byte_order_t::enumeration value)
 	:
 	value(value)
 {
@@ -291,7 +291,7 @@ column_count_option::column_count_option(standard::size_t value)
 {
 }
 
-memory_display_options_t::memory_display_options_t(base_t base, standard::size_t grouping, byte_order_t byte_order, standard::size_t column_count)
+memory_display_options_t::memory_display_options_t(base_t base, standard::size_t grouping, byte_order_t::enumeration byte_order, standard::size_t column_count)
 	:
 	base(base),
 	grouping(grouping),
@@ -369,14 +369,14 @@ const char *base_name(base_t value)
 	}
 }
 
-const char *byte_order_name(byte_order_t value)
+const char *byte_order_name(byte_order_t::enumeration value)
 {
 	switch (value)
 	{
-		case LITTLE:
+		case byte_order_t::LITTLE:
 			return "little-endian";
 
-		case BIG:
+		case byte_order_t::BIG:
 			return "big-endian";
 	}
 }
@@ -485,31 +485,31 @@ standard::size_t calculate_optimal_column_count(standard::size_t preferred_colum
 	return closest_power_of_2(column_count);
 }
 
-print_chunk_t select_print_chunk_function(base_t base, standard::size_t chunk_size, byte_order_t byte_order)
+print_chunk_t select_print_chunk_function(base_t base, standard::size_t chunk_size, byte_order_t::enumeration byte_order)
 {
 	switch (base)
 	{
 		case BIN:
-			return byte_order == CURRENT_BYTE_ORDER ? print_binary_chunk : print_binary_chunk_reverse;
+			return byte_order == byte_order_t::current() ? print_binary_chunk : print_binary_chunk_reverse;
 
 		case HEX:
-			return byte_order == CURRENT_BYTE_ORDER ? print_hexadecimal_chunk : print_hexadecimal_chunk_reverse;
+			return byte_order == byte_order_t::current() ? print_hexadecimal_chunk : print_hexadecimal_chunk_reverse;
 
 		case SDEC:
 		{
 			switch (chunk_size)
 			{
 				case 1:
-					return byte_order == CURRENT_BYTE_ORDER ? print_number_chunk<standard::int8_t> : print_number_chunk_reverse<standard::int8_t>;
+					return byte_order == byte_order_t::current() ? print_number_chunk<standard::int8_t> : print_number_chunk_reverse<standard::int8_t>;
 
 				case 2:
-					return byte_order == CURRENT_BYTE_ORDER ? print_number_chunk<standard::int16_t> : print_number_chunk_reverse<standard::int16_t>;
+					return byte_order == byte_order_t::current() ? print_number_chunk<standard::int16_t> : print_number_chunk_reverse<standard::int16_t>;
 
 				case 4:
-					return byte_order == CURRENT_BYTE_ORDER ? print_number_chunk<standard::int32_t> : print_number_chunk_reverse<standard::int32_t>;
+					return byte_order == byte_order_t::current() ? print_number_chunk<standard::int32_t> : print_number_chunk_reverse<standard::int32_t>;
 
 				case 8:
-					return byte_order == CURRENT_BYTE_ORDER ? print_number_chunk<standard::int64_t> : print_number_chunk_reverse<standard::int64_t>;
+					return byte_order == byte_order_t::current() ? print_number_chunk<standard::int64_t> : print_number_chunk_reverse<standard::int64_t>;
 
 				default:
 					return NULL;
@@ -520,29 +520,29 @@ print_chunk_t select_print_chunk_function(base_t base, standard::size_t chunk_si
 			switch (chunk_size)
 			{
 				case 1:
-					return byte_order == CURRENT_BYTE_ORDER ? print_number_chunk<standard::uint8_t> : print_number_chunk_reverse<standard::uint8_t>;
+					return byte_order == byte_order_t::current() ? print_number_chunk<standard::uint8_t> : print_number_chunk_reverse<standard::uint8_t>;
 
 				case 2:
-					return byte_order == CURRENT_BYTE_ORDER ? print_number_chunk<standard::uint16_t> : print_number_chunk_reverse<standard::uint16_t>;
+					return byte_order == byte_order_t::current() ? print_number_chunk<standard::uint16_t> : print_number_chunk_reverse<standard::uint16_t>;
 
 				case 4:
-					return byte_order == CURRENT_BYTE_ORDER ? print_number_chunk<standard::uint32_t> : print_number_chunk_reverse<standard::uint32_t>;
+					return byte_order == byte_order_t::current() ? print_number_chunk<standard::uint32_t> : print_number_chunk_reverse<standard::uint32_t>;
 
 				case 8:
-					return byte_order == CURRENT_BYTE_ORDER ? print_number_chunk<standard::uint64_t> : print_number_chunk_reverse<standard::uint64_t>;
+					return byte_order == byte_order_t::current() ? print_number_chunk<standard::uint64_t> : print_number_chunk_reverse<standard::uint64_t>;
 
 				default:
 					return NULL;
 			}
 
 		case FLT:
-			return byte_order == CURRENT_BYTE_ORDER ? print_number_chunk<float> : print_number_chunk_reverse<float>;
+			return byte_order == byte_order_t::current() ? print_number_chunk<float> : print_number_chunk_reverse<float>;
 
 		case DBL:
-			return byte_order == CURRENT_BYTE_ORDER ? print_number_chunk<double> : print_number_chunk_reverse<double>;
+			return byte_order == byte_order_t::current() ? print_number_chunk<double> : print_number_chunk_reverse<double>;
 
 		case LDBL:
-			return byte_order == CURRENT_BYTE_ORDER ? print_number_chunk<long double> : print_number_chunk_reverse<long double>;
+			return byte_order == byte_order_t::current() ? print_number_chunk<long double> : print_number_chunk_reverse<long double>;
 	}
 }
 

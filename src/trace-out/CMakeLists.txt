@@ -12,6 +12,7 @@ target_sources(trace-out
 		mutex.hpp
 		nothing.hpp
 		number-bits-iterator.hpp
+		number-bytes-iterator.hpp
 		number-format.hpp
 		platform-detection.hpp
 		pretty-code-blocks.hpp

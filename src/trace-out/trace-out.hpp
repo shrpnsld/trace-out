@@ -28,8 +28,8 @@
 #define $dbl trace_out::base_option(trace_out::DBL)
 #define $ldbl trace_out::base_option(trace_out::LDBL)
 #define $grp(value) trace_out::grouping_option(value)
-#define $be trace_out::byte_order_option(trace_out::BIG)
-#define $le trace_out::byte_order_option(trace_out::LITTLE)
+#define $be trace_out::byte_order_option(trace_out::byte_order_t::BIG)
+#define $le trace_out::byte_order_option(trace_out::byte_order_t::LITTLE)
 #define $col(value) trace_out::column_count_option(value)
 
 #define $m(pointer, ...) \

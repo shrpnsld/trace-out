@@ -1,28 +1,36 @@
 #pragma once
 
 //
-// Private
-
-namespace trace_out
-{
-
-static const standard::uint16_t BYTE_ORDER_TEST_VALUE = static_cast<standard::uint16_t>(0x0001);
-
-}
-
-//
 // Public
 
 namespace trace_out
 {
 
-enum byte_order_t
+struct byte_order_t
 {
-	LITTLE = 0,
-	BIG = 1
+	enum enumeration
+	{
+		LITTLE = 0,
+		BIG = 1
+	};
+
+	inline static byte_order_t::enumeration current();
 };
 
-static const byte_order_t CURRENT_BYTE_ORDER = static_cast<byte_order_t>(*reinterpret_cast<const standard::uint8_t *>(&BYTE_ORDER_TEST_VALUE) == static_cast<standard::uint8_t>(0x01));
+}
+
+//
+// Implementation
+
+namespace trace_out
+{
+
+byte_order_t::enumeration byte_order_t::current()
+{
+	static const standard::uint16_t TEST_VALUE = static_cast<standard::uint16_t>(0x0001);
+
+	return *reinterpret_cast<const standard::uint8_t *>(&TEST_VALUE) == static_cast<standard::uint8_t>(0x01) ? BIG : LITTLE;
+}
 
 }
 
