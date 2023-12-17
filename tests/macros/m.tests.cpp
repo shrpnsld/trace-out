@@ -94,6 +94,26 @@ TEST_CASE("$m(<pointer>, <size>, $bin, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
+	SECTION("$bin, $grp(2)")
+	{
+		$m(subject.data(), subject.size(), $bin, $grp(2))
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		expected << "subject.data(), 32 bytes of 2-byte binary\n";
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 1101111101100100 0110110011001111" "  .dl." "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 1111100111001011 1110110100010001" "  ...." "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 0100101010000011 0111100000101000" "  J.x(" "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 0011110101001000 1010110101000000" "  =H.@" "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 0000000100111001 0100110110011110" "  .9M." "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 1111110110110100 0100010110100001" "  ..E." "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 0111010001101000 1111110011011001" "  th.." "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 0001100011001100 0011101100110010" "  ..;2" "\n";
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
 	SECTION("$bin, $grp(2), $le")
 	{
 		$m(subject.data(), subject.size(), $bin, $grp(2), $le)
@@ -134,6 +154,26 @@ TEST_CASE("$m(<pointer>, <size>, $bin, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
+	SECTION("$bin, $grp(4)")
+	{
+		$m(subject.data(), subject.size(), $bin, $grp(4))
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		expected << "subject.data(), 32 bytes of 4-byte binary\n";
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 11011111011001000110110011001111" "  .dl." "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 11111001110010111110110100010001" "  ...." "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 01001010100000110111100000101000" "  J.x(" "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 00111101010010001010110101000000" "  =H.@" "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 00000001001110010100110110011110" "  .9M." "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 11111101101101000100010110100001" "  ..E." "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 01110100011010001111110011011001" "  th.." "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 00011000110011000011101100110010" "  ..;2" "\n";
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
 	SECTION("$bin, $grp(4), $le")
 	{
 		$m(subject.data(), subject.size(), $bin, $grp(4), $le)
@@ -169,6 +209,22 @@ TEST_CASE("$m(<pointer>, <size>, $bin, $grp(...), $le|$be)", "[m]")
 		expected << "    " << std::hex << address << RESET_FLAGS << ": 11111101101101000100010110100001" "  ..E." "\n"; address += 4;
 		expected << "    " << std::hex << address << RESET_FLAGS << ": 01110100011010001111110011011001" "  th.." "\n"; address += 4;
 		expected << "    " << std::hex << address << RESET_FLAGS << ": 00011000110011000011101100110010" "  ..;2" "\n";
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
+	SECTION("$bin, $grp(8)")
+	{
+		$m(subject.data(), subject.size(), $bin, $grp(8))
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		expected << "subject.data(), 32 bytes of 8-byte binary\n";
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 1101111101100100011011001100111111111001110010111110110100010001" "  .dl....." "\n"; address += 8;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 0100101010000011011110000010100000111101010010001010110101000000" "  J.x(=H.@" "\n"; address += 8;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 0000000100111001010011011001111011111101101101000100010110100001" "  .9M...E." "\n"; address += 8;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 0111010001101000111111001101100100011000110011000011101100110010" "  th....;2" "\n";
 		expected << "\n";
 
 		REQUIRE(test::out_stream.str() == expected.str());
@@ -249,6 +305,22 @@ TEST_CASE("$m(<pointer>, <size>, $hex, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
+	SECTION("$hex, $grp(2)")
+	{
+		$m(subject.data(), subject.size(), $hex, $grp(2))
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		expected << "subject.data(), 32 bytes of 2-byte hexadecimal\n";
+		expected << "    " << std::hex << address << RESET_FLAGS << ": df64 6ccf f9cb ed11" "  .dl....." "\n"; address += 8;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 4a83 7828 3d48 ad40" "  J.x(=H.@" "\n"; address += 8;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 0139 4d9e fdb4 45a1" "  .9M...E." "\n"; address += 8;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 7468 fcd9 18cc 3b32" "  th....;2" "\n";
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
 	SECTION("$hex, $grp(2), $le")
 	{
 		$m(subject.data(), subject.size(), $hex, $grp(2), $le)
@@ -281,6 +353,22 @@ TEST_CASE("$m(<pointer>, <size>, $hex, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
+	SECTION("$hex, $grp(4)")
+	{
+		$m(subject.data(), subject.size(), $hex, $grp(4))
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		expected << "subject.data(), 32 bytes of 4-byte hexadecimal\n";
+		expected << "    " << std::hex << address << RESET_FLAGS << ": df646ccf f9cbed11" "  .dl....." "\n"; address += 8;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 4a837828 3d48ad40" "  J.x(=H.@" "\n"; address += 8;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 01394d9e fdb445a1" "  .9M...E." "\n"; address += 8;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 7468fcd9 18cc3b32" "  th....;2" "\n";
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
 	SECTION("$hex, $grp(4), $le")
 	{
 		$m(subject.data(), subject.size(), $hex, $grp(4), $le)
@@ -308,6 +396,20 @@ TEST_CASE("$m(<pointer>, <size>, $hex, $grp(...), $le|$be)", "[m]")
 		expected << "    " << std::hex << address << RESET_FLAGS << ": 4a837828 3d48ad40" "  J.x(=H.@" "\n"; address += 8;
 		expected << "    " << std::hex << address << RESET_FLAGS << ": 01394d9e fdb445a1" "  .9M...E." "\n"; address += 8;
 		expected << "    " << std::hex << address << RESET_FLAGS << ": 7468fcd9 18cc3b32" "  th....;2" "\n";
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
+	SECTION("$hex, $grp(8)")
+	{
+		$m(subject.data(), subject.size(), $hex, $grp(8))
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		expected << "subject.data(), 32 bytes of 8-byte hexadecimal\n";
+		expected << "    " << std::hex << address << RESET_FLAGS << ": df646ccff9cbed11 4a8378283d48ad40" "  .dl.....J.x(=H.@" "\n"; address += 16;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 01394d9efdb445a1 7468fcd918cc3b32" "  .9M...E.th....;2" "\n";
 		expected << "\n";
 
 		REQUIRE(test::out_stream.str() == expected.str());
@@ -352,6 +454,34 @@ TEST_CASE("$m(<pointer>, <size>, $sdec, $grp(...), $le|$be)", "[m]")
 	};
 	std::uintptr_t address {reinterpret_cast<std::uintptr_t>(subject.data())};
 
+	SECTION("$sdec")
+	{
+		$m(subject.data(), subject.size(), $sdec)
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		if (trace_out::byte_order_t::current() == trace_out::byte_order_t::LITTLE)
+		{
+			expected << "subject.data(), 32 bytes of 1-byte signed decimal\n";
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  -33  100  108  -49   -7  -53  -19   17" "  .dl....." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":   74 -125  120   40   61   72  -83   64" "  J.x(=H.@" "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":    1   57   77  -98   -3  -76   69  -95" "  .9M...E." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  116  104   -4  -39   24  -52   59   50" "  th....;2" "\n";
+		}
+		else if (trace_out::byte_order_t::current() == trace_out::byte_order_t::BIG)
+		{
+			expected << "subject.data(), 32 bytes of 1-byte signed decimal\n";
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  -33  100  108  -49   -7  -53  -19   17" "  .dl....." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":   74 -125  120   40   61   72  -83   64" "  J.x(=H.@" "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":    1   57   77  -98   -3  -76   69  -95" "  .9M...E." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  116  104   -4  -39   24  -52   59   50" "  th....;2" "\n";
+		}
+
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
 	SECTION("$sdec, $le")
 	{
 		$m(subject.data(), subject.size(), $sdec, $le)
@@ -379,6 +509,34 @@ TEST_CASE("$m(<pointer>, <size>, $sdec, $grp(...), $le|$be)", "[m]")
 		expected << "    " << std::hex << address << RESET_FLAGS << ":   74 -125  120   40   61   72  -83   64" "  J.x(=H.@" "\n"; address += 8;
 		expected << "    " << std::hex << address << RESET_FLAGS << ":    1   57   77  -98   -3  -76   69  -95" "  .9M...E." "\n"; address += 8;
 		expected << "    " << std::hex << address << RESET_FLAGS << ":  116  104   -4  -39   24  -52   59   50" "  th....;2" "\n";
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
+	SECTION("$sdec, $grp(1)")
+	{
+		$m(subject.data(), subject.size(), $sdec, $grp(1))
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		if (trace_out::byte_order_t::current() == trace_out::byte_order_t::LITTLE)
+		{
+			expected << "subject.data(), 32 bytes of 1-byte signed decimal\n";
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  -33  100  108  -49   -7  -53  -19   17" "  .dl....." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":   74 -125  120   40   61   72  -83   64" "  J.x(=H.@" "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":    1   57   77  -98   -3  -76   69  -95" "  .9M...E." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  116  104   -4  -39   24  -52   59   50" "  th....;2" "\n";
+		}
+		else if (trace_out::byte_order_t::current() == trace_out::byte_order_t::BIG)
+		{
+			expected << "subject.data(), 32 bytes of 1-byte signed decimal\n";
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  -33  100  108  -49   -7  -53  -19   17" "  .dl....." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":   74 -125  120   40   61   72  -83   64" "  J.x(=H.@" "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":    1   57   77  -98   -3  -76   69  -95" "  .9M...E." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  116  104   -4  -39   24  -52   59   50" "  th....;2" "\n";
+		}
+
 		expected << "\n";
 
 		REQUIRE(test::out_stream.str() == expected.str());
@@ -416,6 +574,34 @@ TEST_CASE("$m(<pointer>, <size>, $sdec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
+	SECTION("$sdec, $grp(2)")
+	{
+		$m(subject.data(), subject.size(), $sdec, $grp(2))
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		if (trace_out::byte_order_t::current() == trace_out::byte_order_t::LITTLE)
+		{
+			expected << "subject.data(), 32 bytes of 2-byte signed decimal, little-endian\n";
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  -8348  27855  -1589  -4847" "  .dl....." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  19075  30760  15688 -21184" "  J.x(=H.@" "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":    313  19870   -588  17825" "  .9M...E." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  29800   -807   6348  15154" "  th....;2" "\n";
+		}
+		else if (trace_out::byte_order_t::current() == trace_out::byte_order_t::BIG)
+		{
+			expected << "subject.data(), 32 bytes of 2-byte signed decimal, big-endian\n";
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  25823 -12436 -13319   4589" "  .dl....." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ": -31926  10360  18493  16557" "  J.x(=H.@" "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  14593 -25011 -19203 -24251" "  .9M...E." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  26740  -9732 -13288  12859" "  th....;2" "\n";
+		}
+
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
 	SECTION("$sdec, $grp(2), $le")
 	{
 		$m(subject.data(), subject.size(), $sdec, $grp(2), $le)
@@ -448,6 +634,34 @@ TEST_CASE("$m(<pointer>, <size>, $sdec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
+	SECTION("$sdec, $grp(4)")
+	{
+		$m(subject.data(), subject.size(), $sdec, $grp(4))
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		if (trace_out::byte_order_t::current() == trace_out::byte_order_t::LITTLE)
+		{
+			expected << "subject.data(), 32 bytes of 4-byte signed decimal, little-endian\n";
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  -547066673  -104076015" "  .dl....." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  1250129960  1028173120" "  J.x(=H.@" "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":    20532638   -38517343" "  .9M...E." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  1953037529   416037682" "  th....;2" "\n";
+		}
+		else if (trace_out::byte_order_t::current() == trace_out::byte_order_t::BIG)
+		{
+			expected << "subject.data(), 32 bytes of 4-byte signed decimal, big-endian\n";
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  -814979873   300796921" "  .dl....." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":   678986570  1085098045" "  J.x(=H.@" "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ": -1639106303 -1589267203" "  .9M...E." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  -637769612   842779672" "  th....;2" "\n";
+		}
+
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
 	SECTION("$sdec, $grp(4), $le")
 	{
 		$m(subject.data(), subject.size(), $sdec, $grp(4), $le)
@@ -475,6 +689,34 @@ TEST_CASE("$m(<pointer>, <size>, $sdec, $grp(...), $le|$be)", "[m]")
 		expected << "    " << std::hex << address << RESET_FLAGS << ":   678986570  1085098045" "  J.x(=H.@" "\n"; address += 8;
 		expected << "    " << std::hex << address << RESET_FLAGS << ": -1639106303 -1589267203" "  .9M...E." "\n"; address += 8;
 		expected << "    " << std::hex << address << RESET_FLAGS << ":  -637769612   842779672" "  th....;2" "\n";
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
+	SECTION("$sdec, $grp(8)")
+	{
+		$m(subject.data(), subject.size(), $sdec, $grp(8))
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		if (trace_out::byte_order_t::current() == trace_out::byte_order_t::LITTLE)
+		{
+			expected << "subject.data(), 32 bytes of 8-byte signed decimal, little-endian\n";
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  -2349633465075634927" "  .dl....." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":   5369267294977961280" "  J.x(=H.@" "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":     88187012967056801" "  .9M...E." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":   8388232315331689266" "  th....;2" "\n";
+		}
+		else if (trace_out::byte_order_t::current() == trace_out::byte_order_t::BIG)
+		{
+			expected << "subject.data(), 32 bytes of 8-byte signed decimal, big-endian\n";
+			expected << "    " << std::hex << address << RESET_FLAGS << ":   1291912941912483039" "  .dl....." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":   4660460616907522890" "  J.x(=H.@" "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  -6825850658834532095" "  .9M...E." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":   3619711132630804596" "  th....;2" "\n";
+		}
+
 		expected << "\n";
 
 		REQUIRE(test::out_stream.str() == expected.str());
@@ -523,6 +765,34 @@ TEST_CASE("$m(<pointer>, <size>, $udec, $grp(...), $le|$be)", "[m]")
 	};
 	std::uintptr_t address {reinterpret_cast<std::uintptr_t>(subject.data())};
 
+	SECTION("$udec")
+	{
+		$m(subject.data(), subject.size(), $udec)
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		if (trace_out::byte_order_t::current() == trace_out::byte_order_t::LITTLE)
+		{
+			expected << "subject.data(), 32 bytes of 1-byte unsigned decimal\n";
+			expected << "    " << std::hex << address << RESET_FLAGS << ": 223 100 108 207 249 203 237  17" "  .dl....." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  74 131 120  40  61  72 173  64" "  J.x(=H.@" "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":   1  57  77 158 253 180  69 161" "  .9M...E." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ": 116 104 252 217  24 204  59  50" "  th....;2" "\n";
+		}
+		else if (trace_out::byte_order_t::current() == trace_out::byte_order_t::BIG)
+		{
+			expected << "subject.data(), 32 bytes of 1-byte unsigned decimal\n";
+			expected << "    " << std::hex << address << RESET_FLAGS << ": 223 100 108 207 249 203 237  17" "  .dl....." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  74 131 120  40  61  72 173  64" "  J.x(=H.@" "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":   1  57  77 158 253 180  69 161" "  .9M...E." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ": 116 104 252 217  24 204  59  50" "  th....;2" "\n";
+		}
+
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
 	SECTION("$udec, $le")
 	{
 		$m(subject.data(), subject.size(), $udec, $le)
@@ -550,6 +820,34 @@ TEST_CASE("$m(<pointer>, <size>, $udec, $grp(...), $le|$be)", "[m]")
 		expected << "    " << std::hex << address << RESET_FLAGS << ":  74 131 120  40  61  72 173  64" "  J.x(=H.@" "\n"; address += 8;
 		expected << "    " << std::hex << address << RESET_FLAGS << ":   1  57  77 158 253 180  69 161" "  .9M...E." "\n"; address += 8;
 		expected << "    " << std::hex << address << RESET_FLAGS << ": 116 104 252 217  24 204  59  50" "  th....;2" "\n";
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
+	SECTION("$udec, $grp(1)")
+	{
+		$m(subject.data(), subject.size(), $udec, $grp(1))
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		if (trace_out::byte_order_t::current() == trace_out::byte_order_t::LITTLE)
+		{
+			expected << "subject.data(), 32 bytes of 1-byte unsigned decimal\n";
+			expected << "    " << std::hex << address << RESET_FLAGS << ": 223 100 108 207 249 203 237  17" "  .dl....." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  74 131 120  40  61  72 173  64" "  J.x(=H.@" "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":   1  57  77 158 253 180  69 161" "  .9M...E." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ": 116 104 252 217  24 204  59  50" "  th....;2" "\n";
+		}
+		else if (trace_out::byte_order_t::current() == trace_out::byte_order_t::BIG)
+		{
+			expected << "subject.data(), 32 bytes of 1-byte unsigned decimal\n";
+			expected << "    " << std::hex << address << RESET_FLAGS << ": 223 100 108 207 249 203 237  17" "  .dl....." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  74 131 120  40  61  72 173  64" "  J.x(=H.@" "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":   1  57  77 158 253 180  69 161" "  .9M...E." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ": 116 104 252 217  24 204  59  50" "  th....;2" "\n";
+		}
+
 		expected << "\n";
 
 		REQUIRE(test::out_stream.str() == expected.str());
@@ -587,6 +885,34 @@ TEST_CASE("$m(<pointer>, <size>, $udec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
+	SECTION("$udec, $grp(2)")
+	{
+		$m(subject.data(), subject.size(), $udec, $grp(2))
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		if (trace_out::byte_order_t::current() == trace_out::byte_order_t::LITTLE)
+		{
+			expected << "subject.data(), 32 bytes of 2-byte unsigned decimal, little-endian\n";
+			expected << "    " << std::hex << address << RESET_FLAGS << ": 57188 27855 63947 60689" "  .dl....." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ": 19075 30760 15688 44352" "  J.x(=H.@" "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":   313 19870 64948 17825" "  .9M...E." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ": 29800 64729  6348 15154" "  th....;2" "\n";
+		}
+		else if (trace_out::byte_order_t::current() == trace_out::byte_order_t::BIG)
+		{
+			expected << "subject.data(), 32 bytes of 2-byte unsigned decimal, big-endian\n";
+			expected << "    " << std::hex << address << RESET_FLAGS << ": 25823 53100 52217  4589" "  .dl....." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ": 33610 10360 18493 16557" "  J.x(=H.@" "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ": 14593 40525 46333 41285" "  .9M...E." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ": 26740 55804 52248 12859" "  th....;2" "\n";
+		}
+
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
 	SECTION("$udec, $grp(2), $le")
 	{
 		$m(subject.data(), subject.size(), $udec, $grp(2), $le)
@@ -619,6 +945,34 @@ TEST_CASE("$m(<pointer>, <size>, $udec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
+	SECTION("$udec, $grp(4)")
+	{
+		$m(subject.data(), subject.size(), $udec, $grp(4))
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		if (trace_out::byte_order_t::current() == trace_out::byte_order_t::LITTLE)
+		{
+			expected << "subject.data(), 32 bytes of 4-byte unsigned decimal, little-endian\n";
+			expected << "    " << std::hex << address << RESET_FLAGS << ": 3747900623 4190891281" "  .dl....." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ": 1250129960 1028173120" "  J.x(=H.@" "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":   20532638 4256449953" "  .9M...E." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ": 1953037529  416037682" "  th....;2" "\n";
+		}
+		else if (trace_out::byte_order_t::current() == trace_out::byte_order_t::BIG)
+		{
+			expected << "subject.data(), 32 bytes of 4-byte unsigned decimal, big-endian\n";
+			expected << "    " << std::hex << address << RESET_FLAGS << ": 3479987423  300796921" "  .dl....." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  678986570 1085098045" "  J.x(=H.@" "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ": 2655860993 2705700093" "  .9M...E." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ": 3657197684  842779672" "  th....;2" "\n";
+		}
+
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
 	SECTION("$udec, $grp(4), $le")
 	{
 		$m(subject.data(), subject.size(), $udec, $grp(4), $le)
@@ -646,6 +1000,34 @@ TEST_CASE("$m(<pointer>, <size>, $udec, $grp(...), $le|$be)", "[m]")
 		expected << "    " << std::hex << address << RESET_FLAGS << ":  678986570 1085098045" "  J.x(=H.@" "\n"; address += 8;
 		expected << "    " << std::hex << address << RESET_FLAGS << ": 2655860993 2705700093" "  .9M...E." "\n"; address += 8;
 		expected << "    " << std::hex << address << RESET_FLAGS << ": 3657197684  842779672" "  th....;2" "\n";
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
+	SECTION("$udec, $grp(8)")
+	{
+		$m(subject.data(), subject.size(), $udec, $grp(8))
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		if (trace_out::byte_order_t::current() == trace_out::byte_order_t::LITTLE)
+		{
+			expected << "subject.data(), 32 bytes of 8-byte unsigned decimal, little-endian\n";
+			expected << "    " << std::hex << address << RESET_FLAGS << ": 16097110608633916689" "  .dl....." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  5369267294977961280" "  J.x(=H.@" "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":    88187012967056801" "  .9M...E." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  8388232315331689266" "  th....;2" "\n";
+		}
+		else if (trace_out::byte_order_t::current() == trace_out::byte_order_t::BIG)
+		{
+			expected << "subject.data(), 32 bytes of 8-byte unsigned decimal, big-endian\n";
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  1291912941912483039" "  .dl....." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  4660460616907522890" "  J.x(=H.@" "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ": 11620893414875019521" "  .9M...E." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":  3619711132630804596" "  th....;2" "\n";
+		}
+
 		expected << "\n";
 
 		REQUIRE(test::out_stream.str() == expected.str());
@@ -694,6 +1076,34 @@ TEST_CASE("$m(<pointer>, <size>, $flt, $le|$be)", "[m]")
 	};
 	std::uintptr_t address {reinterpret_cast<std::uintptr_t>(subject.data())};
 
+	SECTION("$flt")
+	{
+		$m(subject.data(), subject.size(), $flt)
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		if (trace_out::byte_order_t::current() == trace_out::byte_order_t::LITTLE)
+		{
+			expected << "subject.data(), 32 bytes of " << sizeof(float) << "-byte float, little-endian\n";
+			expected << "    " << std::hex << address << RESET_FLAGS << ":   -1.64598e+19   -1.32356e+35" "  .dl....." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":    4.30799e+06      0.0489933" "  J.x(=H.@" "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":    3.40348e-38   -2.99528e+37" "  .9M...E." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":    7.38367e+31    5.27925e-24" "  th....;2" "\n";
+		}
+		if (trace_out::byte_order_t::current() == trace_out::byte_order_t::BIG)
+		{
+			expected << "subject.data(), 32 bytes of " << sizeof(float) << "-byte float, big-endian\n";
+			expected << "    " << std::hex << address << RESET_FLAGS << ":   -3.96603e+09    3.75177e-28" "  .dl....." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":    1.37952e-14        5.41507" "  J.x(=H.@" "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":   -1.08644e-20   -6.69857e-19" "  .9M...E." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":   -8.88082e+15    1.09312e-08" "  th....;2" "\n";
+		}
+
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
 	SECTION("$flt, $le")
 	{
 		$m(subject.data(), subject.size(), $flt, $le)
@@ -737,6 +1147,34 @@ TEST_CASE("$m(<pointer>, <size>, $dbl, $le|$be)", "[m]")
 	};
 	std::uintptr_t address {reinterpret_cast<std::uintptr_t>(subject.data())};
 
+	SECTION("$dbl")
+	{
+		$m(subject.data(), subject.size(), $dbl)
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		if (trace_out::byte_order_t::current() == trace_out::byte_order_t::LITTLE)
+		{
+			expected << "subject.data(), 32 bytes of " << sizeof(double) << "-byte double, little-endian\n";
+			expected << "    " << std::hex << address << RESET_FLAGS << ":   -3.34295808947304e+151" "  .dl....." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":     9.10544235845569e+50" "  J.x(=H.@" "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":    9.22443858116523e-303" "  .9M...E." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":    5.72495988265533e+252" "  th....;2" "\n";
+		}
+		if (trace_out::byte_order_t::current() == trace_out::byte_order_t::BIG)
+		{
+			expected << "subject.data(), 32 bytes of " << sizeof(double) << "-byte double, big-endian\n";
+			expected << "    " << std::hex << address << RESET_FLAGS << ":    2.57598040706935e-222" "  .dl....." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":         3748.11944939234" "  J.x(=H.@" "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":   -2.12203161888808e-148" "  .9M...E." "\n"; address += 8;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":     1.03105746265379e-66" "  th....;2" "\n";
+		}
+
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
 	SECTION("$dbl, $le")
 	{
 		$m(subject.data(), subject.size(), $dbl, $le)
@@ -779,6 +1217,30 @@ TEST_CASE("$m(<pointer>, <size>, $ldbl, $le|$be)", "[m]")
 		0x01, 0x39, 0x4d, 0x9e, 0xfd, 0xb4, 0x45, 0xa1, 0x74, 0x68, 0xfc, 0xd9, 0x18, 0xcc, 0x3b, 0x32
 	};
 	std::uintptr_t address {reinterpret_cast<std::uintptr_t>(subject.data())};
+
+	SECTION("$ldbl")
+	{
+		$m(subject.data(), subject.size(), $ldbl)
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		if (trace_out::byte_order_t::current() == trace_out::byte_order_t::LITTLE)
+		{
+			expected << "subject.data(), 32 bytes of " << sizeof(long double) << "-byte long double, little-endian\n";
+			expected << "    " << std::hex << address << RESET_FLAGS << ":   -1.11973504014201921e+3473" "  .dl.....J.x(=H.@" "\n"; address += 16;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":     1.10671162169717802e+434" "  .9M...E.th....;2" "\n";
+		}
+		if (trace_out::byte_order_t::current() == trace_out::byte_order_t::BIG)
+		{
+			expected << "subject.data(), 32 bytes of " << sizeof(long double) << "-byte long double, big-endian\n";
+			expected << "    " << std::hex << address << RESET_FLAGS << ":   -6.90527387463601281e-4680" "  .dl.....J.x(=H.@" "\n"; address += 16;
+			expected << "    " << std::hex << address << RESET_FLAGS << ":    7.37929517979928498e+3117" "  .9M...E.th....;2" "\n";
+		}
+
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
 
 	SECTION("$ldbl, $le")
 	{

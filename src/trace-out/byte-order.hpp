@@ -10,8 +10,9 @@ struct byte_order_t
 {
 	enum enumeration
 	{
-		LITTLE = 0,
-		BIG = 1
+		NOT_SPECIFIED = 0,
+		LITTLE = 1,
+		BIG = 2
 	};
 
 	inline static byte_order_t::enumeration current();
