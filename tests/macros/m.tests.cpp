@@ -1217,57 +1217,150 @@ TEST_CASE("$m(<pointer>, <size>, $ldbl, $le|$be)", "[m]")
 		0x01, 0x39, 0x4d, 0x9e, 0xfd, 0xb4, 0x45, 0xa1, 0x74, 0x68, 0xfc, 0xd9, 0x18, 0xcc, 0x3b, 0x32
 	};
 	std::uintptr_t address {reinterpret_cast<std::uintptr_t>(subject.data())};
+	std::size_t sizeof_long_double = {trace_out::number_format<long double>::size()};
 
-	SECTION("$ldbl")
+	switch (sizeof_long_double)
 	{
-		$m(subject.data(), subject.size(), $ldbl)
-
-		std::stringstream expected;
-		expected.unsetf(std::ios::basefield);
-		if (trace_out::byte_order_t::current() == trace_out::byte_order_t::LITTLE)
+		case 8:
 		{
-			expected << "subject.data(), 32 bytes of " << sizeof(long double) << "-byte long double, little-endian\n";
-			expected << "    " << std::hex << address << RESET_FLAGS << ":   -1.11973504014201921e+3473" "  .dl.....J.x(=H.@" "\n"; address += 16;
-			expected << "    " << std::hex << address << RESET_FLAGS << ":     1.10671162169717802e+434" "  .9M...E.th....;2" "\n";
+			SECTION("$ldbl, 64-bit")
+			{
+				$m(subject.data(), 32, $ldbl)
+
+				std::stringstream expected;
+				expected.unsetf(std::ios::basefield);
+				if (trace_out::byte_order_t::current() == trace_out::byte_order_t::LITTLE)
+				{
+					expected << "subject.data(), 32 bytes of " << sizeof_long_double << "-byte double, little-endian\n";
+					expected << "    " << std::hex << address << RESET_FLAGS << ":   -3.34295808947304e+151" "  .dl....." "\n"; address += sizeof_long_double;
+					expected << "    " << std::hex << address << RESET_FLAGS << ":     9.10544235845569e+50" "  J.x(=H.@" "\n"; address += sizeof_long_double;
+					expected << "    " << std::hex << address << RESET_FLAGS << ":    9.22443858116523e-303" "  .9M...E." "\n"; address += sizeof_long_double;
+					expected << "    " << std::hex << address << RESET_FLAGS << ":    5.72495988265533e+252" "  th....;2" "\n";
+				}
+				if (trace_out::byte_order_t::current() == trace_out::byte_order_t::BIG)
+				{
+					expected << "subject.data(), 32 bytes of " << sizeof_long_double << "-byte double, big-endian\n";
+					expected << "    " << std::hex << address << RESET_FLAGS << ":    2.57598040706935e-222" "  .dl....." "\n"; address += sizeof_long_double;
+					expected << "    " << std::hex << address << RESET_FLAGS << ":         3748.11944939234" "  J.x(=H.@" "\n"; address += sizeof_long_double;
+					expected << "    " << std::hex << address << RESET_FLAGS << ":   -2.12203161888808e-148" "  .9M...E." "\n"; address += sizeof_long_double;
+					expected << "    " << std::hex << address << RESET_FLAGS << ":     1.03105746265379e-66" "  th....;2" "\n";
+				}
+
+				expected << "\n";
+
+				REQUIRE(test::out_stream.str() == expected.str());
+			}
+
+			SECTION("$ldbl, 64-bit, $le")
+			{
+				$m(subject.data(), 32, $ldbl, $le)
+
+				std::stringstream expected;
+				expected.unsetf(std::ios::basefield);
+				expected << "subject.data(), 32 bytes of " << sizeof_long_double << "-byte double, little-endian\n";
+				expected << "    " << std::hex << address << RESET_FLAGS << ":   -3.34295808947304e+151" "  .dl....." "\n"; address += sizeof_long_double;
+				expected << "    " << std::hex << address << RESET_FLAGS << ":     9.10544235845569e+50" "  J.x(=H.@" "\n"; address += sizeof_long_double;
+				expected << "    " << std::hex << address << RESET_FLAGS << ":    9.22443858116523e-303" "  .9M...E." "\n"; address += sizeof_long_double;
+				expected << "    " << std::hex << address << RESET_FLAGS << ":    5.72495988265533e+252" "  th....;2" "\n";
+				expected << "\n";
+
+				REQUIRE(test::out_stream.str() == expected.str());
+			}
+
+			SECTION("$ldbl, 64-bit, $be")
+			{
+				$m(subject.data(), 32, $ldbl, $be)
+
+				std::stringstream expected;
+				expected.unsetf(std::ios::basefield);
+				expected << "subject.data(), 32 bytes of " << sizeof_long_double << "-byte double, big-endian\n";
+				expected << "    " << std::hex << address << RESET_FLAGS << ":    2.57598040706935e-222" "  .dl....." "\n"; address += sizeof_long_double;
+				expected << "    " << std::hex << address << RESET_FLAGS << ":         3748.11944939234" "  J.x(=H.@" "\n"; address += sizeof_long_double;
+				expected << "    " << std::hex << address << RESET_FLAGS << ":   -2.12203161888808e-148" "  .9M...E." "\n"; address += sizeof_long_double;
+				expected << "    " << std::hex << address << RESET_FLAGS << ":     1.03105746265379e-66" "  th....;2" "\n";
+				expected << "\n";
+
+				REQUIRE(test::out_stream.str() == expected.str());
+			}
+
+			break;
 		}
-		if (trace_out::byte_order_t::current() == trace_out::byte_order_t::BIG)
+
+		case 10:
 		{
-			expected << "subject.data(), 32 bytes of " << sizeof(long double) << "-byte long double, big-endian\n";
-			expected << "    " << std::hex << address << RESET_FLAGS << ":   -6.90527387463601281e-4680" "  .dl.....J.x(=H.@" "\n"; address += 16;
-			expected << "    " << std::hex << address << RESET_FLAGS << ":    7.37929517979928498e+3117" "  .9M...E.th....;2" "\n";
+			SECTION("$ldbl, 80-bit")
+			{
+				$m(subject.data(), 20, $ldbl)
+
+				std::stringstream expected;
+				expected.unsetf(std::ios::basefield);
+				if (trace_out::byte_order_t::current() == trace_out::byte_order_t::LITTLE)
+				{
+					expected << "subject.data(), 20 bytes of " << sizeof_long_double << "-byte long double, little-endian\n";
+					expected << "    " << std::hex << address << RESET_FLAGS << ":    -2.0302222937866432e+2419" "  .dl.....J." "\n"; address += sizeof_long_double;
+					expected << "    " << std::hex << address << RESET_FLAGS << ":    3.87600243484983522e+4327" "  x(=H.@.9M." "\n";
+				}
+				if (trace_out::byte_order_t::current() == trace_out::byte_order_t::BIG)
+				{
+					expected << "subject.data(), 20 bytes of " << sizeof_long_double << "-byte long double, big-endian\n";
+					expected << "    " << std::hex << address << RESET_FLAGS << ":   -6.90527387463601281e-4680" "  .dl.....J." "\n"; address += sizeof_long_double;
+					expected << "    " << std::hex << address << RESET_FLAGS << ":   -9.20363885204217373e-2598" "  x(=H.@.9M." "\n";
+				}
+
+				expected << "\n";
+
+				REQUIRE(test::out_stream.str() == expected.str());
+			}
+
+			SECTION("$ldbl, 80-bit, $le")
+			{
+				$m(subject.data(), 20, $ldbl, $le)
+
+				std::stringstream expected;
+				expected.unsetf(std::ios::basefield);
+				expected << "subject.data(), 20 bytes of " << sizeof_long_double << "-byte long double, little-endian\n";
+				expected << "    " << std::hex << address << RESET_FLAGS << ":    -2.0302222937866432e+2419" "  .dl.....J." "\n"; address += sizeof_long_double;
+				expected << "    " << std::hex << address << RESET_FLAGS << ":    3.87600243484983522e+4327" "  x(=H.@.9M." "\n";
+				expected << "\n";
+
+				REQUIRE(test::out_stream.str() == expected.str());
+			}
+
+			SECTION("$ldbl, 80-bit, $be")
+			{
+				$m(subject.data(), 20, $ldbl, $be)
+
+				std::stringstream expected;
+				expected.unsetf(std::ios::basefield);
+				expected << "subject.data(), 20 bytes of " << sizeof_long_double << "-byte long double, big-endian\n";
+				expected << "    " << std::hex << address << RESET_FLAGS << ":   -6.90527387463601281e-4680" "  .dl.....J." "\n"; address += sizeof_long_double;
+				expected << "    " << std::hex << address << RESET_FLAGS << ":   -9.20363885204217373e-2598" "  x(=H.@.9M." "\n";
+				expected << "\n";
+
+				REQUIRE(test::out_stream.str() == expected.str());
+			}
+
+			break;
 		}
 
-		expected << "\n";
+		case 16:
+		{
+			// TODO: do
 
-		REQUIRE(test::out_stream.str() == expected.str());
-	}
+			SECTION("$ldbl, 128-bit")
+			{
+			}
 
-	SECTION("$ldbl, $le")
-	{
-		$m(subject.data(), subject.size(), $ldbl, $le)
+			SECTION("$ldbl, 128-bit, $le")
+			{
+			}
 
-		std::stringstream expected;
-		expected.unsetf(std::ios::basefield);
-		expected << "subject.data(), 32 bytes of " << sizeof(long double) << "-byte long double, little-endian\n";
-		expected << "    " << std::hex << address << RESET_FLAGS << ":   -1.11973504014201921e+3473" "  .dl.....J.x(=H.@" "\n"; address += 16;
-		expected << "    " << std::hex << address << RESET_FLAGS << ":     1.10671162169717802e+434" "  .9M...E.th....;2" "\n";
-		expected << "\n";
+			SECTION("$ldbl, 128-bit, $be")
+			{
+			}
 
-		REQUIRE(test::out_stream.str() == expected.str());
-	}
-
-	SECTION("$ldbl, $be")
-	{
-		$m(subject.data(), subject.size(), $ldbl, $be)
-
-		std::stringstream expected;
-		expected.unsetf(std::ios::basefield);
-		expected << "subject.data(), 32 bytes of " << sizeof(long double) << "-byte long double, big-endian\n";
-		expected << "    " << std::hex << address << RESET_FLAGS << ":   -6.90527387463601281e-4680" "  .dl.....J.x(=H.@" "\n"; address += 16;
-		expected << "    " << std::hex << address << RESET_FLAGS << ":    7.37929517979928498e+3117" "  .9M...E.th....;2" "\n";
-		expected << "\n";
-
-		REQUIRE(test::out_stream.str() == expected.str());
+			break;
+		}
 	}
 }
 

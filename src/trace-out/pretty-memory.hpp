@@ -7,6 +7,7 @@
 #include "trace-out/console.hpp"
 #include "trace-out/mutex.hpp"
 #include "trace-out/nothing.hpp"
+#include "trace-out/number-format.hpp"
 #include "trace-out/pretty-lines.hpp"
 #include "trace-out/to-string.hpp"
 #include <algorithm>
@@ -308,15 +309,15 @@ void memory_display_options_t::set_option(const base_option &option)
 	switch (base)
 	{
 		case FLT:
-			grouping = sizeof(float);
+			grouping = number_format<float>::size();
 			break;
 
 		case DBL:
-			grouping = sizeof(double);
+			grouping = number_format<double>::size();
 			break;
 
 		case LDBL:
-			grouping = sizeof(long double);
+			grouping = number_format<long double>::size();
 			break;
 
 		default:
