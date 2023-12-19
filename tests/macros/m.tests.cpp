@@ -54,7 +54,7 @@ TEST_CASE("$m(<pointer>, <size>, $bin, $grp(...), $le|$be)", "[m]")
 	};
 	std::uintptr_t address {reinterpret_cast<std::uintptr_t>(subject.data())};
 
-	SECTION("$bin")
+	SECTION("default grouping, current byte order")
 	{
 		$m(subject.data(), subject.size(), $bin)
 
@@ -74,7 +74,87 @@ TEST_CASE("$m(<pointer>, <size>, $bin, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$bin, $grp(1), $be")
+	SECTION("default grouping, $le")
+	{
+		$m(subject.data(), subject.size(), $bin, $le)
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		expected << "subject.data(), 32 bytes of 1-byte binary\n";
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 11011111 01100100 01101100 11001111" "  .dl." "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 11111001 11001011 11101101 00010001" "  ...." "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 01001010 10000011 01111000 00101000" "  J.x(" "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 00111101 01001000 10101101 01000000" "  =H.@" "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 00000001 00111001 01001101 10011110" "  .9M." "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 11111101 10110100 01000101 10100001" "  ..E." "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 01110100 01101000 11111100 11011001" "  th.." "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 00011000 11001100 00111011 00110010" "  ..;2" "\n";
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
+	SECTION("default grouping, $be")
+	{
+		$m(subject.data(), subject.size(), $bin, $be)
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		expected << "subject.data(), 32 bytes of 1-byte binary\n";
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 11011111 01100100 01101100 11001111" "  .dl." "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 11111001 11001011 11101101 00010001" "  ...." "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 01001010 10000011 01111000 00101000" "  J.x(" "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 00111101 01001000 10101101 01000000" "  =H.@" "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 00000001 00111001 01001101 10011110" "  .9M." "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 11111101 10110100 01000101 10100001" "  ..E." "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 01110100 01101000 11111100 11011001" "  th.." "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 00011000 11001100 00111011 00110010" "  ..;2" "\n";
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
+	SECTION("$grp(1), current byte order")
+	{
+		$m(subject.data(), subject.size(), $bin, $grp(1))
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		expected << "subject.data(), 32 bytes of 1-byte binary\n";
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 11011111 01100100 01101100 11001111" "  .dl." "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 11111001 11001011 11101101 00010001" "  ...." "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 01001010 10000011 01111000 00101000" "  J.x(" "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 00111101 01001000 10101101 01000000" "  =H.@" "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 00000001 00111001 01001101 10011110" "  .9M." "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 11111101 10110100 01000101 10100001" "  ..E." "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 01110100 01101000 11111100 11011001" "  th.." "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 00011000 11001100 00111011 00110010" "  ..;2" "\n";
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
+	SECTION("$grp(1), $le")
+	{
+		$m(subject.data(), subject.size(), $bin, $grp(1), $le)
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		expected << "subject.data(), 32 bytes of 1-byte binary\n";
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 11011111 01100100 01101100 11001111" "  .dl." "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 11111001 11001011 11101101 00010001" "  ...." "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 01001010 10000011 01111000 00101000" "  J.x(" "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 00111101 01001000 10101101 01000000" "  =H.@" "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 00000001 00111001 01001101 10011110" "  .9M." "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 11111101 10110100 01000101 10100001" "  ..E." "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 01110100 01101000 11111100 11011001" "  th.." "\n"; address += 4;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 00011000 11001100 00111011 00110010" "  ..;2" "\n";
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
+	SECTION("$grp(1), $be")
 	{
 		$m(subject.data(), subject.size(), $bin, $grp(1), $be)
 
@@ -94,7 +174,7 @@ TEST_CASE("$m(<pointer>, <size>, $bin, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$bin, $grp(2)")
+	SECTION("$grp(2), current byte order")
 	{
 		$m(subject.data(), subject.size(), $bin, $grp(2))
 
@@ -114,7 +194,7 @@ TEST_CASE("$m(<pointer>, <size>, $bin, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$bin, $grp(2), $le")
+	SECTION("$grp(2), $le")
 	{
 		$m(subject.data(), subject.size(), $bin, $grp(2), $le)
 
@@ -134,7 +214,7 @@ TEST_CASE("$m(<pointer>, <size>, $bin, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$bin, $grp(2), $be")
+	SECTION("$grp(2), $be")
 	{
 		$m(subject.data(), subject.size(), $bin, $grp(2), $be)
 
@@ -154,7 +234,7 @@ TEST_CASE("$m(<pointer>, <size>, $bin, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$bin, $grp(4)")
+	SECTION("$grp(4), current byte order")
 	{
 		$m(subject.data(), subject.size(), $bin, $grp(4))
 
@@ -174,7 +254,7 @@ TEST_CASE("$m(<pointer>, <size>, $bin, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$bin, $grp(4), $le")
+	SECTION("$grp(4), $le")
 	{
 		$m(subject.data(), subject.size(), $bin, $grp(4), $le)
 
@@ -194,7 +274,7 @@ TEST_CASE("$m(<pointer>, <size>, $bin, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$bin, $grp(4), $be")
+	SECTION("$grp(4), $be")
 	{
 		$m(subject.data(), subject.size(), $bin, $grp(4), $be)
 
@@ -214,7 +294,7 @@ TEST_CASE("$m(<pointer>, <size>, $bin, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$bin, $grp(8)")
+	SECTION("$grp(8), current byte order")
 	{
 		$m(subject.data(), subject.size(), $bin, $grp(8))
 
@@ -230,7 +310,7 @@ TEST_CASE("$m(<pointer>, <size>, $bin, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$bin, $grp(8), $le")
+	SECTION("$grp(8), $le")
 	{
 		$m(subject.data(), subject.size(), $bin, $grp(8), $le)
 
@@ -246,7 +326,7 @@ TEST_CASE("$m(<pointer>, <size>, $bin, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$bin, $grp(8), $be")
+	SECTION("$grp(8), $be")
 	{
 		$m(subject.data(), subject.size(), $bin, $grp(8), $be)
 
@@ -263,7 +343,7 @@ TEST_CASE("$m(<pointer>, <size>, $bin, $grp(...), $le|$be)", "[m]")
 	}
 }
 
-TEST_CASE("$m(<pointer>, <size>, $hex, $grp(...), $le|$be)", "[m]")
+TEST_CASE("$m(<pointer>, <size>, $hex, [$grp(...)], [$le|$be)]", "[m]")
 {
 	test::out_stream.str(std::string {});
 
@@ -273,7 +353,7 @@ TEST_CASE("$m(<pointer>, <size>, $hex, $grp(...), $le|$be)", "[m]")
 	};
 	std::uintptr_t address {reinterpret_cast<std::uintptr_t>(subject.data())};
 
-	SECTION("$hex")
+	SECTION("default grouping, current byte order")
 	{
 		$m(subject.data(), subject.size(), $hex)
 
@@ -289,7 +369,39 @@ TEST_CASE("$m(<pointer>, <size>, $hex, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$hex, $grp(1)")
+	SECTION("default grouping, $le")
+	{
+		$m(subject.data(), subject.size(), $hex, $le)
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		expected << "subject.data(), 32 bytes of 1-byte hexadecimal\n";
+		expected << "    " << std::hex << address << RESET_FLAGS << ": df 64 6c cf f9 cb ed 11" "  .dl....." "\n"; address += 8;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 4a 83 78 28 3d 48 ad 40" "  J.x(=H.@" "\n"; address += 8;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 01 39 4d 9e fd b4 45 a1" "  .9M...E." "\n"; address += 8;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 74 68 fc d9 18 cc 3b 32" "  th....;2" "\n";
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
+	SECTION("default grouping, $be")
+	{
+		$m(subject.data(), subject.size(), $hex, $be)
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		expected << "subject.data(), 32 bytes of 1-byte hexadecimal\n";
+		expected << "    " << std::hex << address << RESET_FLAGS << ": df 64 6c cf f9 cb ed 11" "  .dl....." "\n"; address += 8;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 4a 83 78 28 3d 48 ad 40" "  J.x(=H.@" "\n"; address += 8;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 01 39 4d 9e fd b4 45 a1" "  .9M...E." "\n"; address += 8;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 74 68 fc d9 18 cc 3b 32" "  th....;2" "\n";
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
+	SECTION("$grp(1), current byte order")
 	{
 		$m(subject.data(), subject.size(), $hex, $grp(1))
 
@@ -305,7 +417,39 @@ TEST_CASE("$m(<pointer>, <size>, $hex, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$hex, $grp(2)")
+	SECTION("$grp(1), $le")
+	{
+		$m(subject.data(), subject.size(), $hex, $grp(1), $le)
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		expected << "subject.data(), 32 bytes of 1-byte hexadecimal\n";
+		expected << "    " << std::hex << address << RESET_FLAGS << ": df 64 6c cf f9 cb ed 11" "  .dl....." "\n"; address += 8;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 4a 83 78 28 3d 48 ad 40" "  J.x(=H.@" "\n"; address += 8;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 01 39 4d 9e fd b4 45 a1" "  .9M...E." "\n"; address += 8;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 74 68 fc d9 18 cc 3b 32" "  th....;2" "\n";
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
+	SECTION("$grp(1), $be")
+	{
+		$m(subject.data(), subject.size(), $hex, $grp(1), $be)
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		expected << "subject.data(), 32 bytes of 1-byte hexadecimal\n";
+		expected << "    " << std::hex << address << RESET_FLAGS << ": df 64 6c cf f9 cb ed 11" "  .dl....." "\n"; address += 8;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 4a 83 78 28 3d 48 ad 40" "  J.x(=H.@" "\n"; address += 8;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 01 39 4d 9e fd b4 45 a1" "  .9M...E." "\n"; address += 8;
+		expected << "    " << std::hex << address << RESET_FLAGS << ": 74 68 fc d9 18 cc 3b 32" "  th....;2" "\n";
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
+	SECTION("$grp(2), current byte order")
 	{
 		$m(subject.data(), subject.size(), $hex, $grp(2))
 
@@ -321,7 +465,7 @@ TEST_CASE("$m(<pointer>, <size>, $hex, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$hex, $grp(2), $le")
+	SECTION("$grp(2), $le")
 	{
 		$m(subject.data(), subject.size(), $hex, $grp(2), $le)
 
@@ -337,7 +481,7 @@ TEST_CASE("$m(<pointer>, <size>, $hex, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$hex, $grp(2), $be")
+	SECTION("$grp(2), $be")
 	{
 		$m(subject.data(), subject.size(), $hex, $grp(2), $be)
 
@@ -353,7 +497,7 @@ TEST_CASE("$m(<pointer>, <size>, $hex, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$hex, $grp(4)")
+	SECTION("$grp(4), current byte order")
 	{
 		$m(subject.data(), subject.size(), $hex, $grp(4))
 
@@ -369,7 +513,7 @@ TEST_CASE("$m(<pointer>, <size>, $hex, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$hex, $grp(4), $le")
+	SECTION("$grp(4), $le")
 	{
 		$m(subject.data(), subject.size(), $hex, $grp(4), $le)
 
@@ -385,7 +529,7 @@ TEST_CASE("$m(<pointer>, <size>, $hex, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$hex, $grp(4), $be")
+	SECTION("$grp(4), $be")
 	{
 		$m(subject.data(), subject.size(), $hex, $grp(4), $be)
 
@@ -401,7 +545,7 @@ TEST_CASE("$m(<pointer>, <size>, $hex, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$hex, $grp(8)")
+	SECTION("$grp(8), current byte order")
 	{
 		$m(subject.data(), subject.size(), $hex, $grp(8))
 
@@ -415,7 +559,7 @@ TEST_CASE("$m(<pointer>, <size>, $hex, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$hex, $grp(8), $le")
+	SECTION("$grp(8), $le")
 	{
 		$m(subject.data(), subject.size(), $hex, $grp(8), $le)
 
@@ -429,7 +573,7 @@ TEST_CASE("$m(<pointer>, <size>, $hex, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$hex, $grp(8), $be")
+	SECTION("$grp(8), $be")
 	{
 		$m(subject.data(), subject.size(), $hex, $grp(8), $be)
 
@@ -444,7 +588,7 @@ TEST_CASE("$m(<pointer>, <size>, $hex, $grp(...), $le|$be)", "[m]")
 	}
 }
 
-TEST_CASE("$m(<pointer>, <size>, $sdec, $grp(...), $le|$be)", "[m]")
+TEST_CASE("$m(<pointer>, <size>, $sdec, [$grp(...)], [$le|$be])", "[m]")
 {
 	test::out_stream.str(std::string {});
 
@@ -454,7 +598,7 @@ TEST_CASE("$m(<pointer>, <size>, $sdec, $grp(...), $le|$be)", "[m]")
 	};
 	std::uintptr_t address {reinterpret_cast<std::uintptr_t>(subject.data())};
 
-	SECTION("$sdec")
+	SECTION("default grouping, current byte order")
 	{
 		$m(subject.data(), subject.size(), $sdec)
 
@@ -482,7 +626,7 @@ TEST_CASE("$m(<pointer>, <size>, $sdec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$sdec, $le")
+	SECTION("default grouping, $le")
 	{
 		$m(subject.data(), subject.size(), $sdec, $le)
 
@@ -498,7 +642,7 @@ TEST_CASE("$m(<pointer>, <size>, $sdec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$sdec, $be")
+	SECTION("default grouping, $be")
 	{
 		$m(subject.data(), subject.size(), $sdec, $be)
 
@@ -514,7 +658,7 @@ TEST_CASE("$m(<pointer>, <size>, $sdec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$sdec, $grp(1)")
+	SECTION("$grp(1), current byte order")
 	{
 		$m(subject.data(), subject.size(), $sdec, $grp(1))
 
@@ -542,7 +686,7 @@ TEST_CASE("$m(<pointer>, <size>, $sdec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$sdec, $grp(1), $le")
+	SECTION("$grp(1), $le")
 	{
 		$m(subject.data(), subject.size(), $sdec, $grp(1), $le)
 
@@ -558,7 +702,7 @@ TEST_CASE("$m(<pointer>, <size>, $sdec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$sdec, $grp(1), $be")
+	SECTION("$grp(1), $be")
 	{
 		$m(subject.data(), subject.size(), $sdec, $grp(1), $be)
 
@@ -574,7 +718,7 @@ TEST_CASE("$m(<pointer>, <size>, $sdec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$sdec, $grp(2)")
+	SECTION("$grp(2), current byte order")
 	{
 		$m(subject.data(), subject.size(), $sdec, $grp(2))
 
@@ -602,7 +746,7 @@ TEST_CASE("$m(<pointer>, <size>, $sdec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$sdec, $grp(2), $le")
+	SECTION("$grp(2), $le")
 	{
 		$m(subject.data(), subject.size(), $sdec, $grp(2), $le)
 
@@ -618,7 +762,7 @@ TEST_CASE("$m(<pointer>, <size>, $sdec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$sdec, $grp(2), $be")
+	SECTION("$grp(2), $be")
 	{
 		$m(subject.data(), subject.size(), $sdec, $grp(2), $be)
 
@@ -634,7 +778,7 @@ TEST_CASE("$m(<pointer>, <size>, $sdec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$sdec, $grp(4)")
+	SECTION("$grp(4), current byte order")
 	{
 		$m(subject.data(), subject.size(), $sdec, $grp(4))
 
@@ -662,7 +806,7 @@ TEST_CASE("$m(<pointer>, <size>, $sdec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$sdec, $grp(4), $le")
+	SECTION("$grp(4), $le")
 	{
 		$m(subject.data(), subject.size(), $sdec, $grp(4), $le)
 
@@ -678,7 +822,7 @@ TEST_CASE("$m(<pointer>, <size>, $sdec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$sdec, $grp(4), $be")
+	SECTION("$grp(4), $be")
 	{
 		$m(subject.data(), subject.size(), $sdec, $grp(4), $be)
 
@@ -694,7 +838,7 @@ TEST_CASE("$m(<pointer>, <size>, $sdec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$sdec, $grp(8)")
+	SECTION("$grp(8), current byte order")
 	{
 		$m(subject.data(), subject.size(), $sdec, $grp(8))
 
@@ -722,7 +866,7 @@ TEST_CASE("$m(<pointer>, <size>, $sdec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$sdec, $grp(8), $le")
+	SECTION("$grp(8), $le")
 	{
 		$m(subject.data(), subject.size(), $sdec, $grp(8), $le)
 
@@ -738,7 +882,7 @@ TEST_CASE("$m(<pointer>, <size>, $sdec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$sdec, $grp(8), $be")
+	SECTION("$grp(8), $be")
 	{
 		$m(subject.data(), subject.size(), $sdec, $grp(8), $be)
 
@@ -755,7 +899,7 @@ TEST_CASE("$m(<pointer>, <size>, $sdec, $grp(...), $le|$be)", "[m]")
 	}
 }
 
-TEST_CASE("$m(<pointer>, <size>, $udec, $grp(...), $le|$be)", "[m]")
+TEST_CASE("$m(<pointer>, <size>, $udec, [$grp(...)], [$le|$be])", "[m]")
 {
 	test::out_stream.str(std::string {});
 
@@ -765,7 +909,7 @@ TEST_CASE("$m(<pointer>, <size>, $udec, $grp(...), $le|$be)", "[m]")
 	};
 	std::uintptr_t address {reinterpret_cast<std::uintptr_t>(subject.data())};
 
-	SECTION("$udec")
+	SECTION("default grouping, current byte order")
 	{
 		$m(subject.data(), subject.size(), $udec)
 
@@ -793,7 +937,7 @@ TEST_CASE("$m(<pointer>, <size>, $udec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$udec, $le")
+	SECTION("default grouping, $le")
 	{
 		$m(subject.data(), subject.size(), $udec, $le)
 
@@ -809,7 +953,7 @@ TEST_CASE("$m(<pointer>, <size>, $udec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$udec, $be")
+	SECTION("default grouping, $be")
 	{
 		$m(subject.data(), subject.size(), $udec, $be)
 
@@ -825,7 +969,7 @@ TEST_CASE("$m(<pointer>, <size>, $udec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$udec, $grp(1)")
+	SECTION("$grp(1), current byte order")
 	{
 		$m(subject.data(), subject.size(), $udec, $grp(1))
 
@@ -853,7 +997,7 @@ TEST_CASE("$m(<pointer>, <size>, $udec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$udec, $grp(1), $le")
+	SECTION("$grp(1), $le")
 	{
 		$m(subject.data(), subject.size(), $udec, $grp(1), $le)
 
@@ -869,7 +1013,7 @@ TEST_CASE("$m(<pointer>, <size>, $udec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$udec, $grp(1), $be")
+	SECTION("$grp(1), $be")
 	{
 		$m(subject.data(), subject.size(), $udec, $grp(1), $be)
 
@@ -885,7 +1029,7 @@ TEST_CASE("$m(<pointer>, <size>, $udec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$udec, $grp(2)")
+	SECTION("$grp(2), current byte order")
 	{
 		$m(subject.data(), subject.size(), $udec, $grp(2))
 
@@ -913,7 +1057,7 @@ TEST_CASE("$m(<pointer>, <size>, $udec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$udec, $grp(2), $le")
+	SECTION("$grp(2), $le")
 	{
 		$m(subject.data(), subject.size(), $udec, $grp(2), $le)
 
@@ -929,7 +1073,7 @@ TEST_CASE("$m(<pointer>, <size>, $udec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$udec, $grp(2), $be")
+	SECTION("$grp(2), $be")
 	{
 		$m(subject.data(), subject.size(), $udec, $grp(2), $be)
 
@@ -945,7 +1089,7 @@ TEST_CASE("$m(<pointer>, <size>, $udec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$udec, $grp(4)")
+	SECTION("$grp(4), current byte order")
 	{
 		$m(subject.data(), subject.size(), $udec, $grp(4))
 
@@ -973,7 +1117,7 @@ TEST_CASE("$m(<pointer>, <size>, $udec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$udec, $grp(4), $le")
+	SECTION("$grp(4), $le")
 	{
 		$m(subject.data(), subject.size(), $udec, $grp(4), $le)
 
@@ -989,7 +1133,7 @@ TEST_CASE("$m(<pointer>, <size>, $udec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$udec, $grp(4), $be")
+	SECTION("$grp(4), $be")
 	{
 		$m(subject.data(), subject.size(), $udec, $grp(4), $be)
 
@@ -1005,7 +1149,7 @@ TEST_CASE("$m(<pointer>, <size>, $udec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$udec, $grp(8)")
+	SECTION("$grp(8), current byte order")
 	{
 		$m(subject.data(), subject.size(), $udec, $grp(8))
 
@@ -1033,7 +1177,7 @@ TEST_CASE("$m(<pointer>, <size>, $udec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$udec, $grp(8), $le")
+	SECTION("$grp(8), $le")
 	{
 		$m(subject.data(), subject.size(), $udec, $grp(8), $le)
 
@@ -1049,7 +1193,7 @@ TEST_CASE("$m(<pointer>, <size>, $udec, $grp(...), $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$udec, $grp(8), $be")
+	SECTION("$grp(8), $be")
 	{
 		$m(subject.data(), subject.size(), $udec, $grp(8), $be)
 
@@ -1066,7 +1210,7 @@ TEST_CASE("$m(<pointer>, <size>, $udec, $grp(...), $le|$be)", "[m]")
 	}
 }
 
-TEST_CASE("$m(<pointer>, <size>, $flt, $le|$be)", "[m]")
+TEST_CASE("$m(<pointer>, <size>, $flt, [$le|$be])", "[m]")
 {
 	test::out_stream.str(std::string {});
 
@@ -1076,7 +1220,7 @@ TEST_CASE("$m(<pointer>, <size>, $flt, $le|$be)", "[m]")
 	};
 	std::uintptr_t address {reinterpret_cast<std::uintptr_t>(subject.data())};
 
-	SECTION("$flt")
+	SECTION("current byte order")
 	{
 		$m(subject.data(), subject.size(), $flt)
 
@@ -1104,7 +1248,7 @@ TEST_CASE("$m(<pointer>, <size>, $flt, $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$flt, $le")
+	SECTION("$le")
 	{
 		$m(subject.data(), subject.size(), $flt, $le)
 
@@ -1120,7 +1264,7 @@ TEST_CASE("$m(<pointer>, <size>, $flt, $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$flt, $be")
+	SECTION("$be")
 	{
 		$m(subject.data(), subject.size(), $flt, $be)
 
@@ -1137,7 +1281,7 @@ TEST_CASE("$m(<pointer>, <size>, $flt, $le|$be)", "[m]")
 	}
 }
 
-TEST_CASE("$m(<pointer>, <size>, $dbl, $le|$be)", "[m]")
+TEST_CASE("$m(<pointer>, <size>, $dbl, [$le|$be])", "[m]")
 {
 	test::out_stream.str(std::string {});
 
@@ -1147,7 +1291,7 @@ TEST_CASE("$m(<pointer>, <size>, $dbl, $le|$be)", "[m]")
 	};
 	std::uintptr_t address {reinterpret_cast<std::uintptr_t>(subject.data())};
 
-	SECTION("$dbl")
+	SECTION("current byte order")
 	{
 		$m(subject.data(), subject.size(), $dbl)
 
@@ -1175,7 +1319,7 @@ TEST_CASE("$m(<pointer>, <size>, $dbl, $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$dbl, $le")
+	SECTION("$le")
 	{
 		$m(subject.data(), subject.size(), $dbl, $le)
 
@@ -1191,7 +1335,7 @@ TEST_CASE("$m(<pointer>, <size>, $dbl, $le|$be)", "[m]")
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
-	SECTION("$dbl, $be")
+	SECTION("$be")
 	{
 		$m(subject.data(), subject.size(), $dbl, $be)
 
@@ -1208,7 +1352,7 @@ TEST_CASE("$m(<pointer>, <size>, $dbl, $le|$be)", "[m]")
 	}
 }
 
-TEST_CASE("$m(<pointer>, <size>, $ldbl, $le|$be)", "[m]")
+TEST_CASE("$m(<pointer>, <size>, $ldbl, [$le|$be])", "[m]")
 {
 	test::out_stream.str(std::string {});
 
@@ -1223,7 +1367,7 @@ TEST_CASE("$m(<pointer>, <size>, $ldbl, $le|$be)", "[m]")
 	{
 		case 8:
 		{
-			SECTION("$ldbl, 64-bit")
+			SECTION("64-bit, current byte order")
 			{
 				$m(subject.data(), 32, $ldbl)
 
@@ -1251,7 +1395,7 @@ TEST_CASE("$m(<pointer>, <size>, $ldbl, $le|$be)", "[m]")
 				REQUIRE(test::out_stream.str() == expected.str());
 			}
 
-			SECTION("$ldbl, 64-bit, $le")
+			SECTION("64-bit, $le")
 			{
 				$m(subject.data(), 32, $ldbl, $le)
 
@@ -1267,7 +1411,7 @@ TEST_CASE("$m(<pointer>, <size>, $ldbl, $le|$be)", "[m]")
 				REQUIRE(test::out_stream.str() == expected.str());
 			}
 
-			SECTION("$ldbl, 64-bit, $be")
+			SECTION("64-bit, $be")
 			{
 				$m(subject.data(), 32, $ldbl, $be)
 
@@ -1288,7 +1432,7 @@ TEST_CASE("$m(<pointer>, <size>, $ldbl, $le|$be)", "[m]")
 
 		case 10:
 		{
-			SECTION("$ldbl, 80-bit")
+			SECTION("80-bit, current byte order")
 			{
 				$m(subject.data(), 20, $ldbl)
 
@@ -1312,7 +1456,7 @@ TEST_CASE("$m(<pointer>, <size>, $ldbl, $le|$be)", "[m]")
 				REQUIRE(test::out_stream.str() == expected.str());
 			}
 
-			SECTION("$ldbl, 80-bit, $le")
+			SECTION("80-bit, $le")
 			{
 				$m(subject.data(), 20, $ldbl, $le)
 
@@ -1326,7 +1470,7 @@ TEST_CASE("$m(<pointer>, <size>, $ldbl, $le|$be)", "[m]")
 				REQUIRE(test::out_stream.str() == expected.str());
 			}
 
-			SECTION("$ldbl, 80-bit, $be")
+			SECTION("80-bit, $be")
 			{
 				$m(subject.data(), 20, $ldbl, $be)
 
@@ -1347,15 +1491,15 @@ TEST_CASE("$m(<pointer>, <size>, $ldbl, $le|$be)", "[m]")
 		{
 			// TODO: do
 
-			SECTION("$ldbl, 128-bit")
+			SECTION("128-bit, current byte order")
 			{
 			}
 
-			SECTION("$ldbl, 128-bit, $le")
+			SECTION("128-bit, $le")
 			{
 			}
 
-			SECTION("$ldbl, 128-bit, $be")
+			SECTION("128-bit, $be")
 			{
 			}
 
