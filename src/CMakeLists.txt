@@ -5,7 +5,7 @@ set(TRACE_OUT_BUILD_AMALGAMATED YES CACHE BOOL "Build amalgamated 'trace-out.hpp
 #
 # 'trace-out'
 
-if(TRACE_OUT_BUILD_AMALGAMATED)
+if (TRACE_OUT_BUILD_AMALGAMATED)
 	add_library(trace-out INTERFACE EXCLUDE_FROM_ALL)
 	target_include_directories(trace-out INTERFACE ${PROJECT_BINARY_DIR}/trace-out-amalgamated/include)
 
