@@ -45,7 +45,7 @@ int main(int argc, const char *argv[])
     {
         return 42
     }
-        
+
 } // int main(int argc, const char *argv[])
 ```
 
@@ -60,20 +60,20 @@ You can get it any way you want, as long as it's one of these
 ### Install system-wide
 
 ```bash
-$ git clone https://github.com/shrpnsld/trace-out  # 1. Download
-$ cd trace-out; mkdir build; cd build; cmake ..    # 2. Generate build files
-$ cmake --install .                                # 3. Install
+$ git clone --recurse-submodules https://github.com/shrpnsld/trace-out  # Download
+$ cd trace-out; mkdir build; cd build; cmake .. # Generate build files
+$ cmake --install . # Install
 ```
 
 ### Generate single header manually
 
 ```bash
-$ git clone https://github.com/shrpnsld/trace-out  # 1. Download
-$ cd trace-out; mkdir build; cd build; cmake ..    # 2. Generate build files
-$ cmake --build . --target trace-out.hpp           # 3. Generate single header
+$ git clone --recurse-submodules https://github.com/shrpnsld/trace-out  # Download
+$ cd trace-out; mkdir build; cd build; cmake .. # Generate build files
+$ cmake --build . --target trace-out.hpp # Generate single header
 ```
 
-Then, you can find single header at `trace-out-amalgamated/trace-out.hpp` inside the build directory.
+Then, you can find single header at `trace-out-amalgamated/include/trace-out/trace-out.hpp` inside the build directory.
 
 ## Pretty-printing
 
@@ -81,11 +81,15 @@ trace-out has several macros defined that pretty-print information about code.
 
 ### Values
 
-`$t(<variable>)` *[C++98]* – print value of a variable (can be used inside expressions).
+`$t(<expression>)` *[C++98]* – print value of a given expression. Can be used inside other expressions.
 
-`$t(<variable>...)` *[C++11 and later]* – print values of listed variables (can be used inside expresssions if one argument was passed).
+`$t(<expression>, ...)` *[C++11 and later]* – same as above, but it can accept multiple values. However, when it is passed multiple values, it can't be used inside other expressions.
 
 `$t("<C-string-literal>")` – print some string.
+
+`$tbin(<expression>)`, `$toct(<expression>)`, `$thex(<expression>)` – *[C++98]* – print binary, octal or hexadecimal representaions for a value of a given expression. Only numerical types are supported. When using floating point types with `$tbin(...)`, it prints binary format representation, but `$toct(...)` and `$thex` print octal and hexadecimal values for each byte of the value. Can be used inside other expressions.
+
+`$tbin(<expression>, ...)`, `$toct(<expression>, ...)`, `$thex(<expression>, ...)` – *[C++11 and later]* – same as above, but it can accept multiple values. However, when it is passed multiple values, it can't be used inside other expressions.
 
 `$tr(<begin>, <end>|<how_much>)` – print values from a range defined by a pair of iterators or iterator and item count.
 
@@ -95,12 +99,19 @@ trace-out has several macros defined that pretty-print information about code.
 
 * `<pointer>` – address of the memory to be printed
 * `<size>` – size of the memory in bytes
-* `$<base>` – numerical base; can be one of the following values: `$bin`, `$hex`, `$sdec`, `$udec`, `$flt`, `$dbl`, `$ldbl`
+* `$<base>` – numerical base; can be one of the following values:
+	* `$bin` – binary
+	* `$hex` – hexadecimal
+	* `$sdec` – signed decimal
+	* `$udec` – unsigned decimal
+	* `$flt` – current `float` type
+	* `$dbl` – current `double` type
+	* `$ldbl` – current `long double` type
 * `$grp(<count>)` – how much bytes should be grouped together in a single column (`1`, `2`, `4` or `8`); this affects only `$bin`, `$hex`, `$sdec`, `$udec` bases
-*  `$be` and `$le` are big-endian and little-endian byte orders
+*  `$be` and `$le` – big-endian and little-endian byte orders, respectively; if not specified, the current byte order is used
 * `$col(<count>)` – print memory in specified column count; if printing exceeds output stream width, then more optimal value will be calculated
 
-`$<base>`, `$grp`, `$be`, `$le` and `$col` are all optional and non-positional, but should be listed after `<pointer>` and `<size>`.
+`$<base>`, `$grp`, `$be`, `$le` and `$col` are all optional and non-positional, but should always be listed after `<pointer>` and `<size>`.
 
 The default memory representation is single-byte hexadecimals, with column count set to the maximum power of 2 that fits console width.
 
@@ -118,7 +129,7 @@ The default memory representation is single-byte hexadecimals, with column count
 
 `$s(...)` – trace statement execution.
 
-Macros `$f`, `$if`, `$for` and `$while` shift output indentation inside their scope, and each thread has its own indentation.
+Macros `$f`, `$if`, `$for` and `$while` shift output indentation inside their scope, while each thread keeps its own indentation.
 
 ### Other
 
