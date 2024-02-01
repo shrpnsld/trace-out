@@ -286,7 +286,7 @@ void pretty_print(std::ostream &stream, char character)
 	if (!std::isprint(character))
 	{
 		stream << "'\\x" << std::setw(2) << std::setfill('0') << std::hex << std::uppercase << (character & 0xff) << '\'';
-		stream.flags(0);
+		stream.flags(static_cast<std::ios_base::fmtflags>(0));
 		stream.width(0);
 		stream.fill(' ');
 		return;

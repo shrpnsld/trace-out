@@ -107,7 +107,7 @@ system::mutex &stream_mutex()
 
 std::ostream &operator <<(std::ostream &stream, reset_flags_t)
 {
-	stream.flags(0);
+	stream.flags(static_cast<std::ios_base::fmtflags>(0));
 	stream.width(0);
 	stream.fill(' ');
 	stream.precision(6);
