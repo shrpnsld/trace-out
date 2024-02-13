@@ -83,7 +83,7 @@ std::streamsize wdo_stream_buf::xsputn(const char_type *what, std::streamsize ho
 
 wdo_stream_buf::int_type wdo_stream_buf::overflow(int_type ch)
 {
-	char_type buffer[2] = {ch, 0};
+	char_type buffer[2] = {static_cast<char_type>(ch), 0};
 	OutputDebugStringA(buffer);
 	return traits_type::not_eof(ch);
 }

@@ -447,7 +447,7 @@ void pretty_print_octal(std::ostream &stream, Type_t value)
 	standard::size_t type_size = number_format<Type_t>::size();
 	if (type_size == 1)
 	{
-		stream << byte_to_octal(value);
+		stream << byte_to_octal(static_cast<standard::uint8_t>(value));
 	}
 	else
 	{
@@ -474,7 +474,7 @@ void pretty_print_hexadecimal(std::ostream &stream, Type_t value)
 	standard::size_t type_size = number_format<Type_t>::size();
 	if (type_size == 1)
 	{
-		stream << byte_to_hexadecimal(value);
+		stream << byte_to_hexadecimal(static_cast<standard::uint8_t>(value));
 	}
 	else if (type_size == 2)
 	{

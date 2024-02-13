@@ -368,6 +368,9 @@ const char *base_name(base_t value)
 
 		case LDBL:
 			return "long double";
+
+		default:
+			return "<unknown base>";
 	}
 }
 
@@ -393,6 +396,9 @@ const char *byte_order_name(byte_order_t::enumeration byte_order, base_t base, s
 
 		case byte_order_t::NOT_SPECIFIED:
 			return NULL;
+
+		default:
+			return "<unknown byte order>";
 	}
 }
 
@@ -558,6 +564,9 @@ print_chunk_t select_print_chunk_function(base_t base, standard::size_t chunk_si
 
 		case LDBL:
 			return byte_order == byte_order_t::current() || byte_order == byte_order_t::NOT_SPECIFIED ? print_number_chunk<long double> : print_number_chunk_reverse<long double>;
+
+		default:
+			return NULL;
 	}
 }
 
