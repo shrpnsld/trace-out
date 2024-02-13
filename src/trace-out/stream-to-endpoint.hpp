@@ -250,9 +250,7 @@ void really_close(untyped<> descriptor)
 
 #pragma comment(lib, "Ws2_32.lib")
 
-#include <WinSock2.h> // [amalgamate:leave]
-#include <ws2tcpip.h> // [amalgamate:leave]
-#include <Windows.h> // [amalgamate:leave]
+#include "trace-out/windows-headers.hpp"
 
 namespace trace_out
 {

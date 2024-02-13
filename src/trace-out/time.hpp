@@ -47,7 +47,7 @@ standard::uint64_t time_in_milliseconds()
 //
 // WinAPI implementation
 
-#include <windows.h> // [amalgamate:leave]
+#include "trace-out/windows-headers.hpp"
 
 namespace trace_out { namespace system
 {

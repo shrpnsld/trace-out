@@ -120,7 +120,7 @@ void mutex_unlock(mutex_t mutex)
 //
 // WinAPI implementation
 
-#include <windows.h> // [amalgamate:leave]
+#include "trace-out/windows-headers.hpp"
 
 namespace trace_out { namespace system
 {

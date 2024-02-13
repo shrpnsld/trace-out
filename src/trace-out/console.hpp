@@ -57,7 +57,7 @@ int console_width()
 //
 // WinAPI implementation
 
-#include <windows.h> // [amalgamate:leave]
+#include "trace-out/windows-headers.hpp"
 
 namespace trace_out { namespace system
 {

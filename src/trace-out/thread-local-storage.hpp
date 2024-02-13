@@ -143,8 +143,8 @@ void tls_set(tlskey_t key, void *data)
 //
 // WinAPI implementation
 
+#include "trace-out/windows-headers.hpp"
 #include <cassert> // [amalgamate:leave]
-#include <windows.h> // [amalgamate:leave]
 
 namespace trace_out { namespace system
 {

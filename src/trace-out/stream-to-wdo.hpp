@@ -5,7 +5,7 @@
 
 #if defined(TRACE_OUT_STREAM_TO_WDO) && defined(TRACE_OUT_WINDOWS)
 
-#include <windows.h> // [amalgamate:leave]
+#include "trace-out/windows-headers.hpp"
 #include <cstring> // [amalgamate:leave]
 
 //
