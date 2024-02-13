@@ -1,8 +1,10 @@
 include(Catch)
 include(compile-options-if-supported)
+include(compile-definitions-for-generator)
 include(build-optimizations)
 
-add_compile_options_if_supported("-Wall" "-Wextra" "/W4")
+add_compile_definitions_for_generator("Visual Studio" NOMINMAX)
+add_compile_options_if_supported("-Wall" "-Wextra" "/W4" "/Zc:__cplusplus")
 
 add_subdirectory(compatibility-with-c++98)
 add_subdirectory(debug)
