@@ -134,7 +134,7 @@ std::pair<std::string, standard::uint16_t> host_port_from_string(const char *str
 		return std::pair<std::string, standard::uint16_t>();
 	}
 
-	standard::uint16_t port(std::atoi(delimiter + 1));
+	standard::uint16_t port(static_cast<standard::uint16_t>(std::atoi(delimiter + 1)));
 
 	error = "";
 	return std::make_pair(host, port);
@@ -269,7 +269,7 @@ size_t no_trailing_newline(char *string, size_t size)
 	return std::strcmp(last_two_chars, "\r\n") == 0 ? size - 2 : size;
 }
 
-string error_to_string(int code)
+std::string error_to_string(int code)
 {
 	LPSTR buffer = NULL;
 	DWORD flags = FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
@@ -325,7 +325,7 @@ socket_stream_buf::socket_stream_buf(const char *endpoint)
 	socket_address.sin_family = AF_INET;
 	std::memcpy(&(socket_address.sin_addr.s_addr), host_entry->h_addr, host_entry->h_length);
 	socket_address.sin_port = htons(host_port.second);
-	int retval = connect(descriptor, reinterpret_cast<sockaddr *>(&socket_address), sizeof(socket_address));
+	retval = connect(descriptor, reinterpret_cast<sockaddr *>(&socket_address), sizeof(socket_address));
 	if (retval == -1)
 	{
 		trace_out_to_network_error() << "failed to open socket (" << error_to_string(WSAGetLastError()) << ')' << std::endl;
@@ -350,7 +350,7 @@ void really_send(untyped<> descriptor, const void *what, standard::size_t how_mu
 		return;
 	}
 
-	int retval = send(_descriptor.get(), static_cast<const char *>(buffer), static_cast<int>(how_much), 0);
+	int retval = send(descriptor, static_cast<const char *>(what), static_cast<int>(how_much), 0);
 	if (retval == -1)
 	{
 		really_close(descriptor);
@@ -367,7 +367,7 @@ void really_send(untyped<> descriptor, const void *what, standard::size_t how_mu
 	return retval;
 }
 
-void really_close(int descriptor)
+void really_close(untyped<> descriptor)
 {
 	socket_send = do_not_send;
 	socket_close = do_not_close;
