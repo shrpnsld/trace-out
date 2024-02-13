@@ -77,7 +77,7 @@ TEST_CASE("$t(value)", "[t]")
 	{
 		using type_t = signed char;
 
-		auto value = GENERATE(123, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::min());
+		auto value = GENERATE(123, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::max());
 		type_t subject {static_cast<type_t>(value)};
 
 		$t(subject);
@@ -91,7 +91,7 @@ TEST_CASE("$t(value)", "[t]")
 	{
 		using type_t = unsigned char;
 
-		auto value = GENERATE(123, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::min());
+		auto value = GENERATE(123, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::max());
 		type_t subject {static_cast<type_t>(value)};
 
 		$t(subject);
@@ -105,7 +105,7 @@ TEST_CASE("$t(value)", "[t]")
 	{
 		using type_t = short;
 
-		auto value = GENERATE(0, 456, -789, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::min());
+		auto value = GENERATE(0, 456, -789, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::max());
 		type_t subject {static_cast<short>(value)};
 
 		$t(subject);
@@ -119,7 +119,7 @@ TEST_CASE("$t(value)", "[t]")
 	{
 		using type_t = unsigned short;
 
-		auto value = GENERATE(456, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::min());
+		auto value = GENERATE(456, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::max());
 		type_t subject {static_cast<type_t>(value)};
 
 		$t(subject);
@@ -133,7 +133,7 @@ TEST_CASE("$t(value)", "[t]")
 	{
 		using type_t = int;
 
-		auto value = GENERATE(0, 456, -789, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::min());
+		auto value = GENERATE(0, 456, -789, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::max());
 		type_t subject {value};
 
 		$t(subject);
@@ -147,7 +147,7 @@ TEST_CASE("$t(value)", "[t]")
 	{
 		using type_t = unsigned int;
 
-		auto value = GENERATE(456u, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::min());
+		auto value = GENERATE(456u, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::max());
 		type_t subject {value};
 
 		$t(subject);
@@ -161,7 +161,7 @@ TEST_CASE("$t(value)", "[t]")
 	{
 		using type_t = long;
 
-		auto value = GENERATE(0l, 456l, -789l, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::min());
+		auto value = GENERATE(0l, 456l, -789l, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::max());
 		type_t subject {value};
 
 		$t(subject);
@@ -175,7 +175,7 @@ TEST_CASE("$t(value)", "[t]")
 	{
 		using type_t = unsigned long;
 
-		auto value = GENERATE(456ul, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::min());
+		auto value = GENERATE(456ul, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::max());
 		type_t subject {value};
 
 		$t(subject);
@@ -189,7 +189,7 @@ TEST_CASE("$t(value)", "[t]")
 	{
 		using type_t = long long;
 
-		auto value = GENERATE(456ll, -789ll, 0ll, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::min());
+		auto value = GENERATE(456ll, -789ll, 0ll, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::max());
 		type_t subject {value};
 
 		$t(subject);
@@ -203,7 +203,7 @@ TEST_CASE("$t(value)", "[t]")
 	{
 		using type_t = unsigned long long;
 
-		auto value = GENERATE(456ull, -789ull, 0ull, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::min());
+		auto value = GENERATE(456ull, 0ull, std::numeric_limits<type_t>::min(), std::numeric_limits<type_t>::max());
 		type_t subject {value};
 
 		$t(subject);
@@ -571,7 +571,7 @@ TEST_CASE("$t(value)", "[t]")
 
 		SECTION("<int, float, std::string>")
 		{
-			std::tuple<int, float, std::string> subject {456, -789.123, "hellomoto!"};
+			std::tuple<int, float, std::string> subject {456, -789.123f, "hellomoto!"};
 
 			$t(subject);
 
