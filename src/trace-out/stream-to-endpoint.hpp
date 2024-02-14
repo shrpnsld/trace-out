@@ -47,7 +47,7 @@ private:
 
 inline socket_stream_buf &socket_stream_buf_instance();
 
-std::ostream &trace_out_to_network_error();
+std::ostream &trace_out_to_endpoint_error();
 
 bool is_valid_port_string(const char *string);
 std::pair<std::string, std::string> host_port_from_string(const char *string, std::string &error);
@@ -99,7 +99,7 @@ socket_stream_buf::int_type socket_stream_buf::overflow(int_type ch)
 	return traits_type::not_eof(ch);
 }
 
-std::ostream &trace_out_to_network_error()
+std::ostream &trace_out_to_endpoint_error()
 {
 	return std::cerr << "trace-out-to-network-error: ";
 }
@@ -237,21 +237,21 @@ socket_stream_buf::socket_stream_buf(const char *endpoint)
 	std::pair<std::string, std::string> host_port = host_port_from_string(endpoint, error);
 	if (!error.empty())
 	{
-		trace_out_to_network_error() << error << std::endl;
+		trace_out_to_endpoint_error() << error << std::endl;
 		return;
 	}
 
 	resource<addrinfo *> addresses(get_addresses(host_port.first.c_str(), host_port.second.c_str(), error), MOVE_RESOURCE);
 	if (addresses.get() == NULL)
 	{
-		trace_out_to_network_error() << error << std::endl;
+		trace_out_to_endpoint_error() << error << std::endl;
 		return;
 	}
 
 	untyped<> descriptor = open_socket_and_connect(addresses.get(), error);
 	if (descriptor == -1)
 	{
-		trace_out_to_network_error() << error << std::endl;
+		trace_out_to_endpoint_error() << error << std::endl;
 		return;
 	}
 
@@ -276,14 +276,14 @@ void really_send(untyped<> descriptor, const void *what, standard::size_t how_mu
 	if (retval == -1)
 	{
 		really_close(descriptor);
-		trace_out_to_network_error() << "failed to send (" << strerror(errno) << ')' << std::endl;
+		trace_out_to_endpoint_error() << "failed to send (" << strerror(errno) << ')' << std::endl;
 		return;
 	}
 
 	if (retval == 0)
 	{
 		really_close(descriptor);
-		trace_out_to_network_error() << "socket disconnected" << std::endl;
+		trace_out_to_endpoint_error() << "socket disconnected" << std::endl;
 		return;
 	}
 }
@@ -347,17 +347,17 @@ socket_stream_buf::socket_stream_buf(const char *endpoint)
 	_descriptor(-1)
 {
 	WSADATA wsa_data;
-	int retval {WSAStartup(MAKEWORD(2, 0), &wsa_data)};
+	int retval = WSAStartup(MAKEWORD(2, 0), &wsa_data);
 	if (retval != 0)
 	{
-		trace_out_to_network_error() << "failed to initialize Windows Sockets libray (" << error_to_string(WSAGetLastError()) << ')' << std::endl;
+		trace_out_to_endpoint_error() << "failed to initialize Windows Sockets libray (" << error_to_string(WSAGetLastError()) << ')' << std::endl;
 		return;
 	}
 
 	SOCKET descriptor = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (descriptor == INVALID_SOCKET)
 	{
-		trace_out_to_network_error() << "failed to open socket (" << error_to_string(WSAGetLastError()) << ')' << std::endl;
+		trace_out_to_endpoint_error() << "failed to open socket (" << error_to_string(WSAGetLastError()) << ')' << std::endl;
 		return;
 	}
 
@@ -365,14 +365,14 @@ socket_stream_buf::socket_stream_buf(const char *endpoint)
 	std::pair<std::string, standard::uint16_t> host_port = host_port_from_string(endpoint, error);
 	if (!error.empty())
 	{
-		trace_out_to_network_error() << error << std::endl;
+		trace_out_to_endpoint_error() << error << std::endl;
 		return;
 	}
 
 	hostent *host_entry = gethostbyname(host_port.first.c_str());
 	if (host_entry == NULL)
 	{
-		trace_out_to_network_error() << "unrecognized host - '" << host_port.first << '\'' << std::endl;
+		trace_out_to_endpoint_error() << "unrecognized host - '" << host_port.first << '\'' << std::endl;
 		return;
 	}
 
@@ -383,7 +383,7 @@ socket_stream_buf::socket_stream_buf(const char *endpoint)
 	retval = connect(descriptor, reinterpret_cast<sockaddr *>(&socket_address), sizeof(socket_address));
 	if (retval == -1)
 	{
-		trace_out_to_network_error() << "failed to open socket (" << error_to_string(WSAGetLastError()) << ')' << std::endl;
+		trace_out_to_endpoint_error() << "failed to open socket (" << error_to_string(WSAGetLastError()) << ')' << std::endl;
 		return;
 	}
 
@@ -409,14 +409,14 @@ void really_send(untyped<> descriptor, const void *what, standard::size_t how_mu
 	if (retval == -1)
 	{
 		really_close(descriptor);
-		trace_out_to_network_error() << "failed to send (" << error_to_string(WSAGetLastError()) << ')' << std::endl;
+		trace_out_to_endpoint_error() << "failed to send (" << error_to_string(WSAGetLastError()) << ')' << std::endl;
 		return;
 	}
 
 	if (retval == 0)
 	{
 		really_close(descriptor);
-		trace_out_to_network_error() << "socket disconnected" << std::endl;
+		trace_out_to_endpoint_error() << "socket disconnected" << std::endl;
 	}
 
 	return retval;

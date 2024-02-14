@@ -20,7 +20,7 @@ public:
 	typedef void (*deleter_t)(Type_t);
 
 	resource(Type_t handle, deleter_t deleter);
-	resource(const resource &); // no implementation, so linker errors if copy constructor is being called
+	resource(const resource &); // no implementation, so linker throws error if copy constructor is being called
 	resource(const resource &another, move_tag);
 	~resource();
 
