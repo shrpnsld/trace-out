@@ -2,6 +2,7 @@
 
 #include "trace-out/integer.hpp"
 #include "trace-out/platform-detection.hpp"
+#include "trace-out/resource.hpp"
 #include "trace-out/untyped.hpp"
 #include <cctype>
 #include <cstdlib>
@@ -49,7 +50,7 @@ inline socket_stream_buf &socket_stream_buf_instance();
 std::ostream &trace_out_to_network_error();
 
 bool is_valid_port_string(const char *string);
-std::pair<std::string, standard::uint16_t> host_port_from_string(const char *string, std::string &error);
+std::pair<std::string, std::string> host_port_from_string(const char *string, std::string &error);
 
 inline void really_send(untyped<> descriptor, const void *what, standard::size_t how_much);
 inline void do_not_send(untyped<> descriptor, const void *what, standard::size_t how_much);
@@ -110,13 +111,13 @@ bool is_valid_port_string(const char *string)
 	return *string == '\0';
 }
 
-std::pair<std::string, standard::uint16_t> host_port_from_string(const char *string, std::string &error)
+std::pair<std::string, std::string> host_port_from_string(const char *string, std::string &error)
 {
 	const char *delimiter = std::strchr(string, ':');
 	if (delimiter == NULL || delimiter == string)
 	{
 		error = "host is not specified";
-		return std::pair<std::string, standard::uint16_t>();
+		return std::pair<std::string, std::string>();
 	}
 
 	std::string host(string, delimiter);
@@ -125,16 +126,16 @@ std::pair<std::string, standard::uint16_t> host_port_from_string(const char *str
 	if (*port_string == '\0')
 	{
 		error = "port is not specified";
-		return std::pair<std::string, standard::uint16_t>();
+		return std::pair<std::string, std::string>();
 	}
 
 	if (!is_valid_port_string(port_string))
 	{
 		error = error + "port is not a number - '" + port_string + '\'';
-		return std::pair<std::string, standard::uint16_t>();
+		return std::pair<std::string, std::string>();
 	}
 
-	standard::uint16_t port(static_cast<standard::uint16_t>(std::atoi(delimiter + 1)));
+	std::string port(delimiter + 1);
 
 	error = "";
 	return std::make_pair(host, port);
@@ -163,40 +164,94 @@ void do_not_close(untyped<>)
 namespace trace_out
 {
 
+resource<addrinfo *> get_addresses(const char *host, const char *port, std::string &error);
+untyped<> open_socket_and_connect(const addrinfo *addresses, std::string &error);
+
+}
+
+namespace trace_out
+{
+
+resource<addrinfo *> get_addresses(const char *host, const char *port, std::string &error)
+{
+	addrinfo hints;
+	hints.ai_family = AF_UNSPEC;
+	hints.ai_socktype = SOCK_STREAM;
+	hints.ai_protocol = IPPROTO_TCP;
+	hints.ai_flags = 0;
+
+	addrinfo *addresses;
+
+	int retval = getaddrinfo(host, port, &hints, &addresses);
+	if (retval != 0)
+	{
+		error = error + "failed to recognize host and/or port '" + host + ':' + port + "' (" + gai_strerror(retval) + ')';
+		return resource<addrinfo *>(NULL, NULL);
+	}
+
+	return resource<addrinfo *>(addresses, freeaddrinfo);
+}
+
+untyped<> open_socket_and_connect(const addrinfo *addresses, std::string &error)
+{
+	untyped<> descriptor;
+	for (const addrinfo *address = addresses; address != NULL; address = address->ai_next)
+	{
+		descriptor = socket(address->ai_family, address->ai_socktype, address->ai_protocol);
+		if (descriptor == -1)
+		{
+			if (address->ai_next == NULL)
+			{
+				error = error + "failed to open socket (" + strerror(errno) + ')';
+				return -1;
+			}
+
+			continue;
+		}
+
+		int retval = connect(descriptor, address->ai_addr, address->ai_addrlen);
+		if (retval == -1)
+		{
+			close(descriptor);
+
+			if (address->ai_next == NULL)
+			{
+				error = error + "failed to connect (" + strerror(errno) + ')';
+				return -1;
+			}
+
+			continue;
+		}
+
+		break;
+	}
+
+	return descriptor;
+}
+
 socket_stream_buf::socket_stream_buf(const char *endpoint)
 	:
 	_descriptor(-1)
 {
-	untyped<> descriptor = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	if (descriptor == -1)
-	{
-		trace_out_to_network_error() << "failed to open socket (" << strerror(errno) << ')' << std::endl;
-		return;
-	}
-
 	std::string error;
-	std::pair<std::string, standard::uint16_t> host_port = host_port_from_string(endpoint, error);
+	std::pair<std::string, std::string> host_port = host_port_from_string(endpoint, error);
 	if (!error.empty())
 	{
 		trace_out_to_network_error() << error << std::endl;
 		return;
 	}
 
-	hostent *host_entry = gethostbyname(host_port.first.c_str());
-	if (host_entry == NULL)
+	resource<addrinfo *> addresses(get_addresses(host_port.first.c_str(), host_port.second.c_str(), error), MOVE_RESOURCE);
+	if (addresses.get() == NULL)
 	{
-		trace_out_to_network_error() << "unrecognized host - '" << host_port.first << '\'' << std::endl;
+		trace_out_to_network_error() << error << std::endl;
 		return;
 	}
 
-	sockaddr_in socket_address;
-	socket_address.sin_family = AF_INET;
-	std::memcpy(&(socket_address.sin_addr.s_addr), host_entry->h_addr, host_entry->h_length);
-	socket_address.sin_port = htons(host_port.second);
-	int retval = connect(descriptor, reinterpret_cast<sockaddr *>(&socket_address), sizeof(socket_address));
-	if (retval == -1)
+	untyped<> descriptor = open_socket_and_connect(addresses.get(), error);
+	if (descriptor == -1)
 	{
-		trace_out_to_network_error() << "failed to connect to '" << endpoint << "' (" << strerror(errno) << ')' << std::endl;
+		trace_out_to_network_error() << error << std::endl;
 		return;
 	}
 
