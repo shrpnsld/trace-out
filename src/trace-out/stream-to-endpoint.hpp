@@ -164,7 +164,7 @@ void do_not_close(untyped<>)
 namespace trace_out
 {
 
-resource<addrinfo *> get_addresses(const char *host, const char *port, std::string &error);
+addrinfo *get_addresses(const char *host, const char *port, std::string &error);
 untyped<> open_socket_and_connect(const addrinfo *addresses, std::string &error);
 
 }
@@ -172,7 +172,7 @@ untyped<> open_socket_and_connect(const addrinfo *addresses, std::string &error)
 namespace trace_out
 {
 
-resource<addrinfo *> get_addresses(const char *host, const char *port, std::string &error)
+addrinfo *get_addresses(const char *host, const char *port, std::string &error)
 {
 	addrinfo hints;
 	hints.ai_family = AF_UNSPEC;
@@ -186,10 +186,10 @@ resource<addrinfo *> get_addresses(const char *host, const char *port, std::stri
 	if (retval != 0)
 	{
 		error = error + "failed to recognize host and/or port '" + host + ':' + port + "' (" + gai_strerror(retval) + ')';
-		return resource<addrinfo *>(NULL, NULL);
+		return NULL;
 	}
 
-	return resource<addrinfo *>(addresses, freeaddrinfo);
+	return addresses;
 }
 
 untyped<> open_socket_and_connect(const addrinfo *addresses, std::string &error)
@@ -241,13 +241,14 @@ socket_stream_buf::socket_stream_buf(const char *endpoint)
 		return;
 	}
 
-	resource<addrinfo *> addresses(get_addresses(host_port.first.c_str(), host_port.second.c_str(), error), MOVE_RESOURCE);
-	if (addresses.get() == NULL)
+	addrinfo *addresses_ptr = get_addresses(host_port.first.c_str(), host_port.second.c_str(), error);
+	if (addresses_ptr == NULL)
 	{
 		trace_out_to_endpoint_error() << error << std::endl;
 		return;
 	}
 
+	resource<addrinfo *> addresses(addresses_ptr, freeaddrinfo);
 	untyped<> descriptor = open_socket_and_connect(addresses.get(), error);
 	if (descriptor == -1)
 	{
