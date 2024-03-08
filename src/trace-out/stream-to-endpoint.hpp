@@ -175,6 +175,7 @@ namespace trace_out
 addrinfo *get_addresses(const char *host, const char *port, std::string &error)
 {
 	addrinfo hints;
+	std::memset(&hints, 0, sizeof(hints));
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_protocol = IPPROTO_TCP;
@@ -308,11 +309,15 @@ void really_close(untyped<> descriptor)
 
 #include "trace-out/windows-headers.hpp"
 
+#include <cstring> // [amalgamate: leave]
+
 namespace trace_out
 {
 
 size_t no_trailing_newline(char *string, size_t size);
 std::string error_to_string(int code);
+PADDRINFOA get_addresses(const char *host, const char *port, std::string &error);
+untyped<> open_socket_and_connect(PADDRINFOA addresses, std::string &error);
 
 }
 
@@ -343,6 +348,64 @@ std::string error_to_string(int code)
 	return error_string;
 }
 
+PADDRINFOA get_addresses(const char *host, const char *port, std::string &error)
+{
+	ADDRINFOA hints;
+	std::memset(&hints, 0, sizeof(hints));
+	hints.ai_family = AF_INET;
+	hints.ai_socktype = SOCK_STREAM;
+	hints.ai_protocol = IPPROTO_TCP;
+	hints.ai_flags = 0;
+
+	addrinfo *addresses;
+
+	int retval = getaddrinfo(host, port, &hints, &addresses);
+	if (retval != 0)
+	{
+		error = error + "failed to recognize host and/or port '" + host + ':' + port + "' (" + gai_strerror(retval) + ')';
+		return NULL;
+	}
+
+	return addresses;
+}
+
+untyped<> open_socket_and_connect(PADDRINFOA addresses, std::string &error)
+{
+	untyped<> descriptor;
+	for (PADDRINFOA address = addresses; address != NULL; address = address->ai_next)
+	{
+		descriptor = socket(address->ai_family, address->ai_socktype, address->ai_protocol);
+		if (descriptor == INVALID_SOCKET)
+		{
+			if (address->ai_next == NULL)
+			{
+				error = error + "failed to open socket (" + error_to_string(WSAGetLastError()) + ')';
+				return -1;
+			}
+
+			continue;
+		}
+
+		int retval = connect(descriptor, address->ai_addr, static_cast<int>(address->ai_addrlen));
+		if (retval == -1)
+		{
+			closesocket(descriptor);
+
+			if (address->ai_next == NULL)
+			{
+				error = error + "failed to connect (" + error_to_string(WSAGetLastError()) + ')';
+				return -1;
+			}
+
+			continue;
+		}
+
+		break;
+	}
+
+	return descriptor;
+}
+
 socket_stream_buf::socket_stream_buf(const char *endpoint)
 	:
 	_descriptor(-1)
@@ -355,36 +418,26 @@ socket_stream_buf::socket_stream_buf(const char *endpoint)
 		return;
 	}
 
-	SOCKET descriptor = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	if (descriptor == INVALID_SOCKET)
-	{
-		trace_out_to_endpoint_error() << "failed to open socket (" << error_to_string(WSAGetLastError()) << ')' << std::endl;
-		return;
-	}
-
 	std::string error;
-	std::pair<std::string, standard::uint16_t> host_port = host_port_from_string(endpoint, error);
+	std::pair<std::string, std::string> host_port = host_port_from_string(endpoint, error);
 	if (!error.empty())
 	{
 		trace_out_to_endpoint_error() << error << std::endl;
 		return;
 	}
 
-	hostent *host_entry = gethostbyname(host_port.first.c_str());
-	if (host_entry == NULL)
+	PADDRINFOA addresses_ptr = get_addresses(host_port.first.c_str(), host_port.second.c_str(), error);
+	if (addresses_ptr == NULL)
 	{
-		trace_out_to_endpoint_error() << "unrecognized host - '" << host_port.first << '\'' << std::endl;
+		trace_out_to_endpoint_error() << error << std::endl;
 		return;
 	}
 
-	sockaddr_in socket_address;
-	socket_address.sin_family = AF_INET;
-	std::memcpy(&(socket_address.sin_addr.s_addr), host_entry->h_addr, host_entry->h_length);
-	socket_address.sin_port = htons(host_port.second);
-	retval = connect(descriptor, reinterpret_cast<sockaddr *>(&socket_address), sizeof(socket_address));
-	if (retval == -1)
+	resource<PADDRINFOA> addresses(addresses_ptr, freeaddrinfo);
+	untyped<> descriptor = open_socket_and_connect(addresses.get(), error);
+	if (descriptor == -1)
 	{
-		trace_out_to_endpoint_error() << "failed to open socket (" << error_to_string(WSAGetLastError()) << ')' << std::endl;
+		trace_out_to_endpoint_error() << error << std::endl;
 		return;
 	}
 
@@ -418,9 +471,8 @@ void really_send(untyped<> descriptor, const void *what, standard::size_t how_mu
 	{
 		really_close(descriptor);
 		trace_out_to_endpoint_error() << "socket disconnected" << std::endl;
+		return;
 	}
-
-	return retval;
 }
 
 void really_close(untyped<> descriptor)
