@@ -21,7 +21,7 @@ int main()
 	$toct(subject2);
 	$thex(subject2);
 	$tr(subject3.begin(), subject3.end())
-	$m(subject3.c_str(), subject3.size(), $hex(1), $col(8))
+	$m(subject3.c_str(), subject3.size(), $hex, $grp(1), $col(8))
 	$s(subject3 = "wazuuup!";)
 
 	$if (true)
