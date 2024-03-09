@@ -64,13 +64,14 @@ wdo_stream_buf &wdo_stream_buf_instance()
 
 std::streamsize wdo_stream_buf::xsputn(const char_type *what, std::streamsize how_much)
 {
-	const std::streamsize BUFFER_SIZE = 32;
+	const std::streamsize BUFFER_SIZE = 128;
+	const std::streamsize STRING_SIZE = BUFFER_SIZE - 1;
 	char_type buffer[BUFFER_SIZE];
 
-	for ( ; how_much > BUFFER_SIZE; what += BUFFER_SIZE, how_much -= BUFFER_SIZE)
+	for ( ; how_much > STRING_SIZE; what += STRING_SIZE, how_much -= STRING_SIZE)
 	{
-		std::memcpy(buffer, what, how_much);
-		buffer[how_much] = 0;
+		std::memcpy(buffer, what, STRING_SIZE);
+		buffer[STRING_SIZE] = 0;
 		OutputDebugStringA(buffer);
 	}
 
