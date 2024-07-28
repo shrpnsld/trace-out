@@ -15,7 +15,7 @@ TEST_CASE("$clocks(...)", "[clocks]")
 	$clocks("dummy", dummy();)
 
 	REQUIRE_THAT(test::out_stream.str(), Matches(
-		R"=(clocking "dummy"...\n)="
+		R"=(Clocking "dummy"...\n)="
 		R"=("dummy" clocked in [0-9]+ clocks \([0-9\.]+ ms\)\n)="
 	));
 }

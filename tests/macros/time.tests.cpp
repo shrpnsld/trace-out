@@ -15,7 +15,7 @@ TEST_CASE("$time(...)", "[time]")
 	$time("dummy", dummy();)
 
 	REQUIRE_THAT(test::out_stream.str(), Matches(
-		R"(timing "dummy"...\n)"
+		R"(Timing "dummy"...\n)"
 		R"("dummy" timed in [0-9]+ ms\n)"
 	));
 }

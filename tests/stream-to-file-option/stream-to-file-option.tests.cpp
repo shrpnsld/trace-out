@@ -55,16 +55,16 @@ TEST_CASE("'TRACE_OUT_STREAM_TO_FILE' option", "[TRACE_OUT_STREAM_TO_FILE]")
 		<< R"=(@@                           \| )=" << std::endl
 		<< R"=(@@                           \|   \} // while \(true\))=" << std::endl
 		<< R"=(@@                           \| )=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:122  \|   timing "dummy"\.\.\.)=" << std::endl
+		<< R"=(@@  stream-to-file-opt~:122  \|   Timing "dummy"\.\.\.)=" << std::endl
 		<< R"=(@@  stream-to-file-opt~:122  \|   "dummy" timed in [0-9]+ ms)=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:123  \|   clocking "dummy"\.\.\.)=" << std::endl
+		<< R"=(@@  stream-to-file-opt~:123  \|   Clocking "dummy"\.\.\.)=" << std::endl
 		<< R"=(@@  stream-to-file-opt~:123  \|   "dummy" clocked in [0-9]+ clocks \([0-9\.]+ ms\))=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:124  \|   // execution time statistics \(ms\) for "dummy":)=" << std::endl
+		<< R"=(@@  stream-to-file-opt~:124  \|   // Execution time statistics \(ms\) for "dummy":)=" << std::endl
 		<< R"=(@@                           \|   //   avg/med: [0-9]+ / [0-9]+)=" << std::endl
 		<< R"=(@@                           \|   //      mode: [0-9]+ \(100% of all values\))=" << std::endl
 		<< R"=(@@                           \|   //     range: [0-9]+ \[[0-9]+\.\.\.[0-9]+\])=" << std::endl
 		<< R"=(@@                           \| )=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:125  \|   // execution time statistics \(clocks\) for "dummy":)=" << std::endl
+		<< R"=(@@  stream-to-file-opt~:125  \|   // Execution time statistics \(clocks\) for "dummy":)=" << std::endl
 		<< R"=(@@                           \|   //   avg/med: [0-9]+ / [0-9]+)=" << std::endl
 		<< R"=(@@                           \|   //      mode: [0-9]+ \([0-9]+% of all values\))=" << std::endl
 		<< R"=(@@                           \|   //     range: [0-9]+ \[[0-9]+\.\.\.[0-9]+\])=" << std::endl

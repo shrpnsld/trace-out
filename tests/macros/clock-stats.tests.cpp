@@ -19,7 +19,7 @@ TEST_CASE("$clock_stats(...)", "[clock_stats]")
 	}
 
 	REQUIRE_THAT(test::out_stream.str(), Matches(
-		R"(// execution time statistics \(clocks\) for "dummy":\n)"
+		R"(// Execution time statistics \(clocks\) for "dummy":\n)"
 		R"(//   avg/med: [0-9\.]+ / [0-9\.]+\n)"
 		R"(//     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)"
 		R"(//     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)"

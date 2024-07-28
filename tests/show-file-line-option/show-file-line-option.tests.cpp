@@ -193,7 +193,7 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$time(...)'", "[TRACE_OUT_SHOW_FILE_
 
 	std::stringstream expected;
 	expected <<
-		" show-file-line-opt~:" << line << "  \\| timing \"dummy\"...\n"
+		" show-file-line-opt~:" << line << "  \\| Timing \"dummy\"...\n"
 		" show-file-line-opt~:" << line << "  \\| \"dummy\" timed in [0-9]+ ms\n";
 	REQUIRE_THAT(test::out_stream.str(), Matches(expected.str()));
 }
@@ -212,7 +212,7 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$time_stats(...)'", "[TRACE_OUT_SHOW
 
 	std::stringstream expected;
 	expected << " show-file-line-opt~:" << line <<
-							"  \\| // execution time statistics \\(ms\\) for \"dummy\":\n"
+							"  \\| // Execution time statistics \\(ms\\) for \"dummy\":\n"
 		"                          \\| //   avg/med: [0-9\\.]+ / [0-9\\.]+\n"
 		"                          \\| //     ( mode|modes): [0-9\\.]+(, [0-9\\.]+)* \\((each = [0-9\\.]+%, all = )?[0-9\\.]+% of all values\\)\n"
 		"                          \\| //     range: [0-9\\.]+ \\[[0-9\\.]+\\.\\.\\.[0-9\\.]+\\]\n"
@@ -232,7 +232,7 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$clocks(...)'", "[TRACE_OUT_SHOW_FIL
 
 	std::stringstream expected;
 	expected <<
-		" show-file-line-opt~:" << line << "  \\| clocking \"dummy\"...\n"
+		" show-file-line-opt~:" << line << "  \\| Clocking \"dummy\"...\n"
 		" show-file-line-opt~:" << line << "  \\| \"dummy\" clocked in [0-9]+ clocks \\([0-9\\.]+ ms\\)\n";
 	REQUIRE_THAT(test::out_stream.str(), Matches(expected.str()));
 }
@@ -251,7 +251,7 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$clock_stats(...)'", "[TRACE_OUT_SHO
 
 	std::stringstream expected;
 	expected << " show-file-line-opt~:" << line <<
-							"  \\| // execution time statistics \\(clocks\\) for \"dummy\":\n"
+							"  \\| // Execution time statistics \\(clocks\\) for \"dummy\":\n"
 		"                          \\| //   avg/med: [0-9\\.]+ / [0-9\\.]+\n"
 		"                          \\| //     ( mode|modes): [0-9\\.]+(, [0-9\\.]+)* \\((each = [0-9\\.]+%, all = )?[0-9\\.]+% of all values\\)\n"
 		"                          \\| //     range: [0-9\\.]+ \\[[0-9\\.]+\\.\\.\\.[0-9\\.]+\\]\n"
