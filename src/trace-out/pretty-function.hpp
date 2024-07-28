@@ -2,6 +2,7 @@
 
 #include "trace-out/mutex.hpp"
 #include "trace-out/pretty-lines.hpp"
+#include "trace-out/styles.hpp"
 #include <string>
 
 //
@@ -41,7 +42,7 @@ function_printer::function_printer(std::ostream &stream, const file_line_t &file
 		autolock<system::mutex> lock(stream_mutex());
 #endif
 
-		_stream << THREAD_INFO << NEW_PARAGRAPH(_file_line) << _signature << '\n' << CONTINUE_PARAGRAPH << '{' << std::endl;
+		_stream << THREAD_INFO << NEW_PARAGRAPH(_file_line) << styles::FUNCTION << _signature << styles::NORMAL << '\n' << CONTINUE_PARAGRAPH << styles::PUNCTUATION << '{' << styles::NORMAL << std::endl;
 	}
 
 	indentation_add();
@@ -56,7 +57,7 @@ function_printer::~function_printer()
 		autolock<system::mutex> lock(stream_mutex());
 #endif
 
-		_stream << THREAD_INFO << NEW_PARAGRAPH(_file_line) << "} // " << _signature << '\n' << SEPARATE_PARAGRAPH << std::endl;
+		_stream << THREAD_INFO << NEW_PARAGRAPH(_file_line) << styles::PUNCTUATION << '}' << styles::NORMAL << ' ' << styles::COMMENT << "// " << _signature << styles::NORMAL << '\n' << SEPARATE_PARAGRAPH << std::endl;
 	}
 }
 

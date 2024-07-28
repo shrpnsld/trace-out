@@ -9,6 +9,7 @@
 #include "trace-out/nothing.hpp"
 #include "trace-out/number-format.hpp"
 #include "trace-out/pretty-lines.hpp"
+#include "trace-out/styles.hpp"
 #include "trace-out/to-string.hpp"
 #include <algorithm>
 #include <cctype>
@@ -219,12 +220,13 @@ void print_memory_with_display_options(std::ostream &stream, const file_line_t &
 		autolock<system::mutex> lock(stream_mutex());
 #endif
 
-		stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << name << ", " << size << " bytes of " << options.grouping << "-byte " << base_name(options.base);
+		stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::SUBJECT << name << styles::NORMAL << ", " << size << " bytes of " << options.grouping << "-byte " << base_name(options.base);
 		const char *byte_order_str = byte_order_name(options.byte_order, options.base, options.grouping);
 		if (byte_order_str != NULL)
 		{
 			stream << ", " << byte_order_str;
 		}
+		stream << styles::NORMAL;
 
 		indentation_add();
 
@@ -233,7 +235,7 @@ void print_memory_with_display_options(std::ostream &stream, const file_line_t &
 			const standard::uint8_t *line = &memory[line_number * memory_line_size];
 
 			stream << '\n' << CONTINUE_PARAGRAPH;
-			stream << std::hex << reinterpret_cast<standard::uint64_t>(line) << RESET_FLAGS << ':';
+			stream << styles::NUMBER << std::hex << reinterpret_cast<standard::uint64_t>(line) << RESET_FLAGS << styles::NORMAL << ':';
 			print_memory_values(stream, print_chunk, line, column_count, options.grouping, column_width);
 			stream << MEMORY_VALUE_AND_TEXT_DELIMITER;
 			print_text_representation(stream, line, column_count * options.grouping);
@@ -245,7 +247,7 @@ void print_memory_with_display_options(std::ostream &stream, const file_line_t &
 			int padding_width = static_cast<int>((column_count - leftover_item_count) * column_width);
 
 			stream << '\n' << CONTINUE_PARAGRAPH;
-			stream << std::hex << reinterpret_cast<standard::uint64_t>(line) << RESET_FLAGS << ':';
+			stream << styles::NUMBER << std::hex << reinterpret_cast<standard::uint64_t>(line) << RESET_FLAGS << styles::NORMAL << ':';
 			print_memory_values(stream, print_chunk, line, leftover_item_count, options.grouping, column_width);
 			stream << std::setw(padding_width) << "" << MEMORY_VALUE_AND_TEXT_DELIMITER;
 			print_text_representation(stream, line, leftover_item_count * options.grouping);
@@ -257,7 +259,7 @@ void print_memory_with_display_options(std::ostream &stream, const file_line_t &
 			int padding_width = static_cast<int>((column_count * column_width) - (leftover_memory_size * 3));
 
 			stream << '\n' << SEPARATE_PARAGRAPH << '\n' << CONTINUE_PARAGRAPH << "leftovers:" << '\n' << CONTINUE_PARAGRAPH;
-			stream << std::hex << reinterpret_cast<standard::uint64_t>(line) << RESET_FLAGS << ':';
+			stream << styles::NUMBER << std::hex << reinterpret_cast<standard::uint64_t>(line) << RESET_FLAGS << styles::NORMAL << ':';
 			print_memory_values(stream, print_hexadecimal_chunk, line, leftover_memory_size, 1, 3);
 			stream << std::setw(padding_width) << "" << MEMORY_VALUE_AND_TEXT_DELIMITER;
 			print_text_representation(stream, line, leftover_memory_size);
@@ -633,8 +635,17 @@ void print_text_representation(std::ostream &stream, const standard::uint8_t *li
 	for (standard::size_t index = 0; index < char_count; ++index)
 	{
 		char character = line[index];
-		stream << (std::isprint(character) ? character : '.');
+		if (std::isprint(character))
+		{
+			stream << styles::CHARACTER << character;
+		}
+		else
+		{
+			stream << styles::COMMENT << '.';
+		}
 	}
+
+	stream << styles::NORMAL;
 }
 
 }

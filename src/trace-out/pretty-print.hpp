@@ -5,6 +5,7 @@
 #include "trace-out/has-member.hpp"
 #include "trace-out/number-bits-iterator.hpp"
 #include "trace-out/number-format.hpp"
+#include "trace-out/styles.hpp"
 #include "trace-out/template-magic.hpp"
 #include "trace-out/type-traits.hpp"
 #include <bitset>
@@ -278,107 +279,107 @@ namespace trace_out
 
 void pretty_print(std::ostream &stream, bool value)
 {
-	stream << std::boolalpha << value << std::noboolalpha;
+	stream << styles::BOOLEAN << std::boolalpha << value << std::noboolalpha << styles::NORMAL;
 }
 
 void pretty_print(std::ostream &stream, char character)
 {
 	if (!std::isprint(character))
 	{
-		stream << "'\\x" << std::setw(2) << std::setfill('0') << std::hex << std::uppercase << (character & 0xff) << '\'';
+		stream << styles::CHARACTER << "'\\x" << std::setw(2) << std::setfill('0') << std::hex << std::uppercase << (character & 0xff) << '\'' << styles::NORMAL;
 		stream.flags(static_cast<std::ios_base::fmtflags>(0));
 		stream.width(0);
 		stream.fill(' ');
 		return;
 	}
 
-	stream << '\'' << character << '\'';
+	stream << styles::CHARACTER << '\'' << character << '\'' << styles::NORMAL;
 }
 
 void pretty_print(std::ostream &stream, signed char number)
 {
-	stream << static_cast<signed int>(number);
+	stream << styles::NUMBER << static_cast<signed int>(number) << styles::NORMAL;
 }
 
 void pretty_print(std::ostream &stream, unsigned char number)
 {
-	stream << static_cast<unsigned int>(number);
+	stream << styles::NUMBER << static_cast<unsigned int>(number) << styles::NORMAL;
 }
 
 void pretty_print(std::ostream &stream, signed short number)
 {
-	stream << number;
+	stream << styles::NUMBER << number << styles::NORMAL;
 }
 
 void pretty_print(std::ostream &stream, unsigned short number)
 {
-	stream << number;
+	stream << styles::NUMBER << number << styles::NORMAL;
 }
 
 void pretty_print(std::ostream &stream, signed int number)
 {
-	stream << number;
+	stream << styles::NUMBER << number << styles::NORMAL;
 }
 
 void pretty_print(std::ostream &stream, unsigned int number)
 {
-	stream << number;
+	stream << styles::NUMBER << number << styles::NORMAL;
 }
 
 void pretty_print(std::ostream &stream, signed long number)
 {
-	stream << number;
+	stream << styles::NUMBER << number << styles::NORMAL;
 }
 
 void pretty_print(std::ostream &stream, unsigned long number)
 {
-	stream << number;
+	stream << styles::NUMBER << number << styles::NORMAL;
 }
 
 #if TRACE_OUT_CPP_VERSION >= 201103L
 
 void pretty_print(std::ostream &stream, signed long long number)
 {
-	stream << number;
+	stream << styles::NUMBER << number << styles::NORMAL;
 }
 
 void pretty_print(std::ostream &stream, unsigned long long number)
 {
-	stream << number;
+	stream << styles::NUMBER << number << styles::NORMAL;
 }
 
 template <typename Type_t>
 typename enable_if<std::is_enum<Type_t>::value, void>::type pretty_print(std::ostream &stream, Type_t value)
 {
-	stream << static_cast<typename std::underlying_type<Type_t>::type>(value);
+	stream << styles::NUMBER << static_cast<typename std::underlying_type<Type_t>::type>(value) << styles::NORMAL;
 }
 
 #endif
 
 void pretty_print(std::ostream &stream, float number)
 {
-	stream << number;
+	stream << styles::NUMBER << number << styles::NORMAL;
 }
 
 void pretty_print(std::ostream &stream, double number)
 {
-	stream << number;
+	stream << styles::NUMBER << number << styles::NORMAL;
 }
 
 void pretty_print(std::ostream &stream, long double number)
 {
-	stream << number;
+	stream << styles::NUMBER << number << styles::NORMAL;
 }
 
 void pretty_print(std::ostream &stream, const void *pointer)
 {
 	if (pointer == NULL)
 	{
-		stream << "<null>";
+		stream << styles::NUMBER << "<null>" << styles::NORMAL;
 	}
 	else
 	{
-		stream << pointer;
+		stream << styles::NUMBER << pointer << styles::NORMAL;
 	}
 }
 
@@ -389,12 +390,12 @@ void pretty_print(std::ostream &stream, void *pointer)
 
 void pretty_print(std::ostream &stream, const char *string)
 {
-	stream << '"' << string << '"';
+	stream << styles::STRING << '"' << string << '"' << styles::NORMAL;
 }
 
 void pretty_print(std::ostream &stream, const std::string &string)
 {
-	stream << '"' << string << '"';
+	stream << styles::STRING << '"' << string << '"' << styles::NORMAL;
 }
 
 template <typename Type_t, standard::size_t Size>
@@ -419,8 +420,9 @@ typename enable_if<is_pointer<Type_t>::value, void>::type pretty_print(std::ostr
 template <typename Type_t>
 typename enable_if<!is_floating_point<Type_t>::value, void>::type pretty_print_binary(std::ostream &stream, Type_t value)
 {
-	stream << "bin: ";
+	stream << styles::COMMENT << "bin:" << styles::NORMAL << ' ';
 
+	stream << styles::NUMBER;
 	const standard::uint8_t *iterator = first_byte_in_number(value);
 	const standard::uint8_t *last = last_byte_in_number(value);
 	for ( ; iterator != last; iterator = next_byte_in_number(iterator))
@@ -428,7 +430,7 @@ typename enable_if<!is_floating_point<Type_t>::value, void>::type pretty_print_b
 		stream << byte_to_binary(*iterator) << ' ';
 	}
 
-	stream << byte_to_binary(*iterator);
+	stream << byte_to_binary(*iterator) << styles::NORMAL;
 }
 
 template <typename Type_t>
@@ -442,8 +444,9 @@ void pretty_print_octal(std::ostream &stream, Type_t value)
 {
 	static const standard::size_t GROUPING = 2;
 
-	stream << "oct: ";
+	stream << styles::COMMENT << "oct:" << styles::NORMAL << ' ';
 
+	stream << styles::NUMBER;
 	standard::size_t type_size = number_format<Type_t>::size();
 	if (type_size == 1)
 	{
@@ -461,6 +464,7 @@ void pretty_print_octal(std::ostream &stream, Type_t value)
 			iterator = print_bytes_of_number(stream, iterator, GROUPING, byte_to_octal);
 			left -= GROUPING;
 		}
+		stream << styles::NORMAL;
 	}
 }
 
@@ -469,8 +473,9 @@ void pretty_print_hexadecimal(std::ostream &stream, Type_t value)
 {
 	static const standard::size_t GROUPING = 4;
 
-	stream << "hex: ";
+	stream << styles::COMMENT << "hex:" << styles::NORMAL << ' ';
 
+	stream << styles::NUMBER;
 	standard::size_t type_size = number_format<Type_t>::size();
 	if (type_size == 1)
 	{
@@ -506,6 +511,8 @@ void pretty_print_hexadecimal(std::ostream &stream, Type_t value)
 			left -= GROUPING;
 		}
 	}
+
+	stream << styles::NORMAL;
 }
 
 //
@@ -1105,7 +1112,7 @@ void pretty_print_floating_in_binary(std::ostream &stream, Floating_t value)
 
 	number_bits_iterator iterator(bits, number_format<Floating_t>::length() / 8);
 
-	stream << "bin: " << *iterator << ' ';
+	stream << styles::COMMENT << "bin:" << styles::NORMAL << ' ' << styles::NUMBER << *iterator << ' ';
 	++iterator;
 
 	if (number_format<Floating_t>::exponent_first_byte_length() > 0)
@@ -1133,6 +1140,8 @@ void pretty_print_floating_in_binary(std::ostream &stream, Floating_t value)
 		stream << ' ';
 		iterator = print_bits(stream, iterator, 8);
 	}
+
+	stream << styles::NORMAL;
 }
 
 const standard::uint8_t *print_bytes_of_number(std::ostream &stream, const standard::uint8_t *iterator, standard::size_t how_much, const char *(*represent)(standard::uint8_t))

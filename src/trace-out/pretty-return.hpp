@@ -3,6 +3,7 @@
 #include "trace-out/mutex.hpp"
 #include "trace-out/pretty-lines.hpp"
 #include "trace-out/pretty-print.hpp"
+#include "trace-out/styles.hpp"
 #include <ostream>
 
 //
@@ -47,7 +48,7 @@ const Type_t &return_printer::operator ,(const Type_t &value)
 		autolock<system::mutex> lock(stream_mutex());
 #endif
 
-		_stream << THREAD_INFO << NEW_PARAGRAPH(_file_line) << "return ";
+		_stream << THREAD_INFO << NEW_PARAGRAPH(_file_line) << styles::KEYWORD << "return" << styles::NORMAL << ' ';
 		pretty_print(_stream, value);
 		_stream << std::endl;
 	}

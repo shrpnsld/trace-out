@@ -3,6 +3,7 @@
 #include "trace-out/mutex.hpp"
 #include "trace-out/pretty-lines.hpp"
 #include "trace-out/pretty-print.hpp"
+#include "trace-out/styles.hpp"
 #include <string>
 
 #if TRACE_OUT_CPP_VERSION >= 201103L
@@ -69,6 +70,8 @@ void trace_range(std::ostream &stream, const file_line_t &file_line, const char 
 template <typename Begin_t>
 void trace_range(std::ostream &stream, const file_line_t &file_line, const char *begin_name, const char *how_much_name, Begin_t begin, standard::size_t how_much);
 
+inline void trace_and_comment(std::ostream &stream, const file_line_t &file_line, const char *statement, const char *comment);
+
 }
 
 //
@@ -134,7 +137,7 @@ Type_t &&trace(std::ostream &stream, const file_line_t &file_line, const char *n
 		autolock<system::mutex> lock(stream_mutex());
 #endif
 
-		stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << name << " = ";
+		stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::SUBJECT << name << styles::NORMAL << " = ";
 		pretty_print(stream, value);
 		stream << std::endl;
 	}
@@ -194,7 +197,7 @@ void print_next_value(std::ostream &stream, const std::string &)
 template <typename First_t, typename ...Rest_t>
 void print_next_value(std::ostream &stream, const std::string &names, const First_t &first, const Rest_t &...rest)
 {
-	stream << CONTINUE_PARAGRAPH << first_token(names) << " = ";
+	stream << CONTINUE_PARAGRAPH << styles::SUBJECT << first_token(names) << styles::NORMAL << " = ";
 	pretty_print(stream, first);
 	stream << std::endl;
 	print_next_value(stream, rest_tokens(names), rest...);
@@ -203,7 +206,7 @@ void print_next_value(std::ostream &stream, const std::string &names, const Firs
 template <typename First_t, typename ...Rest_t>
 void print_first_value(std::ostream &stream, const file_line_t &file_line, const std::string &names, const First_t &first, const Rest_t &...rest)
 {
-	stream << NEW_PARAGRAPH(file_line) << first_token(names) << " = ";
+	stream << NEW_PARAGRAPH(file_line) << styles::SUBJECT << first_token(names) << styles::NORMAL << " = ";
 	pretty_print(stream, first);
 	stream << std::endl;
 	print_next_value(stream, rest_tokens(names), rest...);
@@ -217,7 +220,7 @@ void print_next_binary_value(std::ostream &stream, const std::string &)
 template <typename First_t, typename ...Rest_t>
 void print_next_binary_value(std::ostream &stream, const std::string &names, const First_t &first, const Rest_t &...rest)
 {
-	stream << CONTINUE_PARAGRAPH << first_token(names) << " = ";
+	stream << CONTINUE_PARAGRAPH << styles::SUBJECT << first_token(names) << styles::NORMAL << " = ";
 	pretty_print_binary(stream, first);
 	stream << std::endl;
 	print_next_binary_value(stream, rest_tokens(names), rest...);
@@ -226,7 +229,7 @@ void print_next_binary_value(std::ostream &stream, const std::string &names, con
 template <typename First_t, typename ...Rest_t>
 void print_first_binary_value(std::ostream &stream, const file_line_t &file_line, const std::string &names, const First_t &first, const Rest_t &...rest)
 {
-	stream << NEW_PARAGRAPH(file_line) << first_token(names) << " = ";
+	stream << NEW_PARAGRAPH(file_line) << styles::SUBJECT << first_token(names) << styles::NORMAL << " = ";
 	pretty_print_binary(stream, first);
 	stream << std::endl;
 	print_next_binary_value(stream, rest_tokens(names), rest...);
@@ -240,7 +243,7 @@ void print_next_octal_value(std::ostream &stream, const std::string &)
 template <typename First_t, typename ...Rest_t>
 void print_next_octal_value(std::ostream &stream, const std::string &names, const First_t &first, const Rest_t &...rest)
 {
-	stream << CONTINUE_PARAGRAPH << first_token(names) << " = ";
+	stream << CONTINUE_PARAGRAPH << styles::SUBJECT << first_token(names) << styles::NORMAL << " = ";
 	pretty_print_octal(stream, first);
 	stream << std::endl;
 	print_next_octal_value(stream, rest_tokens(names), rest...);
@@ -249,7 +252,7 @@ void print_next_octal_value(std::ostream &stream, const std::string &names, cons
 template <typename First_t, typename ...Rest_t>
 void print_first_octal_value(std::ostream &stream, const file_line_t &file_line, const std::string &names, const First_t &first, const Rest_t &...rest)
 {
-	stream << NEW_PARAGRAPH(file_line) << first_token(names) << " = ";
+	stream << NEW_PARAGRAPH(file_line) << styles::SUBJECT << first_token(names) << styles::NORMAL << " = ";
 	pretty_print_octal(stream, first);
 	stream << std::endl;
 	print_next_octal_value(stream, rest_tokens(names), rest...);
@@ -263,7 +266,7 @@ void print_next_hexadecimal_value(std::ostream &stream, const std::string &)
 template <typename First_t, typename ...Rest_t>
 void print_next_hexadecimal_value(std::ostream &stream, const std::string &names, const First_t &first, const Rest_t &...rest)
 {
-	stream << CONTINUE_PARAGRAPH << first_token(names) << " = ";
+	stream << CONTINUE_PARAGRAPH << styles::SUBJECT << first_token(names) << styles::NORMAL << " = ";
 	pretty_print_hexadecimal(stream, first);
 	stream << std::endl;
 	print_next_hexadecimal_value(stream, rest_tokens(names), rest...);
@@ -272,7 +275,7 @@ void print_next_hexadecimal_value(std::ostream &stream, const std::string &names
 template <typename First_t, typename ...Rest_t>
 void print_first_hexadecimal_value(std::ostream &stream, const file_line_t &file_line, const std::string &names, const First_t &first, const Rest_t &...rest)
 {
-	stream << NEW_PARAGRAPH(file_line) << first_token(names) << " = ";
+	stream << NEW_PARAGRAPH(file_line) << styles::SUBJECT << first_token(names) << styles::NORMAL << " = ";
 	pretty_print_hexadecimal(stream, first);
 	stream << std::endl;
 	print_next_hexadecimal_value(stream, rest_tokens(names), rest...);
@@ -294,7 +297,7 @@ Type_t &trace(std::ostream &stream, const file_line_t &file_line, const char *na
 		autolock<system::mutex> lock(stream_mutex());
 #endif
 
-		stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << name << " = ";
+		stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::SUBJECT << name << styles::NORMAL << " = ";
 		pretty_print(stream, value);
 		stream << std::endl;
 	}
@@ -311,7 +314,17 @@ void trace(std::ostream &stream, const file_line_t &file_line, const char *shoul
 	autolock<system::mutex> lock(stream_mutex());
 #endif
 
-	stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << (should_comment != NULL ? "// " : "") << comment << std::endl;
+	stream << THREAD_INFO << NEW_PARAGRAPH(file_line);
+	if (should_comment != NULL)
+	{
+		stream << styles::COMMENT << "// " << comment << styles::NORMAL;
+	}
+	else
+	{
+		stream << comment;
+	}
+
+	stream << std::endl;
 }
 
 template <typename Type_t>
@@ -328,7 +341,7 @@ Type_t &trace_binary(std::ostream &stream, const file_line_t &file_line, const c
 		autolock<system::mutex> lock(stream_mutex());
 #endif
 
-		stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << name << " = ";
+		stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::SUBJECT << name << styles::NORMAL << " = ";
 		pretty_print_binary(stream, value);
 		stream << std::endl;
 	}
@@ -350,7 +363,7 @@ Type_t &trace_octal(std::ostream &stream, const file_line_t &file_line, const ch
 		autolock<system::mutex> lock(stream_mutex());
 #endif
 
-		stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << name << " = ";
+		stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::SUBJECT << name << styles::NORMAL << " = ";
 		pretty_print_octal(stream, value);
 		stream << std::endl;
 	}
@@ -372,7 +385,7 @@ Type_t &trace_hexadecimal(std::ostream &stream, const file_line_t &file_line, co
 		autolock<system::mutex> lock(stream_mutex());
 #endif
 
-		stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << name << " = ";
+		stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::SUBJECT << name << styles::NORMAL << " = ";
 		pretty_print_hexadecimal(stream, value);
 		stream << std::endl;
 	}
@@ -387,7 +400,7 @@ void trace_range(std::ostream &stream, const file_line_t &file_line, const char 
 	autolock<system::mutex> lock(stream_mutex());
 #endif
 
-	stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << '[' << begin_name << ", " << end_name << ") = ";
+	stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << '[' << styles::SUBJECT << begin_name << styles::NORMAL << ", " << styles::SUBJECT << end_name << styles::NORMAL << ") = ";
 	pretty_print_begin_end(stream, begin, end);
 	stream << std::endl;
 }
@@ -399,7 +412,7 @@ void trace_range(std::ostream &stream, const file_line_t &file_line, const char 
 	autolock<system::mutex> lock(stream_mutex());
 #endif
 
-	stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << '[' << begin_name << ": " << how_much_name << "] = ";
+	stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << '[' << styles::SUBJECT << begin_name << styles::NORMAL << ": " << styles::SUBJECT << how_much_name << styles::NORMAL << "] = ";
 	pretty_print_begin_how_much(stream, begin, how_much);
 	stream << std::endl;
 }
@@ -418,6 +431,15 @@ std::string rest_tokens(const std::string &tokens)
 	}
 
 	return tokens.substr(from, tokens.size());
+}
+
+void trace_and_comment(std::ostream &stream, const file_line_t &file_line, const char *statement, const char *comment)
+{
+#if defined(TRACE_OUT_SYNC_STREAM)
+	autolock<system::mutex> lock(stream_mutex());
+#endif
+
+	stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::SUBJECT << statement << styles::NORMAL << ' ' << styles::COMMENT << "// " << comment << styles::NORMAL << std::endl;
 }
 
 }

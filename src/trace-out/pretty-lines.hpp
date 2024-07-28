@@ -6,6 +6,7 @@
 #include "trace-out/integer.hpp"
 #include "trace-out/mutex.hpp"
 #include "trace-out/platform-detection.hpp"
+#include "trace-out/styles.hpp"
 #include "trace-out/thread.hpp"
 #include <iomanip>
 #include <ostream>
@@ -122,7 +123,7 @@ std::ostream &operator <<(std::ostream &stream, thread_info_t)
 	if (!is_running_same_thread())
 	{
 		const std::string &thread_name = current_thread_name();
-		stream << MARKER << "~~~~[Thread: " << std::setbase(16) << system::current_thread_id() << RESET_FLAGS << (!thread_name.empty() ? " " : "") << thread_name << "]~~~~";
+		stream << MARKER << styles::THREAD << "~~~~[Thread: " << std::setbase(16) << system::current_thread_id() << RESET_FLAGS << (!thread_name.empty() ? " " : "") << thread_name << "]~~~~" << styles::NORMAL;
 		stream << std::endl;
 	}
 #endif
@@ -155,7 +156,7 @@ std::ostream &operator <<(std::ostream &stream, const file_line_t &filename_line
 	stream << filename;
 
 	stream.width(0);
-	stream << ":";
+	stream << styles::COMMENT << ':' << styles::NORMAL;
 
 	stream.width(LINE_FIELD_WIDTH);
 	stream.flags(std::ios::left);
@@ -169,9 +170,10 @@ std::ostream &operator <<(std::ostream &stream, const file_line_t &filename_line
 std::ostream &operator <<(std::ostream &stream, file_line_blank_t)
 {
 #if defined(TRACE_OUT_SHOW_FILE_LINE)
+	stream << styles::COMMENT;
 	stream.fill(' ');
 	stream.width(FILENAME_FIELD_WIDTH + 1 + LINE_FIELD_WIDTH);
-	stream << "" << FILENAME_LINE_DELIMITER << RESET_FLAGS;
+	stream << "" << FILENAME_LINE_DELIMITER << RESET_FLAGS << styles::NORMAL;
 #endif
 
 	return stream;
@@ -183,7 +185,7 @@ std::ostream &operator <<(std::ostream &stream, const NEW_PARAGRAPH &paragraph)
 
 	(void)paragraph;
 #if defined(TRACE_OUT_SHOW_FILE_LINE)
-	stream << paragraph.filename_line << FILENAME_LINE_DELIMITER;
+	stream << paragraph.filename_line << styles::COMMENT << FILENAME_LINE_DELIMITER << styles::NORMAL;
 #endif
 	return stream << indentation();
 }

@@ -51,9 +51,9 @@
 			trace_out_private__loop(trace_out_private__unify(trace_out_for_block), while, ##__VA_ARGS__)
 
 #define $s(...) \
-			trace_out::trace(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, NULL, #__VA_ARGS__ " // running..."); \
+			trace_out::trace_and_comment(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, #__VA_ARGS__, "running..."); \
 			__VA_ARGS__ \
-			trace_out::trace(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, NULL, #__VA_ARGS__ " // done.");
+			trace_out::trace_and_comment(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, #__VA_ARGS__, "done.");
 
 #define $thread(name) \
 			trace_out::set_current_thread_name(#name);
@@ -74,20 +74,20 @@
 // Private
 
 #define trace_out_private__loop(block_variable_name, loop, ...) \
-			if (trace_out::loop_block block_variable_name = trace_out::loop_block(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, #loop" ("#__VA_ARGS__")")) {} else \
+			if (trace_out::loop_block block_variable_name = trace_out::loop_block(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, #loop, #__VA_ARGS__)) {} else \
 				loop (__VA_ARGS__) \
 					if (trace_out::iteration_block trace_out_private__unify(trace_out_iteration_block) = trace_out::iteration_block(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, #loop, block_variable_name.iteration())) {} else
 
 #define trace_out_private__time(start_time, execution_time, label, ...) \
 			trace_out::standard::uint64_t start_time = trace_out::system::time_in_milliseconds(); \
-			trace_out::trace(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, NULL, "timing \"" label "\"..."); \
+			trace_out::print_measuring_title(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, "Timing", label); \
 			__VA_ARGS__ \
 			trace_out::standard::uint64_t execution_time = trace_out::system::time_in_milliseconds() - start_time; \
 			trace_out::print_execution_time_in_milliseconds(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, label, execution_time);
 
 #define trace_out_private__clocks(start_clocks, execution_clocks, label, ...) \
 			std::clock_t start_clocks = std::clock(); \
-			trace_out::trace(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, NULL, "clocking \"" label "\"..."); \
+			trace_out::print_measuring_title(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, "Clocking", label); \
 			__VA_ARGS__ \
 			std::clock_t execution_clocks = std::clock() - start_clocks; \
 			trace_out::print_execution_time_in_clocks(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, label, execution_clocks, static_cast<double>(execution_clocks) / CLOCKS_PER_SEC * 1000.0);
