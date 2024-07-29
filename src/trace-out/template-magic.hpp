@@ -8,6 +8,9 @@
 namespace trace_out
 {
 
+template <typename Type_t>
+const Type_t &declval();
+
 template <typename First_t, typename Second_t>
 struct is_same;
 
@@ -69,6 +72,29 @@ struct is_structural
 	enum
 	{
 		value = sizeof(do_check<Type_t>(0)) == sizeof(yes)
+	};
+};
+
+template <typename From_t, typename To_t>
+struct is_convertible_to
+{
+	struct yes
+	{
+		unsigned char field[2];
+	};
+
+	struct no
+	{
+		unsigned char field[1];
+	};
+
+	static yes do_check(const To_t & = From_t());
+
+	static no do_check(...);
+
+	enum
+	{
+		value = sizeof(do_check(declval<From_t>())) == sizeof(yes)
 	};
 };
 
