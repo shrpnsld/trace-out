@@ -19,5 +19,6 @@ add_subdirectory(stream-to-endpoint-option)
 add_subdirectory(stream-to-file-option)
 add_subdirectory(stream-to-wdo-option)
 add_subdirectory(strip-scope-option)
+add_subdirectory(style-option)
 add_subdirectory(sync-stream-option)
 
