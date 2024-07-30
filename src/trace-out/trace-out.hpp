@@ -35,8 +35,13 @@
 #define $m(pointer, ...) \
 			trace_out::print_memory(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, #pointer, reinterpret_cast<const trace_out::standard::uint8_t *>(pointer), ##__VA_ARGS__);
 
-#define $f \
+#if defined(TRACE_OUT_STYLE) && TRACE_OUT_STYLE > 0
+	#define $f \
+			trace_out::function_printer trace_out_private__unify(trace_out_f) = trace_out::function_printer(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, __FUNCTION__, trace_out_private__strip_scope(TRACE_OUT_FUNCTION_SIGNATURE));
+#else
+	#define $f \
 			trace_out::function_printer trace_out_private__unify(trace_out_f) = trace_out::function_printer(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, trace_out_private__strip_scope(TRACE_OUT_FUNCTION_SIGNATURE));
+#endif
 
 #define $return \
 			return trace_out::return_printer(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE) ,
