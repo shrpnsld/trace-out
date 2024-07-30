@@ -11,6 +11,8 @@
 #include <bitset>
 #include <cctype>
 #include <iomanip>
+#include <queue>
+#include <stack>
 #include <string>
 
 #if TRACE_OUT_CPP_VERSION >= 201103L
@@ -89,6 +91,12 @@ void pretty_print(std::ostream &stream, const std::pair<First_t, Second_t> &pair
 
 template <std::size_t Size>
 void pretty_print(std::ostream &stream, const std::bitset<Size> &bits);
+
+template <typename Type_t, typename Container_t>
+void pretty_print(std::ostream &stream, const std::stack<Type_t, Container_t> &stack);
+
+template <typename Type_t, typename Container_t>
+void pretty_print(std::ostream &stream, const std::queue<Type_t, Container_t> &queue);
 
 #if TRACE_OUT_CPP_VERSION >= 201103L
 
@@ -532,6 +540,42 @@ template <std::size_t Size>
 void pretty_print(std::ostream &stream, const std::bitset<Size> &bits)
 {
 	stream << bits.to_string();
+}
+
+template <typename Type_t, typename Container_t>
+void pretty_print(std::ostream &stream, const std::stack<Type_t, Container_t> &stack)
+{
+	stream << '[';
+	if (stack.empty())
+	{
+		stream << ']';
+	}
+	else
+	{
+		pretty_print(stream, stack.top());
+		stream << " <- ]";
+	}
+
+	stream << ", size: " << styles::NUMBER << stack.size() << styles::NORMAL;
+}
+
+template <typename Type_t, typename Container_t>
+void pretty_print(std::ostream &stream, const std::queue<Type_t, Container_t> &queue)
+{
+	stream << '[';
+	if (queue.empty())
+	{
+		stream << ']';
+	}
+	else
+	{
+		pretty_print(stream, queue.front());
+		stream << " <- ";
+		pretty_print(stream, queue.back());
+		stream << ']';
+	}
+
+	stream << ", size: " << styles::NUMBER << queue.size() << styles::NORMAL;
 }
 
 #if TRACE_OUT_CPP_VERSION >= 201103L

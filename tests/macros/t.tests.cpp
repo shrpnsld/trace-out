@@ -8,7 +8,9 @@
 #include <map>
 #include <memory>
 #include <ostream>
+#include <queue>
 #include <sstream>
+#include <stack>
 #include <tuple>
 #include <unordered_map>
 #include <utility>
@@ -588,6 +590,91 @@ TEST_CASE("$t(value)", "[t]")
 
 		const char *expected {"subject = 01011001110001111\n"};
 		REQUIRE(test::out_stream.str() == expected);
+	}
+
+	SECTION("std::stack")
+	{
+		SECTION("empty")
+		{
+			std::stack<int> subject;
+
+			$t(subject);
+
+			const char *expected {"subject = [], size: 0\n"};
+			REQUIRE(test::out_stream.str() == expected);
+		}
+
+		SECTION("[456]")
+		{
+			std::stack<int> subject;
+			subject.push(456);
+
+			$t(subject);
+
+			const char *expected {"subject = [456 <- ], size: 1\n"};
+			REQUIRE(test::out_stream.str() == expected);
+		}
+
+		SECTION("[789, 456]")
+		{
+			std::stack<int> subject;
+			subject.push(456);
+			subject.push(789);
+
+			$t(subject);
+
+			const char *expected {"subject = [789 <- ], size: 2\n"};
+			REQUIRE(test::out_stream.str() == expected);
+		}
+	}
+
+	SECTION("std::queue")
+	{
+		SECTION("empty")
+		{
+			std::queue<int> subject;
+
+			$t(subject);
+
+			const char *expected {"subject = [], size: 0\n"};
+			REQUIRE(test::out_stream.str() == expected);
+		}
+
+		SECTION("[456]")
+		{
+			std::queue<int> subject;
+			subject.push(456);
+
+			$t(subject);
+
+			const char *expected {"subject = [456 <- 456], size: 1\n"};
+			REQUIRE(test::out_stream.str() == expected);
+		}
+
+		SECTION("[789, 456]")
+		{
+			std::queue<int> subject;
+			subject.push(456);
+			subject.push(789);
+
+			$t(subject);
+
+			const char *expected {"subject = [456 <- 789], size: 2\n"};
+			REQUIRE(test::out_stream.str() == expected);
+		}
+
+		SECTION("[789, 456, 123]")
+		{
+			std::queue<int> subject;
+			subject.push(456);
+			subject.push(789);
+			subject.push(123);
+
+			$t(subject);
+
+			const char *expected {"subject = [456 <- 123], size: 3\n"};
+			REQUIRE(test::out_stream.str() == expected);
+		}
 	}
 
 	SECTION(".begin(), .end()")
