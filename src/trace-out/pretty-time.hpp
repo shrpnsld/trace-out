@@ -1,8 +1,8 @@
 #pragma once
 
 #include "trace-out/integer.hpp"
-#include "trace-out/statistics.hpp"
 #include "trace-out/pretty-lines.hpp"
+#include "trace-out/statistics.hpp"
 #include "trace-out/styles.hpp"
 #include <algorithm>
 #include <ctime>
