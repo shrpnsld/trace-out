@@ -2,9 +2,9 @@
 
 #include "trace-out/base-conversions.hpp"
 #include "trace-out/byte-order.hpp"
+#include "trace-out/console.hpp"
 #include "trace-out/indentation.hpp"
 #include "trace-out/integer.hpp"
-#include "trace-out/console.hpp"
 #include "trace-out/mutex.hpp"
 #include "trace-out/nothing.hpp"
 #include "trace-out/number-format.hpp"
@@ -14,8 +14,8 @@
 #include <algorithm>
 #include <cctype>
 #include <iomanip>
-#include <ostream>
 #include <limits>
+#include <ostream>
 
 //
 // Public
@@ -226,7 +226,6 @@ void print_memory_with_display_options(std::ostream &stream, const file_line_t &
 		{
 			stream << ", " << byte_order_str;
 		}
-		stream << styles::NORMAL;
 
 		indentation_add();
 
@@ -632,18 +631,66 @@ void print_memory_values(std::ostream &stream, print_chunk_t print_chunk, const 
 
 void print_text_representation(std::ostream &stream, const standard::uint8_t *line, standard::size_t char_count)
 {
+#if !defined(TRACE_OUT_STYLE)
+
 	for (standard::size_t index = 0; index < char_count; ++index)
 	{
 		char character = line[index];
 		if (std::isprint(character))
 		{
+			stream << character;
+		}
+		else
+		{
+			stream << '.';
+		}
+	}
+
+#else
+
+	standard::size_t index = 0;
+	bool is_previous_printable;
+
+	{
+		char character = line[index];
+		if (std::isprint(character))
+		{
 			stream << styles::CHARACTER << character;
+			is_previous_printable = true;
 		}
 		else
 		{
 			stream << styles::COMMENT << '.';
+			is_previous_printable = false;
 		}
 	}
+
+	for (++index; index < char_count; ++index)
+	{
+		char character = line[index];
+		if (std::isprint(character))
+		{
+			if (!is_previous_printable)
+			{
+				stream << styles::CHARACTER;
+				is_previous_printable = true;
+			}
+
+			stream << character;
+		}
+		else
+		{
+			if (is_previous_printable)
+			{
+				stream << styles::COMMENT;
+				is_previous_printable = false;
+			}
+
+			stream << '.';
+		}
+	}
+
+#endif // defined(TRACE_OUT_STYLE)
 
 	stream << styles::NORMAL;
 }
