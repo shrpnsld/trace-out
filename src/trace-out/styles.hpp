@@ -5,9 +5,8 @@
 //
 // Private
 
-#define trace_out_style(...) "\033[0;" trace_out_private__quotize(__VA_ARGS__) "m"
-
-#define trace_out__CLEAN 0
+#define trace_out_style(...) "\033[" trace_out_private__quotize(__VA_ARGS__) "m"
+#define trace_out_style_normal() "\033[0m"
 
 #define trace_out__RED 31
 #define trace_out__GREEN 32
@@ -17,6 +16,7 @@
 #define trace_out__CYAN 36
 #define trace_out__WHITE 37
 
+#define trace_out__REGULAR 0
 #define trace_out__BOLD 1
 
 //
@@ -26,60 +26,56 @@ namespace trace_out { namespace styles
 {
 
 #if TRACE_OUT_STYLE == 1
-	static const char *const BOOLEAN = trace_out_style(trace_out__MAGENTA);
-	static const char *const CHARACTER = trace_out_style(trace_out__YELLOW);
-	static const char *const COMMENT = trace_out_style(trace_out__WHITE);
-	static const char *const COMMENT_BOLD = trace_out_style(trace_out__WHITE;trace_out__BOLD);
-	static const char *const FUNCTION = trace_out_style(trace_out__BOLD);
-	static const char *const KEYWORD = trace_out_style(trace_out__MAGENTA;trace_out__BOLD);
-	static const char *const NORMAL = trace_out_style(trace_out__CLEAN);
-	static const char *const NUMBER = trace_out_style(trace_out__CYAN);
-	static const char *const PUNCTUATION = trace_out_style(trace_out__CLEAN);
-	static const char *const STRING = trace_out_style(trace_out__GREEN);
-	static const char *const SUBJECT = trace_out_style(trace_out__BLUE);
-	static const char *const THREAD = trace_out_style(trace_out__CYAN;trace_out__BOLD);
+	static const char *const BOOLEAN = trace_out_style(trace_out__REGULAR;trace_out__MAGENTA);
+	static const char *const CHARACTER = trace_out_style(trace_out__REGULAR;trace_out__YELLOW);
+	static const char *const COMMENT = trace_out_style(trace_out__REGULAR;trace_out__WHITE);
+	static const char *const COMMENT_BOLD = trace_out_style(trace_out__BOLD;trace_out__WHITE);
+	static const char *const FUNCTION = trace_out_style(trace_out__BOLD;trace_out__BLUE);
+	static const char *const KEYWORD = trace_out_style(trace_out__BOLD;trace_out__MAGENTA);
+	static const char *const NORMAL = trace_out_style_normal();
+	static const char *const NUMBER = trace_out_style(trace_out__REGULAR;trace_out__CYAN);
+	static const char *const STRING = trace_out_style(trace_out__REGULAR;trace_out__GREEN);
+	static const char *const SUBJECT = trace_out_style(trace_out__REGULAR;trace_out__BLUE);
+	static const char *const THREAD = trace_out_style(trace_out__BOLD;trace_out__BLUE);
 
 #elif TRACE_OUT_STYLE == 2
-	static const char *const BOOLEAN = trace_out_style(trace_out__BLUE);
-	static const char *const CHARACTER = trace_out_style(trace_out__GREEN);
-	static const char *const COMMENT = trace_out_style(trace_out__WHITE);
-	static const char *const COMMENT_BOLD = trace_out_style(trace_out__WHITE;trace_out__BOLD);
-	static const char *const FUNCTION = trace_out_style(trace_out__BOLD);
-	static const char *const KEYWORD = trace_out_style(trace_out__BLUE;trace_out__BOLD);
-	static const char *const NORMAL = trace_out_style(trace_out__CLEAN);
-	static const char *const NUMBER = trace_out_style(trace_out__MAGENTA);
-	static const char *const PUNCTUATION = trace_out_style(trace_out__CLEAN);
-	static const char *const STRING = trace_out_style(trace_out__YELLOW);
-	static const char *const SUBJECT = trace_out_style(trace_out__CYAN);
-	static const char *const THREAD = trace_out_style(trace_out__CYAN;trace_out__BOLD);
+	static const char *const BOOLEAN = trace_out_style(trace_out__REGULAR;trace_out__BLUE);
+	static const char *const CHARACTER = trace_out_style(trace_out__REGULAR;trace_out__GREEN);
+	static const char *const COMMENT = trace_out_style(trace_out__REGULAR;trace_out__WHITE);
+	static const char *const COMMENT_BOLD = trace_out_style(trace_out__BOLD;trace_out__WHITE);
+	static const char *const FUNCTION = trace_out_style(trace_out__BOLD;trace_out__CYAN);
+	static const char *const KEYWORD = trace_out_style(trace_out__BOLD;trace_out__BLUE);
+	static const char *const NORMAL = trace_out_style_normal();
+	static const char *const NUMBER = trace_out_style(trace_out__REGULAR;trace_out__MAGENTA);
+	static const char *const STRING = trace_out_style(trace_out__REGULAR;trace_out__YELLOW);
+	static const char *const SUBJECT = trace_out_style(trace_out__REGULAR;trace_out__CYAN);
+	static const char *const THREAD = trace_out_style(trace_out__BOLD;trace_out__CYAN);
 
 #elif TRACE_OUT_STYLE == 3
-	static const char *const BOOLEAN = trace_out_style(trace_out__RED);
-	static const char *const CHARACTER = trace_out_style(trace_out__CYAN);
-	static const char *const COMMENT = trace_out_style(trace_out__WHITE);
-	static const char *const COMMENT_BOLD = trace_out_style(trace_out__WHITE;trace_out__BOLD);
-	static const char *const FUNCTION = trace_out_style(trace_out__BOLD);
-	static const char *const KEYWORD = trace_out_style(trace_out__RED;trace_out__BOLD);
-	static const char *const NORMAL = trace_out_style(trace_out__CLEAN);
-	static const char *const NUMBER = trace_out_style(trace_out__BLUE);
-	static const char *const PUNCTUATION = trace_out_style(trace_out__CLEAN);
-	static const char *const STRING = trace_out_style(trace_out__CYAN);
-	static const char *const SUBJECT = trace_out_style(trace_out__MAGENTA);
-	static const char *const THREAD = trace_out_style(trace_out__CYAN;trace_out__BOLD);
+	static const char *const BOOLEAN = trace_out_style(trace_out__REGULAR;trace_out__RED);
+	static const char *const CHARACTER = trace_out_style(trace_out__REGULAR;trace_out__CYAN);
+	static const char *const COMMENT = trace_out_style(trace_out__REGULAR;trace_out__WHITE);
+	static const char *const COMMENT_BOLD = trace_out_style(trace_out__BOLD;trace_out__WHITE);
+	static const char *const FUNCTION = trace_out_style(trace_out__BOLD;trace_out__MAGENTA);
+	static const char *const KEYWORD = trace_out_style(trace_out__BOLD;trace_out__RED);
+	static const char *const NORMAL = trace_out_style_normal();
+	static const char *const NUMBER = trace_out_style(trace_out__REGULAR;trace_out__BLUE);
+	static const char *const STRING = trace_out_style(trace_out__REGULAR;trace_out__CYAN);
+	static const char *const SUBJECT = trace_out_style(trace_out__REGULAR;trace_out__MAGENTA);
+	static const char *const THREAD = trace_out_style(trace_out__BOLD;trace_out__MAGENTA);
 
 #elif TRACE_OUT_STYLE == 4
-	static const char *const BOOLEAN = trace_out_style(trace_out__YELLOW);
-	static const char *const CHARACTER = trace_out_style(trace_out__BLUE);
-	static const char *const COMMENT = trace_out_style(trace_out__WHITE);
-	static const char *const COMMENT_BOLD = trace_out_style(trace_out__WHITE;trace_out__BOLD);
-	static const char *const FUNCTION = trace_out_style(trace_out__BOLD);
-	static const char *const KEYWORD = trace_out_style(trace_out__YELLOW;trace_out__BOLD);
-	static const char *const NORMAL = trace_out_style(trace_out__CLEAN);
-	static const char *const NUMBER = trace_out_style(trace_out__GREEN);
-	static const char *const PUNCTUATION = trace_out_style(trace_out__CLEAN);
-	static const char *const STRING = trace_out_style(trace_out__BLUE);
-	static const char *const SUBJECT = trace_out_style(trace_out__CYAN);
-	static const char *const THREAD = trace_out_style(trace_out__CYAN;trace_out__BOLD);
+	static const char *const BOOLEAN = trace_out_style(trace_out__REGULAR;trace_out__YELLOW);
+	static const char *const CHARACTER = trace_out_style(trace_out__REGULAR;trace_out__BLUE);
+	static const char *const COMMENT = trace_out_style(trace_out__REGULAR;trace_out__WHITE);
+	static const char *const COMMENT_BOLD = trace_out_style(trace_out__BOLD;trace_out__WHITE);
+	static const char *const FUNCTION = trace_out_style(trace_out__BOLD;trace_out__CYAN);
+	static const char *const KEYWORD = trace_out_style(trace_out__BOLD;trace_out__YELLOW);
+	static const char *const NORMAL = trace_out_style_normal();
+	static const char *const NUMBER = trace_out_style(trace_out__REGULAR;trace_out__GREEN);
+	static const char *const STRING = trace_out_style(trace_out__REGULAR;trace_out__BLUE);
+	static const char *const SUBJECT = trace_out_style(trace_out__REGULAR;trace_out__CYAN);
+	static const char *const THREAD = trace_out_style(trace_out__BOLD;trace_out__CYAN);
 
 #else
 	static const char *const BOOLEAN = "";
@@ -90,7 +86,6 @@ namespace trace_out { namespace styles
 	static const char *const KEYWORD = "";
 	static const char *const NORMAL = "";
 	static const char *const NUMBER = "";
-	static const char *const PUNCTUATION = "";
 	static const char *const STATEMENT = "";
 	static const char *const STRING = "";
 	static const char *const SUBJECT = "";
