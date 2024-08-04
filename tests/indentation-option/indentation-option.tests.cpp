@@ -276,6 +276,32 @@ TEST_CASE("'TRACE_OUT_INDENTATION' outside '$t(...)'", "[indentation][TRACE_OUT_
 		"\n"
 	};
 	REQUIRE(test::out_stream.str() == expected);
+
+	SECTION("nested structure")
+	{
+		$if (some == 456)
+		{
+			std::vector<std::vector<int>> nested {
+				{1, 2, 3},
+				{4, 5, 6},
+				{7, 8, 9}
+			};
+			$t(nested);
+		}
+
+		const char *expected {
+			"if (some == 456) => true\n"
+			"{\n"
+			"  nested = [\n"
+			"    [1, 2, 3],\n"
+			"    [4, 5, 6],\n"
+			"    [7, 8, 9]\n"
+			"  ]\n"
+			"}\n"
+			"\n"
+		};
+		REQUIRE(test::out_stream.str() == expected);
+	}
 }
 
 TEST_CASE("'TRACE_OUT_INDENTATION' outside '$t<base>(...)'", "[indentation][TRACE_OUT_INDENTATION][tbase]")

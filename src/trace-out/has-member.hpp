@@ -77,6 +77,8 @@ trace_out_private__define_has_member(real);
 trace_out_private__define_has_member(imag);
 trace_out_private__define_has_member(begin);
 trace_out_private__define_has_member(end);
+trace_out_private__define_has_member(first);
+trace_out_private__define_has_member(second);
 
 //
 // WinApi
@@ -190,6 +192,9 @@ trace_out_private__define_has_members(begin_end, Type_t,
 	has_member_begin<Type_t>::value && has_member_end<Type_t>::value &&
 	!has_member_GetCharArray<Type_t>::value);
 
+trace_out_private__define_has_members(first_second, Type_t,
+	has_member_first<Type_t>::value && has_member_second<Type_t>::value);
+
 //
 // WinApi
 
@@ -267,6 +272,7 @@ struct has_supported_members
 	enum
 	{
 		value =
+			has_members_first_second<Type_t>::value ||
 			has_members_x_y<Type_t>::value ||
 			has_members_X_Y<Type_t>::value ||
 			has_members_x_y_z<Type_t>::value ||

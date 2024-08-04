@@ -277,6 +277,42 @@ void pretty_print_floating_in_binary(std::ostream &stream, Floating_t value);
 
 inline const standard::uint8_t *print_bytes_of_number(std::ostream &stream, const standard::uint8_t *iterator, standard::size_t how_much, const char *(*represent)(standard::uint8_t));
 
+template <typename Type_t>
+typename enable_if<is_iterable<Type_t>::value || has_supported_members<Type_t>::value, void>::type print_iterable_start(std::ostream &stream, const Type_t & /* value */);
+
+template <typename Type_t>
+typename enable_if<!is_iterable<Type_t>::value && !has_supported_members<Type_t>::value, void>::type print_iterable_start(std::ostream & /* stream */, const Type_t & /* value */);
+
+template <typename Type_t>
+typename enable_if<is_iterable<Type_t>::value || has_supported_members<Type_t>::value, void>::type delimit_item_with_space_or_newline(std::ostream &stream, const Type_t & /* value */);
+
+template <typename Type_t>
+typename enable_if<!is_iterable<Type_t>::value && !has_supported_members<Type_t>::value, void>::type delimit_item_with_space_or_newline(std::ostream &stream, const Type_t & /* value */);
+
+template <typename Type_t>
+typename enable_if<is_iterable<Type_t>::value || has_supported_members<Type_t>::value, void>::type print_iterable_end(std::ostream &stream, const Type_t & /* value */);
+
+template <typename Type_t>
+typename enable_if<!is_iterable<Type_t>::value && !has_supported_members<Type_t>::value, void>::type print_iterable_end(std::ostream & /* stream */, const Type_t & /* value */);
+
+template <typename First_t, typename Second_t>
+typename enable_if<is_iterable<First_t>::value && is_iterable<Second_t>::value, void>::type print_first_start(std::ostream &stream, const First_t & /* first */, const Second_t & /* second */);
+
+template <typename First_t, typename Second_t>
+typename enable_if<!is_iterable<First_t>::value || !is_iterable<Second_t>::value, void>::type print_first_start(std::ostream & /* stream */, const First_t & /* first */, const Second_t & /* second */);
+
+template <typename First_t, typename Second_t>
+typename enable_if<is_iterable<First_t>::value && is_iterable<Second_t>::value, void>::type delimit_first_second_with_space_or_newline(std::ostream &stream, const First_t & /* first */, const Second_t & /* second */);
+
+template <typename First_t, typename Second_t>
+typename enable_if<!is_iterable<First_t>::value || !is_iterable<Second_t>::value, void>::type delimit_first_second_with_space_or_newline(std::ostream &stream, const First_t & /* first */, const Second_t & /* second */);
+
+template <typename First_t, typename Second_t>
+typename enable_if<is_iterable<First_t>::value && is_iterable<Second_t>::value, void>::type print_second_end(std::ostream &stream, const First_t & /* first */, const Second_t & /* second */);
+
+template <typename First_t, typename Second_t>
+typename enable_if<!is_iterable<First_t>::value || !is_iterable<Second_t>::value, void>::type print_second_end(std::ostream & /* stream */, const First_t & /* first */, const Second_t & /* second */);
+
 }
 
 //
@@ -530,9 +566,12 @@ template <typename First_t, typename Second_t>
 void pretty_print(std::ostream &stream, const std::pair<First_t, Second_t> &pair)
 {
 	stream << '{';
+	print_first_start(stream, pair.first, pair.second);
 	pretty_print(stream, pair.first);
-	stream << ", ";
+	stream << ',';
+	delimit_first_second_with_space_or_newline(stream, pair.first, pair.second);
 	pretty_print(stream, pair.second);
+	print_second_end(stream, pair.first, pair.second);
 	stream << '}';
 }
 
@@ -698,12 +737,15 @@ void pretty_print_begin_end(std::ostream &stream, Iterator_t begin, Iterator_t e
 
 	stream << '[';
 	Iterator_t iterator = begin;
+	print_iterable_start(stream, *Iterator_t());
 	pretty_print(stream, *iterator);
 	for (++iterator; iterator != end; ++iterator)
 	{
-		stream << ", ";
+		stream << ',';
+		delimit_item_with_space_or_newline(stream, *Iterator_t());
 		pretty_print(stream, *iterator);
 	}
+	print_iterable_end(stream, *Iterator_t());
 	stream << ']';
 }
 
@@ -714,14 +756,17 @@ void pretty_print_begin_how_much(std::ostream &stream, Iterator_t iterator, stan
 
 	if (how_much > 0)
 	{
+		print_iterable_start(stream, *Iterator_t());
 		pretty_print(stream, *iterator);
 		for (++iterator, --how_much; how_much > 0; ++iterator, --how_much)
 		{
-			stream << ", ";
+			stream << ',';
+			delimit_item_with_space_or_newline(stream, *Iterator_t());
 			pretty_print(stream, *iterator);
 		}
 	}
 
+	print_iterable_end(stream, *Iterator_t());
 	stream << ']';
 }
 
@@ -1197,6 +1242,79 @@ const standard::uint8_t *print_bytes_of_number(std::ostream &stream, const stand
 	}
 
 	return iterator;
+}
+
+template <typename Type_t>
+typename enable_if<is_iterable<Type_t>::value || has_supported_members<Type_t>::value, void>::type print_iterable_start(std::ostream &stream, const Type_t & /* value */)
+{
+	indentation_add();
+	stream << '\n' << CONTINUE_PARAGRAPH;
+}
+
+template <typename Type_t>
+typename enable_if<!is_iterable<Type_t>::value && !has_supported_members<Type_t>::value, void>::type print_iterable_start(std::ostream & /* stream */, const Type_t & /* value */)
+{
+}
+
+template <typename Type_t>
+typename enable_if<is_iterable<Type_t>::value || has_supported_members<Type_t>::value, void>::type delimit_item_with_space_or_newline(std::ostream &stream, const Type_t & /* value */)
+{
+	stream << '\n' << CONTINUE_PARAGRAPH;
+}
+
+template <typename Type_t>
+typename enable_if<!is_iterable<Type_t>::value && !has_supported_members<Type_t>::value, void>::type delimit_item_with_space_or_newline(std::ostream &stream, const Type_t & /* value */)
+{
+	stream << ' ';
+}
+
+template <typename Type_t>
+typename enable_if<is_iterable<Type_t>::value || has_supported_members<Type_t>::value, void>::type print_iterable_end(std::ostream &stream, const Type_t & /* value */)
+{
+	indentation_remove();
+	stream << '\n' << CONTINUE_PARAGRAPH;
+}
+
+template <typename Type_t>
+typename enable_if<!is_iterable<Type_t>::value && !has_supported_members<Type_t>::value, void>::type print_iterable_end(std::ostream & /* stream */, const Type_t & /* value */)
+{
+}
+
+
+template <typename First_t, typename Second_t>
+typename enable_if<is_iterable<First_t>::value && is_iterable<Second_t>::value, void>::type print_first_start(std::ostream &stream, const First_t & /* first */, const Second_t & /* second */)
+{
+	indentation_add();
+	stream << '\n' << CONTINUE_PARAGRAPH;
+}
+
+template <typename First_t, typename Second_t>
+typename enable_if<!is_iterable<First_t>::value || !is_iterable<Second_t>::value, void>::type print_first_start(std::ostream & /* stream */, const First_t & /* first */, const Second_t & /* second */)
+{
+}
+
+template <typename First_t, typename Second_t>
+typename enable_if<is_iterable<First_t>::value && is_iterable<Second_t>::value, void>::type delimit_first_second_with_space_or_newline(std::ostream &stream, const First_t & /* first */, const Second_t & /* second */)
+{
+	stream << '\n' << CONTINUE_PARAGRAPH;
+}
+
+template <typename First_t, typename Second_t>
+typename enable_if<!is_iterable<First_t>::value || !is_iterable<Second_t>::value, void>::type delimit_first_second_with_space_or_newline(std::ostream &stream, const First_t & /* first */, const Second_t & /* second */)
+{
+	stream << ' ';
+}
+
+template <typename First_t, typename Second_t>
+typename enable_if<is_iterable<First_t>::value && is_iterable<Second_t>::value, void>::type print_second_end(std::ostream &stream, const First_t & /* first */, const Second_t & /* second */)
+{
+	indentation_remove();
+	stream << '\n' << CONTINUE_PARAGRAPH;
+}
+
+template <typename First_t, typename Second_t>
+typename enable_if<!is_iterable<First_t>::value || !is_iterable<Second_t>::value, void>::type print_second_end(std::ostream & /* stream */, const First_t & /* first */, const Second_t & /* second */)
+{
 }
 
 }

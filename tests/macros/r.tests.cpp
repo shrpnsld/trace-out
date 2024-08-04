@@ -58,14 +58,14 @@ TEST_CASE("$tr(begin, end)", "[tr]")
 		$tr(subject.begin(), subject.end())
 
 		std::stringstream expected;
-		expected << "[subject.begin(), subject.end()) = [";
+		expected << "[subject.begin(), subject.end()) = [\n";
 		auto itr {subject.begin()};
-		expected << "{\"" << itr->first << "\", " << itr->second << '}';
+		expected << "    {\"" << itr->first << "\", " << itr->second << '}';
 		for (++itr; itr != subject.end(); ++itr)
 		{
-			expected << ", {\"" << itr->first << "\", " << itr->second << '}';
+			expected << ",\n    {\"" << itr->first << "\", " << itr->second << '}';
 		}
-		expected << "]\n";
+		expected << "\n]\n";
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
@@ -76,14 +76,14 @@ TEST_CASE("$tr(begin, end)", "[tr]")
 		$tr(subject.begin(), subject.end())
 
 		std::stringstream expected;
-		expected << "[subject.begin(), subject.end()) = [";
+		expected << "[subject.begin(), subject.end()) = [\n";
 		auto itr {subject.begin()};
-		expected << "{\"" << itr->first << "\", " << itr->second << '}';
+		expected << "    {\"" <<itr->first << "\", " << itr->second << '}';
 		for (++itr; itr != subject.end(); ++itr)
 		{
-			expected << ", {\"" << itr->first << "\", " << itr->second << '}';
+			expected << ",\n    {\"" << itr->first << "\", " << itr->second << '}';
 		}
-		expected << "]\n";
+		expected << "\n]\n";
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 }

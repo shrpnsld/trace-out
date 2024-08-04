@@ -23,6 +23,25 @@ TEST_CASE("'TRACE_OUT_MARKER' with '$t(...)'", "[TRACE_OUT_MARKER][t]")
 
 	const char *expected {"@@ str = \"hellomoto!\"\n"};
 	REQUIRE(test::out_stream.str() == expected);
+
+	SECTION("nested structure")
+	{
+		std::vector<std::vector<int>> nested {
+			{1, 2, 3},
+			{4, 5, 6},
+			{7, 8, 9}
+		};
+		$t(nested);
+
+		const char *expected {
+			"@@ nested = [\n"
+			"@@     [1, 2, 3],\n"
+			"@@     [4, 5, 6],\n"
+			"@@     [7, 8, 9]\n"
+			"@@ ]\n"
+		};
+		REQUIRE(test::out_stream.str() == expected);
+	}
 }
 
 TEST_CASE("'TRACE_OUT_MARKER' with '$tr(...)'", "[TRACE_OUT_MARKER][tr]")
@@ -37,6 +56,23 @@ TEST_CASE("'TRACE_OUT_MARKER' with '$tr(...)'", "[TRACE_OUT_MARKER][tr]")
 
 	const char *expected {"@@ [str, str + length) = ['h', 'e', 'l', 'l', 'o', 'm', 'o', 't', 'o', '!']\n"};
 	REQUIRE(test::out_stream.str() == expected);
+	SECTION("nested structure")
+	{
+		std::vector<std::vector<int>> nested {
+			{1, 2, 3},
+			{4, 5, 6},
+			{7, 8, 9}
+		};
+		$tr(nested.begin(), 2);
+
+		const char *expected {
+			"@@ [nested.begin(): 2] = [\n"
+			"@@     [1, 2, 3],\n"
+			"@@     [4, 5, 6]\n"
+			"@@ ]\n"
+		};
+		REQUIRE(test::out_stream.str() == expected);
+	}
 }
 
 TEST_CASE("'TRACE_OUT_MARKER' with '$m(...)'", "[TRACE_OUT_MARKER][m]")

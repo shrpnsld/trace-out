@@ -1,4 +1,5 @@
 #include "test-stream.hpp"
+#include "std-vector-operator-less-than.hpp"
 #include "trace-out/trace-out.hpp"
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
@@ -725,17 +726,16 @@ TEST_CASE("$t(value)", "[t]")
 
 			$t(subject);
 
-			std::stringstream expected;
-			expected << "subject = [";
-
-			auto itr {subject.begin()};
-			expected << "{\"" << itr->first << "\", " << itr->second << '}';
-			for (++itr; itr != subject.end(); ++itr)
-			{
-				expected << ", {\"" << itr->first << "\", " << itr->second << '}';
-			}
-			expected << "]\n";
-			REQUIRE(test::out_stream.str() == expected.str());
+			const char *expected {
+				"subject = [\n"
+				"    {\"five\", 5},\n"
+				"    {\"four\", 4},\n"
+				"    {\"one\", 1},\n"
+				"    {\"three\", 3},\n"
+				"    {\"two\", 2}\n"
+				"]\n"
+			};
+			REQUIRE(test::out_stream.str() == expected);
 		}
 
 		SECTION("std::unordered_map non-empty")
@@ -745,15 +745,15 @@ TEST_CASE("$t(value)", "[t]")
 			$t(subject);
 
 			std::stringstream expected;
-			expected << "subject = [";
+			expected << "subject = [\n";
 
 			auto itr {subject.begin()};
-			expected << "{\"" << itr->first << "\", " << itr->second << '}';
+			expected << "    {\"" << itr->first << "\", " << itr->second << '}';
 			for (++itr; itr != subject.end(); ++itr)
 			{
-				expected << ", {\"" << itr->first << "\", " << itr->second << '}';
+				expected << ",\n    {\"" << itr->first << "\", " << itr->second << '}';
 			}
-			expected << "]\n";
+			expected << "\n]\n";
 			REQUIRE(test::out_stream.str() == expected.str());
 		}
 	}
@@ -1479,6 +1479,238 @@ TEST_CASE("$t(value)", "[t]")
 		$t(subject);
 
 		REQUIRE(test::out_stream.str() == "subject = <unknown-type>\n");
+	}
+}
+
+TEST_CASE("$t(...) with multilevel data", "[t]")
+{
+	test::out_stream.str(std::string {});
+
+	SECTION("std::vector<std::vector>")
+	{
+		std::vector<std::vector<int>> subject {
+			{1, 2, 3},
+			{4, 5, 6},
+			{7, 8, 9}
+		};
+
+		$t(subject);
+
+		const char *expected {
+			"subject = [\n"
+			"    [1, 2, 3],\n"
+			"    [4, 5, 6],\n"
+			"    [7, 8, 9]\n"
+			"]\n"
+		};
+		REQUIRE(test::out_stream.str() == expected);
+	}
+
+	SECTION("std::vector<std::vector<std::vector>>")
+	{
+		std::vector<std::vector<std::vector<int>>> subject {
+			{
+				{1, 2, 3},
+				{4, 5, 6},
+				{7, 8, 9}
+			},
+			{
+				{4, 5, 6},
+				{7, 8, 9},
+				{1, 2, 3}
+			},
+			{
+				{7, 8, 9},
+				{1, 2, 3},
+				{4, 5, 6}
+			}
+		};
+
+		$t(subject);
+
+		const char *expected {
+			"subject = [\n"
+			"    [\n"
+			"        [1, 2, 3],\n"
+			"        [4, 5, 6],\n"
+			"        [7, 8, 9]\n"
+			"    ],\n"
+			"    [\n"
+			"        [4, 5, 6],\n"
+			"        [7, 8, 9],\n"
+			"        [1, 2, 3]\n"
+			"    ],\n"
+			"    [\n"
+			"        [7, 8, 9],\n"
+			"        [1, 2, 3],\n"
+			"        [4, 5, 6]\n"
+			"    ]\n"
+			"]\n"
+		};
+		REQUIRE(test::out_stream.str() == expected);
+	}
+
+	SECTION("std::vector<xyz_t>")
+	{
+		struct xyz_t
+		{
+			int x, y, z;
+		};
+
+		std::vector<xyz_t> subject {
+			{1, 2, 3},
+			{4, 5, 6},
+			{7, 8, 9}
+		};
+
+		$t(subject);
+
+		const char *expected {
+			"subject = [\n"
+			"    {1, 2, 3},\n"
+			"    {4, 5, 6},\n"
+			"    {7, 8, 9}\n"
+			"]\n"
+		};
+		REQUIRE(test::out_stream.str() == expected);
+	}
+
+	SECTION("std::map<std::string, xyz_t>")
+	{
+		struct xyz_t
+		{
+			int x, y, z;
+		};
+
+		std::map<std::string, xyz_t> subject {
+			{"one", {1, 2, 3}},
+			{"two", {4, 5, 6}},
+			{"three", {7, 8, 9}}
+		};
+
+		$t(subject);
+
+		const char *expected {
+			"subject = [\n"
+			"    {\"one\", {1, 2, 3}},\n"
+			"    {\"three\", {7, 8, 9}},\n"
+			"    {\"two\", {4, 5, 6}}\n"
+			"]\n"
+		};
+		REQUIRE(test::out_stream.str() == expected);
+	}
+
+	SECTION("std::map<std::string, std::vector<int>>")
+	{
+		std::map<std::string, std::vector<int>> subject {
+			{"one", {1, 2, 3}},
+			{"two", {4, 5, 6}},
+			{"three", {7, 8, 9}}
+		};
+
+		$t(subject);
+
+		const char *expected {
+			"subject = [\n"
+			"    {\"one\", [1, 2, 3]},\n"
+			"    {\"three\", [7, 8, 9]},\n"
+			"    {\"two\", [4, 5, 6]}\n"
+			"]\n"
+		};
+		REQUIRE(test::out_stream.str() == expected);
+	}
+
+	SECTION("std::map<std::string, std::vector<std::vector<int>>>")
+	{
+		std::map<std::string, std::vector<std::vector<int>>> subject {
+			{"one", {
+				{1, 2, 3},
+				{4, 5, 6},
+				{7, 8, 9}
+			}},
+			{"two", {
+				{4, 5, 6},
+				{7, 8, 9},
+				{1, 2, 3}
+			}},
+			{"three", {
+				{7, 8, 9},
+				{1, 2, 3},
+				{4, 5, 6}
+			}}
+		};
+
+		$t(subject);
+
+		const char *expected {
+			"subject = [\n"
+			"    {\"one\", [\n"
+			"        [1, 2, 3],\n"
+			"        [4, 5, 6],\n"
+			"        [7, 8, 9]\n"
+			"    ]},\n"
+			"    {\"three\", [\n"
+			"        [7, 8, 9],\n"
+			"        [1, 2, 3],\n"
+			"        [4, 5, 6]\n"
+			"    ]},\n"
+			"    {\"two\", [\n"
+			"        [4, 5, 6],\n"
+			"        [7, 8, 9],\n"
+			"        [1, 2, 3]\n"
+			"    ]}\n"
+			"]\n"
+		};
+		REQUIRE(test::out_stream.str() == expected);
+	}
+
+	SECTION("std::map<std::vector<int>, std::string>")
+	{
+		std::map<std::vector<int>, std::string> subject {
+			{{1, 2, 3}, "one"},
+			{{4, 5, 6}, "two"},
+			{{7, 8, 9}, "three"}
+		};
+
+		$t(subject);
+
+		const char *expected {
+			"subject = [\n"
+			"    {[1, 2, 3], \"one\"},\n"
+			"    {[4, 5, 6], \"two\"},\n"
+			"    {[7, 8, 9], \"three\"}\n"
+			"]\n"
+		};
+		REQUIRE(test::out_stream.str() == expected);
+	}
+
+	SECTION("std::map<std::vector<int>, std::vector<int>>")
+	{
+		std::map<std::vector<int>, std::vector<int>> subject {
+			{{1, 2, 3}, {4, 5, 6}},
+			{{4, 5, 6}, {7, 8, 9}},
+			{{7, 8, 9}, {1, 2, 3}}
+		};
+
+		$t(subject);
+
+		const char *expected {
+			"subject = [\n"
+			"    {\n"
+			"        [1, 2, 3],\n"
+			"        [4, 5, 6]\n"
+			"    },\n"
+			"    {\n"
+			"        [4, 5, 6],\n"
+			"        [7, 8, 9]\n"
+			"    },\n"
+			"    {\n"
+			"        [7, 8, 9],\n"
+			"        [1, 2, 3]\n"
+			"    }\n"
+			"]\n"
+		};
+		REQUIRE(test::out_stream.str() == expected);
 	}
 }
 

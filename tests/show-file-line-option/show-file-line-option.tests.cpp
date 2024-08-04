@@ -32,6 +32,26 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$t(...)'", "[TRACE_OUT_SHOW_FILE_LIN
 	std::stringstream expected;
 	expected << " show-file-line-opt~:" << line << "   | str = \"hellomoto!\"\n";
 	REQUIRE(test::out_stream.str() == expected.str());
+
+	SECTION("nested structure")
+	{
+		std::vector<std::vector<int>> nested {
+			{1, 2, 3},
+			{4, 5, 6},
+			{7, 8, 9}
+		};
+
+		long int line {__LINE__ + 1};
+		$t(nested);
+
+		std::stringstream expected;
+		expected << " show-file-line-opt~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | nested = [\n";
+		expected << "                          |     [1, 2, 3],\n";
+		expected << "                          |     [4, 5, 6],\n";
+		expected << "                          |     [7, 8, 9]\n";
+		expected << "                          | ]\n";
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
 }
 
 TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$t<base>(...)'", "[TRACE_OUT_SHOW_FILE_LINE][tbase]")
