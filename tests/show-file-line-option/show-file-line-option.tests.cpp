@@ -24,14 +24,32 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$t(...)'", "[TRACE_OUT_SHOW_FILE_LIN
 {
 	test::out_stream.str(std::string {});
 
-	const char *str {"hellomoto!"};
+	SECTION("single argument")
+	{
+		const char *str {"hellomoto!"};
 
-	long int line {__LINE__ + 1};
-	$t(str);
+		long int line {__LINE__ + 1};
+		$t(str);
 
-	std::stringstream expected;
-	expected << " show-file-line-opt~:" << line << "   | str = \"hellomoto!\"\n";
-	REQUIRE(test::out_stream.str() == expected.str());
+		std::stringstream expected;
+		expected << " show-file-line-opt~:" << line << "   | str = \"hellomoto!\"\n";
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
+	SECTION("multiple arguments")
+	{
+		const char *str {"hellomoto!"};
+		int number {456};
+
+		long int line {__LINE__ + 1};
+		$t(str, number);
+
+		std::stringstream expected;
+		expected << " show-file-line-opt~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | str = \"hellomoto!\"\n";
+		expected << "                          | number = 456\n";
+		expected << "                          | \n";
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
 
 	SECTION("nested structure")
 	{
@@ -83,7 +101,7 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$tr(...)'", "[TRACE_OUT_SHOW_FILE_LI
 	$tr(str, str + length)
 
 	std::stringstream expected;
-	expected << " show-file-line-opt~:" << line << "   | [str, str + length) = ['h', 'e', 'l', 'l', 'o', 'm', 'o', 't', 'o', '!']\n";
+	expected << " show-file-line-opt~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | [str, str + length) = ['h', 'e', 'l', 'l', 'o', 'm', 'o', 't', 'o', '!']\n";
 	REQUIRE(test::out_stream.str() == expected.str());
 }
 
@@ -99,7 +117,7 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$m(...)'", "[TRACE_OUT_SHOW_FILE_LIN
 
 	std::stringstream expected;
 	std::uintptr_t address {reinterpret_cast<std::uintptr_t>(str)};
-	expected << " show-file-line-opt~:" << line << "   | str, 11 bytes of 1-byte hexadecimal\n";
+	expected << " show-file-line-opt~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | str, 11 bytes of 1-byte hexadecimal\n";
 	expected << "                          |     " << std::hex << address << RESET_FLAGS << ": 68 65 6c 6c 6f 6d 6f 74" "  hellomot" "\n"; address += 8;
 	expected << "                          |     " << std::hex << address << RESET_FLAGS << ": 6f 21 00               " "  o!."      "\n";
 	expected << "                          | \n";
@@ -114,8 +132,8 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$s(...)'", "[TRACE_OUT_SHOW_FILE_LIN
 	$s(dummy();)
 
 	std::stringstream expected;
-	expected << " show-file-line-opt~:" << line << "   | dummy(); // running...\n";
-	expected << " show-file-line-opt~:" << line << "   | dummy(); // done.\n";
+	expected << " show-file-line-opt~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | dummy(); // running...\n";
+	expected << " show-file-line-opt~:" << line << "  | dummy(); // done.\n";
 	REQUIRE(test::out_stream.str() == expected.str());
 }
 
@@ -155,7 +173,7 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$if(...)'", "[TRACE_OUT_SHOW_FILE_LI
 	}
 
 	std::stringstream expected;
-	expected << " show-file-line-opt~:" << line << "  | if (true) => true\n"
+	expected << " show-file-line-opt~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | if (true) => true\n"
 		"                          | {\n"
 		"                          | }\n"
 		"                          | \n";
@@ -173,9 +191,9 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$for(...)'", "[TRACE_OUT_SHOW_FILE_L
 	}
 
 	std::stringstream expected;
-	expected << " show-file-line-opt~:" << line << "  | for (; true;)\n"
+	expected << " show-file-line-opt~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | for (; true;)\n"
 		"                          | {\n"
-		" show-file-line-opt~:" << line << "  |     // for: iteration #1\n"
+		" show-file-line-opt~:" << std::setw(4) << std::left << line << RESET_FLAGS << " |     // for: iteration #1\n"
 		"                          | \n"
 		"                          | } // for (; true;)\n"
 		"                          | \n";
@@ -193,9 +211,9 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$while(...)'", "[TRACE_OUT_SHOW_FILE
 	}
 
 	std::stringstream expected;
-	expected << " show-file-line-opt~:" << line << "  | while (true)\n"
+	expected << " show-file-line-opt~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | while (true)\n"
 		"                          | {\n"
-		" show-file-line-opt~:" << line << "  |     // while: iteration #1\n"
+		" show-file-line-opt~:" << std::setw(4) << std::left << line << RESET_FLAGS << " |     // while: iteration #1\n"
 		"                          | \n"
 		"                          | } // while (true)\n"
 		"                          | \n";

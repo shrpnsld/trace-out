@@ -80,6 +80,29 @@ TEST_CASE("'TRACE_OUT_STYLE=2' with '$t(...)'", "[TRACE_OUT_STYLE][t]")
 		const char *expected {"\033[0;36msubject\033[0m = \033[0;33m\"hellomoto!\"\033[0m\n"};
 		REQUIRE(test::out_stream.str() == expected);
 	}
+
+	SECTION(".begin(), .end()")
+	{
+		SECTION("std::vector empty")
+		{
+			std::vector<int> subject;
+
+			$t(subject);
+
+			const char *expected {"\033[0;36msubject\033[0m = []\n"};
+			REQUIRE(test::out_stream.str() == expected);
+		}
+
+		SECTION("std::vector non-empty")
+		{
+			std::vector<int> subject {1, 2, 3, 4, 5};
+
+			$t(subject);
+
+			const char *expected {"\033[0;36msubject\033[0m = [\033[0;35m1\033[0m, \033[0;35m2\033[0m, \033[0;35m3\033[0m, \033[0;35m4\033[0m, \033[0;35m5\033[0m]\n"};
+			REQUIRE(test::out_stream.str() == expected);
+		}
+	}
 }
 
 TEST_CASE("'TRACE_OUT_STYLE=2' with '$tbin(...)'", "[TRACE_OUT_STYLE][tbin]")
@@ -407,6 +430,16 @@ TEST_CASE("'TRACE_OUT_STYLE=2' with '$tr(...)'", "[TRACE_OUT_STYLE][tr]")
 		REQUIRE(test::out_stream.str() == expected);
 	}
 
+	SECTION("std::vector .begin(), .end(), how_much")
+	{
+		std::vector<int> subject {1, 2, 3, 4, 5};
+
+		$tr(subject.begin(), subject.end(), 5)
+
+		const char *expected {"[\033[0;36msubject.begin()\033[0m, \033[0;36msubject.end()\033[0m):\033[0;36m5\033[0m = [\033[0;35m1\033[0m, \033[0;35m2\033[0m, \033[0;35m3\033[0m, \033[0;35m4\033[0m, \033[0;35m5\033[0m]\n"};
+		REQUIRE(test::out_stream.str() == expected);
+	}
+
 	SECTION("std::map empty")
 	{
 		std::map<std::string, int> subject {};
@@ -423,16 +456,16 @@ TEST_CASE("'TRACE_OUT_STYLE=2' with '$tr(...)'", "[TRACE_OUT_STYLE][tr]")
 
 		$tr(subject.begin(), subject.end())
 
-		std::stringstream expected;
-		expected << "[\033[0;36msubject.begin()\033[0m, \033[0;36msubject.end()\033[0m) = [";
-		auto itr {subject.begin()};
-		expected << "{\033[0;33m\"" << itr->first << "\"\033[0m, \033[0;35m" << itr->second << "\033[0m}";
-		for (++itr; itr != subject.end(); ++itr)
-		{
-			expected << ", {\033[0;33m\"" << itr->first << "\"\033[0m, \033[0;35m" << itr->second << "\033[0m}";
-		}
-		expected << "]\n";
-		REQUIRE(test::out_stream.str() == expected.str());
+		const char *expected {
+			"[\033[0;36msubject.begin()\033[0m, \033[0;36msubject.end()\033[0m) = [\n"
+			"    {\033[0;33m\"five\"\033[0m, \033[0;35m5\033[0m},\n"
+			"    {\033[0;33m\"four\"\033[0m, \033[0;35m4\033[0m},\n"
+			"    {\033[0;33m\"one\"\033[0m, \033[0;35m1\033[0m},\n"
+			"    {\033[0;33m\"three\"\033[0m, \033[0;35m3\033[0m},\n"
+			"    {\033[0;33m\"two\"\033[0m, \033[0;35m2\033[0m}\n"
+			"]\n"
+		};
+		REQUIRE(test::out_stream.str() == expected);
 	}
 }
 
@@ -503,6 +536,60 @@ TEST_CASE("'TRACE_OUT_STYLE=2' with '$m(...)'", "[TRACE_OUT_STYLE][m]")
 		expected << "\033[0;36msubject.data()\033[0m, 32 bytes of 8-byte hexadecimal\n";
 		expected << "    \033[0;35m" << std::hex << address << RESET_FLAGS << "\033[0m: df646ccff9cbed11 4a8378283d48ad40" "  \033[0;37m.\033[0;32mdl\033[0;37m.....\033[0;32mJ\033[0;37m.\033[0;32mx(=H\033[0;37m.\033[0;32m@\033[0m" "\n"; address += 16;
 		expected << "    \033[0;35m" << std::hex << address << RESET_FLAGS << "\033[0m: 01394d9efdb445a1 7468fcd918cc3b32" "  \033[0;37m.\033[0;32m9M\033[0;37m...\033[0;32mE\033[0;37m.\033[0;32mth\033[0;37m....\033[0;32m;2\033[0m" "\n";
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
+	SECTION("incomplete line")
+	{
+		std::size_t type_size {2};
+
+		$m(subject.data(), type_size * 7, $hex, $grp(type_size), $be)
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		expected << "\033[0;36msubject.data()\033[0m, 14 bytes of 2-byte hexadecimal, big-endian\n";
+		expected << "    \033[0;35m" << std::hex << address << RESET_FLAGS << "\033[0m: df64 6ccf f9cb ed11" "  \033[0;37m.\033[0;32mdl\033[0;37m.....\033[0m" "\n"; address += type_size * 4;
+		expected << "    \033[0;35m" << std::hex << address << RESET_FLAGS << "\033[0m: 4a83 7828 3d48     " "  \033[0;32mJ\033[0;37m.\033[0;32mx(=H\033[0m"   "\n"; address += type_size * 3;
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
+	SECTION("incomplete line and leftovers")
+	{
+		std::size_t type_size {2};
+
+		$m(subject.data(), type_size * 7 + 1, $hex, $grp(type_size), $be)
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		expected << "\033[0;36msubject.data()\033[0m, 15 bytes of 2-byte hexadecimal, big-endian\n";
+		expected << "    \033[0;35m" << std::hex << address << RESET_FLAGS << "\033[0m: df64 6ccf f9cb ed11" "  \033[0;37m.\033[0;32mdl\033[0;37m.....\033[0m" "\n"; address += type_size * 4;
+		expected << "    \033[0;35m" << std::hex << address << RESET_FLAGS << "\033[0m: 4a83 7828 3d48     " "  \033[0;32mJ\033[0;37m.\033[0;32mx(=H\033[0m"   "\n"; address += type_size * 3;
+		expected << "\n";
+		expected << "    leftovers:\n";
+		expected << "    \033[0;35m" << std::hex << address << RESET_FLAGS << "\033[0m: ad                 " "  \033[0;37m.\033[0m" "\n";
+		expected << "\n";
+
+		REQUIRE(test::out_stream.str() == expected.str());
+	}
+
+	SECTION("complete line and leftovers")
+	{
+		std::size_t type_size {2};
+
+		$m(subject.data(), type_size * 8 + 1, $hex, $grp(type_size), $be)
+
+		std::stringstream expected;
+		expected.unsetf(std::ios::basefield);
+		expected << "\033[0;36msubject.data()\033[0m, 17 bytes of 2-byte hexadecimal, big-endian\n";
+		expected << "    \033[0;35m" << std::hex << address << RESET_FLAGS << "\033[0m: df64 6ccf f9cb ed11" "  \033[0;37m.\033[0;32mdl\033[0;37m.....\033[0m" "\n"; address += type_size * 4;
+		expected << "    \033[0;35m" << std::hex << address << RESET_FLAGS << "\033[0m: 4a83 7828 3d48 ad40" "  \033[0;32mJ\033[0;37m.\033[0;32mx(=H\033[0;37m.\033[0;32m@\033[0m"   "\n"; address += type_size * 4;
+		expected << "\n";
+		expected << "    leftovers:\n";
+		expected << "    \033[0;35m" << std::hex << address << RESET_FLAGS << "\033[0m: 01                 " "  \033[0;37m.\033[0m" "\n";
 		expected << "\n";
 
 		REQUIRE(test::out_stream.str() == expected.str());

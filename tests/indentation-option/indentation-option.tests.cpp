@@ -263,19 +263,43 @@ TEST_CASE("'TRACE_OUT_INDENTATION' outside '$t(...)'", "[indentation][TRACE_OUT_
 
 	int some {456};
 
-	$if (some == 456)
+	SECTION("single arguments")
 	{
-		$t(some);
+		$if (some == 456)
+		{
+			$t(some);
+		}
+
+		const char *expected {
+			"if (some == 456) => true\n"
+			"{\n"
+			"  some = 456\n"
+			"}\n"
+			"\n"
+		};
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
-	const char *expected {
-		"if (some == 456) => true\n"
-		"{\n"
-		"  some = 456\n"
-		"}\n"
-		"\n"
-	};
-	REQUIRE(test::out_stream.str() == expected);
+	SECTION("multiple arguments")
+	{
+		$if (some == 456)
+		{
+			const char *str {"hellomoto!"};
+			int number {456};
+			$t(str, number);
+		}
+
+		const char *expected {
+			"if (some == 456) => true\n"
+			"{\n"
+			"  str = \"hellomoto!\"\n"
+			"  number = 456\n"
+			"\n"
+			"}\n"
+			"\n"
+		};
+		REQUIRE(test::out_stream.str() == expected);
+	}
 
 	SECTION("nested structure")
 	{

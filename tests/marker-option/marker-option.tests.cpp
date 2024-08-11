@@ -16,13 +16,30 @@ TEST_CASE("'TRACE_OUT_MARKER' with '$t(...)'", "[TRACE_OUT_MARKER][t]")
 {
 	test::out_stream.str(std::string {});
 
-	const char *str {"hellomoto!"};
-	dummy(str);
+	SECTION("single argument")
+	{
+		const char *str {"hellomoto!"};
 
-	$t(str);
+		$t(str);
 
-	const char *expected {"@@ str = \"hellomoto!\"\n"};
-	REQUIRE(test::out_stream.str() == expected);
+		const char *expected {"@@ str = \"hellomoto!\"\n"};
+		REQUIRE(test::out_stream.str() == expected);
+	}
+
+	SECTION("multiple arguments")
+	{
+		const char *str {"hellomoto!"};
+		int number {456};
+
+		$t(str, number);
+
+		const char *expected {
+			"@@ str = \"hellomoto!\"\n"
+			"@@ number = 456\n"
+			"@@ \n"
+		};
+		REQUIRE(test::out_stream.str() == expected);
+	}
 
 	SECTION("nested structure")
 	{
