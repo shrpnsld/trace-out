@@ -116,25 +116,72 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$tr(...)'", "[TRACE_OUT_SHOW_THREAD][tr
 
 	test::out_stream.str(std::string {});
 
-	$thread(one)
-
-	std::thread {[](const char *what)
+	SECTION(".begin(), .end()")
 	{
-		$thread(two)
+		$thread(one)
+
+		std::thread {[](const char *what)
+		{
+			$thread(two)
+			const char *end {what + std::strlen(what)};
+			$tr(what, end)
+		}, "wazuuup!"}.join();
+
+		const char *what {"hellomoto!"};
 		const char *end {what + std::strlen(what)};
 		$tr(what, end)
-	}, "wazuuup!"}.join();
 
-	const char *what {"hellomoto!"};
-	const char *end {what + std::strlen(what)};
-	$tr(what, end)
+		REQUIRE_THAT(test::out_stream.str(), Matches(
+			R"=(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)="
+			R"=(\[what, end\) = \['w', 'a', 'z', 'u', 'u', 'u', 'p', '!'\]\n)="
+			R"=(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)="
+			R"=(\[what, end\) = \['h', 'e', 'l', 'l', 'o', 'm', 'o', 't', 'o', '!'\]\n)="
+		));
+	}
 
-	REQUIRE_THAT(test::out_stream.str(), Matches(
-		R"=(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)="
-		R"=(\[what, end\) = \['w', 'a', 'z', 'u', 'u', 'u', 'p', '!'\]\n)="
-		R"=(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)="
-		R"=(\[what, end\) = \['h', 'e', 'l', 'l', 'o', 'm', 'o', 't', 'o', '!'\]\n)="
-	));
+	SECTION(".begin(), how_much")
+	{
+		$thread(one)
+
+		std::thread {[](const char *what)
+		{
+			$thread(two)
+			$tr(what, 5)
+		}, "wazuuup!"}.join();
+
+		const char *what {"hellomoto!"};
+		$tr(what, 5)
+
+		REQUIRE_THAT(test::out_stream.str(), Matches(
+			R"=(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)="
+			R"=(\[what: 5\] = \['w', 'a', 'z', 'u', 'u'\]\n)="
+			R"=(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)="
+			R"=(\[what: 5\] = \['h', 'e', 'l', 'l', 'o'\]\n)="
+		));
+	}
+
+	SECTION(".begin(), .end(), how_much")
+	{
+		$thread(one)
+
+		std::thread {[](const char *what)
+		{
+			$thread(two)
+			const char *end {what + std::strlen(what)};
+			$tr(what, end, 5)
+		}, "wazuuup!"}.join();
+
+		const char *what {"hellomoto!"};
+		const char *end {what + std::strlen(what)};
+		$tr(what, end, 5)
+
+		REQUIRE_THAT(test::out_stream.str(), Matches(
+			R"=(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)="
+			R"=(\[what, end\):5 = \['w', 'a', 'z', 'u', 'u'\]\n)="
+			R"=(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)="
+			R"=(\[what, end\):5 = \['h', 'e', 'l', 'l', 'o'\]\n)="
+		));
+	}
 }
 
 TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$m(...)'", "[TRACE_OUT_SHOW_THREAD][m]")

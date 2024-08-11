@@ -81,14 +81,41 @@ TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$tr(...)'", "[TRACE_OUT
 
 	std::vector<int> subject {1, 2, 3, 4, 5};
 
-	$tr(subject.begin(), subject.end())
-	$tr(subject.begin(), subject.end())
+	SECTION(".begin(), .end()")
+	{
+		$tr(subject.begin(), subject.end())
+		$tr(subject.begin(), subject.end())
 
-	const char *expected {
-		"[subject.begin(), subject.end()) = [1, 2, 3, 4, 5]\n"
-		"[subject.begin(), subject.end()) = [1, 2, 3, 4, 5]\n"
-	};
-	REQUIRE(test::out_stream.str() == expected);
+		const char *expected {
+			"[subject.begin(), subject.end()) = [1, 2, 3, 4, 5]\n"
+			"[subject.begin(), subject.end()) = [1, 2, 3, 4, 5]\n"
+		};
+		REQUIRE(test::out_stream.str() == expected);
+	}
+
+	SECTION(".begin(), how_much")
+	{
+		$tr(subject.begin(), 5)
+		$tr(subject.begin(), 5)
+
+		const char *expected {
+			"[subject.begin(): 5] = [1, 2, 3, 4, 5]\n"
+			"[subject.begin(): 5] = [1, 2, 3, 4, 5]\n"
+		};
+		REQUIRE(test::out_stream.str() == expected);
+	}
+
+	SECTION(".begin(), .end(), how_much")
+	{
+		$tr(subject.begin(), subject.end(), 5)
+		$tr(subject.begin(), subject.end(), 5)
+
+		const char *expected {
+			"[subject.begin(), subject.end()):5 = [1, 2, 3, 4, 5]\n"
+			"[subject.begin(), subject.end()):5 = [1, 2, 3, 4, 5]\n"
+		};
+		REQUIRE(test::out_stream.str() == expected);
+	}
 }
 
 TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$m(...)'", "[TRACE_OUT_SYNC_STREAM][m]")

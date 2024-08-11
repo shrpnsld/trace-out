@@ -770,6 +770,31 @@ void pretty_print_begin_how_much(std::ostream &stream, Iterator_t iterator, stan
 	stream << ']';
 }
 
+template <typename Iterator_t>
+void pretty_print_begin_end_how_much(std::ostream &stream, Iterator_t begin, Iterator_t end, standard::size_t how_much)
+{
+	// Unreal Engine has only 'operator !=' overloaded for its iterators,
+	// and I want this to be an early return
+	if (!(begin != end) || how_much == 0)
+	{
+		stream << "[]";
+		return;
+	}
+
+	stream << '[';
+	Iterator_t iterator = begin;
+	print_iterable_start(stream, *Iterator_t());
+	pretty_print(stream, *iterator);
+	for (++iterator, --how_much; iterator != end && how_much > 0; ++iterator, --how_much)
+	{
+		stream << ',';
+		delimit_item_with_space_or_newline(stream, *Iterator_t());
+		pretty_print(stream, *iterator);
+	}
+	print_iterable_end(stream, *Iterator_t());
+	stream << ']';
+}
+
 template <typename Type_t>
 typename enable_if<is_iterable<Type_t>::value, void>::type pretty_print(std::ostream &stream, const Type_t &iterable)
 {

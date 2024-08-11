@@ -178,3 +178,114 @@ TEST_CASE("$tr(begin, how_much)", "[tr]")
 	}
 }
 
+TEST_CASE("$tr(begin, end, how_much)", "[tr]")
+{
+	test::out_stream.str(std::string {});
+
+	SECTION("std::vector empty")
+	{
+		SECTION("how_much = 0")
+		{
+			std::vector<int> subject;
+
+			$tr(subject.begin(), subject.end(), 0)
+
+			const char *expected {"[subject.begin(), subject.end()):0 = []\n"};
+			REQUIRE(test::out_stream.str() == expected);
+		}
+
+		SECTION("how_much = 1")
+		{
+			std::vector<int> subject;
+
+			$tr(subject.begin(), subject.end(), 1)
+
+			const char *expected {"[subject.begin(), subject.end()):1 = []\n"};
+			REQUIRE(test::out_stream.str() == expected);
+		}
+
+		SECTION("how_much = 2")
+		{
+			std::vector<int> subject;
+
+			$tr(subject.begin(), subject.end(), 2)
+
+			const char *expected {"[subject.begin(), subject.end()):2 = []\n"};
+			REQUIRE(test::out_stream.str() == expected);
+		}
+	}
+
+	SECTION("std::vector non-empty")
+	{
+		SECTION("how_much == 0")
+		{
+			std::vector<int> subject {1, 2, 3, 4, 5};
+
+			$tr(subject.begin(), subject.end(), 0)
+
+			const char *expected {"[subject.begin(), subject.end()):0 = []\n"};
+			REQUIRE(test::out_stream.str() == expected);
+		}
+
+		SECTION("how_much == 1, how_much < .size()")
+		{
+			std::vector<int> subject {1, 2, 3, 4, 5};
+
+			$tr(subject.begin(), subject.end(), 1)
+
+			const char *expected {"[subject.begin(), subject.end()):1 = [1]\n"};
+			REQUIRE(test::out_stream.str() == expected);
+		}
+
+		SECTION("how_much == 2, how_much < .size()")
+		{
+			std::vector<int> subject {1, 2, 3, 4, 5};
+
+			$tr(subject.begin(), subject.end(), 2)
+
+			const char *expected {"[subject.begin(), subject.end()):2 = [1, 2]\n"};
+			REQUIRE(test::out_stream.str() == expected);
+		}
+
+		SECTION("how_much == .size() - 1")
+		{
+			std::vector<int> subject {1, 2, 3, 4, 5};
+
+			$tr(subject.begin(), subject.end(), 4)
+
+			const char *expected {"[subject.begin(), subject.end()):4 = [1, 2, 3, 4]\n"};
+			REQUIRE(test::out_stream.str() == expected);
+		}
+
+		SECTION("how_much == .size()")
+		{
+			std::vector<int> subject {1, 2, 3, 4, 5};
+
+			$tr(subject.begin(), subject.end(), 5)
+
+			const char *expected {"[subject.begin(), subject.end()):5 = [1, 2, 3, 4, 5]\n"};
+			REQUIRE(test::out_stream.str() == expected);
+		}
+
+		SECTION("how_much == .size() + 1")
+		{
+			std::vector<int> subject {1, 2, 3, 4, 5};
+
+			$tr(subject.begin(), subject.end(), 6)
+
+			const char *expected {"[subject.begin(), subject.end()):6 = [1, 2, 3, 4, 5]\n"};
+			REQUIRE(test::out_stream.str() == expected);
+		}
+
+		SECTION("how_much == .size() + 2")
+		{
+			std::vector<int> subject {1, 2, 3, 4, 5};
+
+			$tr(subject.begin(), subject.end(), 7)
+
+			const char *expected {"[subject.begin(), subject.end()):7 = [1, 2, 3, 4, 5]\n"};
+			REQUIRE(test::out_stream.str() == expected);
+		}
+	}
+}
+

@@ -66,10 +66,13 @@ template <typename Type_t>
 Type_t &trace_hexadecimal(std::ostream &stream, const file_line_t &file_line, const char *name, Type_t &value);
 
 template <typename Begin_t, typename End_t>
-typename enable_if<!is_convertible_to<End_t, standard::size_t>::value, void>::type trace_range(std::ostream &stream, const file_line_t &file_line, const char *begin_name, const char *end_name, Begin_t begin, End_t end);
+typename enable_if<!is_convertible_to<End_t, standard::size_t>::value, void>::type trace_range(std::ostream &stream, const file_line_t &file_line, const char *begin_name, const char *end_name, const char *, Begin_t begin, End_t end);
 
 template <typename Begin_t, typename Size_t>
-typename enable_if<is_convertible_to<Size_t, standard::size_t>::value, void>::type trace_range(std::ostream &stream, const file_line_t &file_line, const char *begin_name, const char */*how_much_name*/, Begin_t begin, Size_t how_much);
+typename enable_if<is_convertible_to<Size_t, standard::size_t>::value, void>::type trace_range(std::ostream &stream, const file_line_t &file_line, const char *begin_name, const char */*how_much_name*/, const char *, Begin_t begin, Size_t how_much);
+
+template <typename Begin_t, typename End_t, typename Size_t>
+typename enable_if<is_convertible_to<Size_t, standard::size_t>::value, void>::type trace_range(std::ostream &stream, const file_line_t &file_line, const char *begin_name, const char *end_name, const char *how_much_name, Begin_t begin, End_t end, Size_t how_much);
 
 inline void trace_and_comment(std::ostream &stream, const file_line_t &file_line, const char *statement, const char *comment);
 
@@ -395,7 +398,7 @@ Type_t &trace_hexadecimal(std::ostream &stream, const file_line_t &file_line, co
 }
 
 template <typename Begin_t, typename End_t>
-typename enable_if<!is_convertible_to<End_t, standard::size_t>::value, void>::type trace_range(std::ostream &stream, const file_line_t &file_line, const char *begin_name, const char *end_name, Begin_t begin, End_t end)
+typename enable_if<!is_convertible_to<End_t, standard::size_t>::value, void>::type trace_range(std::ostream &stream, const file_line_t &file_line, const char *begin_name, const char *end_name, const char */*how_much_name*/, Begin_t begin, End_t end)
 {
 #if defined(TRACE_OUT_SYNC_STREAM)
 	autolock<system::mutex> lock(stream_mutex());
@@ -407,7 +410,7 @@ typename enable_if<!is_convertible_to<End_t, standard::size_t>::value, void>::ty
 }
 
 template <typename Begin_t, typename Size_t>
-typename enable_if<is_convertible_to<Size_t, standard::size_t>::value, void>::type trace_range(std::ostream &stream, const file_line_t &file_line, const char *begin_name, const char */*how_much_name*/, Begin_t begin, Size_t how_much)
+typename enable_if<is_convertible_to<Size_t, standard::size_t>::value, void>::type trace_range(std::ostream &stream, const file_line_t &file_line, const char *begin_name, const char */*end_name*/, const char */*how_much_name*/, Begin_t begin, Size_t how_much)
 {
 #if defined(TRACE_OUT_SYNC_STREAM)
 	autolock<system::mutex> lock(stream_mutex());
@@ -415,6 +418,18 @@ typename enable_if<is_convertible_to<Size_t, standard::size_t>::value, void>::ty
 
 	stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << '[' << styles::SUBJECT << begin_name << styles::NORMAL << ": " << styles::SUBJECT << how_much << styles::NORMAL << "] = ";
 	pretty_print_begin_how_much(stream, begin, how_much);
+	stream << std::endl;
+}
+
+template <typename Begin_t, typename End_t, typename Size_t>
+typename enable_if<is_convertible_to<Size_t, standard::size_t>::value, void>::type trace_range(std::ostream &stream, const file_line_t &file_line, const char *begin_name, const char *end_name, const char */*how_much_name*/, Begin_t begin, End_t end, Size_t how_much)
+{
+#if defined(TRACE_OUT_SYNC_STREAM)
+	autolock<system::mutex> lock(stream_mutex());
+#endif
+
+	stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << '[' << styles::SUBJECT << begin_name << styles::NORMAL << ", " << styles::SUBJECT << end_name << styles::NORMAL << "):" << styles::SUBJECT << how_much << styles::NORMAL << " = ";
+	pretty_print_begin_end_how_much(stream, begin, end, how_much);
 	stream << std::endl;
 }
 

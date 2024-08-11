@@ -17,8 +17,8 @@
 #define $thex(...) \
 			trace_out::trace_hexadecimal(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, #__VA_ARGS__, ##__VA_ARGS__)
 
-#define $tr(first, second) \
-			trace_out::trace_range(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, #first, #second, first, second);
+#define $tr(first, second, ...) \
+			trace_out::trace_range(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, #first, #second, #__VA_ARGS__, first, second, ##__VA_ARGS__);
 
 #define $bin trace_out::base_option(trace_out::BIN)
 #define $hex trace_out::base_option(trace_out::HEX)

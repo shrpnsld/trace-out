@@ -335,20 +335,102 @@ TEST_CASE("'TRACE_OUT_INDENTATION' outside '$tr(...)'", "[indentation][TRACE_OUT
 
 	int some {456};
 
-	$if (some == 456)
+	SECTION("simple structure")
 	{
-		std::vector<int> arr {1, 2, 3, 4, 5};
-		$tr(arr.begin(), arr.end());
+		$if (some == 456)
+		{
+			std::vector<int> arr {1, 2, 3, 4, 5};
+			$tr(arr.begin(), arr.end());
+		}
+
+		const char *expected {
+			"if (some == 456) => true\n"
+			"{\n"
+			"  [arr.begin(), arr.end()) = [1, 2, 3, 4, 5]\n"
+			"}\n"
+			"\n"
+		};
+		REQUIRE(test::out_stream.str() == expected);
 	}
 
-	const char *expected {
-		"if (some == 456) => true\n"
-		"{\n"
-		"  [arr.begin(), arr.end()) = [1, 2, 3, 4, 5]\n"
-		"}\n"
-		"\n"
-	};
-	REQUIRE(test::out_stream.str() == expected);
+	SECTION("nested structures")
+	{
+		SECTION(".begin(), .end()")
+		{
+			$if (some == 456)
+			{
+				std::vector<std::vector<int>> nested {
+					{1, 2, 3},
+					{4, 5, 6},
+					{7, 8, 9}
+				};
+				$tr(nested.begin(), nested.end());
+			}
+
+			const char *expected {
+				"if (some == 456) => true\n"
+				"{\n"
+				"  [nested.begin(), nested.end()) = [\n"
+				"    [1, 2, 3],\n"
+				"    [4, 5, 6],\n"
+				"    [7, 8, 9]\n"
+				"  ]\n"
+				"}\n"
+				"\n"
+			};
+			REQUIRE(test::out_stream.str() == expected);
+		}
+
+		SECTION(".begin(), how_much)")
+		{
+			$if (some == 456)
+			{
+				std::vector<std::vector<int>> nested {
+					{1, 2, 3},
+					{4, 5, 6},
+					{7, 8, 9}
+				};
+				$tr(nested.begin(), 2);
+			}
+
+			const char *expected {
+				"if (some == 456) => true\n"
+				"{\n"
+				"  [nested.begin(): 2] = [\n"
+				"    [1, 2, 3],\n"
+				"    [4, 5, 6]\n"
+				"  ]\n"
+				"}\n"
+				"\n"
+			};
+			REQUIRE(test::out_stream.str() == expected);
+		}
+
+		SECTION(".begin(), .end(), how_much)")
+		{
+			$if (some == 456)
+			{
+				std::vector<std::vector<int>> nested {
+					{1, 2, 3},
+					{4, 5, 6},
+					{7, 8, 9}
+				};
+				$tr(nested.begin(), nested.end(), 2);
+			}
+
+			const char *expected {
+				"if (some == 456) => true\n"
+				"{\n"
+				"  [nested.begin(), nested.end()):2 = [\n"
+				"    [1, 2, 3],\n"
+				"    [4, 5, 6]\n"
+				"  ]\n"
+				"}\n"
+				"\n"
+			};
+			REQUIRE(test::out_stream.str() == expected);
+		}
+	}
 }
 
 TEST_CASE("'TRACE_OUT_INDENTATION' outside '$m(...)'", "[indentation][TRACE_OUT_INDENTATION][m]")

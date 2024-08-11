@@ -48,14 +48,17 @@ TEST_CASE("'TRACE_OUT_MARKER' with '$tr(...)'", "[TRACE_OUT_MARKER][tr]")
 {
 	test::out_stream.str(std::string {});
 
-	const char *str {"hellomoto!"};
-	std::size_t length {10};
-	dummy(str, length);
+	SECTION("simple structure")
+	{
+		const char *str {"hellomoto!"};
+		std::size_t length {10};
 
-	$tr(str, str + length)
+		$tr(str, str + length)
 
-	const char *expected {"@@ [str, str + length) = ['h', 'e', 'l', 'l', 'o', 'm', 'o', 't', 'o', '!']\n"};
-	REQUIRE(test::out_stream.str() == expected);
+		const char *expected {"@@ [str, str + length) = ['h', 'e', 'l', 'l', 'o', 'm', 'o', 't', 'o', '!']\n"};
+		REQUIRE(test::out_stream.str() == expected);
+	}
+
 	SECTION("nested structure")
 	{
 		std::vector<std::vector<int>> nested {
