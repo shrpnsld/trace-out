@@ -31,7 +31,7 @@ target_sources(macros-tests
 		if.tests.cpp
 		indentation.tests.cpp
 		m.tests.cpp
-		r.tests.cpp
+		tr.tests.cpp
 		return.tests.cpp
 		s.tests.cpp
 		t-base.tests.cpp
