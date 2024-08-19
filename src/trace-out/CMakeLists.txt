@@ -30,6 +30,7 @@ target_sources(trace-out
 		stream-to-stdout.hpp
 		stream-to-wdo.hpp
 		strip-scope.hpp
+		styles.hpp
 		template-magic.hpp
 		thread-local-storage.hpp
 		thread.hpp
@@ -38,5 +39,6 @@ target_sources(trace-out
 		trace-out.hpp
 		type-traits.hpp
 		untyped.hpp
+		windows-headers.hpp
 )
 

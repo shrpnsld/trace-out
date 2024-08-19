@@ -24,7 +24,6 @@ namespace trace_out
 static struct reset_flags_t {} RESET_FLAGS;
 static struct thread_info_t {} THREAD_INFO;
 static struct marker_t {} MARKER;
-static struct file_line_blank_t {} FILE_LINE_BLANK;
 static struct continue_paragraph_t {} CONTINUE_PARAGRAPH;
 static struct separate_paragraph_t {} SEPARATE_PARAGRAPH;
 
@@ -34,6 +33,7 @@ struct file_line_t
 
 	const std::string path;
 	const unsigned long line;
+	static inline std::string blank();
 };
 
 struct NEW_PARAGRAPH
@@ -43,6 +43,7 @@ struct NEW_PARAGRAPH
 	const file_line_t &filename_line;
 };
 
+static const std::string FILE_LINE_BLANK = file_line_t::blank();
 inline system::mutex &stream_mutex();
 inline std::ostream &operator <<(std::ostream &stream, reset_flags_t);
 inline std::ostream &operator <<(std::ostream &stream, thread_info_t);
@@ -97,6 +98,15 @@ file_line_t::file_line_t(const char *path, unsigned long line)
 	path(filename_from_path(path)),
 	line(line)
 {
+}
+
+std::string file_line_t::blank()
+{
+	std::stringstream stream;
+	stream.fill(' ');
+	stream.width(FILENAME_FIELD_WIDTH + 1 + LINE_FIELD_WIDTH);
+	stream << "" << RESET_FLAGS;
+	return stream.str();
 }
 
 system::mutex &stream_mutex()
