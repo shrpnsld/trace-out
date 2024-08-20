@@ -2,6 +2,7 @@
 
 #include "trace-out/autolock.hpp"
 #include "trace-out/current-thread-name.hpp"
+#include "trace-out/date-time.hpp"
 #include "trace-out/integer.hpp"
 #include "trace-out/integer.hpp"
 #include "trace-out/mutex.hpp"
@@ -11,6 +12,7 @@
 #include <iomanip>
 #include <ostream>
 #include <string>
+#include <sstream>
 
 //
 // Public
@@ -21,18 +23,13 @@
 namespace trace_out
 {
 
-static struct reset_flags_t {} RESET_FLAGS;
-static struct thread_info_t {} THREAD_INFO;
-static struct marker_t {} MARKER;
-static struct continue_paragraph_t {} CONTINUE_PARAGRAPH;
-static struct separate_paragraph_t {} SEPARATE_PARAGRAPH;
-
 struct file_line_t
 {
 	inline file_line_t(const char *path, unsigned long line);
 
 	const std::string path;
 	const unsigned long line;
+
 	static inline std::string blank();
 };
 
@@ -43,13 +40,19 @@ struct NEW_PARAGRAPH
 	const file_line_t &filename_line;
 };
 
+static struct reset_flags_t {} RESET_FLAGS;
+static struct thread_info_t {} THREAD_INFO;
+static struct marker_t {} MARKER;
+static const std::string DATE_TIME_BLANK = "                   ";
 static const std::string FILE_LINE_BLANK = file_line_t::blank();
+static struct continue_paragraph_t {} CONTINUE_PARAGRAPH;
+static struct separate_paragraph_t {} SEPARATE_PARAGRAPH;
+
 inline system::mutex &stream_mutex();
 inline std::ostream &operator <<(std::ostream &stream, reset_flags_t);
 inline std::ostream &operator <<(std::ostream &stream, thread_info_t);
 inline std::ostream &operator <<(std::ostream &stream, marker_t);
 inline std::ostream &operator <<(std::ostream &stream, const file_line_t &filename_line);
-inline std::ostream &operator <<(std::ostream &stream, file_line_blank_t);
 inline std::ostream &operator <<(std::ostream &stream, const NEW_PARAGRAPH &paragraph);
 inline std::ostream &operator <<(std::ostream &stream, continue_paragraph_t);
 inline std::ostream &operator <<(std::ostream &stream, separate_paragraph_t);
@@ -64,7 +67,7 @@ namespace trace_out
 
 static const standard::size_t FILENAME_FIELD_WIDTH = 20;
 static const standard::size_t LINE_FIELD_WIDTH = 4;
-static const char FILENAME_LINE_DELIMITER[] = " | ";
+static const char TIME_SPACE_CONTEXT_DELIMITER[] = " | ";
 
 static const char FILENAME_FIELD_EXCESS_PADDING[] = "~";
 static const standard::size_t FILENAME_FIELD_EXCESS_PADDING_SIZE = sizeof(FILENAME_FIELD_EXCESS_PADDING);
@@ -177,37 +180,75 @@ std::ostream &operator <<(std::ostream &stream, const file_line_t &filename_line
 	return stream;
 }
 
-std::ostream &operator <<(std::ostream &stream, file_line_blank_t)
-{
-#if defined(TRACE_OUT_SHOW_FILE_LINE)
-	stream << styles::COMMENT;
-	stream.fill(' ');
-	stream.width(FILENAME_FIELD_WIDTH + 1 + LINE_FIELD_WIDTH);
-	stream << "" << FILENAME_LINE_DELIMITER << RESET_FLAGS << styles::NORMAL;
-#endif
-
-	return stream;
-}
-
 std::ostream &operator <<(std::ostream &stream, const NEW_PARAGRAPH &paragraph)
 {
+	(void)paragraph;
+
 	stream << MARKER;
 
-	(void)paragraph;
-#if defined(TRACE_OUT_SHOW_FILE_LINE)
-	stream << paragraph.filename_line << styles::COMMENT << FILENAME_LINE_DELIMITER << styles::NORMAL;
+#if defined(TRACE_OUT_SHOW_DATE_TIME)
+	stream << date_time_now();
 #endif
+
+#if defined(TRACE_OUT_SHOW_DATE_TIME) && defined(TRACE_OUT_SHOW_FILE_LINE)
+	stream << ' ';
+#endif
+
+#if defined(TRACE_OUT_SHOW_FILE_LINE)
+	stream << paragraph.filename_line;
+#endif
+
+#if defined(TRACE_OUT_SHOW_DATE_TIME) || defined(TRACE_OUT_SHOW_FILE_LINE)
+	stream << styles::COMMENT << TIME_SPACE_CONTEXT_DELIMITER << styles::NORMAL;
+#endif
+
 	return stream << indentation();
 }
 
 std::ostream &operator <<(std::ostream &stream, continue_paragraph_t)
 {
-	return stream << MARKER << FILE_LINE_BLANK << indentation();
+	stream << MARKER;
+
+#if defined(TRACE_OUT_SHOW_DATE_TIME)
+	stream << DATE_TIME_BLANK;
+#endif
+
+#if defined(TRACE_OUT_SHOW_DATE_TIME) && defined(TRACE_OUT_SHOW_FILE_LINE)
+	stream << ' ';
+#endif
+
+#if defined(TRACE_OUT_SHOW_FILE_LINE)
+	stream << FILE_LINE_BLANK;
+#endif
+
+#if defined(TRACE_OUT_SHOW_DATE_TIME) || defined(TRACE_OUT_SHOW_FILE_LINE)
+	stream << styles::COMMENT << TIME_SPACE_CONTEXT_DELIMITER << styles::NORMAL;
+#endif
+
+	return stream << indentation();
 }
 
 std::ostream &operator <<(std::ostream &stream, separate_paragraph_t)
 {
-	return stream << MARKER << FILE_LINE_BLANK;
+	stream << MARKER;
+
+#if defined(TRACE_OUT_SHOW_DATE_TIME)
+	stream << DATE_TIME_BLANK;
+#endif
+
+#if defined(TRACE_OUT_SHOW_DATE_TIME) && defined(TRACE_OUT_SHOW_FILE_LINE)
+	stream << ' ';
+#endif
+
+#if defined(TRACE_OUT_SHOW_FILE_LINE)
+	stream << FILE_LINE_BLANK;
+#endif
+
+#if defined(TRACE_OUT_SHOW_DATE_TIME) || defined(TRACE_OUT_SHOW_FILE_LINE)
+	stream << styles::COMMENT << TIME_SPACE_CONTEXT_DELIMITER << styles::NORMAL;
+#endif
+
+	return stream;
 }
 
 const std::string filename_from_path(const char *path)

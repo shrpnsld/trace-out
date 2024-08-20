@@ -5,6 +5,7 @@ target_sources(trace-out
 		byte-order.hpp
 		console.hpp
 		current-thread-name.hpp
+		date-time.hpp
 		has-member.hpp
 		indentation.hpp
 		integer.hpp
