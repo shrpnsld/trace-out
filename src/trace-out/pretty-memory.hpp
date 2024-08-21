@@ -257,7 +257,7 @@ void print_memory_with_display_options(std::ostream &stream, const file_line_t &
 			const standard::uint8_t *line = &memory[size - leftover_memory_size];
 			int padding_width = static_cast<int>((column_count * column_width) - (leftover_memory_size * 3));
 
-			stream << '\n' << SEPARATE_PARAGRAPH << '\n' << CONTINUE_PARAGRAPH << "leftovers:" << '\n' << CONTINUE_PARAGRAPH;
+			stream << '\n' << BREAK_PARAGRAPH << CONTINUE_PARAGRAPH << "leftovers:" << '\n' << CONTINUE_PARAGRAPH;
 			stream << styles::NUMBER << std::hex << reinterpret_cast<standard::uint64_t>(line) << RESET_FLAGS << styles::NORMAL << ':';
 			print_memory_values(stream, print_hexadecimal_chunk, line, leftover_memory_size, 1, 3);
 			stream << std::setw(padding_width) << "" << MEMORY_VALUE_AND_TEXT_DELIMITER;
@@ -266,7 +266,7 @@ void print_memory_with_display_options(std::ostream &stream, const file_line_t &
 
 		indentation_remove();
 
-		stream << '\n' << SEPARATE_PARAGRAPH << '\n';
+		stream << '\n' << BREAK_PARAGRAPH;
 	}
 }
 

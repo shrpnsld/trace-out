@@ -9,6 +9,7 @@
 #include "trace-out/platform-detection.hpp"
 #include "trace-out/styles.hpp"
 #include "trace-out/thread.hpp"
+#include "trace-out/thread-local-storage.hpp"
 #include <iomanip>
 #include <ostream>
 #include <string>
@@ -46,7 +47,7 @@ static struct marker_t {} MARKER;
 static const std::string DATE_TIME_BLANK = "                   ";
 static const std::string FILE_LINE_BLANK = file_line_t::blank();
 static struct continue_paragraph_t {} CONTINUE_PARAGRAPH;
-static struct separate_paragraph_t {} SEPARATE_PARAGRAPH;
+static struct break_paragraph_t {} BREAK_PARAGRAPH;
 
 inline system::mutex &stream_mutex();
 inline std::ostream &operator <<(std::ostream &stream, reset_flags_t);
@@ -55,7 +56,7 @@ inline std::ostream &operator <<(std::ostream &stream, marker_t);
 inline std::ostream &operator <<(std::ostream &stream, const file_line_t &filename_line);
 inline std::ostream &operator <<(std::ostream &stream, const NEW_PARAGRAPH &paragraph);
 inline std::ostream &operator <<(std::ostream &stream, continue_paragraph_t);
-inline std::ostream &operator <<(std::ostream &stream, separate_paragraph_t);
+inline std::ostream &operator <<(std::ostream &stream, break_paragraph_t);
 
 }
 
@@ -80,6 +81,10 @@ static const char FILE_PATH_COMPONENT_DELIMITER =
 #endif
 	;
 
+static system::tls<bool> _is_paragraph_broken;
+
+inline bool is_paragraph_broken();
+inline void set_paragraph_broken(bool value);
 inline const std::string filename_from_path(const char *path);
 
 }
@@ -202,6 +207,8 @@ std::ostream &operator <<(std::ostream &stream, const NEW_PARAGRAPH &paragraph)
 	stream << styles::COMMENT << TIME_SPACE_CONTEXT_DELIMITER << styles::NORMAL;
 #endif
 
+	set_paragraph_broken(false);
+
 	return stream << indentation();
 }
 
@@ -225,11 +232,18 @@ std::ostream &operator <<(std::ostream &stream, continue_paragraph_t)
 	stream << styles::COMMENT << TIME_SPACE_CONTEXT_DELIMITER << styles::NORMAL;
 #endif
 
+	set_paragraph_broken(false);
+
 	return stream << indentation();
 }
 
-std::ostream &operator <<(std::ostream &stream, separate_paragraph_t)
+std::ostream &operator <<(std::ostream &stream, break_paragraph_t)
 {
+	if (is_paragraph_broken())
+	{
+		return stream;
+	}
+
 	stream << MARKER;
 
 #if defined(TRACE_OUT_SHOW_DATE_TIME)
@@ -248,7 +262,19 @@ std::ostream &operator <<(std::ostream &stream, separate_paragraph_t)
 	stream << styles::COMMENT << TIME_SPACE_CONTEXT_DELIMITER << styles::NORMAL;
 #endif
 
-	return stream;
+	set_paragraph_broken(true);
+
+	return stream << std::endl;
+}
+
+bool is_paragraph_broken()
+{
+	return _is_paragraph_broken.get(false);
+}
+
+void set_paragraph_broken(bool value)
+{
+	_is_paragraph_broken.set(value);
 }
 
 const std::string filename_from_path(const char *path)

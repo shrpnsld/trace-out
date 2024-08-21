@@ -228,7 +228,6 @@ TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$for(...)'", "[TRACE_OU
 		"\n"
 		"    } // for (; true;)\n"
 		"\n"
-		"\n"
 		"} // for (; true;)\n"
 		"\n"
 	};
@@ -258,7 +257,6 @@ TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$while(...)'", "[TRACE_
 		"        // while: iteration #1\n"
 		"\n"
 		"    } // while (true)\n"
-		"\n"
 		"\n"
 		"} // while (true)\n"
 		"\n"

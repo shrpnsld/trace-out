@@ -103,7 +103,7 @@ void print_execution_statistics(std::ostream &stream, const file_line_t &file_li
 		stream << styles::NORMAL << '\n';
 
 		// range
-		stream << CONTINUE_PARAGRAPH << styles::COMMENT << "//     range: " << styles::NUMBER << (results.back() - results.front()) << styles::COMMENT << " [" << styles::NUMBER << (results.front()) << styles::COMMENT << "..." << styles::NUMBER << (results.back()) << styles::COMMENT << ']' << styles::NORMAL << '\n' << SEPARATE_PARAGRAPH << std::endl;
+		stream << CONTINUE_PARAGRAPH << styles::COMMENT << "//     range: " << styles::NUMBER << (results.back() - results.front()) << styles::COMMENT << " [" << styles::NUMBER << (results.front()) << styles::COMMENT << "..." << styles::NUMBER << (results.back()) << styles::COMMENT << ']' << styles::NORMAL << '\n' << BREAK_PARAGRAPH;
 	}
 }
 

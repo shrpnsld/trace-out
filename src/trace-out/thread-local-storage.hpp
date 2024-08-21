@@ -24,7 +24,7 @@ public:
 	~tls();
 
 	void set(const Type_t &value);
-	const Type_t &get() const;
+	const Type_t &get(const Type_t &default_value = Type_t()) const;
 
 private:
 	tls(const tls &another);
@@ -75,12 +75,12 @@ void tls<Type_t>::set(const Type_t &value)
 }
 
 template <typename Type_t>
-const Type_t &tls<Type_t>::get() const
+const Type_t &tls<Type_t>::get(const Type_t &default_value) const
 {
 	Type_t *value = static_cast<Type_t *>(tls_get(_key.get()));
 	if (value == NULL)
 	{
-		value = new Type_t;
+		value = new Type_t(default_value);
 		tls_set(_key.get(), value);
 	}
 

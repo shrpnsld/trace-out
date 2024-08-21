@@ -67,7 +67,6 @@ TEST_CASE("$for(...) nested", "[for]")
 		"\n"
 		"    } // for (unsigned int j {0}; j < 1; ++j)\n"
 		"\n"
-		"\n"
 		"} // for (unsigned int i {0}; i < 1; ++i)\n"
 		"\n"
 	};

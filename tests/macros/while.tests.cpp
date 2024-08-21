@@ -80,7 +80,6 @@ TEST_CASE("$while(...) nested", "[while]")
 		"\n"
 		"    } // while (j < 1)\n"
 		"\n"
-		"\n"
 		"} // while (i < 1)\n"
 		"\n"
 	};

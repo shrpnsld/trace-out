@@ -195,7 +195,7 @@ void trace_hexadecimal(std::ostream &stream, const file_line_t &file_line, const
 
 void print_next_value(std::ostream &stream, const std::string &)
 {
-	stream << SEPARATE_PARAGRAPH << std::endl;
+	stream << BREAK_PARAGRAPH;
 }
 
 template <typename First_t, typename ...Rest_t>
@@ -218,7 +218,7 @@ void print_first_value(std::ostream &stream, const file_line_t &file_line, const
 
 void print_next_binary_value(std::ostream &stream, const std::string &)
 {
-	stream << SEPARATE_PARAGRAPH << std::endl;
+	stream << BREAK_PARAGRAPH;
 }
 
 template <typename First_t, typename ...Rest_t>
@@ -241,7 +241,7 @@ void print_first_binary_value(std::ostream &stream, const file_line_t &file_line
 
 void print_next_octal_value(std::ostream &stream, const std::string &)
 {
-	stream << SEPARATE_PARAGRAPH << std::endl;
+	stream << BREAK_PARAGRAPH;
 }
 
 template <typename First_t, typename ...Rest_t>
@@ -264,7 +264,7 @@ void print_first_octal_value(std::ostream &stream, const file_line_t &file_line,
 
 void print_next_hexadecimal_value(std::ostream &stream, const std::string &)
 {
-	stream << SEPARATE_PARAGRAPH << std::endl;
+	stream << BREAK_PARAGRAPH;
 }
 
 template <typename First_t, typename ...Rest_t>

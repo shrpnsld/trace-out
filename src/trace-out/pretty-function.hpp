@@ -98,9 +98,9 @@ function_printer::~function_printer()
 		std::copy(_name_start, _name_end, stream_itr);
 		_stream << styles::COMMENT;
 		std::copy(_name_end, _signature.end(), stream_itr);
-		_stream << styles::NORMAL << '\n' << SEPARATE_PARAGRAPH << std::endl;
+		_stream << styles::NORMAL << '\n' << BREAK_PARAGRAPH;
 #else
-  	_stream << THREAD_INFO << NEW_PARAGRAPH(_file_line) << '}' << ' ' << styles::COMMENT << "// " << _signature << styles::NORMAL << '\n' << SEPARATE_PARAGRAPH << std::endl;
+		_stream << THREAD_INFO << NEW_PARAGRAPH(_file_line) << '}' << ' ' << styles::COMMENT << "// " << _signature << styles::NORMAL << '\n' << BREAK_PARAGRAPH;
 #endif
 	}
 }

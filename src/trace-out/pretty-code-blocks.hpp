@@ -85,7 +85,7 @@ iteration_block::~iteration_block()
 	autolock<system::mutex> lock(stream_mutex());
 #endif
 
-	_stream << THREAD_INFO << SEPARATE_PARAGRAPH << std::endl;
+	_stream << THREAD_INFO << BREAK_PARAGRAPH;
 }
 
 iteration_block::operator bool() const
@@ -137,7 +137,7 @@ if_block::~if_block()
 		autolock<system::mutex> lock(stream_mutex());
 #endif
 
-		_stream << CONTINUE_PARAGRAPH << "}\n" << SEPARATE_PARAGRAPH << std::endl;
+		_stream << CONTINUE_PARAGRAPH << "}\n" << BREAK_PARAGRAPH;
 	}
 }
 
@@ -173,7 +173,7 @@ loop_block::~loop_block()
 		autolock<system::mutex> lock(stream_mutex());
 #endif
 
-		_stream << THREAD_INFO << CONTINUE_PARAGRAPH << "} " << styles::COMMENT << "// " << styles::COMMENT_BOLD << _loop << styles::COMMENT << " (" << _statement << ')' << styles::NORMAL << '\n' << SEPARATE_PARAGRAPH << std::endl;
+		_stream << THREAD_INFO << CONTINUE_PARAGRAPH << "} " << styles::COMMENT << "// " << styles::COMMENT_BOLD << _loop << styles::COMMENT << " (" << _statement << ')' << styles::NORMAL << '\n' << BREAK_PARAGRAPH;
 	}
 }
 
