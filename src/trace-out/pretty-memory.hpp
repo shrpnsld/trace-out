@@ -220,7 +220,7 @@ void print_memory_with_display_options(std::ostream &stream, const file_line_t &
 		autolock<system::mutex> lock(stream_mutex());
 #endif
 
-		stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::SUBJECT << name << styles::NORMAL << ", " << size << " bytes of " << options.grouping << "-byte " << base_name(options.base);
+		stream << START_HEADER << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::SUBJECT << name << styles::NORMAL << ", " << size << " bytes of " << options.grouping << "-byte " << base_name(options.base);
 		const char *byte_order_str = byte_order_name(options.byte_order, options.base, options.grouping);
 		if (byte_order_str != NULL)
 		{

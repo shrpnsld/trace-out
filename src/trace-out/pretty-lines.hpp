@@ -1,6 +1,7 @@
 #pragma once
 
 #include "trace-out/autolock.hpp"
+#include "trace-out/console.hpp"
 #include "trace-out/current-thread-name.hpp"
 #include "trace-out/date-time.hpp"
 #include "trace-out/integer.hpp"
@@ -42,6 +43,7 @@ struct NEW_PARAGRAPH
 };
 
 static struct reset_flags_t {} RESET_FLAGS;
+static struct start_header_t {} START_HEADER;
 static struct thread_info_t {} THREAD_INFO;
 static struct marker_t {} MARKER;
 static const std::string DATE_TIME_BLANK = "                   ";
@@ -51,6 +53,7 @@ static struct break_paragraph_t {} BREAK_PARAGRAPH;
 
 inline system::mutex &stream_mutex();
 inline std::ostream &operator <<(std::ostream &stream, reset_flags_t);
+inline std::ostream &operator <<(std::ostream &stream, start_header_t);
 inline std::ostream &operator <<(std::ostream &stream, thread_info_t);
 inline std::ostream &operator <<(std::ostream &stream, marker_t);
 inline std::ostream &operator <<(std::ostream &stream, const file_line_t &filename_line);
@@ -81,8 +84,12 @@ static const char FILE_PATH_COMPONENT_DELIMITER =
 #endif
 	;
 
-static system::tls<bool> _is_paragraph_broken;
+static system::mutex _is_header_printed_mutex;
+static bool _is_header_printed = false;
+inline bool is_header_printed();
+inline void set_header_printed();
 
+static system::tls<bool> _is_paragraph_broken;
 inline bool is_paragraph_broken();
 inline void set_paragraph_broken(bool value);
 inline const std::string filename_from_path(const char *path);
@@ -133,17 +140,55 @@ std::ostream &operator <<(std::ostream &stream, reset_flags_t)
 	return stream;
 }
 
+std::ostream &operator <<(std::ostream &stream, start_header_t)
+{
+	(void)stream;
+
+#if defined(TRACE_OUT_SHOW_HEADER)
+	if (is_header_printed())
+	{
+		return stream;
+	}
+
+	standard::size_t header_width = 0;
+
+	stream << "#### [";
+	header_width += 6;
+
+	std::string date_time = date_time_now();
+	stream << ' ' << styles::STRING << date_time << styles::NORMAL;
+	header_width += 1 + date_time.size();
+
+#if defined(TRACE_OUT_SHOW_HEADER_TARGET)
+	stream << ' ' << styles::SUBJECT << TRACE_OUT_SHOW_HEADER_TARGET << styles::NORMAL;
+	header_width += 1 + std::strlen(TRACE_OUT_SHOW_HEADER_TARGET);
+#endif // defined(TRACE_OUT_SHOW_HEADER_TARGET)
+
+	stream << " ] ";
+	header_width += 3;
+
+	standard::size_t console_width = system::console_width();
+	standard::size_t fill_width = console_width > header_width ? console_width - header_width : 4;
+	stream << std::setw(fill_width) << std::setfill('#') << "" << RESET_FLAGS << "\n\n";
+	set_header_printed();
+#endif // defined(TRACE_OUT_SHOW_HEADER)
+
+	return stream;
+}
+
 std::ostream &operator <<(std::ostream &stream, thread_info_t)
 {
 	(void)stream;
 
 #if defined(TRACE_OUT_SHOW_THREAD)
-	if (!is_running_same_thread())
+	if (is_running_same_thread())
 	{
-		const std::string &thread_name = current_thread_name();
-		stream << MARKER << styles::THREAD << "~~~~[Thread: " << std::setbase(16) << system::current_thread_id() << RESET_FLAGS << (!thread_name.empty() ? " " : "") << thread_name << "]~~~~" << styles::NORMAL;
-		stream << std::endl;
+		return stream;
 	}
+
+	const std::string &thread_name = current_thread_name();
+	stream << MARKER << styles::THREAD << "~~~~[Thread: " << std::setbase(16) << system::current_thread_id() << RESET_FLAGS << (!thread_name.empty() ? " " : "") << thread_name << "]~~~~" << styles::NORMAL;
+	stream << std::endl;
 #endif
 
 	return stream;
@@ -265,6 +310,18 @@ std::ostream &operator <<(std::ostream &stream, break_paragraph_t)
 	set_paragraph_broken(true);
 
 	return stream << std::endl;
+}
+
+bool is_header_printed()
+{
+	autolock<system::mutex> lock(_is_header_printed_mutex);
+	return _is_header_printed;
+}
+
+void set_header_printed()
+{
+	autolock<system::mutex> lock(_is_header_printed_mutex);
+	_is_header_printed = true;
 }
 
 bool is_paragraph_broken()

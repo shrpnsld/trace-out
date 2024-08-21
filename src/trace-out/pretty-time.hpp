@@ -32,7 +32,7 @@ namespace trace_out
 
 void print_measuring_title(std::ostream &stream, const file_line_t &file_line, const char *title, const char *label)
 {
-	stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << title << ' ' << styles::SUBJECT << '"' << label << '"' << styles::NORMAL << "..." << std::endl;
+	stream << START_HEADER << THREAD_INFO << NEW_PARAGRAPH(file_line) << title << ' ' << styles::SUBJECT << '"' << label << '"' << styles::NORMAL << "..." << std::endl;
 }
 
 void print_execution_time_in_milliseconds(std::ostream &stream, const file_line_t &file_line, const char *label, standard::uint64_t milliseconds)
@@ -41,7 +41,7 @@ void print_execution_time_in_milliseconds(std::ostream &stream, const file_line_
 	autolock<system::mutex> lock(stream_mutex());
 #endif
 
-	stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::SUBJECT << '"' << label << '"' << styles::NORMAL << " timed in " << std::setbase(10) << styles::NUMBER << milliseconds << styles::NORMAL << " ms" << std::endl;
+	stream << START_HEADER << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::SUBJECT << '"' << label << '"' << styles::NORMAL << " timed in " << std::setbase(10) << styles::NUMBER << milliseconds << styles::NORMAL << " ms" << std::endl;
 }
 
 void print_execution_time_in_clocks(std::ostream &stream, const file_line_t &file_line, const char *label, std::clock_t clocks, double milliseconds)
@@ -50,7 +50,7 @@ void print_execution_time_in_clocks(std::ostream &stream, const file_line_t &fil
 	autolock<system::mutex> lock(stream_mutex());
 #endif
 
-	stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::SUBJECT << '"' << label << '"' << styles::NORMAL << " clocked in " << styles::NUMBER << clocks << styles::NORMAL << " clocks (" << styles::NUMBER << milliseconds << styles::NORMAL << " ms)" << std::endl;
+	stream << START_HEADER << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::SUBJECT << '"' << label << '"' << styles::NORMAL << " clocked in " << styles::NUMBER << clocks << styles::NORMAL << " clocks (" << styles::NUMBER << milliseconds << styles::NORMAL << " ms)" << std::endl;
 }
 
 void print_execution_statistics(std::ostream &stream, const file_line_t &file_line, const char *label, std::vector<standard::uint64_t> &results, const char *units)
@@ -61,7 +61,7 @@ void print_execution_statistics(std::ostream &stream, const file_line_t &file_li
 		autolock<system::mutex> lock(stream_mutex());
 #endif
 
-		stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::COMMENT << "// Execution time statistics for \"" << label << "\" is not available" << styles::NORMAL << std::endl;
+		stream << START_HEADER << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::COMMENT << "// Execution time statistics for \"" << label << "\" is not available" << styles::NORMAL << std::endl;
 		return;
 	}
 
@@ -81,7 +81,7 @@ void print_execution_statistics(std::ostream &stream, const file_line_t &file_li
 #if defined(TRACE_OUT_SYNC_STREAM)
 		autolock<system::mutex> lock(stream_mutex());
 #endif
-		stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::COMMENT << "// Execution time statistics (" << units << ") for " << styles::SUBJECT << '"' << label << '"' << styles::COMMENT << ':' << styles::NORMAL << "\n";
+		stream << START_HEADER << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::COMMENT << "// Execution time statistics (" << units << ") for " << styles::SUBJECT << '"' << label << '"' << styles::COMMENT << ':' << styles::NORMAL << "\n";
 		stream << CONTINUE_PARAGRAPH << styles::COMMENT << "//   avg/med: " << styles::NUMBER << average << styles::COMMENT << " / " << styles::NUMBER << median << styles::NORMAL << '\n';
 		if (modes.size() == 1)
 		{

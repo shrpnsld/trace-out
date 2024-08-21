@@ -76,7 +76,7 @@ iteration_block::iteration_block(std::ostream &stream, const file_line_t &file_l
 	autolock<system::mutex> lock(stream_mutex());
 #endif
 
-	_stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::COMMENT << "// " << styles::COMMENT_BOLD << loop << styles::COMMENT << ": iteration #" << iteration << styles::NORMAL << std::endl;
+	_stream << START_HEADER << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::COMMENT << "// " << styles::COMMENT_BOLD << loop << styles::COMMENT << ": iteration #" << iteration << styles::NORMAL << std::endl;
 }
 
 iteration_block::~iteration_block()
@@ -85,7 +85,7 @@ iteration_block::~iteration_block()
 	autolock<system::mutex> lock(stream_mutex());
 #endif
 
-	_stream << THREAD_INFO << BREAK_PARAGRAPH;
+	_stream << START_HEADER << THREAD_INFO << BREAK_PARAGRAPH;
 }
 
 iteration_block::operator bool() const
@@ -104,7 +104,7 @@ if_block::if_block(std::ostream &stream, const file_line_t &file_line, const cha
 		autolock<system::mutex> lock(stream_mutex());
 #endif
 
-		_stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::KEYWORD << "if" << styles::NORMAL << " (" << styles::SUBJECT << condition << styles::NORMAL << ") => " << styles::BOOLEAN << std::boolalpha << !!(_value) << styles::NORMAL << " (";
+		_stream << START_HEADER << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::KEYWORD << "if" << styles::NORMAL << " (" << styles::SUBJECT << condition << styles::NORMAL << ") => " << styles::BOOLEAN << std::boolalpha << !!(_value) << styles::NORMAL << " (";
 		pretty_print(stream, value);
 		_stream << ")\n" << CONTINUE_PARAGRAPH << '{' << std::endl;
 	}
@@ -122,7 +122,7 @@ if_block::if_block(std::ostream &stream, const file_line_t &file_line, const cha
 		autolock<system::mutex> lock(stream_mutex());
 #endif
 
-		_stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::KEYWORD << "if" << styles::NORMAL << " (" << styles::SUBJECT << condition << styles::NORMAL << ") => " << styles::BOOLEAN << std::boolalpha << _value << styles::NORMAL << '\n' << CONTINUE_PARAGRAPH << '{' << std::endl;
+		_stream << START_HEADER << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::KEYWORD << "if" << styles::NORMAL << " (" << styles::SUBJECT << condition << styles::NORMAL << ") => " << styles::BOOLEAN << std::boolalpha << _value << styles::NORMAL << '\n' << CONTINUE_PARAGRAPH << '{' << std::endl;
 	}
 
 	indentation_add();
@@ -158,7 +158,7 @@ loop_block::loop_block(std::ostream &stream, const file_line_t &file_line, const
 		autolock<system::mutex> lock(stream_mutex());
 #endif
 
-		_stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::KEYWORD << _loop << styles::NORMAL << " (" << styles::SUBJECT << _statement << styles::NORMAL << ")\n" << CONTINUE_PARAGRAPH << '{' << std::endl;
+		_stream << START_HEADER << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::KEYWORD << _loop << styles::NORMAL << " (" << styles::SUBJECT << _statement << styles::NORMAL << ")\n" << CONTINUE_PARAGRAPH << '{' << std::endl;
 	}
 
 	indentation_add();
@@ -173,7 +173,7 @@ loop_block::~loop_block()
 		autolock<system::mutex> lock(stream_mutex());
 #endif
 
-		_stream << THREAD_INFO << CONTINUE_PARAGRAPH << "} " << styles::COMMENT << "// " << styles::COMMENT_BOLD << _loop << styles::COMMENT << " (" << _statement << ')' << styles::NORMAL << '\n' << BREAK_PARAGRAPH;
+		_stream << START_HEADER << THREAD_INFO << CONTINUE_PARAGRAPH << "} " << styles::COMMENT << "// " << styles::COMMENT_BOLD << _loop << styles::COMMENT << " (" << _statement << ')' << styles::NORMAL << '\n' << BREAK_PARAGRAPH;
 	}
 }
 
