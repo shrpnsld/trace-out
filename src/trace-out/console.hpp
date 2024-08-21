@@ -1,6 +1,7 @@
 #pragma once
 
 #include "trace-out/platform-detection.hpp"
+#include "trace-out/integer.hpp"
 
 //
 // Public
@@ -8,17 +9,31 @@
 namespace trace_out { namespace system
 {
 
-inline int console_width();
+inline standard::size_t console_width();
 
 }
 }
+
+//
+// Private
+
+namespace trace_out { namespace system
+{
+
+static const int CONSOLE_WIDTH_DEFAULT = 80;
+
+}
+}
+
+//
+// Implementation
 
 #if defined(TRACE_OUT_STREAM_WIDTH)
 
 namespace trace_out { namespace system
 {
 
-int console_width()
+standard::size_t console_width()
 {
 	return TRACE_OUT_STREAM_WIDTH;
 }
@@ -37,16 +52,21 @@ int console_width()
 namespace trace_out { namespace system
 {
 
-int console_width()
+standard::size_t console_width()
 {
 	winsize window_size;
 	int retval = ioctl(STDOUT_FILENO, TIOCGWINSZ, &window_size);
 	if (retval == -1)
 	{
-		return -1;
+		return CONSOLE_WIDTH_DEFAULT;
 	}
 
-	return static_cast<int>(window_size.ws_col) - 1;
+	if (window_size.ws_col == 0)
+	{
+		return CONSOLE_WIDTH_DEFAULT;
+	}
+
+	return static_cast<standard::size_t>(window_size.ws_col - 1);
 }
 
 }
@@ -62,17 +82,17 @@ int console_width()
 namespace trace_out { namespace system
 {
 
-int console_width()
+standard::size_t console_width()
 {
 	CONSOLE_SCREEN_BUFFER_INFO screen_buffer_info;
 
 	BOOL retval = GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &screen_buffer_info);
 	if (retval == 0)
 	{
-		return -1;
+		return CONSOLE_WIDTH_DEFAULT;
 	}
 
-	int width = static_cast<int>(screen_buffer_info.srWindow.Right - screen_buffer_info.srWindow.Left);
+	standard::size_t width = static_cast<standard::size_t>(screen_buffer_info.srWindow.Right - screen_buffer_info.srWindow.Left);
 	return width;
 }
 
