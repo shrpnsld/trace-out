@@ -15,7 +15,7 @@ TEST_CASE("$if(...)", "[if]")
 		const char *expected {
 			"if (value == 456) => true\n"
 			"{\n"
-			"}\n"
+			"} // if (value == 456) => true\n"
 			"\n"
 		};
 		REQUIRE(test::out_stream.str() == expected);
@@ -30,7 +30,7 @@ TEST_CASE("$if(...)", "[if]")
 		const char *expected {
 			"if (value == 456) => false\n"
 			"{\n"
-			"}\n"
+			"} // if (value == 456) => false\n"
 			"\n"
 		};
 		REQUIRE(test::out_stream.str() == expected);
@@ -55,9 +55,9 @@ TEST_CASE("$if(...) nested", "[if]")
 			"{\n"
 			"    if (true) => true\n"
 			"    {\n"
-			"    }\n"
+			"    } // if (true) => true\n"
 			"\n"
-			"}\n"
+			"} // if (true) => true\n"
 			"\n"
 		};
 		REQUIRE(test::out_stream.str() == expected);
@@ -77,9 +77,9 @@ TEST_CASE("$if(...) nested", "[if]")
 			"{\n"
 			"    if (false) => false\n"
 			"    {\n"
-			"    }\n"
+			"    } // if (false) => false\n"
 			"\n"
-			"}\n"
+			"} // if (true) => true\n"
 			"\n"
 		};
 		REQUIRE(test::out_stream.str() == expected);
@@ -102,9 +102,9 @@ TEST_CASE("$if(...) nested", "[if]")
 			"{\n"
 			"    if (true) => true\n"
 			"    {\n"
-			"    }\n"
+			"    } // if (true) => true\n"
 			"\n"
-			"}\n"
+			"} // if (false) => false\n"
 			"\n"
 		};
 		REQUIRE(test::out_stream.str() == expected);
@@ -127,9 +127,9 @@ TEST_CASE("$if(...) nested", "[if]")
 			"{\n"
 			"    if (false) => false\n"
 			"    {\n"
-			"    }\n"
+			"    } // if (false) => false\n"
 			"\n"
-			"}\n"
+			"} // if (false) => false\n"
 			"\n"
 		};
 		REQUIRE(test::out_stream.str() == expected);

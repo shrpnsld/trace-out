@@ -289,12 +289,12 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$if(...)'", "[TRACE_OUT_SHOW_THREAD][th
 		R"=(~~~~\[Thread\: [0-9a-f]+\]~~~~\n)="
 		R"=(if \(what\) => true \("wazuuup!"\)\n)="
 		R"=(\{\n)="
-		R"=(\}\n)="
+		R"=(\} // if \(what\) => true\n)="
 		R"=(\n)="
 		R"=(~~~~\[Thread\: [0-9a-f]+\]~~~~\n)="
 		R"=(if \(what\) => true \("hellomoto!"\)\n)="
 		R"=(\{\n)="
-		R"=(\}\n)="
+		R"=(\} // if \(what\) => true\n)="
 		R"=(\n)="
 	));
 }
@@ -804,12 +804,12 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$thread(...)' and '$if(...)'", "[TRACE_
 		R"=(~~~~\[Thread\: [0-9a-f]+ two\]~~~~\n)="
 		R"=(if \(what\) => true \("wazuuup!"\)\n)="
 		R"=(\{\n)="
-		R"=(\}\n)="
+		R"=(\} // if \(what\) => true\n)="
 		R"=(\n)="
 		R"=(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)="
 		R"=(if \(what\) => true \("hellomoto!"\)\n)="
 		R"=(\{\n)="
-		R"=(\}\n)="
+		R"=(\} // if \(what\) => true\n)="
 		R"=(\n)="
 	));
 }
@@ -1325,12 +1325,12 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' with '$thread(one)' and '$if(...)'", "[TRACE_
 		R"=(~~~~\[Thread\: [0-9a-f]+\]~~~~\n)="
 		R"=(if \(what\) => true \("wazuuup!"\)\n)="
 		R"=(\{\n)="
-		R"=(\}\n)="
+		R"=(\} // if \(what\) => true\n)="
 		R"=(\n)="
 		R"=(~~~~\[Thread\: [0-9a-f]+ one\]~~~~\n)="
 		R"=(if \(what\) => true \("hellomoto!"\)\n)="
 		R"=(\{\n)="
-		R"=(\}\n)="
+		R"=(\} // if \(what\) => true\n)="
 		R"=(\n)="
 	));
 }

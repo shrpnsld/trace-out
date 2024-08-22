@@ -196,9 +196,9 @@ TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$if(...)'", "[TRACE_OUT
 		"{\n"
 		"    if (true) => true\n"
 		"    {\n"
-		"    }\n"
+		"    } // if (true) => true\n"
 		"\n"
-		"}\n"
+		"} // if (true) => true\n"
 		"\n"
 	};
 	REQUIRE(test::out_stream.str() == expected);

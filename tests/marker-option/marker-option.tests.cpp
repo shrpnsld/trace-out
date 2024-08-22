@@ -166,7 +166,7 @@ TEST_CASE("'TRACE_OUT_MARKER' with '$if(...)'", "[TRACE_OUT_MARKER][if]")
 	const char *expected {
 		"@@ if (true) => true\n"
 		"@@ {\n"
-		"@@ }\n"
+		"@@ } // if (true) => true\n"
 		"@@ \n"
 	};
 	REQUIRE(test::out_stream.str() == expected);

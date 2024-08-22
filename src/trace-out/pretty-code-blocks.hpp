@@ -41,6 +41,7 @@ public:
 
 private:
 	std::ostream &_stream;
+	const char *_condition;
 	bool _value;
 };
 
@@ -97,6 +98,7 @@ template <typename Type_t>
 if_block::if_block(std::ostream &stream, const file_line_t &file_line, const char *condition, const Type_t &value)
 	:
 	_stream(stream),
+	_condition(condition),
 	_value(value)
 {
 	{
@@ -115,6 +117,7 @@ if_block::if_block(std::ostream &stream, const file_line_t &file_line, const cha
 if_block::if_block(std::ostream &stream, const file_line_t &file_line, const char *condition, bool value)
 	:
 	_stream(stream),
+	_condition(condition),
 	_value(value)
 {
 	{
@@ -137,7 +140,7 @@ if_block::~if_block()
 		autolock<system::mutex> lock(stream_mutex());
 #endif
 
-		_stream << CONTINUE_PARAGRAPH << "}\n" << BREAK_PARAGRAPH;
+		_stream << CONTINUE_PARAGRAPH << "} " << styles::COMMENT << "// " << styles::COMMENT_BOLD << "if" << styles::COMMENT << " (" << _condition << ") => " << std::boolalpha << _value << styles::NORMAL << '\n' << BREAK_PARAGRAPH;
 	}
 }
 

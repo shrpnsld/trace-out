@@ -175,7 +175,7 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$if(...)'", "[TRACE_OUT_SHOW_FILE_LI
 	std::stringstream expected;
 	expected << " show-file-line-opt~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | if (true) => true\n"
 		"                          | {\n"
-		"                          | }\n"
+		"                          | } // if (true) => true\n"
 		"                          | \n";
 	REQUIRE(test::out_stream.str() == expected.str());
 }

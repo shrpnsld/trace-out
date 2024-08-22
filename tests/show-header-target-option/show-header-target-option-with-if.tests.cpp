@@ -20,7 +20,7 @@ TEST_CASE("'TRACE_OUT_SHOW_HEADER_TARGET' with '$if(...)'", "[TRACE_OUT_SHOW_HEA
 		R"=(\n)="
 		R"=(if \(what\) => true \("hellomoto!"\)\n)="
 		R"=(\{\n)="
-		R"=(\}\n)="
+		R"=(\} // if \(what\) => true\n)="
 		R"=(\n)="
 	));
 }

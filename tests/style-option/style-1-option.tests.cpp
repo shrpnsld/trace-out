@@ -661,7 +661,7 @@ TEST_CASE("'TRACE_OUT_STYLE=1' with '$if(...)'", "[TRACE_OUT_STYLE][if]")
 		const char *expected {
 			"\033[1;35mif\033[0m (\033[0;34mvalue == 456\033[0m) => \033[0;35mtrue\033[0m\n"
 			"{\n"
-			"}\n"
+			"} \033[0;37m// \033[1;37mif\033[0;37m (value == 456) => true\033[0m\n"
 			"\n"
 		};
 		REQUIRE(test::out_stream.str() == expected);
@@ -676,7 +676,7 @@ TEST_CASE("'TRACE_OUT_STYLE=1' with '$if(...)'", "[TRACE_OUT_STYLE][if]")
 		const char *expected {
 			"\033[1;35mif\033[0m (\033[0;34mvalue == 456\033[0m) => \033[0;35mfalse\033[0m\n"
 			"{\n"
-			"}\n"
+			"} \033[0;37m// \033[1;37mif\033[0;37m (value == 456) => false\033[0m\n"
 			"\n"
 		};
 		REQUIRE(test::out_stream.str() == expected);

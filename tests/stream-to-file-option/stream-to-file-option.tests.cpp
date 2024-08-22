@@ -41,7 +41,7 @@ TEST_CASE("'TRACE_OUT_STREAM_TO_FILE' option", "[TRACE_OUT_STREAM_TO_FILE]")
 		<< R"=(@@  stream-to-file-opt~:106  \|   subject3 = "wazuuup!"; // done\.)=" << std::endl
 		<< R"=(@@  stream-to-file-opt~:108  \|   if \(true\) => true)=" << std::endl
 		<< R"=(@@                           \|   \{)=" << std::endl
-		<< R"=(@@                           \|   \})=" << std::endl
+		<< R"=(@@                           \|   \} // if \(true\) => true)=" << std::endl
 		<< R"=(@@                           \| )=" << std::endl
 		<< R"=(@@  stream-to-file-opt~:112  \|   for \(;;\))=" << std::endl
 		<< R"=(@@                           \|   \{)=" << std::endl

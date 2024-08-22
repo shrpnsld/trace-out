@@ -21,7 +21,7 @@ TEST_CASE("indentation inside '$if(...)'", "[indentation][if]")
 		"if (some == 456) => true\n"
 		"{\n"
 		"    some = 456\n"
-		"}\n"
+		"} // if (some == 456) => true\n"
 		"\n"
 	};
 	REQUIRE(test::out_stream.str() == expected);
@@ -138,9 +138,9 @@ TEST_CASE("indentation outside '$if(...)'", "[indentation][if]")
 		"    if (second > 700) => true\n"
 		"    {\n"
 		"        second = 789\n"
-		"    }\n"
+		"    } // if (second > 700) => true\n"
 		"\n"
-		"}\n"
+		"} // if (first > 400) => true\n"
 		"\n"
 	};
 	REQUIRE(test::out_stream.str() == expected);
@@ -172,7 +172,7 @@ TEST_CASE("indentation outside '$for(...)'", "[indentation][for]")
 		"\n"
 		"    } // for (unsigned int i {0}; i < 1; ++i)\n"
 		"\n"
-		"}\n"
+		"} // if (first > 400) => true\n"
 		"\n"
 	};
 	REQUIRE(test::out_stream.str() == expected);
@@ -206,7 +206,7 @@ TEST_CASE("indentation outside '$while(...)'", "[indentation][while]")
 		"\n"
 		"    } // while (i < 1)\n"
 		"\n"
-		"}\n"
+		"} // if (first > 400) => true\n"
 		"\n"
 	};
 	REQUIRE(test::out_stream.str() == expected);
@@ -232,7 +232,7 @@ TEST_CASE("indentation outside '$f'", "[indentation][f]")
 		"        // hellomoto!\n"
 		"    } // void subject_func9()\n"
 		"\n"
-		"}\n"
+		"} // if (first > 400) => true\n"
 		"\n"
 	};
 	REQUIRE(test::out_stream.str() == expected);
@@ -269,7 +269,7 @@ TEST_CASE("indentation outside '$t(...)'", "[indentation][t]")
 		"if (some == 456) => true\n"
 		"{\n"
 		"    some = 456\n"
-		"}\n"
+		"} // if (some == 456) => true\n"
 		"\n"
 	};
 	REQUIRE(test::out_stream.str() == expected);
@@ -294,7 +294,7 @@ TEST_CASE("indentation outside $t<base>(...)", "[indentation][tbase]")
 		"    some = bin: 00000000 00000000 00000001 11001000\n"
 		"    some = oct: 000000 001310\n"
 		"    some = hex: 000001c8\n"
-		"}\n"
+		"} // if (some == 456) => true\n"
 		"\n"
 	};
 	REQUIRE(test::out_stream.str() == expected);
@@ -316,7 +316,7 @@ TEST_CASE("indentation outside '$tr(...)'", "[indentation][tr]")
 		"if (some == 456) => true\n"
 		"{\n"
 		"    [arr.begin(), arr.end()) = [1, 2, 3, 4, 5]\n"
-		"}\n"
+		"} // if (some == 456) => true\n"
 		"\n"
 	};
 	REQUIRE(test::out_stream.str() == expected);
@@ -342,7 +342,7 @@ TEST_CASE("indentation outside '$m(...)'", "[indentation][m]")
 	expected << "        " << std::hex << address << std::resetiosflags(std::ios::basefield) << ": 68 65 6c 6c 6f 6d 6f 74" "  hellomot" "\n"; address += 8;
 	expected << "        " << std::hex << address << std::resetiosflags(std::ios::basefield) << ": 6f 21 00               " "  o!."      "\n";
 	expected << "\n";
-	expected << "}\n";
+	expected << "} // if (some == 456) => true\n";
 	expected << "\n";
 
 	REQUIRE(test::out_stream.str() == expected.str());
@@ -364,7 +364,7 @@ TEST_CASE("indentation outside '$s(...)'", "[indentation][s]")
 		"{\n"
 		"    some = 789; // running...\n"
 		"    some = 789; // done.\n"
-		"}\n"
+		"} // if (some == 456) => true\n"
 		"\n"
 	};
 	REQUIRE(test::out_stream.str() == expected);
@@ -386,7 +386,7 @@ TEST_CASE("indentation outside '$time(...)'", "[indentation][time]")
 		R"=(\{\n)="
 		R"=(    Timing "dummy"...\n)="
 		R"=(    "dummy" timed in [0-9]+ ms\n)="
-		R"=(\}\n)="
+		R"=(\} // if \(true\) => true\n)="
 		R"=(\n)="
 	));
 }
@@ -413,7 +413,7 @@ TEST_CASE("indentation outside '$time_stats(...)'", "[indentation][time_stats]")
 		R"=(    //     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)="
 		R"=(    //     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)="
 		R"=(\n)="
-		R"=(\}\n)="
+		R"=(\} // if \(true\) => true\n)="
 		R"=(\n)="
 	));
 }
@@ -434,7 +434,7 @@ TEST_CASE("indentation outside '$clocks(...)'", "[indentation][clocks]")
 		R"=(\{\n)="
 		R"=(    Clocking "dummy"...\n)="
 		R"=(    "dummy" clocked in [0-9]+ clocks \([0-9\.]+ ms\)\n)="
-		R"=(\}\n)="
+		R"=(\} // if \(true\) => true\n)="
 		R"=(\n)="
 	));
 }
@@ -461,7 +461,7 @@ TEST_CASE("indentation outside '$clock_stats(...)'", "[indentation][clock_stats]
 		R"=(    //     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)="
 		R"=(    //     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)="
 		R"=(\n)="
-		R"=(\}\n)="
+		R"=(\} // if \(true\) => true\n)="
 		R"=(\n)="
 	));
 }
