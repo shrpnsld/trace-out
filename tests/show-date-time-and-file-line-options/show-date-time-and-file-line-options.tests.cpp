@@ -18,7 +18,7 @@ TEST_CASE("'TRACE_OUT_SHOW_DATE_TIME' with 'TRACE_OUT_SHOW_FILE_LINE'", "[TRACE_
 	$t(str);
 
 	std::stringstream expected;
-	expected << "[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}  show-date-time-and~:" << std::setw(4) << std::left << line << RESET_FLAGS << R"=( \| str = "hellomoto!"\n)=";
+	expected << "[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} show-date-time-and-~:" << std::setw(4) << std::left << line << RESET_FLAGS << R"=( \| str = "hellomoto!"\n)=";
 	REQUIRE_THAT(test::out_stream.str(), Matches(expected.str()));
 }
 

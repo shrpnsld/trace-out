@@ -22,57 +22,57 @@ TEST_CASE("'TRACE_OUT_STREAM_TO_FILE' option", "[TRACE_OUT_STREAM_TO_FILE]")
 		<< R"=(@@ ################################ \[ [0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} some \] ###############)=" << std::endl
 		<< R"=(@@                           \| )=" << std::endl
 		<< R"=(@@ ~~~~\[Thread: [0-9a-f]+ main\]~~~~)=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:94   \| int subject_func\(\))=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:94   \| int subject_func\(\))=" << std::endl
 		<< R"=(@@                           \| \{)=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:100  \|   // hellomoto!)=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:101  \|   subject1 = 456)=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:102  \|   subject2 = 789.123)=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:103  \|   subject3 = "hellomoto!")=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:104  \|   subject1 = bin: 00000000 00000000 00000001 11001000)=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:105  \|   subject1 = oct: 000000 001310)=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:106  \|   subject1 = hex: 000001c8)=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:107  \|   subject2 = bin: 0  10001000  1000101 01000111 11011111)=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:108  \|   subject2 = oct: 104105 107337)=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:109  \|   subject2 = hex: 444547df)=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:110  \|   \[subject3\.begin\(\), subject3\.end\(\)\) = \['h', 'e', 'l', 'l', 'o', 'm', 'o', 't', 'o', '!'\])=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:111  \|   subject3.c_str\(\), 11 bytes of 1-byte hexadecimal)=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:100  \|   // hellomoto!)=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:101  \|   subject1 = 456)=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:102  \|   subject2 = 789.123)=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:103  \|   subject3 = "hellomoto!")=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:104  \|   subject1 = bin: 00000000 00000000 00000001 11001000)=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:105  \|   subject1 = oct: 000000 001310)=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:106  \|   subject1 = hex: 000001c8)=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:107  \|   subject2 = bin: 0  10001000  1000101 01000111 11011111)=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:108  \|   subject2 = oct: 104105 107337)=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:109  \|   subject2 = hex: 444547df)=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:110  \|   \[subject3\.begin\(\), subject3\.end\(\)\) = \['h', 'e', 'l', 'l', 'o', 'm', 'o', 't', 'o', '!'\])=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:111  \|   subject3.c_str\(\), 11 bytes of 1-byte hexadecimal)=" << std::endl
 		<< R"=(@@                           \|     [0-9a-f]+: 68 65 6c 6c 6f 6d 6f 74  hellomot)=" << std::endl
 		<< R"=(@@                           \|     [0-9a-f]+: 6f 21 00                 o!\.)=" << std::endl
 		<< R"=(@@                           \| )=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:112  \|   subject3 = "wazuuup!"; // running\.\.\.)=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:112  \|   subject3 = "wazuuup!"; // done\.)=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:114  \|   if \(true\) => true)=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:112  \|   subject3 = "wazuuup!"; // running\.\.\.)=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:112  \|   subject3 = "wazuuup!"; // done\.)=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:114  \|   if \(true\) => true)=" << std::endl
 		<< R"=(@@                           \|   \{)=" << std::endl
 		<< R"=(@@                           \|   \} // if \(true\) => true)=" << std::endl
 		<< R"=(@@                           \| )=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:118  \|   for \(;;\))=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:118  \|   for \(;;\))=" << std::endl
 		<< R"=(@@                           \|   \{)=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:118  \|     // for: iteration #1)=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:118  \|     // for: iteration #1)=" << std::endl
 		<< R"=(@@                           \| )=" << std::endl
 		<< R"=(@@                           \|   \} // for \(;;\))=" << std::endl
 		<< R"=(@@                           \| )=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:123  \|   while \(true\))=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:123  \|   while \(true\))=" << std::endl
 		<< R"=(@@                           \|   \{)=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:123  \|     // while: iteration #1)=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:123  \|     // while: iteration #1)=" << std::endl
 		<< R"=(@@                           \| )=" << std::endl
 		<< R"=(@@                           \|   \} // while \(true\))=" << std::endl
 		<< R"=(@@                           \| )=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:128  \|   Timing "dummy"\.\.\.)=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:128  \|   "dummy" timed in [0-9]+ ms)=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:129  \|   Clocking "dummy"\.\.\.)=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:129  \|   "dummy" clocked in [0-9]+ clocks \([0-9\.]+ ms\))=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:130  \|   // Execution time statistics \(ms\) for "dummy":)=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:128  \|   Timing "dummy"\.\.\.)=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:128  \|   "dummy" timed in [0-9]+ ms)=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:129  \|   Clocking "dummy"\.\.\.)=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:129  \|   "dummy" clocked in [0-9]+ clocks \([0-9\.]+ ms\))=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:130  \|   // Execution time statistics \(ms\) for "dummy":)=" << std::endl
 		<< R"=(@@                           \|   //   avg/med: [0-9]+ / [0-9]+)=" << std::endl
 		<< R"=(@@                           \|   //      mode: [0-9]+ \(100% of all values\))=" << std::endl
 		<< R"=(@@                           \|   //     range: [0-9]+ \[[0-9]+\.\.\.[0-9]+\])=" << std::endl
 		<< R"=(@@                           \| )=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:131  \|   // Execution time statistics \(clocks\) for "dummy":)=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:131  \|   // Execution time statistics \(clocks\) for "dummy":)=" << std::endl
 		<< R"=(@@                           \|   //   avg/med: [0-9]+ / [0-9]+)=" << std::endl
 		<< R"=(@@                           \|   //      mode: [0-9]+ \([0-9]+% of all values\))=" << std::endl
 		<< R"=(@@                           \|   //     range: [0-9]+ \[[0-9]+\.\.\.[0-9]+\])=" << std::endl
 		<< R"=(@@                           \| )=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:133  \|   return 789)=" << std::endl
-		<< R"=(@@  stream-to-file-opt~:94   \| \} // int subject_func\(\))=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:133  \|   return 789)=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:94   \| \} // int subject_func\(\))=" << std::endl
 		<< R"=(@@                           \| )=" << std::endl;
 
 	while (!file.eof() && !expected.eof())

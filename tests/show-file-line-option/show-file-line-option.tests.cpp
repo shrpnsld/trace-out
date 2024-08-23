@@ -32,7 +32,7 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$t(...)'", "[TRACE_OUT_SHOW_FILE_LIN
 		$t(str);
 
 		std::stringstream expected;
-		expected << " show-file-line-opt~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | str = \"hellomoto!\"\n";
+		expected << "show-file-line-opti~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | str = \"hellomoto!\"\n";
 		REQUIRE(test::out_stream.str() == expected.str());
 	}
 
@@ -45,7 +45,7 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$t(...)'", "[TRACE_OUT_SHOW_FILE_LIN
 		$t(str, number);
 
 		std::stringstream expected;
-		expected << " show-file-line-opt~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | str = \"hellomoto!\"\n";
+		expected << "show-file-line-opti~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | str = \"hellomoto!\"\n";
 		expected << "                          | number = 456\n";
 		expected << "                          | \n";
 		REQUIRE(test::out_stream.str() == expected.str());
@@ -63,7 +63,7 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$t(...)'", "[TRACE_OUT_SHOW_FILE_LIN
 		$t(nested);
 
 		std::stringstream expected;
-		expected << " show-file-line-opt~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | nested = [\n";
+		expected << "show-file-line-opti~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | nested = [\n";
 		expected << "                          |     [1, 2, 3],\n";
 		expected << "                          |     [4, 5, 6],\n";
 		expected << "                          |     [7, 8, 9]\n";
@@ -84,9 +84,9 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$t<base>(...)'", "[TRACE_OUT_SHOW_FI
 	$thex(some);
 
 	std::stringstream expected;
-	expected << " show-file-line-opt~:" << std::setw(4) << std::left << line     << RESET_FLAGS << " | some = bin: 00000000 00000000 00000001 11001000\n";
-	expected << " show-file-line-opt~:" << std::setw(4) << std::left << line + 1 << RESET_FLAGS << " | some = oct: 000000 001310\n";
-	expected << " show-file-line-opt~:" << std::setw(4) << std::left << line + 2 << RESET_FLAGS << " | some = hex: 000001c8\n";
+	expected << "show-file-line-opti~:" << std::setw(4) << std::left << line     << RESET_FLAGS << " | some = bin: 00000000 00000000 00000001 11001000\n";
+	expected << "show-file-line-opti~:" << std::setw(4) << std::left << line + 1 << RESET_FLAGS << " | some = oct: 000000 001310\n";
+	expected << "show-file-line-opti~:" << std::setw(4) << std::left << line + 2 << RESET_FLAGS << " | some = hex: 000001c8\n";
 	REQUIRE(test::out_stream.str() == expected.str());
 }
 
@@ -101,7 +101,7 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$tr(...)'", "[TRACE_OUT_SHOW_FILE_LI
 	$tr(str, str + length)
 
 	std::stringstream expected;
-	expected << " show-file-line-opt~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | [str, str + length) = ['h', 'e', 'l', 'l', 'o', 'm', 'o', 't', 'o', '!']\n";
+	expected << "show-file-line-opti~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | [str, str + length) = ['h', 'e', 'l', 'l', 'o', 'm', 'o', 't', 'o', '!']\n";
 	REQUIRE(test::out_stream.str() == expected.str());
 }
 
@@ -117,7 +117,7 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$m(...)'", "[TRACE_OUT_SHOW_FILE_LIN
 
 	std::stringstream expected;
 	std::uintptr_t address {reinterpret_cast<std::uintptr_t>(str)};
-	expected << " show-file-line-opt~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | str, 11 bytes of 1-byte hexadecimal\n";
+	expected << "show-file-line-opti~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | str, 11 bytes of 1-byte hexadecimal\n";
 	expected << "                          |     " << std::hex << address << RESET_FLAGS << ": 68 65 6c 6c 6f 6d 6f 74" "  hellomot" "\n"; address += 8;
 	expected << "                          |     " << std::hex << address << RESET_FLAGS << ": 6f 21 00               " "  o!."      "\n";
 	expected << "                          | \n";
@@ -132,8 +132,8 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$s(...)'", "[TRACE_OUT_SHOW_FILE_LIN
 	$s(dummy();)
 
 	std::stringstream expected;
-	expected << " show-file-line-opt~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | dummy(); // running...\n";
-	expected << " show-file-line-opt~:" << line << "  | dummy(); // done.\n";
+	expected << "show-file-line-opti~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | dummy(); // running...\n";
+	expected << "show-file-line-opti~:" << line << "  | dummy(); // done.\n";
 	REQUIRE(test::out_stream.str() == expected.str());
 }
 
@@ -145,9 +145,9 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$f'", "[TRACE_OUT_SHOW_FILE_LINE][f]
 
 	std::stringstream expected;
 	expected <<
-		" show-file-line-opt~:" << std::setw(4) << std::left << subject_func11_line << RESET_FLAGS << " | void subject_func11()\n"
+		"show-file-line-opti~:" << std::setw(4) << std::left << subject_func11_line << RESET_FLAGS << " | void subject_func11()\n"
 		"                          | {\n"
-		" show-file-line-opt~:" << std::setw(4) << std::left << subject_func11_line << RESET_FLAGS << " | } // void subject_func11()\n"
+		"show-file-line-opti~:" << std::setw(4) << std::left << subject_func11_line << RESET_FLAGS << " | } // void subject_func11()\n"
 		"                          | \n";
 	REQUIRE(test::out_stream.str() == expected.str());
 }
@@ -159,7 +159,7 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$return'", "[TRACE_OUT_SHOW_FILE_LIN
 	subject_func12();
 
 	std::stringstream expected;
-	expected << " show-file-line-opt~:" << std::setw(4) << std::left << subject_func12_line << RESET_FLAGS << " | return 789\n";
+	expected << "show-file-line-opti~:" << std::setw(4) << std::left << subject_func12_line << RESET_FLAGS << " | return 789\n";
 	REQUIRE(test::out_stream.str() == expected.str());
 }
 
@@ -173,7 +173,7 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$if(...)'", "[TRACE_OUT_SHOW_FILE_LI
 	}
 
 	std::stringstream expected;
-	expected << " show-file-line-opt~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | if (true) => true\n"
+	expected << "show-file-line-opti~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | if (true) => true\n"
 		"                          | {\n"
 		"                          | } // if (true) => true\n"
 		"                          | \n";
@@ -191,9 +191,9 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$for(...)'", "[TRACE_OUT_SHOW_FILE_L
 	}
 
 	std::stringstream expected;
-	expected << " show-file-line-opt~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | for (; true;)\n"
+	expected << "show-file-line-opti~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | for (; true;)\n"
 		"                          | {\n"
-		" show-file-line-opt~:" << std::setw(4) << std::left << line << RESET_FLAGS << " |     // for: iteration #1\n"
+		"show-file-line-opti~:" << std::setw(4) << std::left << line << RESET_FLAGS << " |     // for: iteration #1\n"
 		"                          | \n"
 		"                          | } // for (; true;)\n"
 		"                          | \n";
@@ -211,9 +211,9 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$while(...)'", "[TRACE_OUT_SHOW_FILE
 	}
 
 	std::stringstream expected;
-	expected << " show-file-line-opt~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | while (true)\n"
+	expected << "show-file-line-opti~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | while (true)\n"
 		"                          | {\n"
-		" show-file-line-opt~:" << std::setw(4) << std::left << line << RESET_FLAGS << " |     // while: iteration #1\n"
+		"show-file-line-opti~:" << std::setw(4) << std::left << line << RESET_FLAGS << " |     // while: iteration #1\n"
 		"                          | \n"
 		"                          | } // while (true)\n"
 		"                          | \n";
@@ -231,8 +231,8 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$time(...)'", "[TRACE_OUT_SHOW_FILE_
 
 	std::stringstream expected;
 	expected <<
-		" show-file-line-opt~:" << std::setw(4) << std::left << line << RESET_FLAGS << R"=( \| Timing "dummy"...\n)="
-		" show-file-line-opt~:" << std::setw(4) << std::left << line << RESET_FLAGS << R"=( \| "dummy" timed in [0-9]+ ms\n)=";
+		"show-file-line-opti~:" << std::setw(4) << std::left << line << RESET_FLAGS << R"=( \| Timing "dummy"...\n)="
+		"show-file-line-opti~:" << std::setw(4) << std::left << line << RESET_FLAGS << R"=( \| "dummy" timed in [0-9]+ ms\n)=";
 	REQUIRE_THAT(test::out_stream.str(), Matches(expected.str()));
 }
 
@@ -249,7 +249,7 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$time_stats(...)'", "[TRACE_OUT_SHOW
 	}
 
 	std::stringstream expected;
-	expected << " show-file-line-opt~:" << std::setw(4) << std::left << line << RESET_FLAGS << R"=( \| // Execution time statistics \(ms\) for "dummy":\n)="
+	expected << "show-file-line-opti~:" << std::setw(4) << std::left << line << RESET_FLAGS << R"=( \| // Execution time statistics \(ms\) for "dummy":\n)="
 		R"=(                          \| //   avg/med: [0-9\.]+ / [0-9\.]+\n)="
 		R"=(                          \| //     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)="
 		R"=(                          \| //     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)="
@@ -269,8 +269,8 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$clocks(...)'", "[TRACE_OUT_SHOW_FIL
 
 	std::stringstream expected;
 	expected <<
-		" show-file-line-opt~:" << std::setw(4) << std::left << line << RESET_FLAGS << R"=( \| Clocking "dummy"...\n)="
-		" show-file-line-opt~:" << std::setw(4) << std::left << line << RESET_FLAGS << R"=( \| "dummy" clocked in [0-9]+ clocks \([0-9\.]+ ms\)\n)=";
+		"show-file-line-opti~:" << std::setw(4) << std::left << line << RESET_FLAGS << R"=( \| Clocking "dummy"...\n)="
+		"show-file-line-opti~:" << std::setw(4) << std::left << line << RESET_FLAGS << R"=( \| "dummy" clocked in [0-9]+ clocks \([0-9\.]+ ms\)\n)=";
 	REQUIRE_THAT(test::out_stream.str(), Matches(expected.str()));
 }
 
@@ -287,7 +287,7 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$clock_stats(...)'", "[TRACE_OUT_SHO
 	}
 
 	std::stringstream expected;
-	expected << " show-file-line-opt~:" << std::setw(4) << std::left << line << RESET_FLAGS << R"=( \| // Execution time statistics \(clocks\) for "dummy":\n)="
+	expected << "show-file-line-opti~:" << std::setw(4) << std::left << line << RESET_FLAGS << R"=( \| // Execution time statistics \(clocks\) for "dummy":\n)="
 		R"=(                          \| //   avg/med: [0-9\.]+ / [0-9\.]+\n)="
 		R"=(                          \| //     ( mode|modes): [0-9\.]+(, [0-9\.]+)* \((each = [0-9\.]+%, all = )?[0-9\.]+% of all values\)\n)="
 		R"=(                          \| //     range: [0-9\.]+ \[[0-9\.]+\.\.\.[0-9\.]+\]\n)="
