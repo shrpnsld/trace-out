@@ -60,6 +60,9 @@
 			__VA_ARGS__ \
 			trace_out::trace_and_comment(TRACE_OUT_STREAM_TO::stream(), TRACE_OUT_FILE_LINE, #__VA_ARGS__, "done.");
 
+#define $start(...) \
+			trace_out::print_start_header(TRACE_OUT_STREAM_TO::stream(), ##__VA_ARGS__);
+
 #define $thread(name) \
 			trace_out::set_current_thread_name(#name);
 
@@ -157,6 +160,8 @@
 
 #define $s(...) \
 			__VA_ARGS__
+
+#define $start(...)
 
 #define $thread(name)
 

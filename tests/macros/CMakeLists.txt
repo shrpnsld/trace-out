@@ -45,6 +45,189 @@ target_sources(macros-tests
 catch_discover_tests(macros-tests)
 
 #
+# 'start-no-message-tests'
+
+add_executable(start-no-message-tests)
+
+target_compile_features(start-no-message-tests
+	PRIVATE
+		cxx_std_11
+)
+
+target_compile_definitions(start-no-message-tests
+	PRIVATE
+		TRACE_OUT_STREAM_TO=trace_out_to_test_stream
+		TRACE_OUT_STREAM_WIDTH=70
+)
+
+target_link_libraries(start-no-message-tests
+	PRIVATE
+		trace-out
+		Catch2::Catch2WithMain
+		helpers
+)
+
+target_sources(start-no-message-tests
+	PRIVATE
+		start-no-message.tests.cpp
+)
+
+catch_discover_tests(start-no-message-tests)
+
+#
+# 'start-with-message-argument-1-tests'
+
+add_executable(start-with-message-argument-1-tests)
+
+target_compile_features(start-with-message-argument-1-tests
+	PRIVATE
+		cxx_std_11
+)
+
+target_compile_definitions(start-with-message-argument-1-tests
+	PRIVATE
+		TRACE_OUT_STREAM_TO=trace_out_to_test_stream
+		TRACE_OUT_STREAM_WIDTH=70
+)
+
+target_link_libraries(start-with-message-argument-1-tests
+	PRIVATE
+		trace-out
+		Catch2::Catch2WithMain
+		helpers
+)
+
+target_sources(start-with-message-argument-1-tests
+	PRIVATE
+		start-with-message-argument-1.tests.cpp
+)
+
+catch_discover_tests(start-with-message-argument-1-tests)
+
+#
+# 'start-with-message-argument-2-tests'
+
+add_executable(start-with-message-argument-2-tests)
+
+target_compile_features(start-with-message-argument-2-tests
+	PRIVATE
+		cxx_std_11
+)
+
+target_compile_definitions(start-with-message-argument-2-tests
+	PRIVATE
+		TRACE_OUT_STREAM_TO=trace_out_to_test_stream
+		TRACE_OUT_STREAM_WIDTH=70
+)
+
+target_link_libraries(start-with-message-argument-2-tests
+	PRIVATE
+		trace-out
+		Catch2::Catch2WithMain
+		helpers
+)
+
+target_sources(start-with-message-argument-2-tests
+	PRIVATE
+		start-with-message-argument-2.tests.cpp
+)
+
+catch_discover_tests(start-with-message-argument-2-tests)
+
+#
+# 'start-with-message-definition-1-tests'
+
+add_executable(start-with-message-definition-1-tests)
+
+target_compile_features(start-with-message-definition-1-tests
+	PRIVATE
+		cxx_std_11
+)
+
+target_compile_definitions(start-with-message-definition-1-tests
+	PRIVATE
+		TRACE_OUT_STREAM_TO=trace_out_to_test_stream
+		TRACE_OUT_STREAM_WIDTH=70
+		TRACE_OUT_START_MESSAGE="one"
+)
+
+target_link_libraries(start-with-message-definition-1-tests
+	PRIVATE
+		trace-out
+		Catch2::Catch2WithMain
+		helpers
+)
+
+target_sources(start-with-message-definition-1-tests
+	PRIVATE
+		start-with-message-definition-1.tests.cpp
+)
+
+catch_discover_tests(start-with-message-definition-1-tests)
+
+#
+# 'start-with-message-definition-2-tests'
+
+add_executable(start-with-message-definition-2-tests)
+
+target_compile_features(start-with-message-definition-2-tests
+	PRIVATE
+		cxx_std_11
+)
+
+target_compile_definitions(start-with-message-definition-2-tests
+	PRIVATE
+		TRACE_OUT_STREAM_TO=trace_out_to_test_stream
+		TRACE_OUT_STREAM_WIDTH=70
+		TRACE_OUT_START_MESSAGE="two"
+)
+
+target_link_libraries(start-with-message-definition-2-tests
+	PRIVATE
+		trace-out
+		Catch2::Catch2WithMain
+		helpers
+)
+
+target_sources(start-with-message-definition-2-tests
+	PRIVATE
+		start-with-message-definition-2.tests.cpp
+)
+
+catch_discover_tests(start-with-message-definition-2-tests)
+
+#
+# 'start-with-message-argument-and-definition-tests'
+
+add_executable(start-with-message-argument-and-definition-tests)
+
+target_compile_features(start-with-message-argument-and-definition-tests
+	PRIVATE
+		cxx_std_11
+)
+
+target_compile_definitions(start-with-message-argument-and-definition-tests
+	PRIVATE
+		TRACE_OUT_STREAM_TO=trace_out_to_test_stream
+		TRACE_OUT_STREAM_WIDTH=70
+		TRACE_OUT_START_MESSAGE="one"
+)
+
+target_link_libraries(start-with-message-argument-and-definition-tests
+	PRIVATE
+		trace-out
+		Catch2::Catch2WithMain
+		helpers
+)
+
+target_sources(start-with-message-argument-and-definition-tests
+	PRIVATE
+		start-with-message-argument-and-definition.tests.cpp
+)
+
+catch_discover_tests(start-with-message-argument-and-definition-tests)
+
+#
 # 'macros-tests-c++17'
 
 add_executable(macros-tests-c++17)
@@ -137,6 +320,12 @@ add_test("unique variable names"
 # IDE
 
 set_target_properties(macros-tests PROPERTIES FOLDER tests)
+set_target_properties(start-no-message-tests PROPERTIES FOLDER tests)
+set_target_properties(start-with-message-argument-1-tests PROPERTIES FOLDER tests)
+set_target_properties(start-with-message-argument-2-tests PROPERTIES FOLDER tests)
+set_target_properties(start-with-message-definition-1-tests PROPERTIES FOLDER tests)
+set_target_properties(start-with-message-definition-2-tests PROPERTIES FOLDER tests)
+set_target_properties(start-with-message-argument-and-definition-tests PROPERTIES FOLDER tests)
 set_target_properties(macros-tests-c++17 PROPERTIES FOLDER tests)
 set_target_properties(macros-tests-c++23 PROPERTIES FOLDER tests)
 set_target_properties(unique-variable-names PROPERTIES FOLDER tests)
@@ -154,6 +343,54 @@ endif()
 
 if (TRACE_OUT_USE_PCH)
 	target_link_libraries(macros-tests
+		PRIVATE
+			pch-helpers
+			pch-standard
+	)
+endif()
+
+if (TRACE_OUT_USE_PCH)
+	target_link_libraries(start-no-message-tests
+		PRIVATE
+			pch-helpers
+			pch-standard
+	)
+endif()
+
+if (TRACE_OUT_USE_PCH)
+	target_link_libraries(start-with-message-argument-1-tests
+		PRIVATE
+			pch-helpers
+			pch-standard
+	)
+endif()
+
+if (TRACE_OUT_USE_PCH)
+	target_link_libraries(start-with-message-argument-2-tests
+		PRIVATE
+			pch-helpers
+			pch-standard
+	)
+endif()
+
+if (TRACE_OUT_USE_PCH)
+	target_link_libraries(start-with-message-definition-1-tests
+		PRIVATE
+			pch-helpers
+			pch-standard
+	)
+endif()
+
+if (TRACE_OUT_USE_PCH)
+	target_link_libraries(start-with-message-definition-2-tests
+		PRIVATE
+			pch-helpers
+			pch-standard
+	)
+endif()
+
+if (TRACE_OUT_USE_PCH)
+	target_link_libraries(start-with-message-argument-and-definition-tests
 		PRIVATE
 			pch-helpers
 			pch-standard

@@ -65,7 +65,7 @@ function_printer::function_printer(std::ostream &stream, const file_line_t &file
 #if defined(TRACE_OUT_STYLE) && TRACE_OUT_STYLE > 0
 		std::ostream_iterator<char> stream_itr(_stream);
 
-		_stream << START_HEADER << THREAD_INFO << NEW_PARAGRAPH(_file_line);
+		_stream << THREAD_INFO << NEW_PARAGRAPH(_file_line);
 		std::copy(_signature.begin(), _name_start, stream_itr);
 		_stream << styles::FUNCTION;
 		std::copy(_name_start, _name_end, stream_itr);
@@ -73,7 +73,7 @@ function_printer::function_printer(std::ostream &stream, const file_line_t &file
 		std::copy(_name_end, _signature.end(), stream_itr);
 		_stream << '\n' << CONTINUE_PARAGRAPH << '{' << std::endl;
 #else
-		_stream << START_HEADER << THREAD_INFO << NEW_PARAGRAPH(_file_line) << styles::FUNCTION << _signature << styles::NORMAL << '\n' << CONTINUE_PARAGRAPH << '{' << std::endl;
+		_stream << THREAD_INFO << NEW_PARAGRAPH(_file_line) << styles::FUNCTION << _signature << styles::NORMAL << '\n' << CONTINUE_PARAGRAPH << '{' << std::endl;
 #endif
 	}
 
@@ -92,7 +92,7 @@ function_printer::~function_printer()
 #if defined(TRACE_OUT_STYLE) && TRACE_OUT_STYLE > 0
 		std::ostream_iterator<char> stream_itr(_stream);
 
-		_stream << START_HEADER << THREAD_INFO << NEW_PARAGRAPH(_file_line) << '}' << ' ' << styles::COMMENT << "// ";
+		_stream << THREAD_INFO << NEW_PARAGRAPH(_file_line) << '}' << ' ' << styles::COMMENT << "// ";
 		std::copy(_signature.begin(), _name_start, stream_itr);
 		_stream << styles::COMMENT_BOLD;
 		std::copy(_name_start, _name_end, stream_itr);
@@ -100,7 +100,7 @@ function_printer::~function_printer()
 		std::copy(_name_end, _signature.end(), stream_itr);
 		_stream << styles::NORMAL << '\n' << BREAK_PARAGRAPH;
 #else
-		_stream << START_HEADER << THREAD_INFO << NEW_PARAGRAPH(_file_line) << '}' << ' ' << styles::COMMENT << "// " << _signature << styles::NORMAL << '\n' << BREAK_PARAGRAPH;
+		_stream << THREAD_INFO << NEW_PARAGRAPH(_file_line) << '}' << ' ' << styles::COMMENT << "// " << _signature << styles::NORMAL << '\n' << BREAK_PARAGRAPH;
 #endif
 	}
 }

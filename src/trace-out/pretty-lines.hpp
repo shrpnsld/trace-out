@@ -43,17 +43,16 @@ struct NEW_PARAGRAPH
 };
 
 static struct reset_flags_t {} RESET_FLAGS;
-static struct start_header_t {} START_HEADER;
 static struct thread_info_t {} THREAD_INFO;
 static struct marker_t {} MARKER;
-static const std::string DATE_TIME_BLANK = "                   ";
+static const char DATE_TIME_BLANK[] = "                   ";
 static const std::string FILE_LINE_BLANK = file_line_t::blank();
 static struct continue_paragraph_t {} CONTINUE_PARAGRAPH;
 static struct break_paragraph_t {} BREAK_PARAGRAPH;
 
 inline system::mutex &stream_mutex();
+inline void print_start_header(std::ostream &stream, const char *message = NULL);
 inline std::ostream &operator <<(std::ostream &stream, reset_flags_t);
-inline std::ostream &operator <<(std::ostream &stream, start_header_t);
 inline std::ostream &operator <<(std::ostream &stream, thread_info_t);
 inline std::ostream &operator <<(std::ostream &stream, marker_t);
 inline std::ostream &operator <<(std::ostream &stream, const file_line_t &filename_line);
@@ -69,9 +68,16 @@ inline std::ostream &operator <<(std::ostream &stream, break_paragraph_t);
 namespace trace_out
 {
 
+#if defined(TRACE_OUT_MARKER)
+static const standard::size_t MARKER_WIDTH = sizeof(TRACE_OUT_MARKER) / sizeof(TRACE_OUT_MARKER[0]) - 1;
+#endif // defined(TRACE_OUT_MARKER)
+
+static const standard::size_t DATE_TIME_FIELD_WIDTH = sizeof(DATE_TIME_BLANK) / sizeof(DATE_TIME_BLANK[0]) - 1;
 static const standard::size_t FILENAME_FIELD_WIDTH = 20;
 static const standard::size_t LINE_FIELD_WIDTH = 4;
+static const standard::size_t FILENAME_LINE_FIELD_WIDTH = FILENAME_FIELD_WIDTH + 1 + LINE_FIELD_WIDTH;
 static const char TIME_SPACE_CONTEXT_DELIMITER[] = " | ";
+static const standard::size_t TIME_SPACE_CONTEXT_DELIMITER_WIDTH = sizeof(TIME_SPACE_CONTEXT_DELIMITER) / sizeof(TIME_SPACE_CONTEXT_DELIMITER[0]) - 1;
 
 static const char FILENAME_FIELD_EXCESS_PADDING[] = "~";
 static const standard::size_t FILENAME_FIELD_EXCESS_PADDING_SIZE = sizeof(FILENAME_FIELD_EXCESS_PADDING);
@@ -83,11 +89,6 @@ static const char FILE_PATH_COMPONENT_DELIMITER =
 	'\\'
 #endif
 	;
-
-static system::mutex _is_header_printed_mutex;
-static bool _is_header_printed = false;
-inline bool is_header_printed();
-inline void set_header_printed();
 
 static system::tls<bool> _is_paragraph_broken;
 inline bool is_paragraph_broken();
@@ -101,6 +102,61 @@ inline const std::string filename_from_path(const char *path);
 
 namespace trace_out
 {
+
+void print_start_header(std::ostream &stream, const char *message)
+{
+	standard::size_t header_width = 0;
+
+	stream << MARKER;
+#if defined(TRACE_OUT_MARKER)
+	header_width += MARKER_WIDTH + 1;
+#endif // defined(TRACE_OUT_MARKER)
+
+#if defined(TRACE_OUT_SHOW_DATE_TIME)
+	stream << std::setfill('#') << std::setw(DATE_TIME_FIELD_WIDTH) << "" << RESET_FLAGS;
+	header_width += DATE_TIME_FIELD_WIDTH;
+#endif // defined(TRACE_OUT_SHOW_FILE_LINE)
+
+#if defined(TRACE_OUT_SHOW_DATE_TIME) && defined(TRACE_OUT_SHOW_FILE_LINE)
+	stream << '#';
+	header_width += 1;
+#endif // defined(TRACE_OUT_SHOW_DATE_TIME) && defined(TRACE_OUT_SHOW_FILE_LINE)
+
+#if defined(TRACE_OUT_SHOW_FILE_LINE)
+	stream << std::setfill('#') << std::setw(FILENAME_LINE_FIELD_WIDTH) << "" << RESET_FLAGS;
+	header_width += FILENAME_LINE_FIELD_WIDTH;
+#endif // defined(TRACE_OUT_SHOW_FILE_LINE)
+
+#if defined(TRACE_OUT_SHOW_DATE_TIME) || defined(TRACE_OUT_SHOW_FILE_LINE)
+	stream << std::setfill('#') << std::setw(TIME_SPACE_CONTEXT_DELIMITER_WIDTH) << "" << RESET_FLAGS;
+	header_width += TIME_SPACE_CONTEXT_DELIMITER_WIDTH;
+#endif // defined(TRACE_OUT_SHOW_DATE_TIME) || defined(TRACE_OUT_SHOW_FILE_LINE)
+
+	std::string date_time = date_time_now();
+	stream << "#### [ " << styles::STRING << date_time << styles::NORMAL;
+	header_width += 7 + date_time.size();
+
+	if (message != NULL)
+	{
+		stream << ' ' << styles::SUBJECT << message << styles::NORMAL;
+		header_width += 1 + std::strlen(message);
+	}
+	else
+	{
+#if defined(TRACE_OUT_START_MESSAGE)
+		message = TRACE_OUT_START_MESSAGE;
+		stream << ' ' << styles::SUBJECT << message << styles::NORMAL;
+		header_width += 1 + std::strlen(message);
+#endif // defined(TRACE_OUT_START_MESSAGE)
+	}
+
+	stream << " ] ";
+	header_width += 3;
+
+	standard::size_t console_width = system::console_width();
+	standard::size_t rest_fill_width = console_width > header_width ? console_width - header_width : 4;
+	stream << std::setw(rest_fill_width) << std::setfill('#') << "" << RESET_FLAGS << '\n' << BREAK_PARAGRAPH;
+}
 
 NEW_PARAGRAPH::NEW_PARAGRAPH(const file_line_t &filename_line)
 	:
@@ -137,42 +193,6 @@ std::ostream &operator <<(std::ostream &stream, reset_flags_t)
 	stream.width(0);
 	stream.fill(' ');
 	stream.precision(6);
-	return stream;
-}
-
-std::ostream &operator <<(std::ostream &stream, start_header_t)
-{
-	(void)stream;
-
-#if defined(TRACE_OUT_SHOW_HEADER)
-	if (is_header_printed())
-	{
-		return stream;
-	}
-
-	standard::size_t header_width = 0;
-
-	stream << "#### [";
-	header_width += 6;
-
-	std::string date_time = date_time_now();
-	stream << ' ' << styles::STRING << date_time << styles::NORMAL;
-	header_width += 1 + date_time.size();
-
-#if defined(TRACE_OUT_SHOW_HEADER_TARGET)
-	stream << ' ' << styles::SUBJECT << TRACE_OUT_SHOW_HEADER_TARGET << styles::NORMAL;
-	header_width += 1 + std::strlen(TRACE_OUT_SHOW_HEADER_TARGET);
-#endif // defined(TRACE_OUT_SHOW_HEADER_TARGET)
-
-	stream << " ] ";
-	header_width += 3;
-
-	standard::size_t console_width = system::console_width();
-	standard::size_t fill_width = console_width > header_width ? console_width - header_width : 4;
-	stream << std::setw(fill_width) << std::setfill('#') << "" << RESET_FLAGS << "\n\n";
-	set_header_printed();
-#endif // defined(TRACE_OUT_SHOW_HEADER)
-
 	return stream;
 }
 
@@ -310,18 +330,6 @@ std::ostream &operator <<(std::ostream &stream, break_paragraph_t)
 	set_paragraph_broken(true);
 
 	return stream << std::endl;
-}
-
-bool is_header_printed()
-{
-	autolock<system::mutex> lock(_is_header_printed_mutex);
-	return _is_header_printed;
-}
-
-void set_header_printed()
-{
-	autolock<system::mutex> lock(_is_header_printed_mutex);
-	_is_header_printed = true;
 }
 
 bool is_paragraph_broken()

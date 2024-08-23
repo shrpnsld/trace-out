@@ -3,6 +3,7 @@
 
 int main()
 {
+	$start("some")
 	$thread(main)
 	$f
 

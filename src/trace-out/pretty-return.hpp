@@ -48,7 +48,7 @@ const Type_t &return_printer::operator ,(const Type_t &value)
 		autolock<system::mutex> lock(stream_mutex());
 #endif
 
-		_stream << START_HEADER << THREAD_INFO << NEW_PARAGRAPH(_file_line) << styles::KEYWORD << "return" << styles::NORMAL << ' ';
+		_stream << THREAD_INFO << NEW_PARAGRAPH(_file_line) << styles::KEYWORD << "return" << styles::NORMAL << ' ';
 		pretty_print(_stream, value);
 		_stream << std::endl;
 	}

@@ -125,12 +125,76 @@ target_sources(style-2-and-show-thread-options-tests
 catch_discover_tests(style-2-and-show-thread-options-tests)
 
 #
+# 'style-1-and-start-macro-tests'
+
+add_executable(style-1-and-start-macro-tests)
+
+target_compile_features(style-1-and-start-macro-tests
+	PRIVATE
+		cxx_std_11
+)
+
+target_compile_definitions(style-1-and-start-macro-tests
+	PRIVATE
+		TRACE_OUT_STREAM_TO=trace_out_to_test_stream
+		TRACE_OUT_STREAM_WIDTH=70
+		TRACE_OUT_STYLE=1
+)
+
+target_link_libraries(style-1-and-start-macro-tests
+	PRIVATE
+		trace-out
+		helpers
+		Catch2::Catch2WithMain
+)
+
+target_sources(style-1-and-start-macro-tests
+	PRIVATE
+		style-1-and-start-macro.tests.cpp
+)
+
+catch_discover_tests(style-1-and-start-macro-tests)
+
+#
+# 'style-2-and-start-macro-tests'
+
+add_executable(style-2-and-start-macro-tests)
+
+target_compile_features(style-2-and-start-macro-tests
+	PRIVATE
+		cxx_std_11
+)
+
+target_compile_definitions(style-2-and-start-macro-tests
+	PRIVATE
+		TRACE_OUT_STREAM_TO=trace_out_to_test_stream
+		TRACE_OUT_STREAM_WIDTH=70
+		TRACE_OUT_STYLE=2
+)
+
+target_link_libraries(style-2-and-start-macro-tests
+	PRIVATE
+		trace-out
+		helpers
+		Catch2::Catch2WithMain
+)
+
+target_sources(style-2-and-start-macro-tests
+	PRIVATE
+		style-2-and-start-macro.tests.cpp
+)
+
+catch_discover_tests(style-2-and-start-macro-tests)
+
+#
 # IDE
 
 set_target_properties(style-1-option-tests PROPERTIES FOLDER tests)
 set_target_properties(style-2-option-tests PROPERTIES FOLDER tests)
 set_target_properties(style-1-and-show-thread-options-tests PROPERTIES FOLDER tests)
 set_target_properties(style-2-and-show-thread-options-tests PROPERTIES FOLDER tests)
+set_target_properties(style-1-and-start-macro-tests PROPERTIES FOLDER tests)
+set_target_properties(style-2-and-start-macro-tests PROPERTIES FOLDER tests)
 
 #
 # Build optimizations
@@ -152,7 +216,7 @@ if (TRACE_OUT_USE_PCH)
 endif()
 
 if (TRACE_OUT_USE_PCH)
-	target_link_libraries(style-1-1and-show-thread-options-tests
+	target_link_libraries(style-1-and-show-thread-options-tests
 		PRIVATE
 			pch-helpers
 			pch-standard
@@ -160,7 +224,23 @@ if (TRACE_OUT_USE_PCH)
 endif()
 
 if (TRACE_OUT_USE_PCH)
-	target_link_libraries(style-2-1and-show-thread-options-tests
+	target_link_libraries(style-2-and-show-thread-options-tests
+		PRIVATE
+			pch-helpers
+			pch-standard
+	)
+endif()
+
+if (TRACE_OUT_USE_PCH)
+	target_link_libraries(style-1-and-start-macro-tests
+		PRIVATE
+			pch-helpers
+			pch-standard
+	)
+endif()
+
+if (TRACE_OUT_USE_PCH)
+	target_link_libraries(style-2-and-start-macro-tests
 		PRIVATE
 			pch-helpers
 			pch-standard

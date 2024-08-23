@@ -141,7 +141,7 @@ Type_t &&trace(std::ostream &stream, const file_line_t &file_line, const char *n
 		autolock<system::mutex> lock(stream_mutex());
 #endif
 
-		stream << START_HEADER << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::SUBJECT << name << styles::NORMAL << " = ";
+		stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::SUBJECT << name << styles::NORMAL << " = ";
 		pretty_print(stream, value);
 		stream << std::endl;
 	}
@@ -156,7 +156,7 @@ void trace(std::ostream &stream, const file_line_t &file_line, const char *names
 	autolock<system::mutex> lock(stream_mutex());
 #endif
 
-	stream << START_HEADER << THREAD_INFO;
+	stream << THREAD_INFO;
 	print_first_value(stream, file_line, names, values...);
 }
 
@@ -167,7 +167,7 @@ void trace_binary(std::ostream &stream, const file_line_t &file_line, const char
 	autolock<system::mutex> lock(stream_mutex());
 #endif
 
-	stream << START_HEADER << THREAD_INFO;
+	stream << THREAD_INFO;
 	print_first_binary_value(stream, file_line, names, values...);
 }
 
@@ -178,7 +178,7 @@ void trace_octal(std::ostream &stream, const file_line_t &file_line, const char 
 	autolock<system::mutex> lock(stream_mutex());
 #endif
 
-	stream << START_HEADER << THREAD_INFO;
+	stream << THREAD_INFO;
 	print_first_octal_value(stream, file_line, names, values...);
 }
 
@@ -189,7 +189,7 @@ void trace_hexadecimal(std::ostream &stream, const file_line_t &file_line, const
 	autolock<system::mutex> lock(stream_mutex());
 #endif
 
-	stream << START_HEADER << THREAD_INFO;
+	stream << THREAD_INFO;
 	print_first_hexadecimal_value(stream, file_line, names, values...);
 }
 
@@ -301,7 +301,7 @@ Type_t &trace(std::ostream &stream, const file_line_t &file_line, const char *na
 		autolock<system::mutex> lock(stream_mutex());
 #endif
 
-		stream << START_HEADER << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::SUBJECT << name << styles::NORMAL << " = ";
+		stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::SUBJECT << name << styles::NORMAL << " = ";
 		pretty_print(stream, value);
 		stream << std::endl;
 	}
@@ -318,7 +318,7 @@ void trace(std::ostream &stream, const file_line_t &file_line, const char *shoul
 	autolock<system::mutex> lock(stream_mutex());
 #endif
 
-	stream << START_HEADER << THREAD_INFO << NEW_PARAGRAPH(file_line);
+	stream << THREAD_INFO << NEW_PARAGRAPH(file_line);
 	if (should_comment != NULL)
 	{
 		stream << styles::COMMENT << "// " << comment << styles::NORMAL;
@@ -345,7 +345,7 @@ Type_t &trace_binary(std::ostream &stream, const file_line_t &file_line, const c
 		autolock<system::mutex> lock(stream_mutex());
 #endif
 
-		stream << START_HEADER << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::SUBJECT << name << styles::NORMAL << " = ";
+		stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::SUBJECT << name << styles::NORMAL << " = ";
 		pretty_print_binary(stream, value);
 		stream << std::endl;
 	}
@@ -367,7 +367,7 @@ Type_t &trace_octal(std::ostream &stream, const file_line_t &file_line, const ch
 		autolock<system::mutex> lock(stream_mutex());
 #endif
 
-		stream << START_HEADER << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::SUBJECT << name << styles::NORMAL << " = ";
+		stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::SUBJECT << name << styles::NORMAL << " = ";
 		pretty_print_octal(stream, value);
 		stream << std::endl;
 	}
@@ -389,7 +389,7 @@ Type_t &trace_hexadecimal(std::ostream &stream, const file_line_t &file_line, co
 		autolock<system::mutex> lock(stream_mutex());
 #endif
 
-		stream << START_HEADER << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::SUBJECT << name << styles::NORMAL << " = ";
+		stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::SUBJECT << name << styles::NORMAL << " = ";
 		pretty_print_hexadecimal(stream, value);
 		stream << std::endl;
 	}
@@ -404,7 +404,7 @@ typename enable_if<!is_convertible_to<End_t, standard::size_t>::value, void>::ty
 	autolock<system::mutex> lock(stream_mutex());
 #endif
 
-	stream << START_HEADER << THREAD_INFO << NEW_PARAGRAPH(file_line) << '[' << styles::SUBJECT << begin_name << styles::NORMAL << ", " << styles::SUBJECT << end_name << styles::NORMAL << ") = ";
+	stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << '[' << styles::SUBJECT << begin_name << styles::NORMAL << ", " << styles::SUBJECT << end_name << styles::NORMAL << ") = ";
 	pretty_print_begin_end(stream, begin, end);
 	stream << std::endl;
 }
@@ -416,7 +416,7 @@ typename enable_if<is_convertible_to<Size_t, standard::size_t>::value, void>::ty
 	autolock<system::mutex> lock(stream_mutex());
 #endif
 
-	stream << START_HEADER << THREAD_INFO << NEW_PARAGRAPH(file_line) << '[' << styles::SUBJECT << begin_name << styles::NORMAL << ": " << styles::SUBJECT << how_much << styles::NORMAL << "] = ";
+	stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << '[' << styles::SUBJECT << begin_name << styles::NORMAL << ": " << styles::SUBJECT << how_much << styles::NORMAL << "] = ";
 	pretty_print_begin_how_much(stream, begin, how_much);
 	stream << std::endl;
 }
@@ -428,7 +428,7 @@ typename enable_if<is_convertible_to<Size_t, standard::size_t>::value, void>::ty
 	autolock<system::mutex> lock(stream_mutex());
 #endif
 
-	stream << START_HEADER << THREAD_INFO << NEW_PARAGRAPH(file_line) << '[' << styles::SUBJECT << begin_name << styles::NORMAL << ", " << styles::SUBJECT << end_name << styles::NORMAL << "):" << styles::SUBJECT << how_much << styles::NORMAL << " = ";
+	stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << '[' << styles::SUBJECT << begin_name << styles::NORMAL << ", " << styles::SUBJECT << end_name << styles::NORMAL << "):" << styles::SUBJECT << how_much << styles::NORMAL << " = ";
 	pretty_print_begin_end_how_much(stream, begin, end, how_much);
 	stream << std::endl;
 }
@@ -455,7 +455,7 @@ void trace_and_comment(std::ostream &stream, const file_line_t &file_line, const
 	autolock<system::mutex> lock(stream_mutex());
 #endif
 
-	stream << START_HEADER << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::SUBJECT << statement << styles::NORMAL << ' ' << styles::COMMENT << "// " << comment << styles::NORMAL << std::endl;
+	stream << THREAD_INFO << NEW_PARAGRAPH(file_line) << styles::SUBJECT << statement << styles::NORMAL << ' ' << styles::COMMENT << "// " << comment << styles::NORMAL << std::endl;
 }
 
 }
