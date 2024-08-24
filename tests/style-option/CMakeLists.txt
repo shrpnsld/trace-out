@@ -189,12 +189,17 @@ catch_discover_tests(style-2-and-start-macro-tests)
 #
 # IDE
 
-set_target_properties(style-1-option-tests PROPERTIES FOLDER tests)
-set_target_properties(style-2-option-tests PROPERTIES FOLDER tests)
-set_target_properties(style-1-and-show-thread-options-tests PROPERTIES FOLDER tests)
-set_target_properties(style-2-and-show-thread-options-tests PROPERTIES FOLDER tests)
-set_target_properties(style-1-and-start-macro-tests PROPERTIES FOLDER tests)
-set_target_properties(style-2-and-start-macro-tests PROPERTIES FOLDER tests)
+set_target_properties(
+	style-1-option-tests
+	style-2-option-tests
+	style-1-and-show-thread-options-tests
+	style-2-and-show-thread-options-tests
+	style-1-and-start-macro-tests
+	style-2-and-start-macro-tests
+
+	PROPERTIES
+		FOLDER tests
+)
 
 #
 # Build optimizations
@@ -205,41 +210,31 @@ if (TRACE_OUT_USE_PCH)
 			pch-helpers
 			pch-standard
 	)
-endif()
 
-if (TRACE_OUT_USE_PCH)
 	target_link_libraries(style-2-option-tests
 		PRIVATE
 			pch-helpers
 			pch-standard
 	)
-endif()
 
-if (TRACE_OUT_USE_PCH)
 	target_link_libraries(style-1-and-show-thread-options-tests
 		PRIVATE
 			pch-helpers
 			pch-standard
 	)
-endif()
 
-if (TRACE_OUT_USE_PCH)
 	target_link_libraries(style-2-and-show-thread-options-tests
 		PRIVATE
 			pch-helpers
 			pch-standard
 	)
-endif()
 
-if (TRACE_OUT_USE_PCH)
 	target_link_libraries(style-1-and-start-macro-tests
 		PRIVATE
 			pch-helpers
 			pch-standard
 	)
-endif()
 
-if (TRACE_OUT_USE_PCH)
 	target_link_libraries(style-2-and-start-macro-tests
 		PRIVATE
 			pch-helpers

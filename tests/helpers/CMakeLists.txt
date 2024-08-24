@@ -60,8 +60,13 @@ target_sources(dollar-store-catch2
 #
 # IDE
 
-set_target_properties(helpers PROPERTIES FOLDER tests)
-set_target_properties(helpers-c++11 PROPERTIES FOLDER tests)
+set_target_properties(
+	helpers
+	helpers-c++11
+
+	PROPERTIES
+		FOLDER tests
+)
 
 #
 # Build optimizations

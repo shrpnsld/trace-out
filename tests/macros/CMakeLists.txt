@@ -319,16 +319,21 @@ add_test("unique variable names"
 #
 # IDE
 
-set_target_properties(macros-tests PROPERTIES FOLDER tests)
-set_target_properties(start-no-message-tests PROPERTIES FOLDER tests)
-set_target_properties(start-with-message-argument-1-tests PROPERTIES FOLDER tests)
-set_target_properties(start-with-message-argument-2-tests PROPERTIES FOLDER tests)
-set_target_properties(start-with-message-definition-1-tests PROPERTIES FOLDER tests)
-set_target_properties(start-with-message-definition-2-tests PROPERTIES FOLDER tests)
-set_target_properties(start-with-message-argument-and-definition-tests PROPERTIES FOLDER tests)
-set_target_properties(macros-tests-c++17 PROPERTIES FOLDER tests)
-set_target_properties(macros-tests-c++23 PROPERTIES FOLDER tests)
-set_target_properties(unique-variable-names PROPERTIES FOLDER tests)
+set_target_properties(
+	macros-tests
+	start-no-message-tests
+	start-with-message-argument-1-tests
+	start-with-message-argument-2-tests
+	start-with-message-definition-1-tests
+	start-with-message-definition-2-tests
+	start-with-message-argument-and-definition-tests
+	macros-tests-c++17
+	macros-tests-c++23
+	unique-variable-names
+
+	PROPERTIES
+		FOLDER tests
+)
 
 #
 # Build optimizations
@@ -347,65 +352,49 @@ if (TRACE_OUT_USE_PCH)
 			pch-helpers
 			pch-standard
 	)
-endif()
 
-if (TRACE_OUT_USE_PCH)
 	target_link_libraries(start-no-message-tests
 		PRIVATE
 			pch-helpers
 			pch-standard
 	)
-endif()
 
-if (TRACE_OUT_USE_PCH)
 	target_link_libraries(start-with-message-argument-1-tests
 		PRIVATE
 			pch-helpers
 			pch-standard
 	)
-endif()
 
-if (TRACE_OUT_USE_PCH)
 	target_link_libraries(start-with-message-argument-2-tests
 		PRIVATE
 			pch-helpers
 			pch-standard
 	)
-endif()
 
-if (TRACE_OUT_USE_PCH)
 	target_link_libraries(start-with-message-definition-1-tests
 		PRIVATE
 			pch-helpers
 			pch-standard
 	)
-endif()
 
-if (TRACE_OUT_USE_PCH)
 	target_link_libraries(start-with-message-definition-2-tests
 		PRIVATE
 			pch-helpers
 			pch-standard
 	)
-endif()
 
-if (TRACE_OUT_USE_PCH)
 	target_link_libraries(start-with-message-argument-and-definition-tests
 		PRIVATE
 			pch-helpers
 			pch-standard
 	)
-endif()
 
-if (TRACE_OUT_USE_PCH)
 	target_link_libraries(macros-tests-c++17
 		PRIVATE
 			pch-helpers
 			pch-standard
 	)
-endif()
 
-if (TRACE_OUT_USE_PCH)
 	target_link_libraries(macros-tests-c++23
 		PRIVATE
 			pch-helpers

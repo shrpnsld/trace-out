@@ -61,8 +61,13 @@ target_sources(off-option-and-start-macro-tests
 #
 # IDE
 
-set_target_properties(off-option-tests PROPERTIES FOLDER tests)
-set_target_properties(off-option-and-start-macro-tests PROPERTIES FOLDER tests)
+set_target_properties(
+	off-option-tests
+	off-option-and-start-macro-tests
+
+	PROPERTIES
+		FOLDER tests
+)
 
 #
 # Build optimizations
@@ -73,9 +78,7 @@ if (TRACE_OUT_USE_PCH)
 			pch-helpers
 			pch-standard
 	)
-endif()
 
-if (TRACE_OUT_USE_PCH)
 	target_link_libraries(off-option-and-start-macro-tests
 		PRIVATE
 			pch-helpers

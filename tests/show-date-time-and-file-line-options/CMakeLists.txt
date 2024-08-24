@@ -65,8 +65,13 @@ catch_discover_tests(show-date-time-and-file-line-options-and-start-macro-tests)
 #
 # IDE
 
-set_target_properties(show-date-time-and-file-line-options-tests PROPERTIES FOLDER tests)
-set_target_properties(show-date-time-and-file-line-options-and-start-macro-tests PROPERTIES FOLDER tests)
+set_target_properties(
+	show-date-time-and-file-line-options-tests
+	show-date-time-and-file-line-options-and-start-macro-tests
+
+	PROPERTIES
+		FOLDER tests
+)
 
 #
 # Build optimizations
@@ -77,9 +82,7 @@ if (TRACE_OUT_USE_PCH)
 			pch-helpers
 			pch-standard
 	)
-endif()
 
-if (TRACE_OUT_USE_PCH)
 	target_link_libraries(show-date-time-and-file-line-options-and-start-macro-tests
 		PRIVATE
 			pch-helpers

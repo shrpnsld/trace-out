@@ -94,9 +94,14 @@ catch_discover_tests(strip-scope-option-tests-2)
 #
 # IDE
 
-set_target_properties(strip-scope-option-tests-0 PROPERTIES FOLDER tests)
-set_target_properties(strip-scope-option-tests-1 PROPERTIES FOLDER tests)
-set_target_properties(strip-scope-option-tests-2 PROPERTIES FOLDER tests)
+set_target_properties(
+	strip-scope-option-tests-0
+	strip-scope-option-tests-1
+	strip-scope-option-tests-2
+
+	PROPERTIES
+		FOLDER tests
+)
 
 #
 # Build optimizations
@@ -107,17 +112,13 @@ if (TRACE_OUT_USE_PCH)
 			pch-helpers
 			pch-standard
 	)
-endif()
 
-if (TRACE_OUT_USE_PCH)
 	target_link_libraries(strip-scope-option-tests-1
 		PRIVATE
 			pch-helpers
 			pch-standard
 	)
-endif()
 
-if (TRACE_OUT_USE_PCH)
 	target_link_libraries(strip-scope-option-tests-2
 		PRIVATE
 			pch-helpers

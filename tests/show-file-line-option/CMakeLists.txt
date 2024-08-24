@@ -63,8 +63,13 @@ catch_discover_tests(show-file-line-option-and-start-macro-tests)
 #
 # IDE
 
-set_target_properties(show-file-line-option-tests PROPERTIES FOLDER tests)
-set_target_properties(show-file-line-option-and-start-macro-tests PROPERTIES FOLDER tests)
+set_target_properties(
+	show-file-line-option-tests
+	show-file-line-option-and-start-macro-tests
+
+	PROPERTIES
+		FOLDER tests
+)
 
 #
 # Build optimizations
@@ -75,9 +80,7 @@ if (TRACE_OUT_USE_PCH)
 			pch-helpers
 			pch-standard
 	)
-endif()
 
-if (TRACE_OUT_USE_PCH)
 	target_link_libraries(show-file-line-option-and-start-macro-tests
 		PRIVATE
 			pch-helpers
