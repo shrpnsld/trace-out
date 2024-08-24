@@ -9,6 +9,7 @@
 #include "trace-out/mutex.hpp"
 #include "trace-out/platform-detection.hpp"
 #include "trace-out/styles.hpp"
+#include "trace-out/template-magic.hpp"
 #include "trace-out/thread.hpp"
 #include "trace-out/thread-local-storage.hpp"
 #include <iomanip>
@@ -69,18 +70,18 @@ namespace trace_out
 {
 
 #if defined(TRACE_OUT_MARKER)
-static const standard::size_t MARKER_WIDTH = sizeof(TRACE_OUT_MARKER) / sizeof(TRACE_OUT_MARKER[0]) - 1;
+static const standard::size_t MARKER_WIDTH = c_str_arr_size(TRACE_OUT_MARKER);
 #endif // defined(TRACE_OUT_MARKER)
 
-static const standard::size_t DATE_TIME_FIELD_WIDTH = sizeof(DATE_TIME_BLANK) / sizeof(DATE_TIME_BLANK[0]) - 1;
+static const standard::size_t DATE_TIME_FIELD_WIDTH = c_str_arr_size(DATE_TIME_BLANK);
 static const standard::size_t FILENAME_FIELD_WIDTH = 20;
 static const standard::size_t LINE_FIELD_WIDTH = 4;
 static const standard::size_t FILENAME_LINE_FIELD_WIDTH = FILENAME_FIELD_WIDTH + 1 + LINE_FIELD_WIDTH;
 static const char TIME_SPACE_CONTEXT_DELIMITER[] = " | ";
-static const standard::size_t TIME_SPACE_CONTEXT_DELIMITER_WIDTH = sizeof(TIME_SPACE_CONTEXT_DELIMITER) / sizeof(TIME_SPACE_CONTEXT_DELIMITER[0]) - 1;
+static const standard::size_t TIME_SPACE_CONTEXT_DELIMITER_WIDTH = c_str_arr_size(TIME_SPACE_CONTEXT_DELIMITER);
 
 static const char FILENAME_FIELD_EXCESS_PADDING[] = "~";
-static const standard::size_t FILENAME_FIELD_EXCESS_PADDING_SIZE = sizeof(FILENAME_FIELD_EXCESS_PADDING) / sizeof(FILENAME_FIELD_EXCESS_PADDING[0]) - 1;
+static const standard::size_t FILENAME_FIELD_EXCESS_PADDING_SIZE = c_str_arr_size(FILENAME_FIELD_EXCESS_PADDING);
 
 static const char FILE_PATH_COMPONENT_DELIMITER =
 #if defined(TRACE_OUT_POSIX)

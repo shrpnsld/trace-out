@@ -1,5 +1,6 @@
 #pragma once
 
+#include "trace-out/integer.hpp"
 #include "trace-out/platform-detection.hpp"
 
 //
@@ -10,6 +11,12 @@ namespace trace_out
 
 template <typename Type_t>
 const Type_t &declval();
+
+template <typename Type_t, standard::size_t Size>
+standard::size_t c_str_arr_size(Type_t (&)[Size])
+{
+	return Size - 1;
+}
 
 template <typename First_t, typename Second_t>
 struct is_same;
