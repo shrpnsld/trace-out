@@ -178,7 +178,7 @@ TEST_CASE("'TRACE_OUT_SHOW_DATE_TIME' with '$if(...)'", "[TRACE_OUT_SHOW_DATE_TI
 	REQUIRE_THAT(test::out_stream.str(), Matches(
 		R"=([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} \| if \(true\) => true\n)="
 		R"=(                    \| \{\n)="
-		R"=(                    \| \} // if \(true\) => true\n)="
+		R"=([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} \| \} // if \(true\) => true\n)="
 		R"=(                    \| \n)="
 	));
 }
@@ -199,7 +199,7 @@ TEST_CASE("'TRACE_OUT_SHOW_DATE_TIME' with '$for(...)'", "[TRACE_OUT_SHOW_DATE_T
 		R"=(                    \| \{\n)="
 		R"=([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} \|     // for: iteration #1\n)="
 		R"=(                    \| \n)="
-		R"=(                    \| \} // for \(; true;\)\n)="
+		R"=([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} \| \} // for \(; true;\)\n)="
 		R"=(                    \| \n)="
 	));
 }
@@ -220,7 +220,7 @@ TEST_CASE("'TRACE_OUT_SHOW_DATE_TIME' with '$while(...)'", "[TRACE_OUT_SHOW_DATE
 		R"=(                    \| \{\n)="
 		R"=([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} \|     // while: iteration #1\n)="
 		R"=(                    \| \n)="
-		R"=(                    \| \} // while \(true\)\n)="
+		R"=([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} \| \} // while \(true\)\n)="
 		R"=(                    \| \n)="
 	));
 }

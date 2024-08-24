@@ -175,7 +175,7 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$if(...)'", "[TRACE_OUT_SHOW_FILE_LI
 	std::stringstream expected;
 	expected << "show-file-line-opti~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | if (true) => true\n"
 		"                          | {\n"
-		"                          | } // if (true) => true\n"
+		"show-file-line-opti~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | } // if (true) => true\n"
 		"                          | \n";
 	REQUIRE(test::out_stream.str() == expected.str());
 }
@@ -195,7 +195,7 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$for(...)'", "[TRACE_OUT_SHOW_FILE_L
 		"                          | {\n"
 		"show-file-line-opti~:" << std::setw(4) << std::left << line << RESET_FLAGS << " |     // for: iteration #1\n"
 		"                          | \n"
-		"                          | } // for (; true;)\n"
+		"show-file-line-opti~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | } // for (; true;)\n"
 		"                          | \n";
 	REQUIRE(test::out_stream.str() == expected.str());
 }
@@ -215,7 +215,7 @@ TEST_CASE("'TRACE_OUT_SHOW_FILE_LINE' with '$while(...)'", "[TRACE_OUT_SHOW_FILE
 		"                          | {\n"
 		"show-file-line-opti~:" << std::setw(4) << std::left << line << RESET_FLAGS << " |     // while: iteration #1\n"
 		"                          | \n"
-		"                          | } // while (true)\n"
+		"show-file-line-opti~:" << std::setw(4) << std::left << line << RESET_FLAGS << " | } // while (true)\n"
 		"                          | \n";
 	REQUIRE(test::out_stream.str() == expected.str());
 }

@@ -89,19 +89,19 @@ TEST_CASE("'TRACE_OUT_STREAM_TO_FILE' option", "[TRACE_OUT_STREAM_TO_FILE]")
 		<< R"=(@@ stream-to-file-opti~:31   \|   subject3 = "wazuuup!"; // done\.)=" << std::endl
 		<< R"=(@@ stream-to-file-opti~:33   \|   if \(true\) => true)=" << std::endl
 		<< R"=(@@                           \|   \{)=" << std::endl
-		<< R"=(@@                           \|   \} // if \(true\) => true)=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:33   \|   \} // if \(true\) => true)=" << std::endl
 		<< R"=(@@                           \| )=" << std::endl
 		<< R"=(@@ stream-to-file-opti~:37   \|   for \(;;\))=" << std::endl
 		<< R"=(@@                           \|   \{)=" << std::endl
 		<< R"=(@@ stream-to-file-opti~:37   \|     // for: iteration #1)=" << std::endl
 		<< R"=(@@                           \| )=" << std::endl
-		<< R"=(@@                           \|   \} // for \(;;\))=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:37   \|   \} // for \(;;\))=" << std::endl
 		<< R"=(@@                           \| )=" << std::endl
 		<< R"=(@@ stream-to-file-opti~:42   \|   while \(true\))=" << std::endl
 		<< R"=(@@                           \|   \{)=" << std::endl
 		<< R"=(@@ stream-to-file-opti~:42   \|     // while: iteration #1)=" << std::endl
 		<< R"=(@@                           \| )=" << std::endl
-		<< R"=(@@                           \|   \} // while \(true\))=" << std::endl
+		<< R"=(@@ stream-to-file-opti~:42   \|   \} // while \(true\))=" << std::endl
 		<< R"=(@@                           \| )=" << std::endl
 		<< R"=(@@ stream-to-file-opti~:47   \|   Timing "dummy"\.\.\.)=" << std::endl
 		<< R"=(@@ stream-to-file-opti~:47   \|   "dummy" timed in [0-9]+ ms)=" << std::endl
