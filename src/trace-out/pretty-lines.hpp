@@ -73,6 +73,9 @@ namespace trace_out
 static const standard::size_t MARKER_WIDTH = c_str_arr_size(TRACE_OUT_MARKER);
 #endif // defined(TRACE_OUT_MARKER)
 
+static const char START_HEADER_FILL = '#';
+static const char START_HEADER_PADDING[5] = {START_HEADER_FILL, START_HEADER_FILL, START_HEADER_FILL, START_HEADER_FILL, 0};
+static const char START_HEADER_PADDING_WIDTH = c_str_arr_size(START_HEADER_PADDING);
 static const standard::size_t DATE_TIME_FIELD_WIDTH = c_str_arr_size(DATE_TIME_BLANK);
 static const standard::size_t FILENAME_FIELD_WIDTH = 20;
 static const standard::size_t LINE_FIELD_WIDTH = 4;
@@ -114,28 +117,28 @@ void print_start_header(std::ostream &stream, const char *message)
 #endif // defined(TRACE_OUT_MARKER)
 
 #if defined(TRACE_OUT_SHOW_DATE_TIME)
-	stream << std::setfill('#') << std::setw(DATE_TIME_FIELD_WIDTH) << "" << RESET_FLAGS;
+	stream << std::setfill(START_HEADER_FILL) << std::setw(DATE_TIME_FIELD_WIDTH) << "" << RESET_FLAGS;
 	header_width += DATE_TIME_FIELD_WIDTH;
 #endif // defined(TRACE_OUT_SHOW_FILE_LINE)
 
 #if defined(TRACE_OUT_SHOW_DATE_TIME) && defined(TRACE_OUT_SHOW_FILE_LINE)
-	stream << '#';
+	stream << START_HEADER_FILL;
 	header_width += 1;
 #endif // defined(TRACE_OUT_SHOW_DATE_TIME) && defined(TRACE_OUT_SHOW_FILE_LINE)
 
 #if defined(TRACE_OUT_SHOW_FILE_LINE)
-	stream << std::setfill('#') << std::setw(FILENAME_LINE_FIELD_WIDTH) << "" << RESET_FLAGS;
+	stream << std::setfill(START_HEADER_FILL) << std::setw(FILENAME_LINE_FIELD_WIDTH) << "" << RESET_FLAGS;
 	header_width += FILENAME_LINE_FIELD_WIDTH;
 #endif // defined(TRACE_OUT_SHOW_FILE_LINE)
 
 #if defined(TRACE_OUT_SHOW_DATE_TIME) || defined(TRACE_OUT_SHOW_FILE_LINE)
-	stream << std::setfill('#') << std::setw(TIME_SPACE_CONTEXT_DELIMITER_WIDTH) << "" << RESET_FLAGS;
+	stream << std::setfill(START_HEADER_FILL) << std::setw(TIME_SPACE_CONTEXT_DELIMITER_WIDTH) << "" << RESET_FLAGS;
 	header_width += TIME_SPACE_CONTEXT_DELIMITER_WIDTH;
 #endif // defined(TRACE_OUT_SHOW_DATE_TIME) || defined(TRACE_OUT_SHOW_FILE_LINE)
 
 	std::string date_time = date_time_now();
-	stream << "#### [ " << styles::STRING << date_time << styles::NORMAL;
-	header_width += 7 + date_time.size();
+	stream << START_HEADER_PADDING << " [ " << styles::STRING << date_time << styles::NORMAL;
+	header_width += START_HEADER_PADDING_WIDTH + 3 + date_time.size();
 
 	if (message != NULL)
 	{
@@ -156,7 +159,7 @@ void print_start_header(std::ostream &stream, const char *message)
 
 	standard::size_t console_width = system::console_width();
 	standard::size_t rest_fill_width = console_width > header_width ? console_width - header_width : 4;
-	stream << std::setw(rest_fill_width) << std::setfill('#') << "" << RESET_FLAGS << '\n' << BREAK_PARAGRAPH;
+	stream << std::setw(rest_fill_width) << std::setfill(START_HEADER_FILL) << "" << RESET_FLAGS << '\n' << BREAK_PARAGRAPH;
 }
 
 NEW_PARAGRAPH::NEW_PARAGRAPH(const file_line_t &filename_line)
