@@ -117,7 +117,7 @@ void print_start_header(std::ostream &stream, const char *message)
 {
 	standard::size_t header_width = 0;
 
-	stream << MARKER;
+	stream << MARKER << '\n' << MARKER << '\n' << MARKER;
 #if defined(TRACE_OUT_MARKER)
 	header_width += MARKER_WIDTH + 1;
 #endif // defined(TRACE_OUT_MARKER)
@@ -142,30 +142,33 @@ void print_start_header(std::ostream &stream, const char *message)
 	header_width += TIME_SPACE_CONTEXT_DELIMITER_WIDTH;
 #endif // defined(TRACE_OUT_SHOW_DATE_TIME) || defined(TRACE_OUT_SHOW_FILE_LINE)
 
-	std::string date_time = date_time_now();
-	stream << START_HEADER_PADDING << " [ " << styles::STRING << date_time << styles::NORMAL;
-	header_width += START_HEADER_PADDING_WIDTH + 3 + date_time.size();
+	stream << START_HEADER_PADDING << "[ ";
+	header_width += START_HEADER_PADDING_WIDTH + 2;
 
 	if (message != NULL)
 	{
-		stream << ' ' << styles::SUBJECT << message << styles::NORMAL;
-		header_width += 1 + std::strlen(message);
+		stream << styles::SUBJECT << message << styles::NORMAL << ' ';
+		header_width += std::strlen(message) + 1;
 	}
 	else
 	{
 #if defined(TRACE_OUT_START_MESSAGE)
 		message = TRACE_OUT_START_MESSAGE;
-		stream << ' ' << styles::SUBJECT << message << styles::NORMAL;
-		header_width += 1 + std::strlen(message);
+		stream << styles::SUBJECT << message << styles::NORMAL << ' ';
+		header_width += std::strlen(message) + 1;
 #endif // defined(TRACE_OUT_START_MESSAGE)
 	}
 
-	stream << " ] ";
-	header_width += 3;
+	std::string date_time = date_time_now();
+	stream << styles::STRING << date_time << styles::NORMAL;
+	header_width += date_time.size();
+
+	stream << " ]";
+	header_width += 2;
 
 	standard::size_t console_width = system::console_width();
 	standard::size_t rest_fill_width = console_width > header_width ? console_width - header_width : 4;
-	stream << std::setw(rest_fill_width) << std::setfill(START_HEADER_FILL) << "" << RESET_FLAGS << '\n' << BREAK_PARAGRAPH;
+	stream << std::setw(rest_fill_width) << std::setfill(START_HEADER_FILL) << "" << RESET_FLAGS << '\n' << MARKER << '\n';
 }
 
 NEW_PARAGRAPH::NEW_PARAGRAPH(const file_line_t &filename_line)
