@@ -36,7 +36,8 @@ namespace trace_out { namespace styles
 	static const char *const NUMBER = trace_out_style(trace_out__REGULAR;trace_out__CYAN);
 	static const char *const STRING = trace_out_style(trace_out__REGULAR;trace_out__GREEN);
 	static const char *const SUBJECT = trace_out_style(trace_out__REGULAR;trace_out__BLUE);
-	static const char *const THREAD = trace_out_style(trace_out__BOLD;trace_out__BLUE);
+	static const char *const THREAD_NAME = trace_out_style(trace_out__REGULAR;trace_out__BLUE);
+	static const char *const THREAD_ID = trace_out_style(trace_out__REGULAR;trace_out__CYAN);
 
 #elif TRACE_OUT_STYLE == 2
 	static const char *const BOOLEAN = trace_out_style(trace_out__REGULAR;trace_out__BLUE);
@@ -49,7 +50,8 @@ namespace trace_out { namespace styles
 	static const char *const NUMBER = trace_out_style(trace_out__REGULAR;trace_out__MAGENTA);
 	static const char *const STRING = trace_out_style(trace_out__REGULAR;trace_out__YELLOW);
 	static const char *const SUBJECT = trace_out_style(trace_out__REGULAR;trace_out__CYAN);
-	static const char *const THREAD = trace_out_style(trace_out__BOLD;trace_out__CYAN);
+	static const char *const THREAD_NAME = trace_out_style(trace_out__REGULAR;trace_out__CYAN);
+	static const char *const THREAD_ID = trace_out_style(trace_out__REGULAR;trace_out__MAGENTA);
 
 #elif TRACE_OUT_STYLE == 3
 	static const char *const BOOLEAN = trace_out_style(trace_out__REGULAR;trace_out__RED);
@@ -62,7 +64,8 @@ namespace trace_out { namespace styles
 	static const char *const NUMBER = trace_out_style(trace_out__REGULAR;trace_out__BLUE);
 	static const char *const STRING = trace_out_style(trace_out__REGULAR;trace_out__CYAN);
 	static const char *const SUBJECT = trace_out_style(trace_out__REGULAR;trace_out__MAGENTA);
-	static const char *const THREAD = trace_out_style(trace_out__BOLD;trace_out__MAGENTA);
+	static const char *const THREAD_NAME = trace_out_style(trace_out__REGULAR;trace_out__MAGENTA);
+	static const char *const THREAD_ID = trace_out_style(trace_out__REGULAR;trace_out__BLUE);
 
 #elif TRACE_OUT_STYLE == 4
 	static const char *const BOOLEAN = trace_out_style(trace_out__REGULAR;trace_out__YELLOW);
@@ -75,7 +78,8 @@ namespace trace_out { namespace styles
 	static const char *const NUMBER = trace_out_style(trace_out__REGULAR;trace_out__GREEN);
 	static const char *const STRING = trace_out_style(trace_out__REGULAR;trace_out__BLUE);
 	static const char *const SUBJECT = trace_out_style(trace_out__REGULAR;trace_out__CYAN);
-	static const char *const THREAD = trace_out_style(trace_out__BOLD;trace_out__CYAN);
+	static const char *const THREAD_NAME = trace_out_style(trace_out__REGULAR;trace_out__CYAN);
+	static const char *const THREAD_ID = trace_out_style(trace_out__REGULAR;trace_out__GREEN);
 
 #else
 	static const char *const BOOLEAN = "";
@@ -89,7 +93,8 @@ namespace trace_out { namespace styles
 	static const char *const STATEMENT = "";
 	static const char *const STRING = "";
 	static const char *const SUBJECT = "";
-	static const char *const THREAD = "";
+	static const char *const THREAD_NAME = "";
+	static const char *const THREAD_ID = "";
 
 #endif // TRACE_OUT_STYLE
 

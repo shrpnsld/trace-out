@@ -18,7 +18,7 @@ TEST_CASE("'TRACE_OUT_SHOW_THREAD' and '$start' with '$t(...)'", "[TRACE_OUT_SHO
 	REQUIRE_THAT(test::out_stream.str(), Matches(
 		R"=(#### \[ [0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} \] #########################################\n)="
 		R"=(\n)="
-		R"=(~~~~\[Thread\: [0-9a-f]+\]~~~~\n)="
+		R"=(~~~~\[ Thread\: [0-9a-f]+ \]~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n)="
 		R"=(what = "hellomoto!"\n)="
 	));
 }

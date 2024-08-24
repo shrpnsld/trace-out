@@ -64,7 +64,7 @@
 			trace_out::print_start_header(TRACE_OUT_STREAM_TO::stream(), ##__VA_ARGS__);
 
 #define $thread(name) \
-			trace_out::set_current_thread_name(#name);
+			trace_out::set_current_thread_name(name);
 
 #define $time(label, ...) \
 			trace_out_private__time(trace_out_private__unify(trace_out_start_time), trace_out_private__unify(trace_out_end_time), label, ##__VA_ARGS__)

@@ -289,9 +289,6 @@ TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$time_stats(...)'", "[T
 
 	test::out_stream.str(std::string {});
 
-	$thread(one)
-
-	$thread(two)
 	for (std::size_t passes {10}; passes > 0; --passes)
 	{
 		$time_stats("dummy", 10, dummy();)
@@ -341,9 +338,6 @@ TEST_CASE("no deadlock with 'TRACE_OUT_SYNC_STREAM' and '$clock_stats(...)'", "[
 
 	test::out_stream.str(std::string {});
 
-	$thread(one)
-
-	$thread(two)
 	for (std::size_t passes {10}; passes > 0; --passes)
 	{
 		$clock_stats("dummy", 10, dummy();)

@@ -12,6 +12,7 @@
 #include "trace-out/template-magic.hpp"
 #include "trace-out/thread.hpp"
 #include "trace-out/thread-local-storage.hpp"
+#include "trace-out/to-string.hpp"
 #include <iomanip>
 #include <ostream>
 #include <string>
@@ -76,6 +77,11 @@ static const standard::size_t MARKER_WIDTH = c_str_arr_size(TRACE_OUT_MARKER);
 static const char START_HEADER_FILL = '#';
 static const char START_HEADER_PADDING[5] = {START_HEADER_FILL, START_HEADER_FILL, START_HEADER_FILL, START_HEADER_FILL, 0};
 static const char START_HEADER_PADDING_WIDTH = c_str_arr_size(START_HEADER_PADDING);
+
+static const char THREAD_HEADER_FILL = '~';
+static const char THREAD_HEADER_PADDING[5] = {THREAD_HEADER_FILL, THREAD_HEADER_FILL, THREAD_HEADER_FILL, THREAD_HEADER_FILL, 0};
+static const char THREAD_HEADER_PADDING_WIDTH = c_str_arr_size(THREAD_HEADER_PADDING);
+
 static const standard::size_t DATE_TIME_FIELD_WIDTH = c_str_arr_size(DATE_TIME_BLANK);
 static const standard::size_t FILENAME_FIELD_WIDTH = 20;
 static const standard::size_t LINE_FIELD_WIDTH = 4;
@@ -210,10 +216,54 @@ std::ostream &operator <<(std::ostream &stream, thread_info_t)
 		return stream;
 	}
 
+	standard::size_t header_width = 0;
+
+	stream << MARKER;
+#if defined(TRACE_OUT_MARKER)
+	header_width += MARKER_WIDTH + 1;
+#endif // defined(TRACE_OUT_MARKER)
+
+#if defined(TRACE_OUT_SHOW_DATE_TIME)
+	stream << std::setfill(THREAD_HEADER_FILL) << std::setw(DATE_TIME_FIELD_WIDTH) << "" << RESET_FLAGS;
+	header_width += DATE_TIME_FIELD_WIDTH;
+#endif // defined(TRACE_OUT_SHOW_FILE_LINE)
+
+#if defined(TRACE_OUT_SHOW_DATE_TIME) && defined(TRACE_OUT_SHOW_FILE_LINE)
+	stream << THREAD_HEADER_FILL;
+	header_width += 1;
+#endif // defined(TRACE_OUT_SHOW_DATE_TIME) && defined(TRACE_OUT_SHOW_FILE_LINE)
+
+#if defined(TRACE_OUT_SHOW_FILE_LINE)
+	stream << std::setfill(THREAD_HEADER_FILL) << std::setw(FILENAME_LINE_FIELD_WIDTH) << "" << RESET_FLAGS;
+	header_width += FILENAME_LINE_FIELD_WIDTH;
+#endif // defined(TRACE_OUT_SHOW_FILE_LINE)
+
+#if defined(TRACE_OUT_SHOW_DATE_TIME) || defined(TRACE_OUT_SHOW_FILE_LINE)
+	stream << std::setfill(THREAD_HEADER_FILL) << std::setw(TIME_SPACE_CONTEXT_DELIMITER_WIDTH) << "" << RESET_FLAGS;
+	header_width += TIME_SPACE_CONTEXT_DELIMITER_WIDTH;
+#endif // defined(TRACE_OUT_SHOW_DATE_TIME) || defined(TRACE_OUT_SHOW_FILE_LINE)
+
+	std::string thread_id = to_string(system::current_thread_id(), std::setbase(16));
+	stream << THREAD_HEADER_PADDING << "[ Thread: ";
+	header_width += THREAD_HEADER_PADDING_WIDTH + 10;
+
 	const std::string &thread_name = current_thread_name();
-	stream << MARKER << styles::THREAD << "~~~~[Thread: " << std::setbase(16) << system::current_thread_id() << RESET_FLAGS << (!thread_name.empty() ? " " : "") << thread_name << "]~~~~" << styles::NORMAL;
-	stream << std::endl;
-#endif
+	if (!thread_name.empty())
+	{
+		stream << styles::THREAD_NAME << thread_name << styles::NORMAL << ' ';
+		header_width += thread_name.size() + 1;
+	}
+
+	stream << styles::THREAD_ID << thread_id << styles::NORMAL;
+	header_width += thread_id.size();
+
+	stream << " ]";
+	header_width += 2;
+
+	standard::size_t console_width = system::console_width();
+	standard::size_t rest_fill_width = console_width > header_width ? console_width - header_width : 4;
+	stream << std::setw(rest_fill_width) << std::setfill(THREAD_HEADER_FILL) << "" << RESET_FLAGS << std::endl;
+#endif // defined(TRACE_OUT_SHOW_THREAD)
 
 	return stream;
 }

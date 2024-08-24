@@ -4,7 +4,7 @@
 int main()
 {
 	$start("some")
-	$thread(main)
+	$thread("main")
 	$f
 
 	int subject1 = 456;

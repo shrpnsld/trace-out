@@ -21,7 +21,7 @@ TEST_CASE("'TRACE_OUT_STREAM_TO_FILE' option", "[TRACE_OUT_STREAM_TO_FILE]")
 	expected
 		<< R"=(@@ ################################ \[ [0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} some \] ###############)=" << std::endl
 		<< R"=(@@                           \| )=" << std::endl
-		<< R"=(@@ ~~~~\[Thread: [0-9a-f]+ main\]~~~~)=" << std::endl
+		<< R"=(@@ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\[ Thread: main [0-9a-f]+ \]~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~)=" << std::endl
 		<< R"=(@@ stream-to-file-opti~:94   \| int subject_func\(\))=" << std::endl
 		<< R"=(@@                           \| \{)=" << std::endl
 		<< R"=(@@ stream-to-file-opti~:100  \|   // hellomoto!)=" << std::endl
@@ -90,7 +90,7 @@ TEST_CASE("'TRACE_OUT_STREAM_TO_FILE' option", "[TRACE_OUT_STREAM_TO_FILE]")
 int subject_func()
 {
 	$start("some")
-	$thread(main)
+	$thread("main")
 	$f
 
 	int subject1 = 456;
