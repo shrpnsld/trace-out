@@ -26,13 +26,17 @@ namespace trace_out
 template <typename Type_t>
 const std::string to_string(const Type_t &value)
 {
-	return (std::stringstream() << value).str();
+	std::stringstream stream;
+	stream << value;
+	return stream.str();
 }
 
 template <typename Type_t, typename Manipulator_t>
 const std::string to_string(const Type_t &value, const Manipulator_t &manipulator)
 {
-	return (std::stringstream() << manipulator << value).str();
+	std::stringstream stream;
+	stream << manipulator << value;
+	return stream.str();
 }
 
 }
